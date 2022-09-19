@@ -70,6 +70,10 @@ public static class TokenGenerator
             var handler = new JwtSecurityTokenHandler();
             return handler.ValidateToken(token, validationParameters, out _);
         }
+        catch (MissingConfigurationException)
+        {
+            throw;
+        }
         catch (Exception ex)
         {
             logger.LogWarning(ex, "Error occured when validating bearer");
