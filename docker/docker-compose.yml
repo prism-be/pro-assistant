@@ -1,0 +1,12 @@
+﻿version: "3.9"
+services:
+  mongo:
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data/mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=proassistant
+      - MONGO_INITDB_ROOT_PASSWORD=Toto123Toto123
