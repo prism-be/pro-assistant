@@ -4,7 +4,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Api", "P
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Business", "Prism.ProAssistant.Business\Prism.ProAssistant.Business.csproj", "{A2576A2C-CC17-46BA-B0AF-E8A1A3E9EE6E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Tests", "Prism.ProAssistant.Tests\Prism.ProAssistant.Tests.csproj", "{E49E504D-AB67-4282-ACBC-DCC0C85FF02C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Business.Tests", "Prism.ProAssistant.Business.Tests\Prism.ProAssistant.Business.Tests.csproj", "{E49E504D-AB67-4282-ACBC-DCC0C85FF02C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
