@@ -2,6 +2,9 @@
 <project version="4">
   <component name="UserContentModel">
     <attachedFolders>
+      <Path>../../../.github/workflows</Path>
+      <Path>../../.github/workflows</Path>
+      <Path>../web</Path>
       <Path>../../web</Path>
     </attachedFolders>
     <explicitIncludes />

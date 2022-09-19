@@ -1,0 +1,29 @@
+﻿name: CD
+
+on:
+  release:
+    types: [ published ]
+  workflow_dispatch:
+    
+jobs:
+  api:
+    uses: ./.github/workflows/cd-docker.yml
+    with:
+      dockerFile: ./Prism.Picshare.Services.Api/Dockerfile
+      imageTag: api
+      workingDirectory: src/api/
+      isProduction: true
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  
+  web:
+    uses: ./.github/workflows/cd-docker.yml
+    with:
+      dockerFile: ./Dockerfile
+      imageTag: web
+      workingDirectory: src/web/
+      isProduction: true
+    secrets:
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

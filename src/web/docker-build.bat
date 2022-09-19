@@ -1,0 +1,1 @@
+docker build . --tag simonbaudart/pro-assistant:web-nightly

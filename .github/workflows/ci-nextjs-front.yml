@@ -1,0 +1,43 @@
+﻿name: CI - Front
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/web/**'
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    paths:
+      - 'src/web/**'
+    
+jobs:
+  build-and-analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      
+      - name: Extract Version
+        uses: damienaicheh/extract-version-from-tag-action@v1.0.0
+
+      - name: Install Packages
+        working-directory: ./src/web
+        run: yarn install --frozen-lockfile
+
+      - name: Build Project
+        working-directory: ./src/web
+        run: yarn build
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          projectBaseDir: ./src/web
+          args: >
+            -Dsonar.projectVersion=${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ env.NUMBER_OF_COMMITS_SINCE_TAG }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
