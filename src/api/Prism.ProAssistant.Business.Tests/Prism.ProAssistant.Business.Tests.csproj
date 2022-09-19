@@ -8,6 +8,8 @@
         <IsPackable>false</IsPackable>
 
         <RootNamespace>Prism.ProAssistant.Tests</RootNamespace>
+
+        <AssemblyName>Prism.ProAssistant.Tests</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
@@ -28,10 +30,6 @@
     <ItemGroup>
         <ProjectReference Include="..\Prism.ProAssistant.Api\Prism.ProAssistant.Api.csproj" />
         <ProjectReference Include="..\Prism.ProAssistant.Business\Prism.ProAssistant.Business.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Users" />
     </ItemGroup>
 
 </Project>
