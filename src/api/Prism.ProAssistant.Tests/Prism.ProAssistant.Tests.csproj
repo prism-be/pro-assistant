@@ -24,8 +24,12 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Prism.ProAssistant.Api\Prism.ProAssistant.Api.csproj" />
-      <ProjectReference Include="..\Prism.ProAssistant.Business\Prism.ProAssistant.Business.csproj" />
+        <ProjectReference Include="..\Prism.ProAssistant.Api\Prism.ProAssistant.Api.csproj" />
+        <ProjectReference Include="..\Prism.ProAssistant.Business\Prism.ProAssistant.Business.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Business\Users" />
     </ItemGroup>
 
 </Project>
