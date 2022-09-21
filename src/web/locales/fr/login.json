@@ -1,0 +1,11 @@
+﻿{
+  "title": "Veuillez entrer vos informations de connexion",
+  "form": {
+    "login": "Nom d'utilisateur",
+    "password": "Mot de passe",
+    "go": "Connexion"
+  },
+  "errors" : {
+    "invalidCredentials": "Vos identifiants ne sont pas reconnus."
+  }
+}

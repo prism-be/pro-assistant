@@ -1,0 +1,18 @@
+﻿@import "../../vars";
+
+.button
+{
+  border: 1px $primaryColorDark solid;
+  background-color: $primaryColor;
+  width: 20rem;
+  color: $light;
+  padding: 0.5rem;
+  cursor: pointer;
+  
+  transition: background-color 500ms;
+  
+  &:hover
+  {
+    background-color: $primaryColorDark;
+  }
+}

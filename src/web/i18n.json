@@ -6,6 +6,9 @@
   "pages": {
     "*": [
       "common"
+    ],
+    "/login": [
+      "login"
     ]
   }
 }
