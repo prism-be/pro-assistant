@@ -40,6 +40,16 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
+app.UseCors(opt =>
+{
+    opt.AllowAnyHeader()
+        .AllowAnyMethod()
+        .WithOrigins(
+            EnvironmentConfiguration.GetMandatoryConfiguration("FRONT_DOMAIN_FQDN"),
+            EnvironmentConfiguration.GetMandatoryConfiguration("FRONT_DOMAIN_CUSTOM")
+        );
+});
+
 app.UseHealthChecks("/health");
 app.MapControllers();
 

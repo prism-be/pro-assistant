@@ -1,8 +1,19 @@
 import '../styles/globals.css'
 import type {AppProps} from 'next/app'
+import {SWRConfig} from "swr";
+import Head from "next/head";
+import {getData} from "../lib/ajaxHelper";
 
-function MyApp({Component, pageProps}: AppProps) {
-    return <Component {...pageProps} />
+const MyApp = ({Component, pageProps}: AppProps) => {
+
+    return <>
+        <Head>
+            <title>Pro Assistant</title>
+        </Head>
+        <SWRConfig value={{fetcher: getData}}>
+            <Component {...pageProps} />
+        </SWRConfig>
+    </>
 }
 
-export default MyApp
+export default MyApp;
