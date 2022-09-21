@@ -1,4 +1,5 @@
-import '../styles/globals.css'
+import '../styles/global.scss'
+
 import type {AppProps} from 'next/app'
 import {SWRConfig} from "swr";
 import Head from "next/head";
