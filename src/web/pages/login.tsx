@@ -1,8 +1,12 @@
 ﻿import {NextPage} from "next";
+import useTranslation from 'next-translate/useTranslation'
 
 const Login: NextPage = () => {
+
+    const { t, lang } = useTranslation('common');
+    
     return <div>
-        Hello !!!
+        {t("title")}
     </div>
 }
 

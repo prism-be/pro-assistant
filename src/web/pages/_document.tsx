@@ -1,13 +1,9 @@
 ﻿import {Html, Head, Main, NextScript} from 'next/document'
-import i18nextConfig from '../next-i18next.config'
 
 export default function Document(this: any) {
-
-    const currentLocale = i18nextConfig.i18n.defaultLocale
-    
     // noinspection HtmlRequiredTitleElement
     return (
-        <Html lang={currentLocale}>
+        <Html>
             <Head>
                 <link rel="preconnect" href="https://fonts.googleapis.com"/>
                 <link rel="preconnect" href="https://fonts.gstatic.com"/>
