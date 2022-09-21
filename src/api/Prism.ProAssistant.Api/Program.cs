@@ -34,6 +34,13 @@ var database = client.GetDatabase("proassistant");
 builder.Services.AddSingleton<IMongoClient>(client);
 builder.Services.AddSingleton(database);
 
+// Add web stuff
+builder.Services.AddHealthChecks();
+builder.Services.AddControllers();
+
 var app = builder.Build();
+
+app.UseHealthChecks("/health");
+app.MapControllers();
 
 app.Run();
