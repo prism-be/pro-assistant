@@ -1,13 +1,13 @@
 ﻿import { useEffect } from 'react'
 import Router from 'next/router'
-import useSWR from 'swr'
-import {User} from "./models";
+import {useAuth0} from "@auth0/auth0-react";
 
 export default function useUser({
                                     redirectTo = '',
                                     redirectIfFound = false,
                                 } = {}) {
-    const { data: user, mutate: mutateUser } = useSWR<User>('/authentication/user')
+
+    const { user, isAuthenticated } = useAuth0();
 
     useEffect(() => {
         // if no redirect needed, just return (example: already on /dashboard)
@@ -16,13 +16,13 @@ export default function useUser({
 
         if (
             // If redirectTo is set, redirect if the user was not found.
-            (redirectTo && !redirectIfFound && !user?.authenticated) ||
+            (redirectTo && !redirectIfFound && !isAuthenticated) ||
             // If redirectIfFound is also set, redirect if the user was found
-            (redirectIfFound && user?.authenticated)
+            (redirectIfFound && isAuthenticated)
         ) {
             Router.push(redirectTo)
         }
     }, [user, redirectIfFound, redirectTo])
 
-    return { user, mutateUser }
+    return { user }
 }

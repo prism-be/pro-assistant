@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@auth0/auth0-react": "^1.11.0",
     "@hookform/resolvers": "^2.9.8",
     "next": "12.3.0",
     "next-translate": "^1.6.0",
