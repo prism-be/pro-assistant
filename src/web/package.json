@@ -9,7 +9,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^1.11.0",
+    "@azure/msal-browser": "^2.28.3",
+    "@azure/msal-react": "^1.4.7",
     "@hookform/resolvers": "^2.9.8",
     "next": "12.3.0",
     "next-translate": "^1.6.0",

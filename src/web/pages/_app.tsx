@@ -4,7 +4,8 @@ import type {AppProps} from 'next/app'
 import {SWRConfig} from "swr";
 import Head from "next/head";
 import {getData} from "../lib/ajaxHelper";
-import {Auth0Provider} from "@auth0/auth0-react";
+import {MsalProvider} from "@azure/msal-react";
+import {msalInstance} from "../lib/msal";
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
@@ -13,20 +14,13 @@ const MyApp = ({Component, pageProps}: AppProps) => {
             <title>Pro Assistant</title>
         </Head>
 
-        <Auth0Provider
-            domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}
-            clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!}
-            redirectUri={process.env.NEXT_PUBLIC_AUTH0_REDIRECT_URI!}
-            audience={process.env.NEXT_PUBLIC_AUTH0_AUDIENCE!}
-            scope={process.env.NEXT_PUBLIC_AUTH0_SCOPE!}
-            useRefreshTokens={true}
-        >
+        <MsalProvider instance={msalInstance}>
 
             <SWRConfig value={{fetcher: getData}}>
                 <Component {...pageProps} />
             </SWRConfig>
 
-        </Auth0Provider>
+        </MsalProvider>
     </>
 }
 

@@ -6,25 +6,35 @@ import Button from "../components/forms/Button";
 import Popin from "../components/Popin";
 import {useAuth0} from "@auth0/auth0-react";
 import useTranslation from "next-translate/useTranslation";
+import {
+    AuthenticatedTemplate,
+    UnauthenticatedTemplate,
+    useMsal,
+} from '@azure/msal-react';
 
 const Home: NextPage = () => {
 
-    const {user, isAuthenticated, loginWithRedirect} = useAuth0();
+    const { instance, accounts } = useMsal();
+    
     const {t} = useTranslation("login");
 
-    if (!user || !isAuthenticated) {
-        return <Popin>
-            <>
-                <h1 className={styles.title}>{t("title")}</h1>
-                <div className={styles.button}>
-                    <Button text={t("form.go")} onClick={() => loginWithRedirect()}/>
-                </div>
-            </>
-        </Popin>
-    }
-
+    console.log(accounts);
+    
     return (
         <div>
+            <AuthenticatedTemplate>
+                <p>Welcome, {accounts[0]?.username}</p>
+            </AuthenticatedTemplate>
+            <UnauthenticatedTemplate>
+                <Popin>
+                    <>
+                        <h1 className={styles.title}>{t("title")}</h1>
+                        <div className={styles.button}>
+                            <Button text={t("form.go")} onClick={() => instance.loginRedirect()}/>
+                        </div>
+                    </>
+                </Popin>
+            </UnauthenticatedTemplate>
         </div>
     )
 }
