@@ -18,7 +18,7 @@ const MyApp = ({Component, pageProps}: AppProps) => {
             clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!}
             redirectUri={process.env.NEXT_PUBLIC_AUTH0_REDIRECT_URI!}
             audience={process.env.NEXT_PUBLIC_AUTH0_AUDIENCE!}
-            scope={process.env.NEXT_PUBLIC_AUTH0_REDIRECT_URI!}
+            scope={process.env.NEXT_PUBLIC_AUTH0_SCOPE!}
             useRefreshTokens={true}
         >
 

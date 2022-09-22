@@ -1,11 +1,6 @@
 ﻿{
-  "title": "Veuillez entrer vos informations de connexion",
+  "title": "Veuillez vous diriger vers la plateforme d'authentification pour recevoir un accès à l'application.",
   "form": {
-    "login": "Nom d'utilisateur",
-    "password": "Mot de passe",
-    "go": "Connexion"
-  },
-  "errors" : {
-    "invalidCredentials": "Vos identifiants ne sont pas reconnus."
+    "go": "J'y vais !"
   }
 }

@@ -16,7 +16,9 @@ const Login: NextPage = () => {
     return <Popin>
         <>
             <h1 className={styles.title}>{t("title")}</h1>
-            <Button text={t("form.go")} onClick={() => loginWithRedirect()}/>
+            <div className={styles.button}>
+                <Button text={t("form.go")} onClick={() => loginWithRedirect()}/>
+            </div>
         </>
     </Popin>
 }
