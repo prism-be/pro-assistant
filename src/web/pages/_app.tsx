@@ -14,11 +14,11 @@ const MyApp = ({Component, pageProps}: AppProps) => {
         </Head>
 
         <Auth0Provider
-            domain="by-prism.eu.auth0.com"
-            clientId="Okfgjry7fkHqX2l0A4cQXu6jLXqLt897"
-            redirectUri="http://localhost:3000"
-            audience="https://localhost:7013"
-            scope="read:current_user update:current_user_metadata"
+            domain={process.env.NEXT_PUBLIC_AUTH0_DOMAIN!}
+            clientId={process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID!}
+            redirectUri={process.env.NEXT_PUBLIC_AUTH0_REDIRECT_URI!}
+            audience={process.env.NEXT_PUBLIC_AUTH0_AUDIENCE!}
+            scope={process.env.NEXT_PUBLIC_AUTH0_REDIRECT_URI!}
             useRefreshTokens={true}
         >
 

@@ -10,7 +10,7 @@ import Button from "../components/forms/Button";
 const Login: NextPage = () => {
 
     const {t} = useTranslation("login");
-    const { loginWithRedirect } = useAuth0();
+    const {loginWithRedirect} = useAuth0();
 
 
     return <Popin>
