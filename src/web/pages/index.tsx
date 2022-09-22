@@ -11,6 +11,7 @@ import {
     UnauthenticatedTemplate,
     useMsal,
 } from '@azure/msal-react';
+import ProtectedComponent from "../components/ProtectedComponent";
 
 const Home: NextPage = () => {
 
@@ -24,6 +25,7 @@ const Home: NextPage = () => {
         <div>
             <AuthenticatedTemplate>
                 <p>Welcome, {accounts[0]?.username}</p>
+                <ProtectedComponent />
             </AuthenticatedTemplate>
             <UnauthenticatedTemplate>
                 <Popin>
