@@ -6,10 +6,6 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-
-        <RootNamespace>Prism.ProAssistant.Tests</RootNamespace>
-
-        <AssemblyName>Prism.ProAssistant.Tests</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>
