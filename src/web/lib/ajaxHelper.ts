@@ -1,31 +1,28 @@
-﻿import getConfig from 'next/config'
+﻿import {AccountInfo, InteractionRequiredAuthError, IPublicClientApplication} from "@azure/msal-browser";
 
-interface ObjectResult
-{
+interface ObjectResult {
     status: number;
     data: any | undefined;
 }
 
-const { publicRuntimeConfig: config } = getConfig()
-
-export async function getData(route: string): Promise<ObjectResult> {
-    const response = await fetch(config.apiRoot + route, {
+export async function getData(route: string, instance: IPublicClientApplication, account: AccountInfo): Promise<ObjectResult> {
+    
+    console.log(route);
+    const bearer = await getAuthorization(instance, account);
+    
+    console.log(bearer);
+    
+    const response = await fetch(route, {
         method: "GET",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': getAuthorization()
+            'Authorization': bearer
         },
     });
-    
-    if (response.status === 401)
-    {
-        if (await performRefreshToken())
-        {
-            return getData(route);
-        }
-    }
 
+    console.log(response);
+    
     if (response.status === 200)
     {
         return {
@@ -40,6 +37,7 @@ export async function getData(route: string): Promise<ObjectResult> {
     }
 }
 
+/*
 export const performRefreshToken = async (): Promise<boolean> => {
     const refreshToken = localStorage.getItem('refreshToken');
 
@@ -91,7 +89,7 @@ export async function postData(route: string, body: any): Promise<any> {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': getAuthorization()
+            'Authorization': await getAuthorization()
         },
     });
 
@@ -127,7 +125,7 @@ export async function postFile(route: string, file: File): Promise<any> {
         method: "POST",
         headers: {
             'Accept': 'application/json',
-            'Authorization': getAuthorization()
+            'Authorization': await getAuthorization()
         },
     });
 
@@ -151,10 +149,37 @@ export async function postFile(route: string, file: File): Promise<any> {
         status: response.status,
         data: undefined
     }
-}
+}*/
 
-const getAuthorization = (): string => {
-    const accessToken = localStorage.getItem('accessToken');
+export const getAuthorization = async (instance: IPublicClientApplication, account: AccountInfo): Promise<string> => {
+    const accessTokenRequest = {
+        scopes: ["https://byprism.onmicrosoft.com/b210005a-b610-43e2-9dd5-824e50b9f692/records.manage"],
+        account: account,
+    };
+
+    let accessToken = '';
+
+    try {
+        const accessTokenResponse = await instance.acquireTokenSilent(accessTokenRequest);
+        
+        if (accessTokenResponse?.accessToken) {
+            accessToken = accessTokenResponse?.accessToken;
+        }
+    } catch (error) {
+        console.log(error);
+
+        if (error instanceof InteractionRequiredAuthError) {
+            try {
+                const accessTokenResponse = await instance.acquireTokenPopup(accessTokenRequest);
+
+                if (accessTokenResponse?.accessToken) {
+                    accessToken = accessTokenResponse?.accessToken;
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        }
+    }
 
     if (accessToken) {
         return 'Bearer ' + accessToken;
