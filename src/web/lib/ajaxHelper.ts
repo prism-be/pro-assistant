@@ -6,11 +6,7 @@ interface ObjectResult {
 }
 
 export async function getData(route: string, instance: IPublicClientApplication, account: AccountInfo): Promise<ObjectResult> {
-    
-    console.log(route);
     const bearer = await getAuthorization(instance, account);
-    
-    console.log(bearer);
     
     const response = await fetch(route, {
         method: "GET",
@@ -20,8 +16,6 @@ export async function getData(route: string, instance: IPublicClientApplication,
             'Authorization': bearer
         },
     });
-
-    console.log(response);
     
     if (response.status === 200)
     {

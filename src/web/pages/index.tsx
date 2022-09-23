@@ -19,8 +19,6 @@ const Home: NextPage = () => {
     
     const {t} = useTranslation("login");
 
-    console.log(accounts);
-    
     return (
         <div>
             <AuthenticatedTemplate>
