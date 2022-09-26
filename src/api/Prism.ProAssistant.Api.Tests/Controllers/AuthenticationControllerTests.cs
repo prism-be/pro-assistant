@@ -17,18 +17,4 @@ namespace Prism.ProAssistant.Api.Tests.Controllers;
 
 public class AuthenticationControllerTests
 {
-    [Fact]
-    public async Task Login_Ok()
-    {
-        // Arrange
-        var mediator = new Mock<IMediator>();
-        var controller = new AuthenticationController(mediator.Object);
-
-        // Act
-        var request = new AuthenticateUser(Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
-        await controller.Login(request);
-
-        // Assert
-        mediator.Verify(x => x.Send(It.Is<AuthenticateUser>(r => r == request), CancellationToken.None), Times.Once);
-    }
 }
