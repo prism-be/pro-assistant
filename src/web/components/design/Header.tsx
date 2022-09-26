@@ -7,12 +7,10 @@ import useTranslation from "next-translate/useTranslation"
 import {useRouter} from "next/router";
 import {useSWRConfig} from "swr";
 
-import useUser from "../../lib/useUser";
 import Link from "next/link";
 
 const Header = () => {
 
-    const {user} = useUser();
     const {t} = useTranslation('common');
 
     const router = useRouter();
@@ -43,7 +41,7 @@ const Header = () => {
             </div>
             <div className={styles.hello}>
                 <div className="m-auto pl-2 pr-2 text-sm">
-                    {t("header.hello")} {user?.name} !<br/>
+                    {t("header.hello")} {"Simon"} !<br/>
                     <a href="#" onClick={logout}>{t("header.logout")}</a>
 
                 </div>

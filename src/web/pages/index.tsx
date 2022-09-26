@@ -1,10 +1,7 @@
 import type {NextPage} from 'next'
-import Loader from "../components/design/Loader";
-import useUser from "../lib/useUser";
 import styles from "../styles/pages/login.module.scss";
 import Button from "../components/forms/Button";
 import Popin from "../components/Popin";
-import {useAuth0} from "@auth0/auth0-react";
 import useTranslation from "next-translate/useTranslation";
 import {
     AuthenticatedTemplate,
