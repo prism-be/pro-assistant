@@ -1,8 +1,14 @@
 ﻿import {NextApiRequest, NextApiResponse} from "next";
 import {withAuth} from "../../lib/middlewares/withAuth";
 
-const handler = (req: NextApiRequest, res: NextApiResponse) => {
+export const handleGetRecords = (req: NextApiRequest, res: NextApiResponse) => {
+
+    if (req.method !== 'GET') {
+        res.status(405).json({ err: 'Method not allowed' });
+        return;
+    }
+    
     res.status(200).json({ text: 'Hello' });
 }
 
-export default withAuth(handler);
+export default withAuth(handleGetRecords);
