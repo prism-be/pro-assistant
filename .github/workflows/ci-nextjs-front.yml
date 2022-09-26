@@ -31,6 +31,10 @@ jobs:
       - name: Build Project
         working-directory: ./src/web
         run: yarn build
+        
+      - name: Run Unit Tests
+        working-directory: ./src/web
+        run: yarn jest
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
