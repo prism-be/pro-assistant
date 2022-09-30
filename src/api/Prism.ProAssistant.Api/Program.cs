@@ -44,8 +44,8 @@ builder.Services.AddAuthentication(options =>
     })
     .AddJwtBearer(jwtOptions =>
     {
-        jwtOptions.Authority = "https://login.microsoftonline.com/tfp/b210005a-b610-43e2-9dd5-824e50b9f692/B2C_1_PRO_ASSISTANT/v2.0/";
-        jwtOptions.Audience = EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_AD_TENANT_ID");
+        jwtOptions.Authority = "https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/";
+        jwtOptions.Audience = EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_AD_CLIENT_ID");
         jwtOptions.Events = new JwtBearerEvents
         {
             OnAuthenticationFailed = AuthenticationFailed
@@ -54,11 +54,7 @@ builder.Services.AddAuthentication(options =>
 
 Task AuthenticationFailed(AuthenticationFailedContext arg)
 {
-    // For debugging purposes only!
-    var s = $"AuthenticationFailed: {arg.Exception.Message}";
-    arg.Response.ContentLength = s.Length;
-    arg.Response.Body.Write(Encoding.UTF8.GetBytes(s), 0, s.Length);
-
+    // TODO : LOG
     return Task.FromResult(0);
 }
 
