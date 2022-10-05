@@ -14,12 +14,10 @@ namespace Prism.ProAssistant.Api.Controllers;
 
 public class AuthenticationController : Controller
 {
-    private readonly IMediator _mediator;
     private readonly IUserContextAccessor _userContextAccessor;
 
-    public AuthenticationController(IMediator mediator, IUserContextAccessor userContextAccessor)
+    public AuthenticationController(IUserContextAccessor userContextAccessor)
     {
-        _mediator = mediator;
         _userContextAccessor = userContextAccessor;
     }
 
@@ -28,11 +26,11 @@ public class AuthenticationController : Controller
     [Authorize]
     public ActionResult<UserInformation> GetUser()
     {
-        if (User.Identity?.IsAuthenticated == true)
+        if (_userContextAccessor.IsAuthenticated)
         {
-            return StatusCode(200, new UserInformation(_userContextAccessor.Name, User.Identity.IsAuthenticated));
+            return Ok(new UserInformation(_userContextAccessor.Name, true));
         }
 
-        return StatusCode(200, new UserInformation(null, User.Identity?.IsAuthenticated == true));
+        return Ok(new UserInformation(null, false));
     }
 }

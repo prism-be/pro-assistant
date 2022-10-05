@@ -1,18 +1,10 @@
 ﻿using System.Text.Json;
 using FluentAssertions;
-using Prism.ProAssistant.Business.Users;
 
-namespace Prism.ProAssistant.Tests.Business;
+namespace Prism.ProAssistant.Business.Tests;
 
 public class SerializationTests
 {
-    [Fact]
-    public void User_Ok()
-    {
-        var user = new User(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
-        CheckSerialization(user);
-    }
-
     private static void CheckSerialization<T>(T source)
     {
         // Act

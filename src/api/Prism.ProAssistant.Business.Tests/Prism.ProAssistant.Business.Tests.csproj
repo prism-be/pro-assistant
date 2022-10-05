@@ -28,8 +28,4 @@
         <ProjectReference Include="..\Prism.ProAssistant.Business\Prism.ProAssistant.Business.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Security" />
-    </ItemGroup>
-
 </Project>

@@ -11,6 +11,7 @@ namespace Prism.ProAssistant.Business.Security;
 
 public interface IUserContextAccessor
 {
+    bool IsAuthenticated { get; }
     Guid UserId { get; }
     string Name { get; }
 }
@@ -24,11 +25,13 @@ public class UserContextAccessor : IUserContextAccessor
         _httpContextAccessor = httpContextAccessor;
     }
 
+    public bool IsAuthenticated => _httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated == true;
+
     public string Name
     {
         get
         {
-            if (_httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated == false)
+            if (!IsAuthenticated)
             {
                 return string.Empty;
             }
