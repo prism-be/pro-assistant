@@ -15,6 +15,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Behaviors;
+using Prism.ProAssistant.Business.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,10 @@ var client = new MongoClient(mongoDbConnectionString);
 var database = client.GetDatabase("proassistant");
 builder.Services.AddSingleton<IMongoClient>(client);
 builder.Services.AddSingleton(database);
+
+// Add business services
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<IUserContextAccessor, UserContextAccessor>();
 
 // Add JWT
 builder.Services.AddAuthentication(options =>
