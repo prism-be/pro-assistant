@@ -1,0 +1,15 @@
+﻿{
+  "defaultLocale": "fr",
+  "locales": [
+    "fr"
+  ],
+  "pages": {
+    "*": [
+      "common",
+      "login"
+    ],
+    "/login": [
+      "login"
+    ]
+  }
+}

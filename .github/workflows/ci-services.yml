@@ -11,7 +11,7 @@ on:
     types: [ opened, synchronize, reopened ]
     paths:
       - 'src/api/**'
-    
+
 jobs:
   build-and-analyze:
     runs-on: ubuntu-latest
@@ -31,7 +31,7 @@ jobs:
 
       - name: Trick for Sonar
         run: rm -f ./sonar-project.properties
-        
+
       - name: Build and Analyze
         uses: highbyte/sonarscan-dotnet@v2.1.3
         with:

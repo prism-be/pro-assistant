@@ -4,6 +4,7 @@
     <attachedFolders>
       <Path>../../../.github/workflows</Path>
       <Path>../../.github/workflows</Path>
+      <Path>../../docker</Path>
       <Path>../web</Path>
       <Path>../../web</Path>
     </attachedFolders>

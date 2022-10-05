@@ -48,7 +48,7 @@ jobs:
         run: |
           docker push simonbaudart/pro-assistant:${{ inputs.imageTag }}-latest
           docker push simonbaudart/pro-assistant:${{ inputs.imageTag }}-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
-          
+
       - name: Push the Docker image - Nightly
         working-directory: src
         run: |

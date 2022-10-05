@@ -44,15 +44,6 @@ COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-COPY entrypoint.sh .
-COPY .env.production .
-
-RUN apk add --no-cache --upgrade bash
-RUN apk add dos2unix --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted
-
-RUN chmod +x ./entrypoint.sh
-RUN dos2unix ./entrypoint.sh
-
 USER nextjs
 
 EXPOSE 3000
