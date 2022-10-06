@@ -61,7 +61,7 @@ public record GetUserInformationHandler : IRequestHandler<GetUserInformation, Us
                 }
             };
 
-            userCollection.FindOneAndReplace(x => x.Id == request.UserId, userInformation);
+            userCollection.FindOneAndReplace(x => x.Id == request.UserId, userInformation, cancellationToken: cancellationToken);
         }
 
         return userInformation;
