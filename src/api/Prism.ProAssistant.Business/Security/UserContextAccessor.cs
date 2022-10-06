@@ -5,13 +5,17 @@
 // -----------------------------------------------------------------------
 
 using System.Security.Claims;
+using MediatR;
 using Microsoft.AspNetCore.Http;
+using Prism.ProAssistant.Business.Queries;
 
 namespace Prism.ProAssistant.Business.Security;
 
 public interface IUserContextAccessor
 {
     bool IsAuthenticated { get; }
+
+    Guid OrganisationId { get; }
     Guid UserId { get; }
     string Name { get; }
 }
@@ -20,12 +24,23 @@ public class UserContextAccessor : IUserContextAccessor
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserContextAccessor(IHttpContextAccessor httpContextAccessor)
+    private readonly Lazy<Guid> _organisationId;
+
+    public UserContextAccessor(IHttpContextAccessor httpContextAccessor, IMediator mediator)
     {
         _httpContextAccessor = httpContextAccessor;
+
+        _organisationId = new Lazy<Guid>(() =>
+        {
+            var result = mediator.Send(new GetUserInformation(UserId));
+            result.Wait();
+            return result.Result.Organizations.First().Id;
+        });
     }
 
     public bool IsAuthenticated => _httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated == true;
+
+    public Guid OrganisationId => _organisationId.Value;
 
     public string Name
     {
