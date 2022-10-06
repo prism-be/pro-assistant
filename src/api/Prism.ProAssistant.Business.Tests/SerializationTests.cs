@@ -1,10 +1,31 @@
-﻿using System.Text.Json;
+﻿// -----------------------------------------------------------------------
+//  <copyright file = "SerializationTests.cs" company = "Prism">
+//  Copyright (c) Prism.All rights reserved.
+//  </copyright>
+// -----------------------------------------------------------------------
+
+using System.Text.Json;
 using FluentAssertions;
+using Prism.ProAssistant.Business.Models;
+using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Business.Tests;
 
 public class SerializationTests
 {
+    [Fact]
+    public void Organization_Ok()
+    {
+        // Arrange
+        var organization = new Organization
+        {
+            Id = Identifier.Generate()
+        };
+
+        // Act and Assert
+        CheckSerialization(organization);
+    }
+
     private static void CheckSerialization<T>(T source)
     {
         // Act
