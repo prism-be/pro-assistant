@@ -4,18 +4,19 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Text;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using Prism.ProAssistant.Api.Queries;
+using Prism.ProAssistant.Api.Types;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Behaviors;
 using Prism.ProAssistant.Business.Security;
+using Prism.ProAssistant.Business.Storage;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,17 @@ var client = new MongoClient(mongoDbConnectionString);
 var database = client.GetDatabase("proassistant");
 builder.Services.AddSingleton<IMongoClient>(client);
 builder.Services.AddSingleton(database);
+
+builder.Services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
+
+builder.Services.AddScoped<IOrganizationContext, OrganizationContext>();
+builder.Services.AddScoped<IPatientRepository, PatientRepository>();
+
+// GraphQL
+builder.Services
+    .AddGraphQLServer()
+    .AddQueryType<PatientQuery>()
+    .AddType<PatientType>();
 
 // Add business services
 builder.Services.AddHttpContextAccessor();
@@ -80,7 +92,13 @@ app.UseCors(opt =>
 });
 
 app.UseHealthChecks("/health");
-app.UseAuthentication().UseAuthorization();
 app.MapControllers();
+
+app.UseRouting();
+app.UseAuthentication().UseAuthorization();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapGraphQL("/api/graphql");
+});
 
 app.Run();
