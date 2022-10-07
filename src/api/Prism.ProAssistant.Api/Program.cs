@@ -42,13 +42,17 @@ builder.Services.AddSingleton(database);
 builder.Services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
 
 builder.Services.AddScoped<IOrganizationContext, OrganizationContext>();
-builder.Services.AddScoped<IPatientRepository, PatientRepository>();
 
 // GraphQL
 builder.Services
     .AddGraphQLServer()
+    .AddAuthorization()
     .AddQueryType<PatientQuery>()
-    .AddType<PatientType>();
+    .AddType<PatientType>()
+    .AddMongoDbFiltering()
+    .AddMongoDbSorting()
+    .AddMongoDbProjections()
+    .AddMongoDbPagingProviders();
 
 // Add business services
 builder.Services.AddHttpContextAccessor();
