@@ -11,6 +11,7 @@ using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Api.Queries;
 
+[ExtendObjectType(Name = "Query")]
 public class PatientQuery
 {
     [UseFirstOrDefault]

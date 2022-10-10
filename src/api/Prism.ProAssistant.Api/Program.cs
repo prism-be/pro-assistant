@@ -11,6 +11,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using Prism.ProAssistant.Api.Mutations;
 using Prism.ProAssistant.Api.Queries;
 using Prism.ProAssistant.Api.Types;
 using Prism.ProAssistant.Business;
@@ -47,7 +48,10 @@ builder.Services.AddScoped<IOrganizationContext, OrganizationContext>();
 builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
-    .AddQueryType<PatientQuery>()
+    .AddQueryType(d => d.Name("Query"))
+    .AddTypeExtension<PatientQuery>()
+    .AddMutationType(d => d.Name("Mutation"))
+    .AddTypeExtension<PatientMutation>()
     .AddType<PatientType>()
     .AddMongoDbFiltering()
     .AddMongoDbSorting()
