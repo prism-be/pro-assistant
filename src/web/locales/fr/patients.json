@@ -1,3 +1,6 @@
 ﻿{
-  "title": "Fiche Patients"
+  "title": "Rechercher un patient",
+  "search": {
+    "firstName": "Prénom"
+  }
 }
