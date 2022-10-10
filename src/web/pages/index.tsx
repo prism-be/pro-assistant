@@ -9,6 +9,7 @@ import {
     useMsal,
 } from '@azure/msal-react';
 import ProtectedComponent from "../components/ProtectedComponent";
+import Header from "../components/design/Header";
 
 const Home: NextPage = () => {
 
@@ -19,6 +20,7 @@ const Home: NextPage = () => {
     return (
         <div>
             <AuthenticatedTemplate>
+                <Header />
                 <p>Welcome, {accounts[0]?.username}</p>
                 <ProtectedComponent />
             </AuthenticatedTemplate>

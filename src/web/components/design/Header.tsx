@@ -1,32 +1,25 @@
-﻿import styles from '../../styles/modules/header.module.scss';
+﻿import styles from '../../styles/components/design/header.module.scss';
 
 import React from "react";
 import Image, {ImageLoaderProps} from "next/image";
 
 import useTranslation from "next-translate/useTranslation"
-import {useRouter} from "next/router";
-import {useSWRConfig} from "swr";
+import useSWR from "swr";
 
 import Link from "next/link";
+import {useMsal} from "@azure/msal-react";
+import {getData} from "../../lib/ajaxHelper";
 
 const Header = () => {
 
     const {t} = useTranslation('common');
 
-    const router = useRouter();
-    const {mutate} = useSWRConfig();
-
-    const logout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
-        e.preventDefault();
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        await mutate('/api/authentication/user/check');
-        await router.push('/login');
-    }
-
     const myLoader = ({src}: ImageLoaderProps) => {
         return src;
     }
+
+    const {instance, accounts} = useMsal();
+    const {data} = useSWR('/api/authentication/user', (apiURL: string) => getData(apiURL, instance, accounts[0]))
 
     return <>
         <div className={styles.bar}>
@@ -41,9 +34,8 @@ const Header = () => {
             </div>
             <div className={styles.hello}>
                 <div className="m-auto pl-2 pr-2 text-sm">
-                    {t("header.hello")} {"Simon"} !<br/>
-                    <a href="#" onClick={logout}>{t("header.logout")}</a>
-
+                    {t("header.hello")} {data?.data.name} !<br/>
+                    <a href="#" onClick={() => instance.logout()}>{t("header.logout")}</a>
                 </div>
             </div>
         </div>

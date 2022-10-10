@@ -8,6 +8,15 @@ const nextConfig = {
     output: "standalone",
     publicRuntimeConfig: {
         apiRoot: process.env.NEXT_PUBLIC_API_URL
+    },
+    async rewrites() {
+        return [
+            {
+                source: '/api/:path*',
+                destination: 'http://localhost:7013/api/:path*'
+                //destination: 'http://localhost:7071/api/:path*'
+            }
+        ]
     }
 }
 
