@@ -1,0 +1,24 @@
+﻿@import "../../vars";
+
+.container
+{
+  position: fixed;
+  height: calc(100vh - 4rem);
+  width: 15rem;
+  border-right: 1px $grey solid;
+}
+
+.item a
+{
+  display: block;
+  line-height: 3rem;
+  padding-left: 2rem;
+  margin: 0.2rem;
+  border-radius: 0.25rem;
+  
+  &:hover
+  {
+    text-decoration: none;
+    background-color: $grey;
+  }
+}
