@@ -9,7 +9,7 @@ using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 
-namespace Prism.ProAssistant.Api.Mutations;
+namespace Prism.ProAssistant.Api.Graph.Patients;
 
 [ExtendObjectType(Name = "Mutation")]
 public class PatientMutation

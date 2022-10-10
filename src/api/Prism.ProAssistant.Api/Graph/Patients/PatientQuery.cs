@@ -9,7 +9,7 @@ using MongoDB.Driver;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Storage;
 
-namespace Prism.ProAssistant.Api.Queries;
+namespace Prism.ProAssistant.Api.Graph.Patients;
 
 [ExtendObjectType(Name = "Query")]
 public class PatientQuery

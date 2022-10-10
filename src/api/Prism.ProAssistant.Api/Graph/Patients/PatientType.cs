@@ -6,7 +6,7 @@
 
 using Prism.ProAssistant.Business.Models;
 
-namespace Prism.ProAssistant.Api.Types;
+namespace Prism.ProAssistant.Api.Graph.Patients;
 
 public class PatientType: ObjectType<Patient>
 {
