@@ -1,6 +1,9 @@
 ﻿{
   "title": "Rechercher un patient",
   "search": {
-    "firstName": "Prénom"
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "birthDate": "Date de naissance",
+    "search": "Rechercher"
   }
 }

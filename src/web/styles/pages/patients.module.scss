@@ -1,8 +1,28 @@
 ﻿@import "../vars";
 
-.searchPanel
-{
-  display: block;
+.searchContainer{
   border-bottom: 1px $grey solid;
   box-shadow: 0 0 7px 0 #00000021;
+}
+
+.searchTitle{
+  padding: 1rem 0 0 1rem;
+}
+
+.searchPanel {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 1rem;
+  padding: 1rem;
+}
+
+.searchField {
+  grid-column: auto / auto;
+  grid-row: 1 / auto;
+}
+
+.searchButton {
+  text-align: right;
+  grid-column: 3 / auto;
+  grid-row: 2 / auto;
 }

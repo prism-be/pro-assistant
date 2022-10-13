@@ -7,13 +7,13 @@ import InputText from "../../components/forms/InputText";
 import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
+import Button from "../../components/forms/Button";
 
 const Patients: NextPage = () => {
 
     const {t} = useTranslation('patients');
 
-    const schema = yup.object({
-    }).required();
+    const schema = yup.object({}).required();
 
     const {register, handleSubmit, formState: {errors}} = useForm({resolver: yupResolver(schema)});
 
@@ -22,12 +22,23 @@ const Patients: NextPage = () => {
     }
 
     return <ContentContainer>
-        <>
-            <h1>{t("title")}</h1>
+        <div className={styles.searchContainer}>
+            <h1 className={styles.searchTitle}>{t("title")}</h1>
             <form className={styles.searchPanel} onSubmit={handleSubmit(onSubmit)}>
-                <InputText name="firstName" label={t("search.firstName")} type="text" required={false} register={register} error={errors.firstName}/>
+                <div className={styles.searchField}>
+                    <InputText name="firstName" label={t("search.firstName")} type="text" required={false} register={register} error={errors.firstName}/>
+                </div>
+                <div className={styles.searchField}>
+                    <InputText name="lastName" label={t("search.lastName")} type="text" required={false} register={register} error={errors.lastName}/>
+                </div>
+                <div className={styles.searchField}>
+                    <InputText name="birthDate" label={t("search.birthDate")} type="text" required={false} register={register} error={errors.birthDate}/>
+                </div>
+                <div className={styles.searchButton}>
+                    <Button text={t("search.search")} onClick={handleSubmit(onSubmit)}/>
+                </div>
             </form>
-        </>
+        </div>
     </ContentContainer>
 }
 

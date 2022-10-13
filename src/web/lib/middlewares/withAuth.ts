@@ -15,7 +15,6 @@ export function withAuth(handler: { (req: NextApiRequest, res: NextApiResponse):
 
         function getKey(header: any, callback: any){
             client.getSigningKey(header.kid, function(err, key) {
-                console.log(key);
                 // @ts-ignore
                 const signingKey = key?.publicKey || key?.rsaPublicKey;
                 callback(null, signingKey);
@@ -32,7 +31,6 @@ export function withAuth(handler: { (req: NextApiRequest, res: NextApiResponse):
         
         jwt.verify(token, getKey, options, function(err, decoded) {
             decodedToken = decoded;
-            console.log(decodedToken);
 
             if (!decodedToken)
             {
