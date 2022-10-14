@@ -8,17 +8,24 @@ import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import Button from "../../components/forms/Button";
+import {PatientSummary, SearchParameter, searchPatients} from "../../lib/services/Patients";
+import {useState} from "react";
+import {useMsal} from "@azure/msal-react";
 
 const Patients: NextPage = () => {
 
     const {t} = useTranslation('patients');
+    const {instance, accounts} = useMsal();
+    
+    const [patients, setPatients] = useState<PatientSummary[]>()
 
     const schema = yup.object({}).required();
 
     const {register, handleSubmit, formState: {errors}} = useForm({resolver: yupResolver(schema)});
 
     const onSubmit = async (data: any) => {
-        console.log(data);
+        const result = await searchPatients(data, instance, accounts[0]);
+        setPatients(result);
     }
 
     return <ContentContainer>
@@ -44,7 +51,10 @@ const Patients: NextPage = () => {
                 </form>
             </div>
             <div className={styles.searchResults}>
-
+                { patients?.map(patient =>  <div key={patient.id}>
+                        {patient.firstName} {patient.lastName}
+                    </div>
+                )}
             </div>
         </>
     </ContentContainer>

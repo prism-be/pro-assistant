@@ -1,13 +1,14 @@
 ﻿import {AccountInfo, InteractionRequiredAuthError, IPublicClientApplication} from "@azure/msal-browser";
+import {Exception} from "sass";
 
-interface ObjectResult {
+interface ObjectResult<TData> {
     status: number;
-    data: any | undefined;
+    data: TData | undefined;
 }
 
-export async function getData(route: string, instance: IPublicClientApplication, account: AccountInfo): Promise<ObjectResult> {
+export async function getData<TResult>(route: string, instance: IPublicClientApplication, account: AccountInfo): Promise<ObjectResult<TResult>> {
     const bearer = await getAuthorization(instance, account);
-    
+
     const response = await fetch(route, {
         method: "GET",
         headers: {
@@ -16,9 +17,8 @@ export async function getData(route: string, instance: IPublicClientApplication,
             'Authorization': bearer
         },
     });
-    
-    if (response.status === 200)
-    {
+
+    if (response.status === 200) {
         return {
             status: response.status,
             data: await response.json()
@@ -31,72 +31,21 @@ export async function getData(route: string, instance: IPublicClientApplication,
     }
 }
 
-/*
-export const performRefreshToken = async (): Promise<boolean> => {
-    const refreshToken = localStorage.getItem('refreshToken');
+export async function postData<TResult>(route: string, instance: IPublicClientApplication, account: AccountInfo, body: any): Promise<ObjectResult<TResult>> {
 
-    if (refreshToken)
-    {
-        const data = {
-            refreshToken
-        };
-        
-        const refreshResponse = await fetch(config.apiRoot + '/api/authentication/refresh', {
-            body: JSON.stringify(data),
-            method: "POST",
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-            }
-        });
+    const bearer = await getAuthorization(instance, account);
 
-        if (refreshResponse.status === 200)
-        {
-            const refreshData = await refreshResponse.json();
-            localStorage.setItem('accessToken', refreshData.accessToken);
-            localStorage.setItem('refreshToken', refreshData.refreshToken);
-
-            if (autoRefreshToken)
-            {
-                clearTimeout(autoRefreshToken);
-            }
-            autoRefreshToken = setTimeout(performRefreshToken, refreshData.expires / 2 * 1000);
-            
-            return true;
-        }
-
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('refreshToken');
-        
-        return false;
-    }
-    
-    return false;
-}
-
-let autoRefreshToken: NodeJS.Timeout;
-
-export async function postData(route: string, body: any): Promise<any> {
-    const response = await fetch(config.apiRoot + route, {
+    const response = await fetch(route, {
         body: JSON.stringify(body),
         method: "POST",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': await getAuthorization()
+            'Authorization': bearer
         },
     });
 
-    if (response.status === 401)
-    {
-        if (await performRefreshToken())
-        {
-            return postData(route, body);
-        }
-    }
-
-    if (response.status === 200)
-    {
+    if (response.status === 200) {
         return {
             status: response.status,
             data: await response.json()
@@ -109,6 +58,32 @@ export async function postData(route: string, body: any): Promise<any> {
     }
 }
 
+export async function queryItems<TResult>(instance: IPublicClientApplication, account: AccountInfo, query: string): Promise<TResult> {
+    const bearer = await getAuthorization(instance, account);
+
+    const body = {
+
+        query: query
+    };
+
+    const response = await fetch("/api/graphql", {
+        body: JSON.stringify(body),
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+    });
+
+    if (response.status === 200) {
+        return response.json();
+    }
+
+    throw response;
+}
+
+/*
 export async function postFile(route: string, file: File): Promise<any> {
     
     const data = new FormData();
@@ -155,7 +130,7 @@ export const getAuthorization = async (instance: IPublicClientApplication, accou
 
     try {
         const accessTokenResponse = await instance.acquireTokenSilent(accessTokenRequest);
-        
+
         if (accessTokenResponse?.accessToken) {
             accessToken = accessTokenResponse?.accessToken;
         }
