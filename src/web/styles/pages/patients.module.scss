@@ -11,7 +11,7 @@
 
 .searchPanel {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
   padding: 1rem;
 }
@@ -23,6 +23,11 @@
 
 .searchButton {
   text-align: right;
-  grid-column: 3 / auto;
+  grid-column: 4 / auto;
   grid-row: 2 / auto;
+}
+
+.searchResults
+{
+  
 }

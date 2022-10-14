@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using HotChocolate.AspNetCore.Authorization;
 using Prism.ProAssistant.Business.Models;
 
 namespace Prism.ProAssistant.Api.Graph.Patients;

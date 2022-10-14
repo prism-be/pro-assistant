@@ -22,23 +22,31 @@ const Patients: NextPage = () => {
     }
 
     return <ContentContainer>
-        <div className={styles.searchContainer}>
-            <h1 className={styles.searchTitle}>{t("title")}</h1>
-            <form className={styles.searchPanel} onSubmit={handleSubmit(onSubmit)}>
-                <div className={styles.searchField}>
-                    <InputText name="firstName" label={t("search.firstName")} type="text" required={false} register={register} error={errors.firstName}/>
-                </div>
-                <div className={styles.searchField}>
-                    <InputText name="lastName" label={t("search.lastName")} type="text" required={false} register={register} error={errors.lastName}/>
-                </div>
-                <div className={styles.searchField}>
-                    <InputText name="birthDate" label={t("search.birthDate")} type="text" required={false} register={register} error={errors.birthDate}/>
-                </div>
-                <div className={styles.searchButton}>
-                    <Button text={t("search.search")} onClick={handleSubmit(onSubmit)}/>
-                </div>
-            </form>
-        </div>
+        <>
+            <div className={styles.searchContainer}>
+                <h1 className={styles.searchTitle}>{t("title")}</h1>
+                <form className={styles.searchPanel} onSubmit={handleSubmit(onSubmit)}>
+                    <div className={styles.searchField}>
+                        <InputText name="lastName" label={t("search.lastName")} type="text" required={false} register={register} error={errors.lastName}/>
+                    </div>
+                    <div className={styles.searchField}>
+                        <InputText name="firstName" label={t("search.firstName")} type="text" required={false} register={register} error={errors.firstName}/>
+                    </div>
+                    <div className={styles.searchField}>
+                        <InputText name="phoneNumber" label={t("search.phoneNumber")} type="text" required={false} register={register} error={errors.phoneNumber}/>
+                    </div>
+                    <div className={styles.searchField}>
+                        <InputText name="birthDate" label={t("search.birthDate")} type="text" required={false} register={register} error={errors.birthDate}/>
+                    </div>
+                    <div className={styles.searchButton}>
+                        <Button text={t("search.search")} onClick={handleSubmit(onSubmit)}/>
+                    </div>
+                </form>
+            </div>
+            <div className={styles.searchResults}>
+
+            </div>
+        </>
     </ContentContainer>
 }
 

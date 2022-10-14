@@ -18,10 +18,10 @@ public class Patient
     public Guid Id { get; set; }
 
     [JsonPropertyName("mobileNumber")]
-    public string MobileNumber { get; set; }
+    public string? MobileNumber { get; set; }
 
     [JsonPropertyName("phoneNumber")]
-    public string PhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
 
     [JsonPropertyName("city")]
     public string? City { get; set; }

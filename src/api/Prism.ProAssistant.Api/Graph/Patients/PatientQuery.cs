@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using HotChocolate.AspNetCore.Authorization;
 using HotChocolate.Data;
 using MongoDB.Driver;
 using Prism.ProAssistant.Business.Models;
@@ -11,7 +12,8 @@ using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Api.Graph.Patients;
 
-[ExtendObjectType(Name = "Query")]
+[Authorize]
+[ExtendObjectType("Query")]
 public class PatientQuery
 {
     [UseFirstOrDefault]

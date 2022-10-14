@@ -4,6 +4,7 @@
     "firstName": "Prénom",
     "lastName": "Nom",
     "birthDate": "Date de naissance",
-    "search": "Rechercher"
+    "search": "Rechercher",
+    "phoneNumber": "N° Téléphone"
   }
 }

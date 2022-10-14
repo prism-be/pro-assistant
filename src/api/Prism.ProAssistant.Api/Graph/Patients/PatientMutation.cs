@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using HotChocolate.AspNetCore.Authorization;
 using MongoDB.Driver;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
@@ -11,7 +12,8 @@ using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Api.Graph.Patients;
 
-[ExtendObjectType(Name = "Mutation")]
+[Authorize]
+[ExtendObjectType("Mutation")]
 public class PatientMutation
 {
     public async Task<Patient> CreatePatientAsync(Patient patient, [Service] IOrganizationContext organizationContext)
