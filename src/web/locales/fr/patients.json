@@ -6,5 +6,10 @@
     "birthDate": "Date de naissance",
     "search": "Rechercher",
     "phoneNumber": "N° Téléphone"
+  },
+  "results": {
+    "doSearch": "Veuillez faire une recherche pour avoir des résultats",
+    "noResults": "Il n'y pas de résultats pour votre recherche",
+    "title": "Résultats de la recherche"
   }
 }

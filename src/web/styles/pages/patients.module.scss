@@ -1,11 +1,11 @@
 ﻿@import "../vars";
 
-.searchContainer{
+.searchContainer {
   border-bottom: 1px $grey solid;
   box-shadow: 0 0 7px 0 #00000021;
 }
 
-.searchTitle{
+.searchTitle {
   padding: 1rem 0 0 1rem;
 }
 
@@ -17,17 +17,45 @@
 }
 
 .searchField {
-  grid-column: auto / auto;
-  grid-row: 1 / auto;
+  grid-column: auto;
+  grid-row: 1;
 }
 
 .searchButton {
   text-align: right;
-  grid-column: 4 / auto;
-  grid-row: 2 / auto;
+  grid-column: 4;
+  grid-row: 2;
 }
 
-.searchResults
+.searchResults {
+ h2 {
+   padding-top: 1rem;
+ }
+}
+
+.searchResultsTable
 {
-  
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  padding-top: 1rem;
+}
+
+.searchResultsHeader {
+  grid-column: auto;
+  grid-row: 1;
+  font-weight: bold;
+  border-bottom: 1px $grey solid;
+}
+
+.searchResultsRow {
+  grid-column: auto;
+  grid-row: auto;
+}
+
+.helpText {
+  display: block;
+  text-align: center;
+  padding: 1rem;
+  font-style: italic;
 }

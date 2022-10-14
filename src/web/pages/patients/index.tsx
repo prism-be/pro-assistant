@@ -11,12 +11,13 @@ import Button from "../../components/forms/Button";
 import {PatientSummary, SearchParameter, searchPatients} from "../../lib/services/Patients";
 import {useState} from "react";
 import {useMsal} from "@azure/msal-react";
+import React from 'react';
 
 const Patients: NextPage = () => {
 
     const {t} = useTranslation('patients');
     const {instance, accounts} = useMsal();
-    
+
     const [patients, setPatients] = useState<PatientSummary[]>()
 
     const schema = yup.object({}).required();
@@ -51,10 +52,28 @@ const Patients: NextPage = () => {
                 </form>
             </div>
             <div className={styles.searchResults}>
-                { patients?.map(patient =>  <div key={patient.id}>
-                        {patient.firstName} {patient.lastName}
-                    </div>
-                )}
+                {patients && <>
+                    <h2>{t("results.title")}</h2>
+                    {patients.length !== 0 && <div className={styles.searchResultsTable}>
+                        <div className={styles.searchResultsHeader}>{t("search.lastName")}</div>
+                        <div className={styles.searchResultsHeader}>{t("search.firstName")}</div>
+                        <div className={styles.searchResultsHeader}>{t("search.phoneNumber")}</div>
+                        <div className={styles.searchResultsHeader}>{t("search.birthDate")}</div>
+                        {patients?.map(patient => <React.Fragment key={patient.id}>
+                                <div className={styles.searchResultsRow}>{patient.lastName}</div>
+                                <div className={styles.searchResultsRow}>{patient.firstName}</div>
+                                <div className={styles.searchResultsRow}>{patient.phoneNumber}</div>
+                                <div className={styles.searchResultsRow}>{patient.birthDate}</div>
+                            </React.Fragment>
+                        )}
+                    </div>}
+
+                    {patients.length === 0 && <div className={styles.helpText}>{t("results.noResults")}</div>}
+                </>}
+
+                {!patients && <>
+                    <div className={styles.helpText}>{t("results.doSearch")}</div>
+                </>}
             </div>
         </>
     </ContentContainer>
