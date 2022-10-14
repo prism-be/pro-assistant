@@ -1,4 +1,4 @@
-﻿import {postData, queryItems} from "../ajaxHelper";
+﻿import {queryItems} from "../ajaxHelper";
 import {AccountInfo, IPublicClientApplication} from "@azure/msal-browser";
 import {EnumType, jsonToGraphQLQuery} from "json-to-graphql-query";
 
