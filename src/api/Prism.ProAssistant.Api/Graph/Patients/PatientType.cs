@@ -4,14 +4,17 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using HotChocolate.AspNetCore.Authorization;
 using Prism.ProAssistant.Business.Models;
 
 namespace Prism.ProAssistant.Api.Graph.Patients;
 
 public class PatientType: ObjectType<Patient>
 {
-    protected override void Configure(IObjectTypeDescriptor<Patient> descriptor)
+    public PatientType() : base(ConfigurePatient)
+    {
+    }
+
+    internal static void ConfigurePatient(IObjectTypeDescriptor<Patient> descriptor)
     {
         descriptor.Field(_ => _.Id);
         descriptor.Field(_ => _.FirstName);
@@ -22,7 +25,5 @@ public class PatientType: ObjectType<Patient>
         descriptor.Field(_ => _.City);
         descriptor.Field(_ => _.Country);
         descriptor.Field(_ => _.BirthDate);
-        
-        base.Configure(descriptor);
     }
 }
