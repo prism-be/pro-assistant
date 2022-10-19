@@ -1,4 +1,4 @@
-﻿import {queryItems} from "../ajaxHelper";
+﻿import {buildWhere, queryItems} from "../ajaxHelper";
 import {AccountInfo, IPublicClientApplication} from "@azure/msal-browser";
 import {EnumType, jsonToGraphQLQuery} from "json-to-graphql-query";
 
@@ -17,29 +17,12 @@ export interface PatientSummary {
     birthDate: string;
 }
 
-const buildWhere= (query: any) => {
-    let where: any = {};
-    
-    Object.getOwnPropertyNames(query).forEach(p => {
-        if (query[p] && query[p] != "" && query[p] != 0)
-        {
-            where[p] = {
-                contains: query[p]
-            }
-        }
-    })
-    
-    return where;
-}
-
-
-
 export const searchPatients = async (search: SearchParameter, instance: IPublicClientApplication, account: AccountInfo): Promise<PatientSummary[]> => {
 
     const where = buildWhere(search);
 
     const query = {
-        query : {
+        query: {
             patients: {
                 __args: {
                     order: {
@@ -48,7 +31,7 @@ export const searchPatients = async (search: SearchParameter, instance: IPublicC
                     },
                     where
                 },
-                nodes : {
+                nodes: {
                     id: true,
                     firstName: true,
                     lastName: true,
@@ -59,7 +42,7 @@ export const searchPatients = async (search: SearchParameter, instance: IPublicC
         }
     }
 
-    const graph = jsonToGraphQLQuery(query, { pretty: true });
+    const graph = jsonToGraphQLQuery(query, {pretty: true});
 
     const result = await queryItems<any>(instance, account, graph);
 

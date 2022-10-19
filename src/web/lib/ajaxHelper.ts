@@ -156,3 +156,18 @@ export const getAuthorization = async (instance: IPublicClientApplication, accou
 
     return '';
 }
+
+export const buildWhere= (query: any) => {
+    let where: any = {};
+
+    Object.getOwnPropertyNames(query).forEach(p => {
+        if (query[p] && query[p] != "" && query[p] != 0)
+        {
+            where[p] = {
+                contains: query[p]
+            }
+        }
+    })
+
+    return where;
+}

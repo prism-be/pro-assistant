@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testExecutions version="1">
-  <file path="C:\dev\github\prism-be\pro-assistant\src\web\__tests__\api\records.test.ts">
-    <testCase name="/api/records should return a 200 if HTTP method is GET" duration="2"/>
-    <testCase name="/api/records should return a 405 if HTTP method is not GET" duration="1"/>
-  </file>
-</testExecutions>

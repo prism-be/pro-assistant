@@ -55,16 +55,18 @@ const Patients: NextPage = () => {
                 {patients && <>
                     <h2>{t("results.title")}</h2>
                     {patients.length !== 0 && <div className={styles.searchResultsTable}>
-                        <div className={styles.searchResultsHeader}>{t("search.lastName")}</div>
-                        <div className={styles.searchResultsHeader}>{t("search.firstName")}</div>
-                        <div className={styles.searchResultsHeader}>{t("search.phoneNumber")}</div>
-                        <div className={styles.searchResultsHeader}>{t("search.birthDate")}</div>
-                        {patients?.map(patient => <React.Fragment key={patient.id}>
-                                <div className={styles.searchResultsRow}>{patient.lastName}</div>
-                                <div className={styles.searchResultsRow}>{patient.firstName}</div>
-                                <div className={styles.searchResultsRow}>{patient.phoneNumber}</div>
-                                <div className={styles.searchResultsRow}>{patient.birthDate}</div>
-                            </React.Fragment>
+                        <div className={styles.searchResultsRow}>
+                            <div className={styles.searchResultsHeader}>{t("search.lastName")}</div>
+                            <div className={styles.searchResultsHeader}>{t("search.firstName")}</div>
+                            <div className={styles.searchResultsHeader}>{t("search.phoneNumber")}</div>
+                            <div className={styles.searchResultsHeader}>{t("search.birthDate")}</div>
+                        </div>
+                        {patients?.map(patient => <div className={styles.searchResultsRow + " " + styles.searchResultsRowPatient} key={patient.id}>
+                                <div className={styles.searchResultsCell}>{patient.lastName}</div>
+                                <div className={styles.searchResultsCell}>{patient.firstName}</div>
+                                <div className={styles.searchResultsCell}>{patient.phoneNumber}</div>
+                                <div className={styles.searchResultsCell}>{patient.birthDate}</div>
+                            </div>
                         )}
                     </div>}
 
