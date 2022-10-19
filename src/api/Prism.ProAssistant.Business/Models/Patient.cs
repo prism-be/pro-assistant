@@ -17,17 +17,14 @@ public class Patient
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
 
-    [JsonPropertyName("mobileNumber")]
-    public string? MobileNumber { get; set; }
-
-    [JsonPropertyName("phoneNumber")]
-    public string? PhoneNumber { get; set; }
-
     [JsonPropertyName("city")]
     public string? City { get; set; }
 
     [JsonPropertyName("country")]
     public string? Country { get; set; }
+
+    [JsonPropertyName("email")]
+    public string? Email { get; set; }
 
     [JsonPropertyName("firstName")]
     public string? FirstName { get; set; }
@@ -35,8 +32,14 @@ public class Patient
     [JsonPropertyName("lastName")]
     public string? LastName { get; set; }
 
+    [JsonPropertyName("mobileNumber")]
+    public string? MobileNumber { get; set; }
+
     [JsonPropertyName("number")]
     public string? Number { get; set; }
+
+    [JsonPropertyName("phoneNumber")]
+    public string? PhoneNumber { get; set; }
 
     [JsonPropertyName("street")]
     public string? Street { get; set; }

@@ -13,6 +13,9 @@
     ],
     "/patients": [
       "patients"
+    ],
+    "/patients/[pid]": [
+      "patients"
     ]
   }
 }
