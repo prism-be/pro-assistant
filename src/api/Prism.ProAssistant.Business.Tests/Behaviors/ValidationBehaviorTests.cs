@@ -22,7 +22,7 @@ public class ValidationBehaviorTests
 
         // Act and Assert
         var loginRequest = new DummyRequest(string.Empty, Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
-        var exception = await Assert.ThrowsAsync<InvalidModelException>(async () => await validationBehavior.Handle(loginRequest, default, Mock.Of<RequestHandlerDelegate<DummyResponse>>()));
+        var exception = await Assert.ThrowsAsync<InvalidModelException>(async () => await validationBehavior.Handle(loginRequest, Mock.Of<RequestHandlerDelegate<DummyResponse>>(), CancellationToken.None));
 
         // Assert
         Assert.NotNull(exception);
@@ -37,7 +37,7 @@ public class ValidationBehaviorTests
 
         // Act and Assert
         var loginRequest = new DummyRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
-        var result = await validationBehavior.Handle(loginRequest, default, Mock.Of<RequestHandlerDelegate<DummyResponse>>());
+        var result = await validationBehavior.Handle(loginRequest, Mock.Of<RequestHandlerDelegate<DummyResponse>>(), CancellationToken.None);
         Assert.Null(result);
     }
 
@@ -54,7 +54,7 @@ public class ValidationBehaviorTests
 
         // Act
         var loginRequest = new DummyRequest(Guid.NewGuid().ToString(), Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
-        var result = await validationBehavior.Handle(loginRequest, default, Mock.Of<RequestHandlerDelegate<DummyResponse>>());
+        var result = await validationBehavior.Handle(loginRequest, Mock.Of<RequestHandlerDelegate<DummyResponse>>(), CancellationToken.None);
         Assert.Null(result);
     }
 }
