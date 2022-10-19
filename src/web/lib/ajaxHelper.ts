@@ -1,5 +1,4 @@
 ﻿import {AccountInfo, InteractionRequiredAuthError, IPublicClientApplication} from "@azure/msal-browser";
-import {Exception} from "sass";
 
 interface ObjectResult<TData> {
     status: number;

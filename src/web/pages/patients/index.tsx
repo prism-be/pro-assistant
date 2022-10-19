@@ -8,10 +8,9 @@ import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import Button from "../../components/forms/Button";
-import {PatientSummary, SearchParameter, searchPatients} from "../../lib/services/Patients";
+import {PatientSummary, searchPatients} from "../../lib/services/Patients";
 import {useState} from "react";
 import {useMsal} from "@azure/msal-react";
-import React from 'react';
 
 const Patients: NextPage = () => {
 
