@@ -1,0 +1,73 @@
+﻿@import "../vars";
+
+.searchContainer {
+  border-bottom: 1px $grey solid;
+  box-shadow: 0 0 7px 0 #00000021;
+}
+
+.searchTitle {
+  padding: 1rem 0 0 1rem;
+}
+
+.searchPanel {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  padding: 1rem;
+}
+
+.searchField {
+  grid-column: auto;
+  grid-row: 1;
+}
+
+.searchButton {
+  text-align: right;
+  grid-column: 4;
+  grid-row: 2;
+}
+
+.searchResults {
+  h2 {
+    padding: 1rem 0 0 0.5rem;
+  }
+}
+
+.searchResultsTable {
+  display: grid;
+}
+
+.searchResultsRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 1rem;
+  padding: 0.5rem;
+}
+
+.searchResultsRowPatient {
+  border-radius: 0.25rem;
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $light;
+  }
+}
+
+.searchResultsHeader {
+  grid-column: auto;
+  grid-row: 1;
+  font-weight: bold;
+  border-bottom: 1px $grey solid;
+}
+
+.searchResultsCell {
+  grid-column: auto;
+  grid-row: auto;
+}
+
+.helpText {
+  display: block;
+  text-align: center;
+  padding: 1rem;
+  font-style: italic;
+}

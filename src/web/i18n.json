@@ -10,6 +10,9 @@
     ],
     "/login": [
       "login"
+    ],
+    "/patients": [
+      "patients"
     ]
   }
 }

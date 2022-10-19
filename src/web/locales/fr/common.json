@@ -1,3 +1,10 @@
 ﻿{
-  "title": "Bonjouuuuqsdqsduuuuuuuuuuuuuuuuuuur !"
+  "header": {
+    "hello": "Bonjour",
+    "logout": "Se déconnecter"
+  },
+  "menu" : {
+    "patients": "Fiches Patients",
+    "calendar": "Calendrier"
+  }
 }

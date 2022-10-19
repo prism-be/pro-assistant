@@ -32,6 +32,11 @@ public class UserContextAccessor : IUserContextAccessor
 
         _organisationId = new Lazy<Guid>(() =>
         {
+            if (!IsAuthenticated)
+            {
+                return Guid.Empty;
+            }
+            
             var result = mediator.Send(new GetUserInformation(UserId));
             result.Wait();
             return result.Result.Organizations.First().Id;

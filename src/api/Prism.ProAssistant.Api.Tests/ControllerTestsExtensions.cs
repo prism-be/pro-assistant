@@ -15,7 +15,7 @@ public static class ControllerTestsExtensions
     public static void Validate<T>(ActionResult<T>? result, Action<T> validate) where T : class
     {
         result.Should().NotBeNull();
-        var resultObject = result.Result as OkObjectResult;
+        var resultObject = result?.Result as OkObjectResult;
         resultObject.Should().NotBeNull();
         var objectValue = resultObject!.Value as T;
         objectValue.Should().NotBeNull();

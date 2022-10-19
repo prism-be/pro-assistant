@@ -1,12 +1,17 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "OrganizationDatabase.cs" company = "Prism">
+//  <copyright file = "MongoDbConfiguration.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
 namespace Prism.ProAssistant.Business.Storage;
 
-public class OrganizationDatabase
+public class MongoDbConfiguration
 {
-    
+    public MongoDbConfiguration(string connectionString)
+    {
+        ConnectionString = connectionString;
+    }
+
+    public string ConnectionString { get; set; }
 }

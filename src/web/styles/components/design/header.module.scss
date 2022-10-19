@@ -1,0 +1,55 @@
+﻿@import "../../vars";
+
+.bar {
+  height: 4rem;
+  display: flex;
+  border-bottom: 1px $grey solid;
+  box-shadow: 0 0 7px 0 #00000021;
+}
+
+.logo
+{
+  display: flex;
+
+  a {
+    margin: auto;
+    padding: 0 0.5rem;
+  }
+}
+
+.upload
+{
+  display: flex;
+  width:150px;
+
+  @media (min-width: $breakpointSM)
+  {
+    width:300px;
+  }
+
+  @media (min-width: $breakpointLG)
+  {
+    width:400px;
+  }
+
+  > div {
+    padding: 0 0.5rem;
+  }
+}
+
+.menu
+{
+  display: flex;
+  flex-grow: 1;
+}
+
+.hello
+{
+  display: flex;
+
+  > div {
+    font-size: 0.8rem;
+    margin: auto;
+    padding: 0 0.5rem;
+  }
+}

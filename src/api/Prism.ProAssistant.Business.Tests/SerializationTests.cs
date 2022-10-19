@@ -26,6 +26,27 @@ public class SerializationTests
         CheckSerialization(organization);
     }
 
+    [Fact]
+    public void Patient_Ok()
+    {
+        // Arrange
+        var organization = new Patient
+        {
+            Id = Identifier.Generate(),
+            BirthDate = DateTime.Now,
+            City = Identifier.GenerateString(),
+            Country = Identifier.GenerateString(),
+            Number = Identifier.GenerateString(),
+            Street = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            ZipCode = Identifier.GenerateString()
+        };
+
+        // Act and Assert
+        CheckSerialization(organization);
+    }
+
     private static void CheckSerialization<T>(T source)
     {
         // Act
