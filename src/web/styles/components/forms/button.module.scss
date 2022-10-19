@@ -16,3 +16,23 @@
     background-color: $primaryColorDark;
   }
 }
+
+.buttonSecondary
+{
+  display: block;
+  text-align: center;
+  border: 1px $light solid;
+  background-color: white;
+  width: 10rem;
+  color: $primaryColor;
+  padding: 0.5rem;
+  cursor: pointer;
+
+  transition: background-color 500ms;
+
+  &:hover
+  {
+    background-color: $light;
+    text-decoration: none;
+  }
+}

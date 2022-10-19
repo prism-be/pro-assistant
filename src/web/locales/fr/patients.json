@@ -1,11 +1,14 @@
 ﻿{
   "title": "Rechercher un patient",
-  "search": {
+  "fields": {
     "firstName": "Prénom",
     "lastName": "Nom",
-    "birthDate": "Date de naissance",
+    "phoneNumber": "N° Téléphone",
+    "birthDate": "Date de naissance"
+  },
+  "search": {
     "search": "Rechercher",
-    "phoneNumber": "N° Téléphone"
+    "reset": "Vider"
   },
   "results": {
     "doSearch": "Veuillez faire une recherche pour avoir des résultats",
