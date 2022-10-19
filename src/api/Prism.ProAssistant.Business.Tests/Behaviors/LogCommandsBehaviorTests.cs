@@ -11,7 +11,7 @@ using Moq;
 using Prism.Picshare.Tests;
 using Prism.ProAssistant.Business.Behaviors;
 
-namespace Prism.ProAssistant.Tests.Behaviors;
+namespace Prism.ProAssistant.Business.Tests.Behaviors;
 
 public class LogCommandsBehaviorTests
 {
@@ -25,7 +25,7 @@ public class LogCommandsBehaviorTests
 
         // Act and Assert
         var loginRequest = new DummyRequest(string.Empty, Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
-        await logCommandsBehavior.Handle(loginRequest, default, Mock.Of<RequestHandlerDelegate<DummyResponse>>());
+        await logCommandsBehavior.Handle(loginRequest, Mock.Of<RequestHandlerDelegate<DummyResponse>>(), CancellationToken.None);
 
         // Assert
         logger.Invocations.Should().NotBeEmpty();
