@@ -79,10 +79,16 @@ public class PatientMutationTests
     {
         // Arrange
         var patientId = Identifier.Generate();
-        var database = new Mock<IMongoDatabase>();
-        database.SetupCollection(new Patient
+        var replacePatient = new Patient
         {
-            Id = Identifier.Generate(),
+            Id = patientId,
+            LastName = "Simon"
+        };
+        
+        var database = new Mock<IMongoDatabase>();
+        database.SetupCollectionAndReplace(replacePatient, new Patient
+        {
+            Id = patientId,
             LastName = "Baudart"
         });
 
@@ -91,11 +97,7 @@ public class PatientMutationTests
 
         // Act
         var query = new PatientMutation();
-        var result = await query.UpdatePatientAsync(new Patient
-        {
-            Id = patientId,
-            LastName = "Simon"
-        }, organisationContext.Object);
+        var result = await query.UpdatePatientAsync(replacePatient, organisationContext.Object);
 
         // Assert
         result.Should().NotBeNull();
