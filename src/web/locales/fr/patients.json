@@ -14,7 +14,8 @@
   },
   "search": {
     "search": "Rechercher",
-    "reset": "Vider"
+    "reset": "Vider",
+    "new": "Nouveau"
   },
   "results": {
     "doSearch": "Veuillez faire une recherche pour avoir des résultats",

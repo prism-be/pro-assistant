@@ -13,6 +13,7 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {useEffect, useState} from "react";
 import {useMsal} from "@azure/msal-react";
 import {useRouter} from "next/router";
+import useKeyboardJs from "react-use/lib/useKeyboardJs";
 
 const Patients: NextPage = () => {
 
@@ -55,6 +56,15 @@ const Patients: NextPage = () => {
         setFocus('lastName');
     }
 
+    const [isNewPressed, isNewPressedEvent] = useKeyboardJs("alt + n")
+    useEffect(() => {
+        if (isNewPressed)
+        {
+            isNewPressedEvent?.preventDefault();
+            router.push("/patients/00000000-0000-0000-0000-000000000000");
+        }
+    }, [isNewPressed])
+
     return <ContentContainer>
         <>
             <div className={styles.searchContainer}>
@@ -74,6 +84,9 @@ const Patients: NextPage = () => {
                     </div>
                     <div className={styles.resetButton}>
                         <Button text={t("search.reset")} onClick={resetSearch} secondary={true}/>
+                    </div>
+                    <div className={styles.newButton}>
+                        <Button text={t("search.new")} onClick={() => router.push("/patients/00000000-0000-0000-0000-000000000000")} secondary={true}/>
                     </div>
                     <div className={styles.searchButton}>
                         <Button text={t("search.search")} onClick={handleSubmit(onSubmit)}/>
