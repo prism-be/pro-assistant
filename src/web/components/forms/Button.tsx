@@ -11,7 +11,7 @@ interface Props {
 const Button = ({text, onClick, secondary}: Props) => {
     return <>
         {secondary == true && <a className={styles.buttonSecondary} onClick={onClick}>{text}</a>}
-        {!secondary && <button className={styles.button}>{text}</button>}
+        {!secondary && <button className={styles.button} onClick={onClick}>{text}</button>}
     </>
 }
 

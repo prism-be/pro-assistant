@@ -6,12 +6,12 @@ import {useMsal} from "@azure/msal-react";
 import ContentContainer from "../../components/design/ContentContainer";
 import {useRouter} from "next/router";
 import useSWR from "swr";
-import {getPatient, savePatient, searchPatients} from "../../lib/services/Patients";
+import {getPatient, savePatient} from "../../lib/services/Patients";
 import InputText from "../../components/forms/InputText";
-import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {useEffect} from "react";
 import Button from "../../components/forms/Button";
+import {success} from "../../lib/events/alert";
 
 const Patient: NextPage = () => {
     const {t} = useTranslation('patients');
@@ -33,13 +33,12 @@ const Patient: NextPage = () => {
         }
     }, [patient])
 
-    const schema = yup.object({}).required();
-
-    const {register, handleSubmit, formState: {errors}, setValue, setFocus, reset} = useForm();
+    const {register, handleSubmit, formState: {errors}, setValue } = useForm();
 
     const onSubmit = async (data: any) => {
         await savePatient(data, instance, accounts[0]);
         await mutatePatient();
+        success(t("details.saveSuccess"), { autoClose: true });
     }
 
     return <ContentContainer>
@@ -79,7 +78,7 @@ const Patient: NextPage = () => {
                         <InputText name="country" label={t("fields.country")} type="text" required={false} register={register} error={errors.country}/>
                     </div>
                     <div className={styles.saveButton}>
-                        <Button text={t("details.save")} onClick={handleSubmit(onSubmit)}/>
+                        <Button text={t("details.save")} onClick={handleSubmit(onSubmit)} secondary={true}/>
                     </div>
                 </form>
             </div>

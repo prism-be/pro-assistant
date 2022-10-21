@@ -6,6 +6,7 @@ import Head from "next/head";
 import {getData} from "../lib/ajaxHelper";
 import {MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "../lib/msal";
+import {Alert} from "../components/Alert";
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
@@ -18,6 +19,7 @@ const MyApp = ({Component, pageProps}: AppProps) => {
 
             <SWRConfig value={{fetcher: getData}}>
                 <Component {...pageProps} />
+                <Alert />
             </SWRConfig>
 
         </MsalProvider>

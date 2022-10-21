@@ -24,6 +24,7 @@
   "details" : {
     "title": "Fiche patient : ",
     "contact": "Coordonnées",
-    "save": "Sauvegarder"
+    "save": "Sauvegarder",
+    "saveSuccess": "Les modifications sur la fiche ont été sauvegardées."
   }
 }
