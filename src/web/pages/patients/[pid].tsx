@@ -13,6 +13,7 @@ import {useEffect} from "react";
 import Button from "../../components/forms/Button";
 import {success} from "../../lib/events/alert";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
+import {Back} from "../../components/icons/Back";
 
 const Patient: NextPage = () => {
     const {t} = useTranslation('patients');
@@ -60,7 +61,12 @@ const Patient: NextPage = () => {
     return <ContentContainer>
         <>
             <div className={styles.card}>
-                <h1>{t("details.title")} {patient?.lastName} {patient?.firstName}</h1>
+                <div className={styles.cardTitle}>
+                    <a onClick={() => router.push("/patients")}>
+                        <Back />
+                    </a>
+                    <h1>{t("details.title")} {patient?.lastName} {patient?.firstName}</h1>
+                </div>
                 <h2>{t("details.contact")}</h2>
                 <form className={styles.contact} onSubmit={handleSubmit(onSavePatientSubmit)}>
                     <div className={styles.contactField}>
