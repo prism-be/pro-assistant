@@ -2,7 +2,7 @@
 
 import {FieldValues, UseFormRegister} from "react-hook-form";
 import {UseFormSetValue} from "react-hook-form/dist/types/form";
-import {format, parse} from "date-fns";
+import {add, format, parse} from "date-fns";
 
 interface Props {
     label: string;
@@ -35,7 +35,9 @@ const InputDate = ({label, name, type, required, register, error, setValue}: Pro
             return;
         }
 
-        const value = parse(data, "d/M/yy", new Date(2000,1,1));
+        const value = parse(data, "d/M/yy", add(new Date(), {
+            years: -50
+        }));
         if (value.toString() !== "Invalid Date") {
             setValue(name, format(value, "dd/MM/yyyy"));
         }
