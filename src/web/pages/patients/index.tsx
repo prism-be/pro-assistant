@@ -60,16 +60,16 @@ const Patients: NextPage = () => {
                 <h1 className={styles.searchTitle}>{t("title")}</h1>
                 <form className={styles.searchPanel} onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.searchField}>
-                        <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} error={errors.lastName}/>
+                        <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                     </div>
                     <div className={styles.searchField}>
-                        <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} error={errors.firstName}/>
+                        <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} setValue={setValue} error={errors.firstName} autoCapitalize={true}/>
                     </div>
                     <div className={styles.searchField}>
-                        <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} error={errors.phoneNumber}/>
+                        <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
                     </div>
                     <div className={styles.searchField}>
-                        <InputText name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} error={errors.birthDate}/>
+                        <InputText name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                     </div>
                     <div className={styles.resetButton}>
                         <Button text={t("search.reset")} onClick={resetSearch} secondary={true}/>

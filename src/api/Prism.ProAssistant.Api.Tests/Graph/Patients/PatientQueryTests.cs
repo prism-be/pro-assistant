@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -67,6 +66,66 @@ public class PatientQueryTests
         // Act
         var query = new PatientQuery();
         var result = query.GetPatients(organisationContext.Object);
+
+        // Assert
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void SearchPatients_EmptyFilters()
+    {
+        // Arrange
+        var database = new Mock<IMongoDatabase>();
+        database.SetupCollection(new Patient
+            {
+                Id = Identifier.Generate(),
+                LastName = "Baudart",
+                FirstName = "Simon",
+                BirthDate = "14/05",
+                PhoneNumber = "123456789"
+            },
+            new Patient
+            {
+                Id = Identifier.Generate(),
+                LastName = "Simon"
+            });
+
+        var organisationContext = new Mock<IOrganizationContext>();
+        organisationContext.Setup(x => x.Patients).Returns(database.Object.GetCollection<Patient>());
+
+        // Act
+        var query = new PatientQuery();
+        var result = query.SearchPatients(string.Empty, string.Empty, string.Empty, string.Empty, organisationContext.Object);
+
+        // Assert
+        result.Should().NotBeNull();
+    }
+
+    [Fact]
+    public void SearchPatients_Ok()
+    {
+        // Arrange
+        var database = new Mock<IMongoDatabase>();
+        database.SetupCollection(new Patient
+            {
+                Id = Identifier.Generate(),
+                LastName = "Baudart",
+                FirstName = "Simon",
+                BirthDate = "14/05",
+                PhoneNumber = "123456789"
+            },
+            new Patient
+            {
+                Id = Identifier.Generate(),
+                LastName = "Simon"
+            });
+
+        var organisationContext = new Mock<IOrganizationContext>();
+        organisationContext.Setup(x => x.Patients).Returns(database.Object.GetCollection<Patient>());
+
+        // Act
+        var query = new PatientQuery();
+        var result = query.SearchPatients("bau", "sim", "123", "14", organisationContext.Object);
 
         // Assert
         result.Should().NotBeNull();

@@ -1,6 +1,7 @@
 ﻿import styles from "../../styles/components/forms/input.text.module.scss"
 
 import {FieldValues, UseFormRegister} from "react-hook-form";
+import {UseFormSetValue} from "react-hook-form/dist/types/form";
 
 interface Props {
     label: string;
@@ -8,18 +9,27 @@ interface Props {
     type: string;
     required: boolean;
     register: UseFormRegister<FieldValues>;
+    setValue: UseFormSetValue<FieldValues>;
     error: any;
+    autoCapitalize?: boolean;
 }
 
 
-const InputText = ({label, name, type, required, register, error}: Props) => {
+const InputText = ({label, name, type, required, register, error, autoCapitalize, setValue}: Props) => {
 
+    const autoCapitalizeContent = (e: { target: { value: any; }; }) => {
+        if (autoCapitalize === true)
+        {
+            setValue(name, e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1));
+        }
+    }
+    
     return <div className={styles.container}>
         <label className={styles.label}>{label} {required && " *"} </label>
         <input
             className={error ? styles.errorInput : styles.input}
             type={type}
-            {...register(name, {required})}/>
+            {...register(name, {required, onChange: (e) => { autoCapitalizeContent(e) }})}/>
         {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
     </div>
 }

@@ -70,34 +70,34 @@ const Patient: NextPage = () => {
                 <h2>{t("details.contact")}</h2>
                 <form className={styles.contact} onSubmit={handleSubmit(onSavePatientSubmit)}>
                     <div className={styles.contactField}>
-                        <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} error={errors.lastName}/>
+                        <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                     </div>
                     <div className={styles.contactField}>
-                        <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} error={errors.firstName}/>
+                        <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} setValue={setValue} error={errors.firstName} autoCapitalize={true}/>
                     </div>
                     <div className={styles.contactField}>
-                        <InputText name="email" label={t("fields.email")} type="text" required={false} register={register} error={errors.email}/>
+                        <InputText name="email" label={t("fields.email")} type="text" required={false} register={register} setValue={setValue} error={errors.email}/>
                     </div>
                     <div className={styles.contactFieldSmall}>
-                        <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} error={errors.phoneNumber}/>
+                        <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
                     </div>
                     <div className={styles.contactFieldSmall}>
-                        <InputText name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} error={errors.birthDate}/>
+                        <InputText name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                     </div>
                     <div className={styles.contactFieldWide}>
-                        <InputText name="street" label={t("fields.street")} type="text" required={false} register={register} error={errors.street}/>
+                        <InputText name="street" label={t("fields.street")} type="text" required={false} register={register} setValue={setValue} error={errors.street} autoCapitalize={true}/>
                     </div>
                     <div className={styles.contactFieldSmall}>
-                        <InputText name="number" label={t("fields.number")} type="text" required={false} register={register} error={errors.number}/>
+                        <InputText name="number" label={t("fields.number")} type="text" required={false} register={register} setValue={setValue} error={errors.number}/>
                     </div>
                     <div className={styles.contactFieldSmall}>
-                        <InputText name="zipCode" label={t("fields.zipCode")} type="text" required={false} register={register} error={errors.zipCode}/>
+                        <InputText name="zipCode" label={t("fields.zipCode")} type="text" required={false} register={register} setValue={setValue} error={errors.zipCode}/>
                     </div>
                     <div className={styles.contactField}>
-                        <InputText name="city" label={t("fields.city")} type="text" required={false} register={register} error={errors.city}/>
+                        <InputText name="city" label={t("fields.city")} type="text" required={false} register={register} setValue={setValue} error={errors.city} autoCapitalize={true}/>
                     </div>
                     <div className={styles.contactFieldSmall}>
-                        <InputText name="country" label={t("fields.country")} type="text" required={false} register={register} error={errors.country}/>
+                        <InputText name="country" label={t("fields.country")} type="text" required={false} register={register} setValue={setValue} error={errors.country} autoCapitalize={true}/>
                     </div>
                     <div className={styles.saveButton}>
                         <Button text={t("details.save")} onClick={handleSubmit(onSavePatientSubmit)} secondary={true}/>

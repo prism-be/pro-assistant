@@ -1,6 +1,6 @@
-﻿import {buildWhere, queryItems} from "../ajaxHelper";
+﻿import {queryItems} from "../ajaxHelper";
 import {AccountInfo, IPublicClientApplication} from "@azure/msal-browser";
-import {EnumType, jsonToGraphQLQuery} from "json-to-graphql-query";
+import {jsonToGraphQLQuery} from "json-to-graphql-query";
 
 export interface SearchParameter {
     lastName: string;
@@ -85,25 +85,21 @@ export const getPatient = async (id: string, instance: IPublicClientApplication,
 
 export const searchPatients = async (search: SearchParameter, instance: IPublicClientApplication, account: AccountInfo): Promise<PatientSummary[]> => {
 
-    const where = buildWhere(search);
-
     const query = {
         query: {
-            patients: {
+            searchPatients: {
                 __args: {
-                    order: {
-                        lastName: new EnumType('ASC'),
-                        firstName: new EnumType('ASC')
-                    },
-                    where
+                    
+                    lastName: search.lastName,
+                    firstName: search.firstName,
+                    phoneNumber: search.phoneNumber,
+                    birthDate: search.birthDate,
                 },
-                nodes: {
-                    id: true,
-                    firstName: true,
-                    lastName: true,
-                    phoneNumber: true,
-                    birthDate: true
-                }
+                id: true,
+                firstName: true,
+                lastName: true,
+                phoneNumber: true,
+                birthDate: true
             }
         }
     }
@@ -113,7 +109,7 @@ export const searchPatients = async (search: SearchParameter, instance: IPublicC
     const result = await queryItems<any>(instance, account, graph);
 
     if (result.data) {
-        return result.data.patients.nodes;
+        return result.data.searchPatients;
     }
 
     return [];
