@@ -4,7 +4,7 @@
 {
   border: 1px $primaryColorDark solid;
   background-color: $primaryColor;
-  width: 10rem;
+  width: 100%;
   color: $light;
   padding: 0.5rem;
   cursor: pointer;
@@ -14,5 +14,25 @@
   &:hover
   {
     background-color: $primaryColorDark;
+  }
+}
+
+.buttonSecondary
+{
+  display: block;
+  text-align: center;
+  border: 1px $light solid;
+  background-color: white;
+  width: 100%;
+  color: $primaryColor;
+  padding: 0.5rem;
+  cursor: pointer;
+
+  transition: background-color 500ms;
+
+  &:hover
+  {
+    background-color: $light;
+    text-decoration: none;
   }
 }

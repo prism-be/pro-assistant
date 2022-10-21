@@ -25,5 +25,7 @@ public class PatientType: ObjectType<Patient>
         descriptor.Field(_ => _.City);
         descriptor.Field(_ => _.Country);
         descriptor.Field(_ => _.BirthDate);
+        descriptor.Field(_ => _.PhoneNumber);
+        descriptor.Field(_ => _.Email);
     }
 }

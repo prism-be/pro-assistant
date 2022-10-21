@@ -33,7 +33,7 @@ public class SerializationTests
         var organization = new Patient
         {
             Id = Identifier.Generate(),
-            BirthDate = DateTime.Now,
+            BirthDate = Identifier.GenerateString(),
             City = Identifier.GenerateString(),
             Country = Identifier.GenerateString(),
             Number = Identifier.GenerateString(),

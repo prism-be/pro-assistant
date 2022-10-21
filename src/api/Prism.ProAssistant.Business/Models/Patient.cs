@@ -10,18 +10,11 @@ namespace Prism.ProAssistant.Business.Models;
 
 public class Patient
 {
-
     [JsonPropertyName("birthDate")]
-    public DateTime? BirthDate { get; set; }
+    public string? BirthDate { get; set; }
 
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
-
-    [JsonPropertyName("mobileNumber")]
-    public string? MobileNumber { get; set; }
-
-    [JsonPropertyName("phoneNumber")]
-    public string? PhoneNumber { get; set; }
 
     [JsonPropertyName("city")]
     public string? City { get; set; }
@@ -29,14 +22,23 @@ public class Patient
     [JsonPropertyName("country")]
     public string? Country { get; set; }
 
+    [JsonPropertyName("email")]
+    public string? Email { get; set; }
+
     [JsonPropertyName("firstName")]
     public string? FirstName { get; set; }
 
     [JsonPropertyName("lastName")]
     public string? LastName { get; set; }
 
+    [JsonPropertyName("mobileNumber")]
+    public string? MobileNumber { get; set; }
+
     [JsonPropertyName("number")]
     public string? Number { get; set; }
+
+    [JsonPropertyName("phoneNumber")]
+    public string? PhoneNumber { get; set; }
 
     [JsonPropertyName("street")]
     public string? Street { get; set; }

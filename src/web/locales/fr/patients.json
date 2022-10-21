@@ -1,15 +1,30 @@
 ﻿{
   "title": "Rechercher un patient",
-  "search": {
+  "fields": {
     "firstName": "Prénom",
     "lastName": "Nom",
+    "phoneNumber": "N° Téléphone",
     "birthDate": "Date de naissance",
+    "email": "E-mail",
+    "street": "Rue",
+    "number": "N°",
+    "zipCode": "Code Postal",
+    "city": "Ville",
+    "country": "Pays"
+  },
+  "search": {
     "search": "Rechercher",
-    "phoneNumber": "N° Téléphone"
+    "reset": "Vider"
   },
   "results": {
     "doSearch": "Veuillez faire une recherche pour avoir des résultats",
     "noResults": "Il n'y pas de résultats pour votre recherche",
     "title": "Résultats de la recherche"
+  },
+  "details" : {
+    "title": "Fiche patient : ",
+    "contact": "Coordonnées",
+    "save": "Sauvegarder",
+    "saveSuccess": "Les modifications sur la fiche ont été sauvegardées."
   }
 }

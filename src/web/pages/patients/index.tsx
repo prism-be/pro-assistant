@@ -9,23 +9,49 @@ import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import Button from "../../components/forms/Button";
 import {PatientSummary, searchPatients} from "../../lib/services/Patients";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {useMsal} from "@azure/msal-react";
+import {useRouter} from "next/router";
 
 const Patients: NextPage = () => {
 
     const {t} = useTranslation('patients');
     const {instance, accounts} = useMsal();
+    const router = useRouter();
 
-    const [patients, setPatients] = useState<PatientSummary[]>()
+    const [patients, setPatients] = useState<PatientSummary[] | null>(null);
 
     const schema = yup.object({}).required();
 
-    const {register, handleSubmit, formState: {errors}} = useForm({resolver: yupResolver(schema)});
+    const {register, handleSubmit, formState: {errors}, setValue, setFocus, reset} = useForm({resolver: yupResolver(schema)});
+
+    useEffect(() => {
+        const sessionSearchPatients = sessionStorage.getItem('patients/search-patients');
+        if (sessionSearchPatients) {
+            const data = JSON.parse(sessionSearchPatients);
+            Object.getOwnPropertyNames(data).forEach(field => {
+                setValue(field, data[field]);
+            })
+            onSubmit(data);
+        }
+        setFocus('lastName');
+    }, [])
 
     const onSubmit = async (data: any) => {
+        sessionStorage.setItem('patients/search-patients', JSON.stringify(data));
         const result = await searchPatients(data, instance, accounts[0]);
         setPatients(result);
+    }
+
+    const navigate = async (id: string) => {
+        await router.push('/patients/' + id);
+    }
+
+    const resetSearch=()=> {
+        sessionStorage.removeItem('patients/search-patients');
+        reset();
+        setPatients(null);
+        setFocus('lastName');
     }
 
     return <ContentContainer>
@@ -34,16 +60,19 @@ const Patients: NextPage = () => {
                 <h1 className={styles.searchTitle}>{t("title")}</h1>
                 <form className={styles.searchPanel} onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.searchField}>
-                        <InputText name="lastName" label={t("search.lastName")} type="text" required={false} register={register} error={errors.lastName}/>
+                        <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} error={errors.lastName}/>
                     </div>
                     <div className={styles.searchField}>
-                        <InputText name="firstName" label={t("search.firstName")} type="text" required={false} register={register} error={errors.firstName}/>
+                        <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} error={errors.firstName}/>
                     </div>
                     <div className={styles.searchField}>
-                        <InputText name="phoneNumber" label={t("search.phoneNumber")} type="text" required={false} register={register} error={errors.phoneNumber}/>
+                        <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} error={errors.phoneNumber}/>
                     </div>
                     <div className={styles.searchField}>
-                        <InputText name="birthDate" label={t("search.birthDate")} type="text" required={false} register={register} error={errors.birthDate}/>
+                        <InputText name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} error={errors.birthDate}/>
+                    </div>
+                    <div className={styles.resetButton}>
+                        <Button text={t("search.reset")} onClick={resetSearch} secondary={true}/>
                     </div>
                     <div className={styles.searchButton}>
                         <Button text={t("search.search")} onClick={handleSubmit(onSubmit)}/>
@@ -55,12 +84,13 @@ const Patients: NextPage = () => {
                     <h2>{t("results.title")}</h2>
                     {patients.length !== 0 && <div className={styles.searchResultsTable}>
                         <div className={styles.searchResultsRow}>
-                            <div className={styles.searchResultsHeader}>{t("search.lastName")}</div>
-                            <div className={styles.searchResultsHeader}>{t("search.firstName")}</div>
-                            <div className={styles.searchResultsHeader}>{t("search.phoneNumber")}</div>
-                            <div className={styles.searchResultsHeader}>{t("search.birthDate")}</div>
+                            <div className={styles.searchResultsHeader}>{t("fields.lastName")}</div>
+                            <div className={styles.searchResultsHeader}>{t("fields.firstName")}</div>
+                            <div className={styles.searchResultsHeader}>{t("fields.phoneNumber")}</div>
+                            <div className={styles.searchResultsHeader}>{t("fields.birthDate")}</div>
                         </div>
-                        {patients?.map(patient => <div className={styles.searchResultsRow + " " + styles.searchResultsRowPatient} key={patient.id}>
+                        {patients?.map(patient =>
+                            <div className={styles.searchResultsRow + " " + styles.searchResultsRowPatient} key={patient.id} onClick={() => navigate(patient.id)}>
                                 <div className={styles.searchResultsCell}>{patient.lastName}</div>
                                 <div className={styles.searchResultsCell}>{patient.firstName}</div>
                                 <div className={styles.searchResultsCell}>{patient.phoneNumber}</div>
