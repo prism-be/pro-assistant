@@ -10,9 +10,8 @@ namespace Prism.ProAssistant.Business.Models;
 
 public class Patient
 {
-
     [JsonPropertyName("birthDate")]
-    public DateTime? BirthDate { get; set; }
+    public string? BirthDate { get; set; }
 
     [JsonPropertyName("id")]
     public Guid Id { get; set; }
