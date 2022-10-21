@@ -12,6 +12,7 @@ import {useForm} from "react-hook-form";
 import {useEffect} from "react";
 import Button from "../../components/forms/Button";
 import {success} from "../../lib/events/alert";
+import useKeyboardJs from "react-use/lib/useKeyboardJs";
 
 const Patient: NextPage = () => {
     const {t} = useTranslation('patients');
@@ -33,20 +34,35 @@ const Patient: NextPage = () => {
         }
     }, [patient])
 
-    const {register, handleSubmit, formState: {errors}, setValue } = useForm();
+    const {register, handleSubmit, formState: {errors}, setValue, getValues } = useForm();
 
-    const onSubmit = async (data: any) => {
+    const savePatientForm = async (data: any) => {
         await savePatient(data, instance, accounts[0]);
         await mutatePatient();
         success(t("details.saveSuccess"), { autoClose: true });
     }
+    
+    const onSavePatientSubmit = async (data: any) => {
+        await savePatientForm(data);
+    }
+    
+    const [isSavePressed, isSaveEvent] = useKeyboardJs("ctrl + s")
+    useEffect(() => {
+        if (isSavePressed)
+        {
+            isSaveEvent?.preventDefault();
+            const data = getValues();
+            savePatientForm(data);
+        }    
+    }, [isSavePressed])
+    
 
     return <ContentContainer>
         <>
             <div className={styles.card}>
                 <h1>{t("details.title")} {patient?.lastName} {patient?.firstName}</h1>
                 <h2>{t("details.contact")}</h2>
-                <form className={styles.contact} onSubmit={handleSubmit(onSubmit)}>
+                <form className={styles.contact} onSubmit={handleSubmit(onSavePatientSubmit)}>
                     <div className={styles.contactField}>
                         <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} error={errors.lastName}/>
                     </div>
@@ -78,7 +94,7 @@ const Patient: NextPage = () => {
                         <InputText name="country" label={t("fields.country")} type="text" required={false} register={register} error={errors.country}/>
                     </div>
                     <div className={styles.saveButton}>
-                        <Button text={t("details.save")} onClick={handleSubmit(onSubmit)} secondary={true}/>
+                        <Button text={t("details.save")} onClick={handleSubmit(onSavePatientSubmit)} secondary={true}/>
                     </div>
                 </form>
             </div>
