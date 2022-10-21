@@ -1,14 +1,15 @@
 ﻿import styles from '../../styles/pages/patients.module.scss';
 
-import {NextPage} from "next";
-import useTranslation from "next-translate/useTranslation";
+import {PatientSummary, searchPatients} from "../../lib/services/Patients";
 import ContentContainer from "../../components/design/ContentContainer";
 import InputText from "../../components/forms/InputText";
+import InputDate from "../../components/forms/InputDate";
+import Button from "../../components/forms/Button";
+import {NextPage} from "next";
+import useTranslation from "next-translate/useTranslation";
 import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
-import Button from "../../components/forms/Button";
-import {PatientSummary, searchPatients} from "../../lib/services/Patients";
 import {useEffect, useState} from "react";
 import {useMsal} from "@azure/msal-react";
 import {useRouter} from "next/router";
@@ -69,7 +70,7 @@ const Patients: NextPage = () => {
                         <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
                     </div>
                     <div className={styles.searchField}>
-                        <InputText name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
+                        <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                     </div>
                     <div className={styles.resetButton}>
                         <Button text={t("search.reset")} onClick={resetSearch} secondary={true}/>

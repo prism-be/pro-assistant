@@ -14,6 +14,7 @@ import Button from "../../components/forms/Button";
 import {success} from "../../lib/events/alert";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {Back} from "../../components/icons/Back";
+import InputDate from "../../components/forms/InputDate";
 
 const Patient: NextPage = () => {
     const {t} = useTranslation('patients');
@@ -82,7 +83,7 @@ const Patient: NextPage = () => {
                         <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
                     </div>
                     <div className={styles.contactFieldSmall}>
-                        <InputText name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
+                        <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                     </div>
                     <div className={styles.contactFieldWide}>
                         <InputText name="street" label={t("fields.street")} type="text" required={false} register={register} setValue={setValue} error={errors.street} autoCapitalize={true}/>
