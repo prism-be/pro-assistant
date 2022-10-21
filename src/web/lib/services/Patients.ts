@@ -1,6 +1,6 @@
 ﻿import {queryItems} from "../ajaxHelper";
 import {AccountInfo, IPublicClientApplication} from "@azure/msal-browser";
-import {jsonToGraphQLQuery} from "json-to-graphql-query";
+import {EnumType, jsonToGraphQLQuery} from "json-to-graphql-query";
 
 export interface SearchParameter {
     lastName: string;
@@ -29,6 +29,28 @@ export interface Patient {
     zipCode:string;
     city:string;
     country:string;
+}
+
+export const createPatient = async (patient: Patient, instance: IPublicClientApplication, account: AccountInfo): Promise<boolean> => {
+    
+    patient.id = "00000000-0000-0000-0000-000000000001";
+    
+    const query = {
+        mutation : {
+            createPatient: {
+                __args: {
+                    patient
+                },
+                id: true
+            }
+        }
+    }
+
+    const graph = jsonToGraphQLQuery(query);
+
+    const result = await queryItems<any>(instance, account, graph);
+
+    return result.data.createPatient.id;
 }
 
 export const savePatient = async (patient: Patient, instance: IPublicClientApplication, account: AccountInfo): Promise<boolean> => {
@@ -89,7 +111,10 @@ export const searchPatients = async (search: SearchParameter, instance: IPublicC
         query: {
             searchPatients: {
                 __args: {
-                    
+                    order: {
+                        lastName: new EnumType('ASC'),
+                        firstName: new EnumType('ASC')
+                    },
                     lastName: search.lastName,
                     firstName: search.firstName,
                     phoneNumber: search.phoneNumber,

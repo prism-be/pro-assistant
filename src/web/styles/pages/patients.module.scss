@@ -22,14 +22,17 @@
 }
 
 .searchButton {
-  text-align: right;
   grid-column: 4;
   grid-row: 2;
 }
 
 .resetButton {
-  text-align: left;
   grid-column: 1;
+  grid-row: 2;
+}
+
+.newButton {
+  grid-column: 3;
   grid-row: 2;
 }
 
