@@ -13,11 +13,11 @@ namespace Prism.ProAssistant.Business.Storage;
 public interface IOrganizationContext
 {
     IMongoCollection<Patient> Patients { get; }
+    IMongoCollection<Tarif> Tarifs { get; }
 }
 
 public class OrganizationContext : IOrganizationContext
 {
-    private const string PatientsCollectionName = "patients";
 
     private static readonly Collation CaseInsensitiveCollation = new("fr", strength: CollationStrength.Primary);
 
@@ -31,21 +31,30 @@ public class OrganizationContext : IOrganizationContext
             Initialize(database);
         }
 
-        Patients = database.GetCollection<Patient>(PatientsCollectionName);
+        Patients = database.GetCollection<Patient>(CollectionNames.Patients);
+        Tarifs = database.GetCollection<Tarif>(CollectionNames.Tarifs);
     }
+
+    public IMongoCollection<Tarif> Tarifs { get; }
 
     public IMongoCollection<Patient> Patients { get; }
 
     private void Initialize(IMongoDatabase database)
     {
-        database.CreateCollection(PatientsCollectionName, new CreateCollectionOptions
+        database.CreateCollection(CollectionNames.Patients, new CreateCollectionOptions
         {
             Collation = CaseInsensitiveCollation
         });
 
         var firstNameIndexModel = new CreateIndexModel<Patient>(Builders<Patient>.IndexKeys.Ascending(x => x.FirstName));
-        database.GetCollection<Patient>(PatientsCollectionName).Indexes.CreateOne(firstNameIndexModel);
+        database.GetCollection<Patient>(CollectionNames.Patients).Indexes.CreateOne(firstNameIndexModel);
         var lastNameIndexModel = new CreateIndexModel<Patient>(Builders<Patient>.IndexKeys.Ascending(x => x.LastName));
-        database.GetCollection<Patient>(PatientsCollectionName).Indexes.CreateOne(lastNameIndexModel);
+        database.GetCollection<Patient>(CollectionNames.Patients).Indexes.CreateOne(lastNameIndexModel);
+    }
+
+    private static class CollectionNames
+    {
+        public const string Patients = "patients";
+        public const string Tarifs = "tarifs";
     }
 }
