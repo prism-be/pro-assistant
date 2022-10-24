@@ -13,7 +13,7 @@ namespace Prism.ProAssistant.Business.Storage;
 public interface IOrganizationContext
 {
     IMongoCollection<Patient> Patients { get; }
-    IMongoCollection<Tarif> Tarifs { get; }
+    IMongoCollection<Tariff> Tariffs { get; }
 }
 
 public class OrganizationContext : IOrganizationContext
@@ -32,10 +32,10 @@ public class OrganizationContext : IOrganizationContext
         }
 
         Patients = database.GetCollection<Patient>(CollectionNames.Patients);
-        Tarifs = database.GetCollection<Tarif>(CollectionNames.Tarifs);
+        Tariffs = database.GetCollection<Tariff>(CollectionNames.Tarifs);
     }
 
-    public IMongoCollection<Tarif> Tarifs { get; }
+    public IMongoCollection<Tariff> Tariffs { get; }
 
     public IMongoCollection<Patient> Patients { get; }
 

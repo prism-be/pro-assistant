@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 
 namespace Prism.ProAssistant.Business.Models;
 
-public class Tarif
+public class Tariff
 {
     [JsonPropertyName("id")]
     public Guid Id { get; set; }

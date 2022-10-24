@@ -8,23 +8,23 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MongoDB.Driver;
 using Moq;
-using Prism.ProAssistant.Api.Graph.Tarifs;
+using Prism.ProAssistant.Api.Graph.Tariffs;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 using Xunit;
 
-namespace Prism.ProAssistant.Api.Tests.Graph.Tarifs;
+namespace Prism.ProAssistant.Api.Tests.Graph.Tariffs;
 
-public class TarifMutationTests
+public class TariffMutationTests
 {
     [Fact]
-    public async Task CreateTarifAsync_Ok()
+    public async Task CreateTariffsync_Ok()
     {
         // Arrange
         var tarifId = Identifier.Generate();
         var database = new Mock<IMongoDatabase>();
-        database.SetupCollection(new Tarif
+        database.SetupCollection(new Tariff
         {
             Id = Identifier.Generate(),
             Name = Identifier.GenerateString(),
@@ -32,11 +32,11 @@ public class TarifMutationTests
         });
 
         var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Tarifs).Returns(database.Object.GetCollection<Tarif>());
+        organisationContext.Setup(x => x.Tariffs).Returns(database.Object.GetCollection<Tariff>());
 
         // Act
-        var query = new TarifMutation();
-        var result = await query.CreateTarifAsync(new Tarif
+        var query = new TariffMutation();
+        var result = await query.CreateTariffAsync(new Tariff
         {
             Id = tarifId,
             Name = Identifier.GenerateString(),
@@ -49,18 +49,18 @@ public class TarifMutationTests
     }
 
     [Fact]
-    public async Task RemoveTarifAsync_Ok()
+    public async Task RemoveTariffsync_Ok()
     {
         // Arrange
         var patientId = Identifier.Generate();
         var database = new Mock<IMongoDatabase>();
-        database.SetupCollection(new Tarif
+        database.SetupCollection(new Tariff
             {
                 Id = Identifier.Generate(),
                 Name = Identifier.GenerateString(),
                 Price = 42
             },
-            new Tarif
+            new Tariff
             {
                 Id = patientId,
                 Name = Identifier.GenerateString(),
@@ -68,22 +68,22 @@ public class TarifMutationTests
             });
 
         var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Tarifs).Returns(database.Object.GetCollection<Tarif>());
+        organisationContext.Setup(x => x.Tariffs).Returns(database.Object.GetCollection<Tariff>());
 
         // Act
-        var query = new TarifMutation();
-        var result = await query.RemoveTarifAsync(patientId, organisationContext.Object);
+        var query = new TariffMutation();
+        var result = await query.RemoveTariffAsync(patientId, organisationContext.Object);
 
         // Assert
         result.Should().BeTrue();
     }
 
     [Fact]
-    public async Task UpdateTarifAsync_Ok()
+    public async Task UpdateTariffsync_Ok()
     {
         // Arrange
         var patientId = Identifier.Generate();
-        var replaceTarif = new Tarif
+        var replaceTarif = new Tariff
         {
             Id = patientId,
             Name = Identifier.GenerateString(),
@@ -91,7 +91,7 @@ public class TarifMutationTests
         };
 
         var database = new Mock<IMongoDatabase>();
-        database.SetupCollectionAndReplace(replaceTarif, new Tarif
+        database.SetupCollectionAndReplace(replaceTarif, new Tariff
         {
             Id = patientId,
             Name = Identifier.GenerateString(),
@@ -99,11 +99,11 @@ public class TarifMutationTests
         });
 
         var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Tarifs).Returns(database.Object.GetCollection<Tarif>());
+        organisationContext.Setup(x => x.Tariffs).Returns(database.Object.GetCollection<Tariff>());
 
         // Act
-        var query = new TarifMutation();
-        var result = await query.UpdateTarifAsync(replaceTarif, organisationContext.Object);
+        var query = new TariffMutation();
+        var result = await query.UpdateTariffAsync(replaceTarif, organisationContext.Object);
 
         // Assert
         result.Should().NotBeNull();

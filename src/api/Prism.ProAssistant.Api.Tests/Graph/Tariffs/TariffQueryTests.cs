@@ -9,23 +9,23 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using MongoDB.Driver;
 using Moq;
-using Prism.ProAssistant.Api.Graph.Tarifs;
+using Prism.ProAssistant.Api.Graph.Tariffs;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 using Xunit;
 
-namespace Prism.ProAssistant.Api.Tests.Graph.Tarifs;
+namespace Prism.ProAssistant.Api.Tests.Graph.Tariffs;
 
-public class TarifQueryTests
+public class TariffQueryTests
 {
     [Fact]
-    public async Task GetTarifById_Ok()
+    public async Task GetTariffById_Ok()
     {
         // Arrange
         var tarifId = Identifier.Generate();
         var database = new Mock<IMongoDatabase>();
-        database.SetupCollection(new Tarif
+        database.SetupCollection(new Tariff
         {
             Id = tarifId,
             Name = Identifier.GenerateString(),
@@ -33,12 +33,12 @@ public class TarifQueryTests
         });
 
         var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Tarifs).Returns(database.Object.GetCollection<Tarif>());
+        organisationContext.Setup(x => x.Tariffs).Returns(database.Object.GetCollection<Tariff>());
 
         // Act
-        var query = new TarifQuery();
-        var result = query.GetTarifById(tarifId, organisationContext.Object);
-        var patient = await result.SingleOrDefaultAsync(CancellationToken.None) as Tarif;
+        var query = new TariffQuery();
+        var result = query.GetTariffById(tarifId, organisationContext.Object);
+        var patient = await result.SingleOrDefaultAsync(CancellationToken.None) as Tariff;
 
         // Assert
         patient.Should().NotBeNull();
@@ -46,17 +46,17 @@ public class TarifQueryTests
     }
 
     [Fact]
-    public void GetTarifs_Ok()
+    public void GetTariffs_Ok()
     {
         // Arrange
         var database = new Mock<IMongoDatabase>();
-        database.SetupCollection(new Tarif
+        database.SetupCollection(new Tariff
             {
                 Id = Identifier.Generate(),
                 Name = Identifier.GenerateString(),
                 Price = 42
             },
-            new Tarif
+            new Tariff
             {
                 Id = Identifier.Generate(),
                 Name = Identifier.GenerateString(),
@@ -64,11 +64,11 @@ public class TarifQueryTests
             });
 
         var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Tarifs).Returns(database.Object.GetCollection<Tarif>());
+        organisationContext.Setup(x => x.Tariffs).Returns(database.Object.GetCollection<Tariff>());
 
         // Act
-        var query = new TarifQuery();
-        var result = query.GetTarifs(organisationContext.Object);
+        var query = new TariffQuery();
+        var result = query.GetTariffs(organisationContext.Object);
 
         // Assert
         result.Should().NotBeNull();

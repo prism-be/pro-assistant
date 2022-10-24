@@ -10,24 +10,22 @@ using MongoDB.Driver;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Storage;
 
-namespace Prism.ProAssistant.Api.Graph.Tarifs;
+namespace Prism.ProAssistant.Api.Graph.Tariffs;
 
 [Authorize]
 [ExtendObjectType("Query")]
-public class TarifQuery
+public class TariffQuery
 {
     [UseFirstOrDefault]
-    public IExecutable<Tarif> GetTarifById(Guid id, [Service] IOrganizationContext organizationContext)
+    public IExecutable<Tariff> GetTariffById(Guid id, [Service] IOrganizationContext organizationContext)
     {
-        return organizationContext.Tarifs.Find(x => x.Id == id).AsExecutable();
+        return organizationContext.Tariffs.Find(x => x.Id == id).AsExecutable();
     }
 
-    [UsePaging]
-    [UseProjection]
     [UseSorting]
     [UseFiltering]
-    public IExecutable<Tarif> GetTarifs([Service] IOrganizationContext organizationContext)
+    public IExecutable<Tariff> GetTariffs([Service] IOrganizationContext organizationContext)
     {
-        return organizationContext.Tarifs.AsExecutable();
+        return organizationContext.Tariffs.AsExecutable();
     }
 }

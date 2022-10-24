@@ -53,7 +53,7 @@ public class SerializationTests
     public void Tarif_Ok()
     {
         // Arrange
-        var organization = new Tarif
+        var organization = new Tariff
         {
             Id = Identifier.Generate(),
             Name = Identifier.GenerateString(),

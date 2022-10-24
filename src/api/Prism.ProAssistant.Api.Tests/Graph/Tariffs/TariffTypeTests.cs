@@ -7,22 +7,22 @@
 using FluentAssertions;
 using HotChocolate.Types;
 using Moq;
-using Prism.ProAssistant.Api.Graph.Tarifs;
+using Prism.ProAssistant.Api.Graph.Tariffs;
 using Prism.ProAssistant.Business.Models;
 using Xunit;
 
-namespace Prism.ProAssistant.Api.Tests.Graph.Tarifs;
+namespace Prism.ProAssistant.Api.Tests.Graph.Tariffs;
 
-public class TarifTypeTests
+public class TariffTypeTests
 {
     [Fact]
     public void Configure_Ok()
     {
         // Arrange
-        var descriptor = new Mock<IObjectTypeDescriptor<Tarif>>();
+        var descriptor = new Mock<IObjectTypeDescriptor<Tariff>>();
 
         // Act
-        TarifType.ConfigureTarif(descriptor.Object);
+        TariffType.ConfigureTariff(descriptor.Object);
 
         // Assert
         descriptor.Invocations.Count.Should().Be(3);

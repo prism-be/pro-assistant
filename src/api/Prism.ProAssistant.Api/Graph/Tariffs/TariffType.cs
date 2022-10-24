@@ -6,15 +6,15 @@
 
 using Prism.ProAssistant.Business.Models;
 
-namespace Prism.ProAssistant.Api.Graph.Tarifs;
+namespace Prism.ProAssistant.Api.Graph.Tariffs;
 
-public class TarifType : ObjectType<Tarif>
+public class TariffType : ObjectType<Tariff>
 {
-    public TarifType() : base(ConfigureTarif)
+    public TariffType() : base(ConfigureTariff)
     {
     }
 
-    internal static void ConfigureTarif(IObjectTypeDescriptor<Tarif> descriptor)
+    internal static void ConfigureTariff(IObjectTypeDescriptor<Tariff> descriptor)
     {
         descriptor.Field(_ => _.Id);
         descriptor.Field(_ => _.Name);
