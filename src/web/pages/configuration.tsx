@@ -4,9 +4,9 @@ import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import {useMsal} from "@azure/msal-react";
-import {getTariffs, Tariff, upsertTariff} from "../lib/services/tariffs";
+import {getTariffs, upsertTariff} from "../lib/services/tariffs";
 import useSWR from "swr";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import InputText from "../components/forms/InputText";
 import {useForm} from "react-hook-form";
 import Button from "../components/forms/Button";
@@ -18,7 +18,7 @@ import {alertSuccess} from "../lib/events/alert";
 const Tariffs = () => {
     const {instance, accounts} = useMsal();
     const {t} = useTranslation("configuration");
-    const {register, handleSubmit, formState: {errors}, setValue, getValues} = useForm();
+    const {register, handleSubmit, formState: {errors}, setValue} = useForm();
     const [editing, setEditing] = useState<boolean>(false);
     
     useKeyPressEvent('Escape', () => {
