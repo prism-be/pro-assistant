@@ -6,6 +6,7 @@
 
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Graph.Tariffs;
@@ -42,7 +43,7 @@ public class TariffMutationTests
 
         // Act
         var query = new TariffMutation();
-        var result = await query.RemoveTariffAsync(patientId, organisationContext.Object);
+        var result = await query.RemoveTariffAsync(patientId, organisationContext.Object, Mock.Of<ILogger<TariffMutation>>());
 
         // Assert
         result.Should().BeTrue();
@@ -73,7 +74,7 @@ public class TariffMutationTests
 
         // Act
         var query = new TariffMutation();
-        var result = await query.UpsertTariffAsync(replaceTarif, organisationContext.Object);
+        var result = await query.UpsertTariffAsync(replaceTarif, organisationContext.Object, Mock.Of<ILogger<TariffMutation>>());
 
         // Assert
         result.Should().NotBeNull();

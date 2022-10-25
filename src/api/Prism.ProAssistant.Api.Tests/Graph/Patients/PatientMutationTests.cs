@@ -6,6 +6,7 @@
 
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Graph.Patients;
@@ -39,39 +40,11 @@ public class PatientMutationTests
         {
             Id = patientId,
             LastName = "Simon"
-        }, organisationContext.Object);
+        }, organisationContext.Object, Mock.Of<ILogger<PatientMutation>>());
 
         // Assert
         result.Should().NotBeNull();
         result.Id.Should().NotBe(patientId);
-    }
-
-    [Fact]
-    public async Task RemovePatientAsync_Ok()
-    {
-        // Arrange
-        var patientId = Identifier.Generate();
-        var database = new Mock<IMongoDatabase>();
-        database.SetupCollection(new Patient
-            {
-                Id = Identifier.Generate(),
-                LastName = "Baudart"
-            },
-            new Patient
-            {
-                Id = patientId,
-                LastName = "Simon"
-            });
-
-        var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Patients).Returns(database.Object.GetCollection<Patient>());
-
-        // Act
-        var query = new PatientMutation();
-        var result = await query.RemovePatientAsync(patientId, organisationContext.Object);
-
-        // Assert
-        result.Should().BeTrue();
     }
 
     [Fact]
@@ -97,7 +70,7 @@ public class PatientMutationTests
 
         // Act
         var query = new PatientMutation();
-        var result = await query.UpdatePatientAsync(replacePatient, organisationContext.Object);
+        var result = await query.UpdatePatientAsync(replacePatient, organisationContext.Object, Mock.Of<ILogger<PatientMutation>>());
 
         // Assert
         result.Should().NotBeNull();

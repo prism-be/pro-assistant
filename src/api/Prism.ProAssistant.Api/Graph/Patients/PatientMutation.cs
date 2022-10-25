@@ -16,23 +16,20 @@ namespace Prism.ProAssistant.Api.Graph.Patients;
 [ExtendObjectType("Mutation")]
 public class PatientMutation
 {
-    public async Task<Patient> CreatePatientAsync(Patient patient, [Service] IOrganizationContext organizationContext)
+    public async Task<Patient> CreatePatientAsync(Patient patient, [Service] IOrganizationContext organizationContext, [Service] ILogger<PatientMutation> logger)
     {
         patient.Id = Identifier.Generate();
+        
+        logger.LogInformation("Creating an new patient {patientId}", patient.Id);
+        
         await organizationContext.Patients.InsertOneAsync(patient);
 
         return patient;
     }
     
-    public async Task<Patient> UpdatePatientAsync(Patient patient, [Service] IOrganizationContext organizationContext)
+    public async Task<Patient> UpdatePatientAsync(Patient patient, [Service] IOrganizationContext organizationContext, [Service] ILogger<PatientMutation> logger)
     {
+        logger.LogInformation("Updating an existing patient {patientId}", patient.Id);
         return await organizationContext.Patients.FindOneAndReplaceAsync(Builders<Patient>.Filter.Eq("Id", patient.Id), patient);
-    }
-
-    public async Task<bool> RemovePatientAsync(Guid id, [Service] IOrganizationContext organizationContext)
-    {
-        var result = await organizationContext.Patients.DeleteOneAsync(Builders<Patient>.Filter.Eq("Id", id));
-
-        return result.IsAcknowledged;
     }
 }
