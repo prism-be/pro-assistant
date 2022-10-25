@@ -10,6 +10,7 @@ using HotChocolate.Data;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Prism.ProAssistant.Business.Models;
+using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Api.Graph.Patients;
@@ -19,14 +20,34 @@ namespace Prism.ProAssistant.Api.Graph.Patients;
 public class PatientQuery
 {
     [UseFirstOrDefault]
-    public IExecutable<Patient> GetPatientById(Guid id, [Service] IOrganizationContext organizationContext)
+    public IExecutable<Patient> GetPatientById(Guid id, [Service] IOrganizationContext organizationContext, [Service] ILogger<PatientQuery> logger,
+        [Service] IUserContextAccessor userContextAccessor)
     {
+        logger.LogInformation("GDRP : {userId} is accessing patient data {patientId}", userContextAccessor.UserId, id);
         return organizationContext.Patients.Find(x => x.Id == id).AsExecutable();
     }
 
+    [UsePaging]
+    [UseProjection]
     [UseSorting]
-    public IExecutable<Patient> SearchPatients(string lastName, string firstName, string phoneNumber, string birthDate, [Service] IOrganizationContext organizationContext)
+    [UseFiltering]
+    public IExecutable<Patient> GetPatients([Service] IOrganizationContext organizationContext, [Service] ILogger<PatientQuery> logger, [Service] IUserContextAccessor userContextAccessor)
     {
+        logger.LogInformation("GDRP : {userId} is searching patients and read summary", userContextAccessor.UserId);
+        return organizationContext.Patients.AsExecutable();
+    }
+
+    [UseSorting]
+    public IExecutable<Patient> SearchPatients(string lastName, string firstName, string phoneNumber, string birthDate, [Service] IOrganizationContext organizationContext,
+        [Service] ILogger<PatientQuery> logger, [Service] IUserContextAccessor userContextAccessor)
+    {
+        logger.LogInformation("GDRP : {userId} is searching patients (query : {lastName}, {firstName}, {phoneNumber}, {birthDate}) and read summary",
+            userContextAccessor.UserId,
+            lastName,
+            firstName,
+            phoneNumber,
+            birthDate);
+
         var filters = new List<FilterDefinition<Patient>>();
 
         if (!string.IsNullOrWhiteSpace(lastName))
@@ -56,14 +77,5 @@ public class PatientQuery
         return organizationContext.Patients
             .Find(filter)
             .AsExecutable();
-    }
-
-    [UsePaging]
-    [UseProjection]
-    [UseSorting]
-    [UseFiltering]
-    public IExecutable<Patient> GetPatients([Service] IOrganizationContext organizationContext)
-    {
-        return organizationContext.Patients.AsExecutable();
     }
 }
