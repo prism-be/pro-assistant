@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Graph.Tariffs;
+using Prism.ProAssistant.Api.Tests.Fakes;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
@@ -23,11 +24,11 @@ public class TariffMutationTests
     public async Task RemoveTariffsync_Ok()
     {
         // Arrange
-        var patientId = Identifier.Generate();
+        var patientId = Identifier.GenerateString();
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Tariff
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 Name = Identifier.GenerateString(),
                 Price = 42
             },
@@ -53,31 +54,20 @@ public class TariffMutationTests
     public async Task UpsertTariffsync_Ok()
     {
         // Arrange
-        var patientId = Identifier.Generate();
         var replaceTarif = new Tariff
         {
-            Id = patientId,
             Name = Identifier.GenerateString(),
             Price = 42
         };
 
-        var database = new Mock<IMongoDatabase>();
-        database.SetupCollectionAndReplace(replaceTarif, new Tariff
-        {
-            Id = patientId,
-            Name = Identifier.GenerateString(),
-            Price = 42
-        });
-
-        var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Tariffs).Returns(database.Object.GetCollection<Tariff>());
+        var organisationContext = new OrganizationContextFake();
 
         // Act
         var query = new TariffMutation();
-        var result = await query.UpsertTariffAsync(replaceTarif, organisationContext.Object, Mock.Of<ILogger<TariffMutation>>());
+        var result = await query.UpsertTariffAsync(replaceTarif, organisationContext, Mock.Of<ILogger<TariffMutation>>(), Mock.Of<IUserContextAccessor>());
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(patientId);
+        result.Id.Should().NotBeEmpty();
     }
 }

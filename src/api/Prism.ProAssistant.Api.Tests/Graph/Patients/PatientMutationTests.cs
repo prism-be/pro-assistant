@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Graph.Patients;
+using Prism.ProAssistant.Api.Tests.Fakes;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
@@ -23,24 +24,16 @@ public class PatientMutationTests
     public async Task CreatePatientAsync_Ok()
     {
         // Arrange
-        var patientId = Identifier.Generate();
-        var database = new Mock<IMongoDatabase>();
-        database.SetupCollection(new Patient
-        {
-            Id = Identifier.Generate(),
-            LastName = "Baudart"
-        });
+        var patientId = Identifier.GenerateString();
 
-        var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Patients).Returns(database.Object.GetCollection<Patient>());
+        var organisationContext = new OrganizationContextFake();
 
         // Act
         var query = new PatientMutation();
         var result = await query.CreatePatientAsync(new Patient
         {
-            Id = patientId,
             LastName = "Simon"
-        }, organisationContext.Object, Mock.Of<ILogger<PatientMutation>>());
+        }, organisationContext, Mock.Of<ILogger<PatientMutation>>(), Mock.Of<IUserContextAccessor>());
 
         // Assert
         result.Should().NotBeNull();
@@ -51,26 +44,21 @@ public class PatientMutationTests
     public async Task UpdatePatientAsync_Ok()
     {
         // Arrange
-        var patientId = Identifier.Generate();
+        var patientId = Identifier.GenerateString();
         var replacePatient = new Patient
         {
             Id = patientId,
             LastName = "Simon"
         };
-        
-        var database = new Mock<IMongoDatabase>();
-        database.SetupCollectionAndReplace(replacePatient, new Patient
-        {
-            Id = patientId,
-            LastName = "Baudart"
-        });
 
-        var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Patients).Returns(database.Object.GetCollection<Patient>());
+        var organisationContext = new OrganizationContextFake
+        {
+            PatientsReplace = replacePatient
+        };
 
         // Act
         var query = new PatientMutation();
-        var result = await query.UpdatePatientAsync(replacePatient, organisationContext.Object, Mock.Of<ILogger<PatientMutation>>());
+        var result = await query.UpdatePatientAsync(replacePatient, organisationContext, Mock.Of<ILogger<PatientMutation>>(), Mock.Of<IUserContextAccessor>());
 
         // Assert
         result.Should().NotBeNull();

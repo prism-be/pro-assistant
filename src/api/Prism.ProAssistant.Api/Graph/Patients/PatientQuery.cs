@@ -20,7 +20,7 @@ namespace Prism.ProAssistant.Api.Graph.Patients;
 public class PatientQuery
 {
     [UseFirstOrDefault]
-    public IExecutable<Patient> GetPatientById(Guid id, [Service] IOrganizationContext organizationContext, [Service] ILogger<PatientQuery> logger,
+    public IExecutable<Patient> GetPatientById(string id, [Service] IOrganizationContext organizationContext, [Service] ILogger<PatientQuery> logger,
         [Service] IUserContextAccessor userContextAccessor)
     {
         logger.LogInformation("GDRP : {userId} is accessing patient data {patientId}", userContextAccessor.UserId, id);

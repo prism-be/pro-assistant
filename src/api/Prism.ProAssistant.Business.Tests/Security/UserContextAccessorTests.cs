@@ -66,13 +66,13 @@ public class UserContextAccessorTests
     public void Logged_Name_Empty()
     {
         // Arrange
-        var id = Identifier.Generate();
+        var id = Identifier.GenerateString();
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
         var context = new DefaultHttpContext
         {
             User = new ClaimsPrincipal(new ClaimsIdentity(new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, id)
             }, "TestAuthType"))
         };
         httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
@@ -92,7 +92,7 @@ public class UserContextAccessorTests
     public void Logged_Ok()
     {
         // Arrange
-        var id = Identifier.Generate();
+        var id = Identifier.GenerateString();
         var name = Identifier.GenerateString();
 
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -100,7 +100,7 @@ public class UserContextAccessorTests
         {
             User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                 {
-                    new(ClaimTypes.NameIdentifier, id.ToString()),
+                    new(ClaimTypes.NameIdentifier, id),
                     new Claim("name", name)
                 }, "TestAuthType")
             )
@@ -122,8 +122,8 @@ public class UserContextAccessorTests
     public void OrganisationId_Ok()
     {
         // Arrange
-        var id = Identifier.Generate();
-        var organizationId = Identifier.Generate();
+        var id = Identifier.GenerateString();
+        var organizationId = Identifier.GenerateString();
         var name = Identifier.GenerateString();
 
         var httpContextAccessor = new Mock<IHttpContextAccessor>();
@@ -131,7 +131,7 @@ public class UserContextAccessorTests
         {
             User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                 {
-                    new(ClaimTypes.NameIdentifier, id.ToString()),
+                    new(ClaimTypes.NameIdentifier, id),
                     new Claim("name", name)
                 }, "TestAuthType")
             )

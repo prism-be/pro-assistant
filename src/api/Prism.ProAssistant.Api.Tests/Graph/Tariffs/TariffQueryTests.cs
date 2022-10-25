@@ -23,7 +23,7 @@ public class TariffQueryTests
     public async Task GetTariffById_Ok()
     {
         // Arrange
-        var tarifId = Identifier.Generate();
+        var tarifId = Identifier.GenerateString();
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Tariff
         {
@@ -52,13 +52,13 @@ public class TariffQueryTests
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Tariff
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 Name = Identifier.GenerateString(),
                 Price = 42
             },
             new Tariff
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 Name = Identifier.GenerateString(),
                 Price = 42
             });

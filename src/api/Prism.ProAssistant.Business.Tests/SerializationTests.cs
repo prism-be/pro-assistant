@@ -21,7 +21,7 @@ public class SerializationTests
         // Arrange
         var organization = new Organization
         {
-            Id = Identifier.Generate()
+            Id = Identifier.GenerateString()
         };
 
         // Act and Assert
@@ -34,7 +34,7 @@ public class SerializationTests
         // Arrange
         var organization = new Patient
         {
-            Id = Identifier.Generate(),
+            Id = Identifier.GenerateString(),
             BirthDate = Identifier.GenerateString(),
             City = Identifier.GenerateString(),
             Country = Identifier.GenerateString(),
@@ -55,7 +55,7 @@ public class SerializationTests
         // Arrange
         var organization = new Tariff
         {
-            Id = Identifier.Generate(),
+            Id = Identifier.GenerateString(),
             Name = Identifier.GenerateString(),
             Price = (decimal)_dice.NextDouble()
         };

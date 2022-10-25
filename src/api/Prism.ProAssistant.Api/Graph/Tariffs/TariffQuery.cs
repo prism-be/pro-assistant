@@ -17,7 +17,7 @@ namespace Prism.ProAssistant.Api.Graph.Tariffs;
 public class TariffQuery
 {
     [UseFirstOrDefault]
-    public IExecutable<Tariff> GetTariffById(Guid id, [Service] IOrganizationContext organizationContext)
+    public IExecutable<Tariff> GetTariffById(string id, [Service] IOrganizationContext organizationContext)
     {
         return organizationContext.Tariffs.Find(x => x.Id == id).AsExecutable();
     }

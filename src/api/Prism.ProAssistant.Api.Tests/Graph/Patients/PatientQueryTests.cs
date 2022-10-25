@@ -24,7 +24,7 @@ public class PatientQueryTests
     public async Task GetPatientById_Ok()
     {
         // Arrange
-        var patientId = Identifier.Generate();
+        var patientId = Identifier.GenerateString();
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Patient
         {
@@ -52,12 +52,12 @@ public class PatientQueryTests
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Baudart"
             },
             new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Simon"
             });
 
@@ -79,7 +79,7 @@ public class PatientQueryTests
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Baudart",
                 FirstName = "Simon",
                 BirthDate = "14/05",
@@ -87,7 +87,7 @@ public class PatientQueryTests
             },
             new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Simon"
             });
 
@@ -109,7 +109,7 @@ public class PatientQueryTests
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Baudart",
                 FirstName = "Simon",
                 BirthDate = "14/05",
@@ -117,7 +117,7 @@ public class PatientQueryTests
             },
             new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Simon"
             });
 

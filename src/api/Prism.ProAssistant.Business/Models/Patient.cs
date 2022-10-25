@@ -5,6 +5,9 @@
 // -----------------------------------------------------------------------
 
 using System.Text.Json.Serialization;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Business.Models;
 
@@ -14,7 +17,9 @@ public class Patient
     public string? BirthDate { get; set; }
 
     [JsonPropertyName("id")]
-    public Guid Id { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string Id { get; set; } = string.Empty;
 
     [JsonPropertyName("city")]
     public string? City { get; set; }

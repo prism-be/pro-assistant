@@ -12,6 +12,7 @@ namespace Prism.ProAssistant.Business.Storage;
 
 public interface IOrganizationContext
 {
+    IMongoCollection<History> History { get; }
     IMongoCollection<Patient> Patients { get; }
     IMongoCollection<Tariff> Tariffs { get; }
 }
@@ -24,20 +25,23 @@ public class OrganizationContext : IOrganizationContext
     public OrganizationContext(MongoDbConfiguration mongoDbConfiguration, IUserContextAccessor userContextAccessor)
     {
         var client = new MongoClient(mongoDbConfiguration.ConnectionString);
-        var database = client.GetDatabase(userContextAccessor.OrganisationId.ToString());
+        var database = client.GetDatabase(userContextAccessor.OrganisationId);
 
         if (!database.ListCollectionNames().Any())
         {
             Initialize(database);
         }
 
+        History = database.GetCollection<History>(CollectionNames.History);
         Patients = database.GetCollection<Patient>(CollectionNames.Patients);
-        Tariffs = database.GetCollection<Tariff>(CollectionNames.Tarifs);
+        Tariffs = database.GetCollection<Tariff>(CollectionNames.Tariffs);
     }
 
     public IMongoCollection<Tariff> Tariffs { get; }
 
     public IMongoCollection<Patient> Patients { get; }
+
+    public IMongoCollection<History> History { get; }
 
     private void Initialize(IMongoDatabase database)
     {
@@ -52,9 +56,10 @@ public class OrganizationContext : IOrganizationContext
         database.GetCollection<Patient>(CollectionNames.Patients).Indexes.CreateOne(lastNameIndexModel);
     }
 
-    private static class CollectionNames
+    public static class CollectionNames
     {
         public const string Patients = "patients";
-        public const string Tarifs = "tarifs";
+        public const string Tariffs = "tariffs";
+        public const string History = "history";
     }
 }
