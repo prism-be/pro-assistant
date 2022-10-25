@@ -20,7 +20,7 @@ public class OrganizationContextFake : IOrganizationContext
     {
         var database = new Mock<IMongoDatabase>();
 
-        HistoryReplace = new History
+        HistoryReplace = new History()
         {
             Id = Identifier.GenerateString()
         };

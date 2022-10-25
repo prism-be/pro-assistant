@@ -12,6 +12,10 @@ namespace Prism.ProAssistant.Business.Models;
 
 public class History
 {
+    public History()
+    {
+    }
+    
     public History(string userId, object actual)
     {
         Actual = actual;

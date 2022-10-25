@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "TarifMutationTests.cs" company = "Prism">
+//  <copyright file = "TariffMutationTests.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -51,7 +51,7 @@ public class TariffMutationTests
     }
 
     [Fact]
-    public async Task UpsertTariffsync_Ok()
+    public async Task UpsertTariffsync_Existing()
     {
         // Arrange
         var replaceTarif = new Tariff
@@ -68,6 +68,24 @@ public class TariffMutationTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public async Task UpsertTariffsync_New()
+    {
+        // Arrange
+        var replaceTarif = new Tariff
+        {
+            Price = 42
+        };
+
+        var organisationContext = new OrganizationContextFake();
+
+        // Act
+        var query = new TariffMutation();
+        var result = await query.UpsertTariffAsync(replaceTarif, organisationContext, Mock.Of<ILogger<TariffMutation>>(), Mock.Of<IUserContextAccessor>());
+
+        // Assert
+        result.Should().NotBeNull();
     }
 }
