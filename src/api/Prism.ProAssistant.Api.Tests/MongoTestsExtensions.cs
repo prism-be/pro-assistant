@@ -8,25 +8,31 @@ using System.Collections.Generic;
 using System.Threading;
 using MongoDB.Driver;
 using Moq;
+using Prism.ProAssistant.Business.Models;
+using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Api.Tests;
 
 public static class MongoTestsExtensions
 {
-    public static void SetupCollection<T>(this Mock<IMongoDatabase> database, params T[] samples) where T : new()
+    public static Mock<IMongoCollection<T>> SetupCollection<T>(this Mock<IMongoDatabase> database, params T[] samples) where T : new()
     {
         var collection = CreateCollection(samples);
 
         database.Setup(x => x.GetCollection<T>(typeof(T).Name.ToLowerInvariant(), null)).Returns(collection.Object);
+
+        return collection;
     }
 
-    public static void SetupCollectionAndReplace<T>(this Mock<IMongoDatabase> database, T replacement, params T[] samples) where T : new()
+    public static Mock<IMongoCollection<T>> SetupCollectionAndReplace<T>(this Mock<IMongoDatabase> database, T replacement, params T[] samples) where T : new()
     {
         var collection = CreateCollection(samples);
         collection.Setup(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<T>>(), It.IsAny<T>(), It.IsAny<FindOneAndReplaceOptions<T, T>>(), CancellationToken.None))
             .ReturnsAsync(replacement);
 
         database.Setup(x => x.GetCollection<T>(typeof(T).Name.ToLowerInvariant(), null)).Returns(collection.Object);
+
+        return collection;
     }
 
     private static Mock<IMongoCollection<T>> CreateCollection<T>(IReadOnlyCollection<T> samples) where T : new()

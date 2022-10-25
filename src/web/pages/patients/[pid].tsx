@@ -6,12 +6,12 @@ import {useMsal} from "@azure/msal-react";
 import ContentContainer from "../../components/design/ContentContainer";
 import {useRouter} from "next/router";
 import useSWR from "swr";
-import {createPatient, getPatient, savePatient} from "../../lib/services/Patients";
+import {createPatient, getPatient, savePatient} from "../../lib/services/patients";
 import InputText from "../../components/forms/InputText";
 import {useForm} from "react-hook-form";
 import {useEffect} from "react";
 import Button from "../../components/forms/Button";
-import {success} from "../../lib/events/alert";
+import {alertSuccess} from "../../lib/events/alert";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {Back} from "../../components/icons/Back";
 import InputDate from "../../components/forms/InputDate";
@@ -23,6 +23,12 @@ const Patient: NextPage = () => {
     const {pid} = router.query;
 
     const loadPatient = async (id: string) => {
+        
+        if (id === "000000000000000000000000")
+        {
+            return null;
+        }
+        
         return await getPatient(id, instance, accounts[0]);
     }
     const {data: patient, mutate: mutatePatient} = useSWR(pid, loadPatient);
@@ -39,17 +45,17 @@ const Patient: NextPage = () => {
     const {register, handleSubmit, formState: {errors}, setValue, getValues } = useForm();
 
     const savePatientForm = async (data: any) => {
-        if (pid === '00000000-0000-0000-0000-000000000000')
+        if (pid === '000000000000000000000000')
         {
             const newPid = await createPatient(data, instance, accounts[0]);
-            success(t("details.saveSuccess"), { autoClose: true });
+            alertSuccess(t("details.saveSuccess"), { autoClose: true });
             await router.push("/patients/" + newPid);
             return;
         }
         
         await savePatient(data, instance, accounts[0]);
         await mutatePatient();
-        success(t("details.saveSuccess"), { autoClose: true });
+        alertSuccess(t("details.saveSuccess"), { autoClose: true });
     }
     
     const onSavePatientSubmit = async (data: any) => {

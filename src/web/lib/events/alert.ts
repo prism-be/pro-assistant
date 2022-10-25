@@ -25,19 +25,19 @@ export const onAlert = (id = defaultId) => {
 }
 
 // convenience methods
-export const success = (message: string, options: any) => {
+export const alertSuccess = (message: string, options: any) => {
     alert({ ...options, type: AlertType.Success, message });
 }
 
-export const error = (message: string, options: any) => {
+export const alertError = (message: string, options: any) => {
     alert({ ...options, type: AlertType.Error, message });
 }
 
-export const info = (message: string, options: any) => {
+export const alertInfo = (message: string, options: any) => {
     alert({ ...options, type: AlertType.Info, message });
 }
 
-export const warn = (message: string, options: any) => {
+export const alertWarn = (message: string, options: any) => {
     alert({ ...options, type: AlertType.Warning, message });
 }
 

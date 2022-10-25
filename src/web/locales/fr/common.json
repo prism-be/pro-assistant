@@ -5,6 +5,15 @@
   },
   "menu" : {
     "patients": "Fiches Patients",
-    "calendar": "Calendrier"
+    "calendar": "Calendrier",
+    "configuration": "Configuration"
+  },
+  "actions": {
+    "add": "Ajouter",
+    "save": "Sauvegarder",
+    "cancel": "Annuler"
+  },
+  "alerts" : {
+    "saveSuccess": "Les modifications ont été enregistrées."
   }
 }

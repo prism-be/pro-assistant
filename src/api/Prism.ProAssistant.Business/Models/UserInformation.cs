@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using System.Text.Json.Serialization;
+using MongoDB.Bson.Serialization.Attributes;
 
 namespace Prism.ProAssistant.Business.Models;
 
@@ -16,7 +17,8 @@ public class UserInformation
     }
 
     [JsonPropertyName("id")]
-    public Guid Id { get; set; }
+    [BsonId]
+    public string Id { get; set; } = string.Empty;
 
     [JsonPropertyName("organizations")]
     public List<Organization> Organizations { get; set; }

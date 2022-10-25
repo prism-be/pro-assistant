@@ -13,13 +13,15 @@ namespace Prism.ProAssistant.Business.Tests;
 
 public class SerializationTests
 {
+    private readonly Random _dice = new();
+
     [Fact]
     public void Organization_Ok()
     {
         // Arrange
         var organization = new Organization
         {
-            Id = Identifier.Generate()
+            Id = Identifier.GenerateString()
         };
 
         // Act and Assert
@@ -32,7 +34,7 @@ public class SerializationTests
         // Arrange
         var organization = new Patient
         {
-            Id = Identifier.Generate(),
+            Id = Identifier.GenerateString(),
             BirthDate = Identifier.GenerateString(),
             City = Identifier.GenerateString(),
             Country = Identifier.GenerateString(),
@@ -41,6 +43,21 @@ public class SerializationTests
             FirstName = Identifier.GenerateString(),
             LastName = Identifier.GenerateString(),
             ZipCode = Identifier.GenerateString()
+        };
+
+        // Act and Assert
+        CheckSerialization(organization);
+    }
+
+    [Fact]
+    public void Tarif_Ok()
+    {
+        // Arrange
+        var organization = new Tariff
+        {
+            Id = Identifier.GenerateString(),
+            Name = Identifier.GenerateString(),
+            Price = (decimal)_dice.NextDouble()
         };
 
         // Act and Assert

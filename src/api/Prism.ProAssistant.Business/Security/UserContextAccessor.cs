@@ -14,29 +14,28 @@ namespace Prism.ProAssistant.Business.Security;
 public interface IUserContextAccessor
 {
     bool IsAuthenticated { get; }
-
-    Guid OrganisationId { get; }
-    Guid UserId { get; }
     string Name { get; }
+    string OrganisationId { get; }
+    string UserId { get; }
 }
 
 public class UserContextAccessor : IUserContextAccessor
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    private readonly Lazy<Guid> _organisationId;
+    private readonly Lazy<string> _organisationId;
 
     public UserContextAccessor(IHttpContextAccessor httpContextAccessor, IMediator mediator)
     {
         _httpContextAccessor = httpContextAccessor;
 
-        _organisationId = new Lazy<Guid>(() =>
+        _organisationId = new Lazy<string>(() =>
         {
             if (!IsAuthenticated)
             {
-                return Guid.Empty;
+                return string.Empty;
             }
-            
+
             var result = mediator.Send(new GetUserInformation(UserId));
             result.Wait();
             return result.Result.Organizations.First().Id;
@@ -45,7 +44,7 @@ public class UserContextAccessor : IUserContextAccessor
 
     public bool IsAuthenticated => _httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated == true;
 
-    public Guid OrganisationId => _organisationId.Value;
+    public string OrganisationId => _organisationId.Value;
 
     public string Name
     {
@@ -67,23 +66,23 @@ public class UserContextAccessor : IUserContextAccessor
         }
     }
 
-    public Guid UserId
+    public string UserId
     {
         get
         {
             if (_httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated == false)
             {
-                return Guid.Empty;
+                return string.Empty;
             }
 
             var objectid = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
 
             if (objectid == null)
             {
-                return Guid.Empty;
+                return string.Empty;
             }
 
-            return Guid.Parse(objectid.Value);
+            return objectid.Value;
         }
     }
 }

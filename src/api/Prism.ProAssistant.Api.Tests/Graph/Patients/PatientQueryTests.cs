@@ -7,6 +7,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Graph.Patients;
@@ -23,7 +24,7 @@ public class PatientQueryTests
     public async Task GetPatientById_Ok()
     {
         // Arrange
-        var patientId = Identifier.Generate();
+        var patientId = Identifier.GenerateString();
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Patient
         {
@@ -36,7 +37,7 @@ public class PatientQueryTests
 
         // Act
         var query = new PatientQuery();
-        var result = query.GetPatientById(patientId, organisationContext.Object);
+        var result = query.GetPatientById(patientId, organisationContext.Object, Mock.Of<ILogger<PatientQuery>>(), Mock.Of<IUserContextAccessor>());
         var patient = await result.SingleOrDefaultAsync(CancellationToken.None) as Patient;
 
         // Assert
@@ -51,12 +52,12 @@ public class PatientQueryTests
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Baudart"
             },
             new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Simon"
             });
 
@@ -65,7 +66,7 @@ public class PatientQueryTests
 
         // Act
         var query = new PatientQuery();
-        var result = query.GetPatients(organisationContext.Object);
+        var result = query.GetPatients(organisationContext.Object, Mock.Of<ILogger<PatientQuery>>(), Mock.Of<IUserContextAccessor>());
 
         // Assert
         result.Should().NotBeNull();
@@ -78,7 +79,7 @@ public class PatientQueryTests
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Baudart",
                 FirstName = "Simon",
                 BirthDate = "14/05",
@@ -86,7 +87,7 @@ public class PatientQueryTests
             },
             new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Simon"
             });
 
@@ -95,7 +96,7 @@ public class PatientQueryTests
 
         // Act
         var query = new PatientQuery();
-        var result = query.SearchPatients(string.Empty, string.Empty, string.Empty, string.Empty, organisationContext.Object);
+        var result = query.SearchPatients(string.Empty, string.Empty, string.Empty, string.Empty, organisationContext.Object, Mock.Of<ILogger<PatientQuery>>(), Mock.Of<IUserContextAccessor>());
 
         // Assert
         result.Should().NotBeNull();
@@ -108,7 +109,7 @@ public class PatientQueryTests
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Baudart",
                 FirstName = "Simon",
                 BirthDate = "14/05",
@@ -116,7 +117,7 @@ public class PatientQueryTests
             },
             new Patient
             {
-                Id = Identifier.Generate(),
+                Id = Identifier.GenerateString(),
                 LastName = "Simon"
             });
 
@@ -125,7 +126,7 @@ public class PatientQueryTests
 
         // Act
         var query = new PatientQuery();
-        var result = query.SearchPatients("bau", "sim", "123", "14", organisationContext.Object);
+        var result = query.SearchPatients("bau", "sim", "123", "14", organisationContext.Object, Mock.Of<ILogger<PatientQuery>>(), Mock.Of<IUserContextAccessor>());
 
         // Assert
         result.Should().NotBeNull();

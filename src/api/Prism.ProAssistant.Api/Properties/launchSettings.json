@@ -3,11 +3,12 @@
     "Prism.ProAssistant.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": false,
+      "launchBrowser": true,
+      "launchUrl": "http://localhost:7013/api/graphql",
       "applicationUrl": "http://localhost:7013",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "FRONT_DOMAIN_CUSTOM": "https://flow.picshare.me",
+        "FRONT_DOMAIN_CUSTOM": "https://localhost:3000",
         "FRONT_DOMAIN_FQDN":"http://localhost:3000",
         "MONGODB_CONNECTION_STRING": "mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin",
         "AZURE_AD_AUTHORITY": "https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/",

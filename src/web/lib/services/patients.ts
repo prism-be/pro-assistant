@@ -33,7 +33,7 @@ export interface Patient {
 
 export const createPatient = async (patient: Patient, instance: IPublicClientApplication, account: AccountInfo): Promise<boolean> => {
     
-    patient.id = "00000000-0000-0000-0000-000000000001";
+    patient.id = "";
     
     const query = {
         mutation : {

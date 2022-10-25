@@ -16,30 +16,12 @@ namespace Prism.ProAssistant.Business.Tests.Queries;
 
 public class GetUserInformationTests
 {
-    [Fact]
-    public async Task Handle_Unknwon_User()
-    {
-        // Arrange
-        var userId = Identifier.Generate();
 
-        var database = new Mock<IMongoDatabase>();
-        database.SetupCollectionFindEmpty<UserInformation>();
-
-        var handler = new GetUserInformationHandler(Mock.Of<ILogger<GetUserInformationHandler>>(), database.Object);
-
-        // Act
-        var result = await handler.Handle(new GetUserInformation(userId), CancellationToken.None);
-
-        // Assert
-        result.Id.Should().Be(userId);
-        result.Organizations.Count.Should().Be(1);
-    }
-    
     [Fact]
     public async Task Handle_Classic()
     {
         // Arrange
-        var userId = Identifier.Generate();
+        var userId = Identifier.GenerateString();
 
         var database = new Mock<IMongoDatabase>();
         database.SetupCollection(new UserInformation
@@ -49,7 +31,7 @@ public class GetUserInformationTests
             {
                 new()
                 {
-                    Id = Identifier.Generate()
+                    Id = Identifier.GenerateString()
                 }
             }
         });
@@ -65,10 +47,29 @@ public class GetUserInformationTests
     }
 
     [Fact]
+    public async Task Handle_Unknwon_User()
+    {
+        // Arrange
+        var userId = Identifier.GenerateString();
+
+        var database = new Mock<IMongoDatabase>();
+        database.SetupCollectionFindEmpty<UserInformation>();
+
+        var handler = new GetUserInformationHandler(Mock.Of<ILogger<GetUserInformationHandler>>(), database.Object);
+
+        // Act
+        var result = await handler.Handle(new GetUserInformation(userId), CancellationToken.None);
+
+        // Assert
+        result.Id.Should().Be(userId);
+        result.Organizations.Count.Should().Be(1);
+    }
+
+    [Fact]
     public void Validate_Empty()
     {
         // Arrange
-        var request = new GetUserInformation(Guid.Empty);
+        var request = new GetUserInformation(string.Empty);
 
         // Act
         var valdiation = new GetUserInformationValidator().Validate(request);
@@ -81,7 +82,7 @@ public class GetUserInformationTests
     public void Validate_Ok()
     {
         // Arrange
-        var request = new GetUserInformation(Identifier.Generate());
+        var request = new GetUserInformation(Identifier.GenerateString());
 
         // Act
         var valdiation = new GetUserInformationValidator().Validate(request);

@@ -13,7 +13,7 @@ using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Business.Queries;
 
-public record GetUserInformation(Guid UserId) : IRequest<UserInformation>;
+public record GetUserInformation(string UserId) : IRequest<UserInformation>;
 
 public class GetUserInformationValidator : AbstractValidator<GetUserInformation>
 {
@@ -57,7 +57,7 @@ public record GetUserInformationHandler : IRequestHandler<GetUserInformation, Us
             {
                 new()
                 {
-                    Id = Identifier.Generate()
+                    Id = Identifier.GenerateString()
                 }
             };
 
