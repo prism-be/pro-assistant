@@ -4,7 +4,7 @@ import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import {useMsal} from "@azure/msal-react";
-import {getTariffs, upsertTariff} from "../lib/services/tariffs";
+import {getTariffs, Tariff, upsertTariff} from "../lib/services/tariffs";
 import useSWR from "swr";
 import {useState} from "react";
 import InputText from "../components/forms/InputText";
@@ -13,6 +13,7 @@ import Button from "../components/forms/Button";
 import {Popup} from '../components/Pops';
 import {useKeyPressEvent} from "react-use";
 import {alertSuccess} from "../lib/events/alert";
+import {Pencil} from "../components/icons/Icons";
 
 
 const Tariffs = () => {
@@ -20,7 +21,7 @@ const Tariffs = () => {
     const {t} = useTranslation("configuration");
     const {register, handleSubmit, formState: {errors}, setValue} = useForm();
     const [editing, setEditing] = useState<boolean>(false);
-    
+
     useKeyPressEvent('Escape', () => {
         setEditing(false);
     })
@@ -37,11 +38,18 @@ const Tariffs = () => {
         setEditing(true);
     }
 
+    const editTariff = (tariff: Tariff) => {
+        setValue("id", tariff.id);
+        setValue("name", tariff.name);
+        setValue("price", tariff.price.toFixed(2));
+        setEditing(true);
+    }
+
     const onSaveTariff = async (data: any) => {
         data.price = parseFloat(data.price);
         await upsertTariff(data, instance, accounts[0]);
         setEditing(false);
-        alertSuccess(t("common:alerts.saveSuccess"), { });
+        alertSuccess(t("common:alerts.saveSuccess"), {});
         await mutateTariffs();
     }
 
@@ -50,7 +58,7 @@ const Tariffs = () => {
             <h2>{t("tariffs.title")}</h2>
             <Button text={t("common:actions.add")} onClick={() => addTariff()} secondary={true}></Button>
         </header>
-        
+
         {editing && <Popup>
             <form>
                 <div className={styles.tariffEditionGrid}>
@@ -66,14 +74,19 @@ const Tariffs = () => {
             </form>
         </Popup>}
 
-        <div>
+        <div className={styles.tariffGrid}>
             {tariffs?.map(tariff =>
-                <div key={tariff.id} className={styles.tariffGrid}>
+                <div key={tariff.id} className={styles.tariffGridRow}>
                     <div>
                         {tariff.name}
                     </div>
                     <div>
-                        {tariff.price} &euro;
+                        {tariff.price.toFixed(2)} &euro;
+                    </div>
+                    <div>
+                        <a onClick={() => editTariff(tariff)}>
+                            <Pencil/>
+                        </a>
                     </div>
                 </div>)}
 
