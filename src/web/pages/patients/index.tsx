@@ -1,6 +1,6 @@
 ﻿import styles from '../../styles/pages/patients.module.scss';
 
-import {PatientSummary, searchPatients} from "../../lib/services/Patients";
+import {PatientSummary, searchPatients} from "../../lib/services/patients";
 import ContentContainer from "../../components/design/ContentContainer";
 import InputText from "../../components/forms/InputText";
 import InputDate from "../../components/forms/InputDate";
@@ -61,7 +61,7 @@ const Patients: NextPage = () => {
         if (isNewPressed)
         {
             isNewPressedEvent?.preventDefault();
-            router.push("/patients/00000000-0000-0000-0000-000000000000");
+            router.push("/patients/000000000000000000000000");
         }
     }, [isNewPressed])
 
@@ -86,7 +86,7 @@ const Patients: NextPage = () => {
                         <Button text={t("search.reset")} onClick={resetSearch} secondary={true}/>
                     </div>
                     <div className={styles.newButton}>
-                        <Button text={t("search.new")} onClick={() => router.push("/patients/00000000-0000-0000-0000-000000000000")} secondary={true}/>
+                        <Button text={t("search.new")} onClick={() => router.push("/patients/000000000000000000000000")} secondary={true}/>
                     </div>
                     <div className={styles.searchButton}>
                         <Button text={t("search.search")} onClick={handleSubmit(onSubmit)}/>
