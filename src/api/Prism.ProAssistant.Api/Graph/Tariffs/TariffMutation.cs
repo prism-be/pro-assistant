@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "PatientMutation.cs" company = "Prism">
+//  <copyright file = "TariffMutation.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -16,14 +16,6 @@ namespace Prism.ProAssistant.Api.Graph.Tariffs;
 [ExtendObjectType("Mutation")]
 public class TariffMutation
 {
-    public async Task<Tariff> CreateTariffAsync(Tariff tariff, [Service] IOrganizationContext organizationContext)
-    {
-        tariff.Id = Identifier.Generate();
-        await organizationContext.Tariffs.InsertOneAsync(tariff);
-
-        return tariff;
-    }
-
     public async Task<bool> RemoveTariffAsync(Guid id, [Service] IOrganizationContext organizationContext)
     {
         var result = await organizationContext.Tariffs.DeleteOneAsync(Builders<Tariff>.Filter.Eq("Id", id));
@@ -31,8 +23,13 @@ public class TariffMutation
         return result.IsAcknowledged;
     }
 
-    public async Task<Tariff> UpdateTariffAsync(Tariff tariff, [Service] IOrganizationContext organizationContext)
+    public async Task<Tariff> UpsertTariffAsync(Tariff tariff, [Service] IOrganizationContext organizationContext)
     {
-        return await organizationContext.Tariffs.FindOneAndReplaceAsync(Builders<Tariff>.Filter.Eq("Id", tariff.Id), tariff);
+        var options = new FindOneAndReplaceOptions<Tariff>
+        {
+            IsUpsert = true
+        };
+        
+        return await organizationContext.Tariffs.FindOneAndReplaceAsync(Builders<Tariff>.Filter.Eq("Id", tariff.Id), tariff, options);
     }
 }

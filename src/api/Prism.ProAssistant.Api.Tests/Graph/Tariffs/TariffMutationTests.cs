@@ -19,36 +19,6 @@ namespace Prism.ProAssistant.Api.Tests.Graph.Tariffs;
 public class TariffMutationTests
 {
     [Fact]
-    public async Task CreateTariffsync_Ok()
-    {
-        // Arrange
-        var tarifId = Identifier.Generate();
-        var database = new Mock<IMongoDatabase>();
-        database.SetupCollection(new Tariff
-        {
-            Id = Identifier.Generate(),
-            Name = Identifier.GenerateString(),
-            Price = 42
-        });
-
-        var organisationContext = new Mock<IOrganizationContext>();
-        organisationContext.Setup(x => x.Tariffs).Returns(database.Object.GetCollection<Tariff>());
-
-        // Act
-        var query = new TariffMutation();
-        var result = await query.CreateTariffAsync(new Tariff
-        {
-            Id = tarifId,
-            Name = Identifier.GenerateString(),
-            Price = 42.01M
-        }, organisationContext.Object);
-
-        // Assert
-        result.Should().NotBeNull();
-        result.Id.Should().NotBe(tarifId);
-    }
-
-    [Fact]
     public async Task RemoveTariffsync_Ok()
     {
         // Arrange
@@ -79,7 +49,7 @@ public class TariffMutationTests
     }
 
     [Fact]
-    public async Task UpdateTariffsync_Ok()
+    public async Task UpsertTariffsync_Ok()
     {
         // Arrange
         var patientId = Identifier.Generate();
@@ -103,7 +73,7 @@ public class TariffMutationTests
 
         // Act
         var query = new TariffMutation();
-        var result = await query.UpdateTariffAsync(replaceTarif, organisationContext.Object);
+        var result = await query.UpsertTariffAsync(replaceTarif, organisationContext.Object);
 
         // Assert
         result.Should().NotBeNull();
