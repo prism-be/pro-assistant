@@ -5,6 +5,7 @@
   },
   "menu" : {
     "patients": "Fiches Patients",
-    "calendar": "Calendrier"
+    "calendar": "Calendrier",
+    "configuration": "Configuration"
   }
 }

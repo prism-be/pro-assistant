@@ -1,0 +1,8 @@
+﻿{
+  "tariffs": {
+    "title": "Configuration des tarifs des séances",
+    "titleExisting": "Liste des tarifs existants",
+    "name": "Nom",
+    "price": "Prix"
+  }
+}
