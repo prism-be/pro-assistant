@@ -4,14 +4,15 @@ import {MouseEventHandler} from "react";
 
 interface Props {
     text: string;
-    onClick?: MouseEventHandler<any>,
-    secondary?: boolean
+    onClick?: MouseEventHandler<any>;
+    secondary?: boolean;
+    className?:string;
 }
 
-const Button = ({text, onClick, secondary}: Props) => {
+const Button = ({text, onClick, secondary, className}: Props) => {
     return <>
-        {secondary === true && <a className={styles.buttonSecondary} onClick={onClick}>{text}</a>}
-        {!secondary && <button className={styles.button} onClick={onClick}>{text}</button>}
+        {secondary === true && <a className={styles.buttonSecondary + " " + className} onClick={onClick}>{text}</a>}
+        {!secondary && <button className={styles.button + " " + className} onClick={onClick}>{text}</button>}
     </>
 }
 

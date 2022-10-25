@@ -9,69 +9,76 @@ import useSWR from "swr";
 import {useEffect, useState} from "react";
 import InputText from "../components/forms/InputText";
 import {Plus} from "../components/icons/Plus";
-import { v4 as uuidv4 } from 'uuid';
+import {v4 as uuidv4} from 'uuid';
 import {useForm} from "react-hook-form";
-import {Save} from "../components/icons/Save";
+import Button from "../components/forms/Button";
+import {Popup} from '../components/Pops';
 
-const Configuration: NextPage = () => {
 
+const Tariffs = () => {
     const {instance, accounts} = useMsal();
     const {t} = useTranslation("configuration");
-    const {register, handleSubmit, formState: {errors}, setValue, getValues } = useForm();
-    const [currentTariffEdition, setCurrentTariffEdition] = useState<Tariff>();
+    const {register, handleSubmit, formState: {errors}, setValue, getValues} = useForm();
+    const [editing, setEditing] = useState<boolean>(false);
 
-    const loadTariffs = async (id: string) => {
+    const loadTariffs = async () => {
         return await getTariffs(instance, accounts[0]);
     }
-    const {data: tariffs, mutate: mutatePatient} = useSWR("/tariffs", loadTariffs);
-    
+    const {data: tariffs, mutate: mutateTariffs} = useSWR("/tariffs", loadTariffs);
+
     const addTariff = () => {
-        setCurrentTariffEdition({
-            id: uuidv4(),
-            name: "",
-            price: 0
-        });
+        setValue("id", "");
+        setValue("name", "");
+        setValue("price", 0);
+        setEditing(true);
     }
-    
 
-    return <ContentContainer>
-        <section className={styles.section}>
-            <h1>{t("tariffs.title")}</h1>
+    const onSaveTariff = async (data: any) => {
+        setEditing(false);
+    }
 
-            <div className={styles.tariffAdd}>
-                <a onClick={() => addTariff()}>
-                    <Plus />
-                </a>
-            </div>
-            
+    return <section className={styles.section}>
+        <h1>{t("tariffs.title")}</h1>
+
+        <div className={styles.tariffAdd}>
+            <a onClick={() => addTariff()}>
+                <Plus/>
+            </a>
+        </div>
+
+        {editing && <Popup>
             <form>
-                {currentTariffEdition && <div className={styles.tariffGrid}>
-                    <div>
-                        <InputText label={t("tariffs.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name} />
+                <div className={styles.tariffEditionGrid}>
+                    <div className={styles.tariffEditionGridField}>
+                        <InputText label={t("tariffs.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
                     </div>
-                    <div>
-                        <InputText label={t("tariffs.price")} name={"price"} type={"text"} required={true} register={register} setValue={setValue} error={errors.price} />
+                    <div className={styles.tariffEditionGridField}>
+                        <InputText label={t("tariffs.price")} name={"price"} type={"text"} required={true} register={register} setValue={setValue} error={errors.price}/>
                     </div>
-                    <div>
-                        <a>
-                            <Save />
-                        </a>
-                    </div>
-                </div>}
+                    <Button className={styles.tariffEditionGridButtonCancel} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
+                    <Button className={styles.tariffEditionGridButtonSave} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
+                </div>
             </form>
-            <div>
-                {tariffs?.map(tariff => 
-                    <div key={tariff.id} className={styles.tariffGrid}>
-                        <div>
-                            {tariff.name}
-                        </div>
-                        <div>
-                            {tariff.price} &euro;
-                        </div>
-                    </div>)}
-                
-            </div>
-        </section>
+        </Popup>}
+
+        <div>
+            {tariffs?.map(tariff =>
+                <div key={tariff.id} className={styles.tariffGrid}>
+                    <div>
+                        {tariff.name}
+                    </div>
+                    <div>
+                        {tariff.price} &euro;
+                    </div>
+                </div>)}
+
+        </div>
+    </section>
+}
+
+const Configuration: NextPage = () => {
+    return <ContentContainer>
+        <Tariffs/>
     </ContentContainer>
 }
 

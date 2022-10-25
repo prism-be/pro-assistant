@@ -1,10 +1,29 @@
 ﻿@import "../vars";
 
-.panel
-{
+.popin {
   margin: 1rem auto;
   max-width: $breakpointMD;
   width: 100%;
   border: 1px $grey solid;
   padding: 1rem;
+}
+
+.popup {
+  
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+  background-color: rgba(142, 142, 142, 0.5);
+  
+  > div {
+    background-color: white;
+    margin: 10rem auto 1rem auto;
+    max-width: $breakpointMD;
+    width: 100%;
+    border: 1px $grey solid;
+    padding: 1rem;
+  }
 }
