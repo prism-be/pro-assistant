@@ -26,13 +26,16 @@ public class TariffMutation
 
     public async Task<Tariff> UpsertTariffAsync(Tariff tariff, [Service] IOrganizationContext organizationContext, [Service] ILogger<TariffMutation> logger, [Service]IUserContextAccessor userContextAccessor)
     {
-        var options = new FindOneAndReplaceOptions<Tariff>
+        if (string.IsNullOrWhiteSpace(tariff.Id))
         {
-            IsUpsert = true
-        };
+            await organizationContext.Tariffs.InsertOneAsync(tariff);
+            await organizationContext.History.InsertOneAsync(new History(userContextAccessor.UserId, tariff));
+            logger.LogInformation("Created new tariffs {tarrifId}", tariff.Id);
+            return tariff;
+        }
         
-        logger.LogInformation("Upserting tariffs {tarrifId}", tariff.Id);
+        logger.LogInformation("Updating tariffs {tarrifId}", tariff.Id);
         await organizationContext.History.InsertOneAsync(new History(userContextAccessor.UserId, tariff));
-        return await organizationContext.Tariffs.FindOneAndReplaceAsync(Builders<Tariff>.Filter.Eq("Id", tariff.Id), tariff, options);
+        return await organizationContext.Tariffs.FindOneAndReplaceAsync(Builders<Tariff>.Filter.Eq("Id", tariff.Id), tariff);
     }
 }

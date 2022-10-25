@@ -5,8 +5,18 @@
   border-bottom: 1px $grey solid;
   box-shadow: 0 0 7px 0 #00000021;
   
-  h2 {
-    padding-top: 1rem;
+  header {
+    display: grid;
+    grid-template-columns: auto 10rem;
+    
+    h2 {
+      grid-column: 1;
+      line-height: 42px;
+    }
+
+    a {
+      grid-column: 2;
+    }
   }
 }
 

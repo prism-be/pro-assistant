@@ -4,15 +4,15 @@ import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import {useMsal} from "@azure/msal-react";
-import {getTariffs, Tariff} from "../lib/services/tariffs";
+import {getTariffs, Tariff, upsertTariff} from "../lib/services/tariffs";
 import useSWR from "swr";
 import {useEffect, useState} from "react";
 import InputText from "../components/forms/InputText";
-import {Plus} from "../components/icons/Plus";
-import {v4 as uuidv4} from 'uuid';
 import {useForm} from "react-hook-form";
 import Button from "../components/forms/Button";
 import {Popup} from '../components/Pops';
+import {useKeyPressEvent} from "react-use";
+import {alertSuccess} from "../lib/events/alert";
 
 
 const Tariffs = () => {
@@ -20,6 +20,10 @@ const Tariffs = () => {
     const {t} = useTranslation("configuration");
     const {register, handleSubmit, formState: {errors}, setValue, getValues} = useForm();
     const [editing, setEditing] = useState<boolean>(false);
+    
+    useKeyPressEvent('Escape', () => {
+        setEditing(false);
+    })
 
     const loadTariffs = async () => {
         return await getTariffs(instance, accounts[0]);
@@ -34,18 +38,19 @@ const Tariffs = () => {
     }
 
     const onSaveTariff = async (data: any) => {
+        data.price = parseFloat(data.price);
+        await upsertTariff(data, instance, accounts[0]);
         setEditing(false);
+        alertSuccess(t("common:alerts.saveSuccess"), { });
+        await mutateTariffs();
     }
 
     return <section className={styles.section}>
-        <h1>{t("tariffs.title")}</h1>
-
-        <div className={styles.tariffAdd}>
-            <a onClick={() => addTariff()}>
-                <Plus/>
-            </a>
-        </div>
-
+        <header>
+            <h2>{t("tariffs.title")}</h2>
+            <Button text={t("common:actions.add")} onClick={() => addTariff()} secondary={true}></Button>
+        </header>
+        
         {editing && <Popup>
             <form>
                 <div className={styles.tariffEditionGrid}>

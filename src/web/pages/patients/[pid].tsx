@@ -11,7 +11,7 @@ import InputText from "../../components/forms/InputText";
 import {useForm} from "react-hook-form";
 import {useEffect} from "react";
 import Button from "../../components/forms/Button";
-import {success} from "../../lib/events/alert";
+import {alertSuccess} from "../../lib/events/alert";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {Back} from "../../components/icons/Back";
 import InputDate from "../../components/forms/InputDate";
@@ -48,14 +48,14 @@ const Patient: NextPage = () => {
         if (pid === '000000000000000000000000')
         {
             const newPid = await createPatient(data, instance, accounts[0]);
-            success(t("details.saveSuccess"), { autoClose: true });
+            alertSuccess(t("details.saveSuccess"), { autoClose: true });
             await router.push("/patients/" + newPid);
             return;
         }
         
         await savePatient(data, instance, accounts[0]);
         await mutatePatient();
-        success(t("details.saveSuccess"), { autoClose: true });
+        alertSuccess(t("details.saveSuccess"), { autoClose: true });
     }
     
     const onSavePatientSubmit = async (data: any) => {

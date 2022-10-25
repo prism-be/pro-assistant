@@ -8,6 +8,25 @@ export interface Tariff {
     price: number;
 }
 
+export const upsertTariff = async (tariff: Tariff, instance: IPublicClientApplication, account: AccountInfo): Promise<boolean> => {
+    const query = {
+        mutation : {
+            upsertTariff: {
+                __args: {
+                    tariff
+                },
+                id: true
+            }
+        }
+    }
+
+    const graph = jsonToGraphQLQuery(query);
+
+    const result = await queryItems<any>(instance, account, graph);
+
+    return result !== null;
+}
+
 export const getTariffs = async (instance: IPublicClientApplication, account: AccountInfo): Promise<Tariff[]> => {
 
     const query = {
