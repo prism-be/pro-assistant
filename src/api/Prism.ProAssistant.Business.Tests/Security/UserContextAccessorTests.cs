@@ -7,11 +7,8 @@
 using System.Security.Authentication;
 using System.Security.Claims;
 using FluentAssertions;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Moq;
-using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Business.Tests.Security;
@@ -165,9 +162,6 @@ public class UserContextAccessorTests
 
         // Assert
         userContextAccessor.IsAuthenticated.Should().BeTrue();
-
         Assert.Throws<AuthenticationException>(() => userContextAccessor.OrganisationId.Should().BeEmpty());
-
-        mediator.Verify(x => x.Send(It.IsAny<GetUserInformation>(), CancellationToken.None), Times.Once);
     }
 }
