@@ -15,6 +15,7 @@ import {fr} from "date-fns/locale";
 import Button from "../forms/Button";
 import {alertSuccess} from "../../lib/events/alert";
 import {Meeting, upsertMeeting} from "../../lib/services/meetings";
+import InputSelect from "../forms/InputSelect";
 
 interface Props {
     meetingId?: string;
@@ -35,6 +36,20 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
     const [suggested, setSuggested] = useState<string>();
     const [date, setDate] = useState<Date>(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
     const [duration, setDuration] = useState<number>(60);
+    
+    const paymentOptions = [
+        { value: "0", text: t("options.payments.state0") },
+        { value: "1", text: t("options.payments.state1") },
+        { value: "2", text: t("options.payments.state2") },
+        { value: "3", text: t("options.payments.state3") }
+    ]
+
+    const stateOptions = [
+        { value: "0", text: t("options.meetings.state0") },
+        { value: "1", text: t("options.meetings.state1") },
+        { value: "10", text: t("options.meetings.state10") },
+        { value: "100", text: t("options.meetings.state100") }
+    ]
 
     const loadTariffs = async () => {
         return await getTariffs(instance, accounts[0]);
@@ -125,8 +140,9 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
             duration: duration,
             startDate: formatISO(date),
             type: data.type,
-            state: 0,
-            payment: 0
+            state: parseInt(data.state),
+            payment: parseInt(data.payment),
+            paymentDate: parseInt(data.payment) !== 0 ? formatISO(new Date()) : null 
         }
 
         await upsertMeeting(meeting, instance, accounts[0]);
@@ -140,8 +156,8 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
             {meetingId !== undefined && <h1>{t("popups.meeting.titleEditing")}</h1>}
 
             <form className={styles.content} onSubmit={handleSubmit(onSubmit)}>
-                <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.lastName}/>
-                <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.firstName}/>
+                <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName}/>
+                <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.firstName}/>
                 {patientsSuggestions.length !== 0 && <div className={styles.patientsSuggestions}>
                     <h2>{t("popups.meeting.patientsSuggestions.title")}</h2>
                     {patientsSuggestions.map(p => <div key={p.id} className={styles.patientsSuggestion} onClick={() => selectPatient(p)}>
@@ -158,14 +174,18 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
                     </div>
                     }
                 </div>
-                <InputText className={styles.type} label={t("fields.meetingType")} name={"type"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.type}/>
-                <InputText className={styles.price} label={t("fields.price")} name={"price"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.price}/>
+                <InputText className={styles.type} label={t("fields.meetingType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>
+                <InputText className={styles.price} label={t("fields.price")} name={"price"} required={true} type={"text"} register={register} setValue={setValue} error={errors.price}/>
                 <Calendar className={styles.date} value={date} onChange={(d) => setDate(d)}/>
-                <InputText className={styles.hour} label={t("fields.hour")} name={"hour"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.hour}/>
-                <InputText className={styles.duration} label={t("fields.duration")} name={"duration"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.duration}/>
+                <InputText className={styles.hour} label={t("fields.hour")} name={"hour"} required={true} type={"text"} register={register} setValue={setValue} error={errors.hour}/>
+                <InputText className={styles.duration} label={t("fields.duration")} name={"duration"} required={true} type={"text"} register={register} setValue={setValue} error={errors.duration}/>
                 <div className={styles.durationText}>
                     <div>{format(date, "EEEE dd MMMM", { locale: fr})} {t("fields.fromHour")} {format(date, "HH:mm", { locale: fr})} {t("fields.toHour")} {format(add(date, {minutes: duration}), "HH:mm", { locale: fr})}</div>
                 </div>
+
+                <InputSelect className={styles.payment} label={t("fields.payment")} name={"payment"} required={false} register={register} error={errors.payment} options={paymentOptions} />
+                <InputSelect className={styles.state} label={t("fields.meetingState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions} />
+                
                 <Button text={t("actions.cancel")} secondary={true} className={styles.cancel} onClick={() => hide()} />
                 <Button text={t("actions.save")}  className={styles.save}  onClick={handleSubmit(onSubmit)}/>
             </form>

@@ -76,15 +76,27 @@
   grid-row: 7;
   grid-column: 3 / span 2;
 }
- 
-.cancel
+
+.payment
 {
   grid-row: 8;
+  grid-column: 3 / span 2;
+}
+
+.state
+{
+  grid-row: 8;
+  grid-column: 1 / span 2;
+}
+
+.cancel
+{
+  grid-row: 9;
   grid-column: 1;
 }
 
 .save
 {
-  grid-row: 8;
+  grid-row: 9;
   grid-column: 4;
 }

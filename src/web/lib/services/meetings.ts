@@ -12,7 +12,7 @@ export interface Meeting {
     state?: number;
     price?: number;
     payment?: number;
-    paymentDate?: string;
+    paymentDate?: string | null;
     type?: string;
 }
 
