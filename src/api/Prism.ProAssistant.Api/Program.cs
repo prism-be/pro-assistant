@@ -11,6 +11,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using Prism.ProAssistant.Api.Graph.Meetings;
 using Prism.ProAssistant.Api.Graph.Patients;
 using Prism.ProAssistant.Api.Graph.Tariffs;
 using Prism.ProAssistant.Business;
@@ -48,11 +49,14 @@ builder.Services
     .AddGraphQLServer()
     .AddAuthorization()
     .AddQueryType(d => d.Name("Query"))
+    .AddTypeExtension<MeetingQuery>()
     .AddTypeExtension<PatientQuery>()
     .AddTypeExtension<TariffQuery>()
     .AddMutationType(d => d.Name("Mutation"))
+    .AddTypeExtension<MeetingMutation>()
     .AddTypeExtension<PatientMutation>()
     .AddTypeExtension<TariffMutation>()
+    .AddType<MeetingType>()
     .AddType<PatientType>()
     .AddType<TariffType>()
     .AddMongoDbFiltering()

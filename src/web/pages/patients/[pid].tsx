@@ -17,7 +17,7 @@ import {Back} from "../../components/icons/Back";
 import InputDate from "../../components/forms/InputDate";
 
 const Patient: NextPage = () => {
-    const {t} = useTranslation('patients');
+    const {t} = useTranslation('common');
     const {instance, accounts} = useMsal();
     const router = useRouter();
     const {pid} = router.query;
@@ -47,6 +47,7 @@ const Patient: NextPage = () => {
     const savePatientForm = async (data: any) => {
         if (pid === '000000000000000000000000')
         {
+            data.id = '';
             const newPid = await createPatient(data, instance, accounts[0]);
             alertSuccess(t("details.saveSuccess"), { autoClose: true });
             await router.push("/patients/" + newPid);
@@ -55,7 +56,7 @@ const Patient: NextPage = () => {
         
         await savePatient(data, instance, accounts[0]);
         await mutatePatient();
-        alertSuccess(t("details.saveSuccess"), { autoClose: true });
+        alertSuccess(t("pages.patients.details.saveSuccess"), { autoClose: true });
     }
     
     const onSavePatientSubmit = async (data: any) => {
@@ -80,9 +81,9 @@ const Patient: NextPage = () => {
                     <a onClick={() => router.push("/patients")}>
                         <Back />
                     </a>
-                    <h1>{t("details.title")} {patient?.lastName} {patient?.firstName}</h1>
+                    <h1>{t("pages.patients.details.title")} {patient?.lastName} {patient?.firstName}</h1>
                 </div>
-                <h2>{t("details.contact")}</h2>
+                <h2>{t("pages.patients.details.contact")}</h2>
                 <form className={styles.contact} onSubmit={handleSubmit(onSavePatientSubmit)}>
                     <div className={styles.contactField}>
                         <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
@@ -115,7 +116,7 @@ const Patient: NextPage = () => {
                         <InputText name="country" label={t("fields.country")} type="text" required={false} register={register} setValue={setValue} error={errors.country} autoCapitalize={true}/>
                     </div>
                     <div className={styles.saveButton}>
-                        <Button text={t("details.save")} onClick={handleSubmit(onSavePatientSubmit)} secondary={true}/>
+                        <Button text={t("actions.save")} onClick={handleSubmit(onSavePatientSubmit)} secondary={true}/>
                     </div>
                 </form>
             </div>

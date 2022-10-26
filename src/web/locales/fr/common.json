@@ -3,7 +3,7 @@
     "hello": "Bonjour",
     "logout": "Se déconnecter"
   },
-  "menu" : {
+  "menu": {
     "patients": "Fiches Patients",
     "calendar": "Calendrier",
     "configuration": "Configuration"
@@ -11,9 +11,69 @@
   "actions": {
     "add": "Ajouter",
     "save": "Sauvegarder",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "search": "Rechercher",
+    "reset": "Vider",
+    "new": "Nouveau"
   },
-  "alerts" : {
+  "fields": {
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "phoneNumber": "N° Téléphone",
+    "birthDate": "Date de naissance",
+    "email": "E-mail",
+    "street": "Rue",
+    "number": "N°",
+    "zipCode": "Code Postal",
+    "city": "Ville",
+    "country": "Pays",
+    "meetingType": "Type de séance",
+    "price": "Prix",
+    "hour": "Heure",
+    "duration": "Durée",
+    "fromHour": "à",
+    "toHour": "jusque"
+  },
+  "results": {
+    "doSearch": "Veuillez faire une recherche pour avoir des résultats",
+    "noResults": "Il n'y pas de résultats pour votre recherche",
+    "title": "Résultats de la recherche"
+  },
+  "alerts": {
     "saveSuccess": "Les modifications ont été enregistrées."
+  },
+  "popups": {
+    "meeting": {
+      "titleNew": "Ajouter un rendez-vous",
+      "titleEditing": "Edition d'un rendez-vous",
+      "patientsSuggestions": {
+        "title": "Suggestions de patients"
+      },
+      "tariffs": {
+        "title": "Type de séance",
+        "empty": "Veuillez choisir un type de séance"
+      }
+    }
+  },
+  "pages": {
+    "patients": {
+      "title": "Rechercher un patient",
+      "details": {
+        "title": "Fiche patient : ",
+        "contact": "Coordonnées",
+        "saveSuccess": "Les modifications sur la fiche ont été sauvegardées."
+      }
+    }
+  },
+  "days": {
+    "short": {
+      "day1": "Lu",
+      "day2": "Ma",
+      "day3": "Me",
+      "day4": "Je",
+      "day5": "Ve",
+      "day6": "Sa",
+      "day7": "Di"
+    }
   }
 }

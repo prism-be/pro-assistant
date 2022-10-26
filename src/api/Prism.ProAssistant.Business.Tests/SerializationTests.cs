@@ -16,6 +16,27 @@ public class SerializationTests
     private readonly Random _dice = new();
 
     [Fact]
+    public void Meeting_Ok()
+    {
+        // Arrange
+        var meeting = new Meeting
+        {
+            Id = Identifier.GenerateString(),
+            Duration = _dice.Next(0, 42),
+            Payment = (int)PaymentTypes.Wire,
+            Price = _dice.Next(0, 42),
+            State = (int)MeetingState.Confirmed,
+            PaymentDate = DateTime.UtcNow,
+            Title = Identifier.GenerateString(),
+            PatientId = Identifier.GenerateString(),
+            StartDate = DateTime.UtcNow.AddHours(-2)
+        };
+
+        // Act and Assert
+        CheckSerialization(meeting);
+    }
+
+    [Fact]
     public void Organization_Ok()
     {
         // Arrange
@@ -32,7 +53,7 @@ public class SerializationTests
     public void Patient_Ok()
     {
         // Arrange
-        var organization = new Patient
+        var patient = new Patient
         {
             Id = Identifier.GenerateString(),
             BirthDate = Identifier.GenerateString(),
@@ -46,7 +67,7 @@ public class SerializationTests
         };
 
         // Act and Assert
-        CheckSerialization(organization);
+        CheckSerialization(patient);
     }
 
     [Fact]
