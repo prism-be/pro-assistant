@@ -17,7 +17,7 @@ import useKeyboardJs from "react-use/lib/useKeyboardJs";
 
 const Patients: NextPage = () => {
 
-    const {t} = useTranslation('patients');
+    const {t} = useTranslation('common');
     const {instance, accounts} = useMsal();
     const router = useRouter();
 
@@ -68,7 +68,7 @@ const Patients: NextPage = () => {
     return <ContentContainer>
         <>
             <div className={styles.searchContainer}>
-                <h1 className={styles.searchTitle}>{t("title")}</h1>
+                <h1 className={styles.searchTitle}>{t("pages.patients.title")}</h1>
                 <form className={styles.searchPanel} onSubmit={handleSubmit(onSubmit)}>
                     <div className={styles.searchField}>
                         <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
@@ -83,13 +83,13 @@ const Patients: NextPage = () => {
                         <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                     </div>
                     <div className={styles.resetButton}>
-                        <Button text={t("search.reset")} onClick={resetSearch} secondary={true}/>
+                        <Button text={t("actions.reset")} onClick={resetSearch} secondary={true}/>
                     </div>
                     <div className={styles.newButton}>
-                        <Button text={t("search.new")} onClick={() => router.push("/patients/000000000000000000000000")} secondary={true}/>
+                        <Button text={t("actions.new")} onClick={() => router.push("/patients/000000000000000000000000")} secondary={true}/>
                     </div>
                     <div className={styles.searchButton}>
-                        <Button text={t("search.search")} onClick={handleSubmit(onSubmit)}/>
+                        <Button text={t("actions.search")} onClick={handleSubmit(onSubmit)}/>
                     </div>
                 </form>
             </div>

@@ -11,12 +11,6 @@
     "/login": [
       "login"
     ],
-    "/patients": [
-      "patients"
-    ],
-    "/patients/[pid]": [
-      "patients"
-    ],
     "/configuration": [
       "configuration"
     ]

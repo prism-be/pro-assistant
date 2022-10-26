@@ -11,9 +11,44 @@
   "actions": {
     "add": "Ajouter",
     "save": "Sauvegarder",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "search": "Rechercher",
+    "reset": "Vider",
+    "new": "Nouveau"
+  },
+  "fields": {
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "phoneNumber": "N° Téléphone",
+    "birthDate": "Date de naissance",
+    "email": "E-mail",
+    "street": "Rue",
+    "number": "N°",
+    "zipCode": "Code Postal",
+    "city": "Ville",
+    "country": "Pays"
+  },
+  "results": {
+    "doSearch": "Veuillez faire une recherche pour avoir des résultats",
+    "noResults": "Il n'y pas de résultats pour votre recherche",
+    "title": "Résultats de la recherche"
   },
   "alerts" : {
     "saveSuccess": "Les modifications ont été enregistrées."
+  },
+  "popups": {
+    "meeting" : {
+      "title": "Edition d'un rendez-vous"
+    }
+  },
+  "pages" : {
+    "patients" : {
+      "title": "Rechercher un patient",
+      "details" : {
+        "title": "Fiche patient : ",
+        "contact": "Coordonnées",
+        "saveSuccess": "Les modifications sur la fiche ont été sauvegardées."
+      }
+    }
   }
 }
