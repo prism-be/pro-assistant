@@ -52,3 +52,39 @@
   grid-row: 4;
   grid-column: 3 / span 2;
 }
+
+.date
+{
+  grid-row: 5 / span 3;
+  grid-column: 1 / span 2;
+}
+
+.hour
+{
+  grid-row: 5;
+  grid-column: 3 / span 2;
+}
+
+.duration
+{
+  grid-row: 6;
+  grid-column: 3 / span 2;
+}
+
+.durationText
+{
+  grid-row: 7;
+  grid-column: 3 / span 2;
+}
+ 
+.cancel
+{
+  grid-row: 8;
+  grid-column: 1;
+}
+
+.save
+{
+  grid-row: 8;
+  grid-column: 4;
+}

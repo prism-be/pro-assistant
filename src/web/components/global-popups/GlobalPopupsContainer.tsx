@@ -34,7 +34,7 @@ export const GlobalPopupsContainer = () => {
 
     return <div>
         {displayNewMeeting && <>
-            <MeetingPopup meetingId={meetingId} />
+            <MeetingPopup meetingId={meetingId} hide={() => setDisplayNewMeeting(false)} />
         </>}
     </div>
 }

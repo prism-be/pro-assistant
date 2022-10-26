@@ -1,0 +1,88 @@
+﻿@import '../../vars';
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  user-select: none;
+}
+
+.previous, .next {
+  cursor: pointer;
+
+  svg {
+    color: $primaryColor;
+    width: 24px;
+    height: 24px;
+    display: block;
+    margin: auto;
+  }
+}
+
+.previous {
+  grid-row: 1;
+  grid-column: 1;
+}
+
+.next {
+  grid-row: 1;
+  grid-column: 7;
+}
+
+.month {
+  text-align: center;
+  grid-row: 1;
+  grid-column: 2 / span 5;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+
+.day {
+  text-align: center;
+  padding: 0.25rem;
+  cursor: pointer;
+  
+  &:hover
+  {
+    background-color: $primaryColor;
+    color: $light;
+  }
+}
+
+.dayHeader
+{
+  font-weight: bold;
+}
+
+.daySelected
+{
+  background-color: $primaryColorDark;
+  color: $light;
+}
+
+.day1 {
+  grid-column: 1;
+}
+
+.day2 {
+  grid-column: 2;
+}
+
+.day3 {
+  grid-column: 3;
+}
+
+.day4 {
+  grid-column: 4;
+}
+
+.day5 {
+  grid-column: 5;
+}
+
+.day6 {
+  grid-column: 6;
+}
+
+.day7 {
+  grid-column: 7;
+}

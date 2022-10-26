@@ -25,7 +25,7 @@ export const onAlert = (id = defaultId) => {
 }
 
 // convenience methods
-export const alertSuccess = (message: string, options: any) => {
+export const alertSuccess = (message: string, options?: any) => {
     alert({ ...options, type: AlertType.Success, message });
 }
 

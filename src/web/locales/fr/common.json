@@ -28,7 +28,11 @@
     "city": "Ville",
     "country": "Pays",
     "meetingType": "Type de séance",
-    "price": "Prix"
+    "price": "Prix",
+    "hour": "Heure",
+    "duration": "Durée",
+    "fromHour": "à",
+    "toHour": "jusque"
   },
   "results": {
     "doSearch": "Veuillez faire une recherche pour avoir des résultats",
@@ -59,6 +63,17 @@
         "contact": "Coordonnées",
         "saveSuccess": "Les modifications sur la fiche ont été sauvegardées."
       }
+    }
+  },
+  "days": {
+    "short": {
+      "day1": "Lu",
+      "day2": "Ma",
+      "day3": "Me",
+      "day4": "Je",
+      "day5": "Ve",
+      "day6": "Sa",
+      "day7": "Di"
     }
   }
 }
