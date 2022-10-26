@@ -65,6 +65,9 @@
         "contact": "Coordonnées",
         "saveSuccess": "Les modifications sur la fiche ont été sauvegardées."
       }
+    },
+    "calendar": {
+      "title": "Agenda de la semaine du"
     }
   },
   "days": {

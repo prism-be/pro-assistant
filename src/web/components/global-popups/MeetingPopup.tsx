@@ -11,11 +11,11 @@ import useSWR from "swr";
 import {getTariffs} from "../../lib/services/tariffs";
 import {Calendar} from "../forms/Calendar";
 import {add, format, formatISO, parse} from "date-fns";
-import {fr} from "date-fns/locale";
 import Button from "../forms/Button";
 import {alertSuccess} from "../../lib/events/alert";
 import {Meeting, upsertMeeting} from "../../lib/services/meetings";
 import InputSelect from "../forms/InputSelect";
+import {getLocale} from "../../lib/localization";
 
 interface Props {
     meetingId?: string;
@@ -180,7 +180,7 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
                 <InputText className={styles.hour} label={t("fields.hour")} name={"hour"} required={true} type={"text"} register={register} setValue={setValue} error={errors.hour}/>
                 <InputText className={styles.duration} label={t("fields.duration")} name={"duration"} required={true} type={"text"} register={register} setValue={setValue} error={errors.duration}/>
                 <div className={styles.durationText}>
-                    <div>{format(date, "EEEE dd MMMM", { locale: fr})} {t("fields.fromHour")} {format(date, "HH:mm", { locale: fr})} {t("fields.toHour")} {format(add(date, {minutes: duration}), "HH:mm", { locale: fr})}</div>
+                    <div>{format(date, "EEEE dd MMMM", { locale: getLocale()})} {t("fields.fromHour")} {format(date, "HH:mm", { locale: getLocale()})} {t("fields.toHour")} {format(add(date, {minutes: duration}), "HH:mm")}</div>
                 </div>
 
                 <InputSelect className={styles.payment} label={t("fields.payment")} name={"payment"} required={false} register={register} error={errors.payment} options={paymentOptions} />

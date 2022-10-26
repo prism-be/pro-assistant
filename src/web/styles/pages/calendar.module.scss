@@ -1,0 +1,69 @@
+﻿@import '../vars';
+
+.navigationHeader
+{
+  padding-top: 0.5rem;
+  display: grid;
+  grid-template-columns: 24px auto 24px;
+  
+  svg {
+    height: 24px;
+    width: 24px;
+    color: $primaryColor;
+  }
+}
+
+.navigationLeft
+{
+  grid-column: 1;
+  display: block;
+  cursor: pointer;
+}
+
+.navigationRight
+{
+  grid-column: 3;
+  display: block;
+  cursor: pointer;
+}
+
+.calendar
+{
+  display: grid;
+  grid-template-columns: 2rem repeat(7, 1fr);
+  font-size: 0.8rem;
+  padding-top: 0.5rem;
+}
+
+.headerDay
+{
+  grid-row: 1;
+  text-align: center;
+  border-bottom: 1px $mediumGrey solid;
+}
+
+.hour {
+  grid-column: 1;
+  grid-row-end: span 2;
+  text-align: left;
+  border-bottom: 1px $mediumGrey solid;
+  border-right: 1px $mediumGrey solid;
+  vertical-align: middle;
+}
+
+.dayHourFirst,.dayHourSecond
+{
+  height: 1.5rem;
+  border-right: 1px $light solid;
+}
+.dayHourFirst
+{
+  padding: 0.25rem;
+  border-bottom: 1px $light dashed;
+}
+
+.dayHourSecond
+{
+  padding: 0.25rem;
+  border-bottom: 1px $mediumGrey solid;
+}
