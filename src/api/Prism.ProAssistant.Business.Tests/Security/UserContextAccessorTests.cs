@@ -26,10 +26,8 @@ public class UserContextAccessorTests
         var context = new DefaultHttpContext();
         httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
 
-        var mediator = new Mock<IMediator>();
-
         // Act
-        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object, mediator.Object);
+        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object);
 
         // Assert
         userContextAccessor.IsAuthenticated.Should().BeFalse();
@@ -52,10 +50,8 @@ public class UserContextAccessorTests
         };
         httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
 
-        var mediator = new Mock<IMediator>();
-
         // Act
-        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object, mediator.Object);
+        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object);
 
         // Assert
         userContextAccessor.IsAuthenticated.Should().BeTrue();
@@ -78,10 +74,8 @@ public class UserContextAccessorTests
         };
         httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
 
-        var mediator = new Mock<IMediator>();
-
         // Act
-        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object, mediator.Object);
+        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object);
 
         // Assert
         userContextAccessor.IsAuthenticated.Should().BeTrue();
@@ -108,10 +102,8 @@ public class UserContextAccessorTests
         };
         httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
 
-        var mediator = new Mock<IMediator>();
-
         // Act
-        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object, mediator.Object);
+        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object);
 
         // Assert
         userContextAccessor.IsAuthenticated.Should().BeTrue();
@@ -133,28 +125,15 @@ public class UserContextAccessorTests
             User = new ClaimsPrincipal(new ClaimsIdentity(new[]
                 {
                     new(ClaimTypes.NameIdentifier, id),
-                    new Claim("name", name)
+                    new Claim("name", name),
+                    new Claim("extension_Organization", organizationId)
                 }, "TestAuthType")
             )
         };
         httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
 
-        var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<GetUserInformation>(), CancellationToken.None))
-            .ReturnsAsync(new UserInformation
-            {
-                Id = id,
-                Organizations = new List<Organization>
-                {
-                    new()
-                    {
-                        Id = organizationId
-                    }
-                }
-            });
-
         // Act
-        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object, mediator.Object);
+        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object);
 
         // Assert
         userContextAccessor.IsAuthenticated.Should().BeTrue();

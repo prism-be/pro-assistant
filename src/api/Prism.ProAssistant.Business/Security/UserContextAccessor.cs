@@ -4,10 +4,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Security.Authentication;
 using System.Security.Claims;
-using MediatR;
 using Microsoft.AspNetCore.Http;
-using Prism.ProAssistant.Business.Queries;
 
 namespace Prism.ProAssistant.Business.Security;
 
@@ -23,28 +22,32 @@ public class UserContextAccessor : IUserContextAccessor
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    private readonly Lazy<string> _organisationId;
-
-    public UserContextAccessor(IHttpContextAccessor httpContextAccessor, IMediator mediator)
+    public UserContextAccessor(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
+    }
 
-        _organisationId = new Lazy<string>(() =>
+    public bool IsAuthenticated => _httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated == true;
+
+    public string OrganisationId
+    {
+        get
         {
             if (!IsAuthenticated)
             {
                 return string.Empty;
             }
 
-            var result = mediator.Send(new GetUserInformation(UserId));
-            result.Wait();
-            return result.Result.Organizations.First().Id;
-        });
+            var organization = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "extension_Organization")?.Value;
+
+            if (string.IsNullOrWhiteSpace(organization))
+            {
+                throw new AuthenticationException($"The user {UserId} don't have an organization");
+            }
+
+            return organization;
+        }
     }
-
-    public bool IsAuthenticated => _httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated == true;
-
-    public string OrganisationId => _organisationId.Value;
 
     public string Name
     {
