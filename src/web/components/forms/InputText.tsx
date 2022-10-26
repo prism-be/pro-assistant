@@ -12,10 +12,11 @@ interface Props {
     setValue: UseFormSetValue<FieldValues>;
     error: any;
     autoCapitalize?: boolean;
+    className?:string;
 }
 
 
-const InputText = ({label, name, type, required, register, error, autoCapitalize, setValue}: Props) => {
+const InputText = ({label, name, type, required, register, error, autoCapitalize, setValue, className}: Props) => {
 
     const autoCapitalizeContent = (e: { target: { value: any; }; }) => {
         if (autoCapitalize === true)
@@ -24,7 +25,7 @@ const InputText = ({label, name, type, required, register, error, autoCapitalize
         }
     }
     
-    return <div className={styles.container}>
+    return <div className={styles.container + " " + className}>
         <label className={styles.label}>{label} {required && " *"} </label>
         <input
             className={error ? styles.errorInput : styles.input}

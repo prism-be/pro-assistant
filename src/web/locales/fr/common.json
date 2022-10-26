@@ -38,7 +38,11 @@
   },
   "popups": {
     "meeting" : {
-      "title": "Edition d'un rendez-vous"
+      "titleNew": "Ajouter un rendez-vous",
+      "titleEditing": "Edition d'un rendez-vous",
+      "patientsSuggestions" : {
+        "title": "Suggestions de patients"
+      }
     }
   },
   "pages" : {
