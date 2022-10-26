@@ -19,8 +19,6 @@
 .patientsSuggestions {
   grid-row: 2;
   grid-column: span 4;
-
-
 }
 
 .patientsSuggestion {
@@ -29,4 +27,28 @@
   &:hover {
     background-color: $light;
   }
+}
+
+.tariffs
+{
+  grid-row: 3;
+  grid-column: span 4;
+
+  select {
+    display: block;
+    border: 1px $grey solid;
+    outline: none;
+    padding: 0.5rem;
+    width: 100%;
+  }
+}
+
+.type {
+  grid-row: 4;
+  grid-column: 1 / span 2;
+}
+
+.price {
+  grid-row: 4;
+  grid-column: 3 / span 2;
 }

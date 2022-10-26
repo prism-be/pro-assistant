@@ -3,7 +3,7 @@
     "hello": "Bonjour",
     "logout": "Se déconnecter"
   },
-  "menu" : {
+  "menu": {
     "patients": "Fiches Patients",
     "calendar": "Calendrier",
     "configuration": "Configuration"
@@ -26,29 +26,35 @@
     "number": "N°",
     "zipCode": "Code Postal",
     "city": "Ville",
-    "country": "Pays"
+    "country": "Pays",
+    "meetingType": "Type de séance",
+    "price": "Prix"
   },
   "results": {
     "doSearch": "Veuillez faire une recherche pour avoir des résultats",
     "noResults": "Il n'y pas de résultats pour votre recherche",
     "title": "Résultats de la recherche"
   },
-  "alerts" : {
+  "alerts": {
     "saveSuccess": "Les modifications ont été enregistrées."
   },
   "popups": {
-    "meeting" : {
+    "meeting": {
       "titleNew": "Ajouter un rendez-vous",
       "titleEditing": "Edition d'un rendez-vous",
-      "patientsSuggestions" : {
+      "patientsSuggestions": {
         "title": "Suggestions de patients"
+      },
+      "tariffs": {
+        "title": "Type de séance",
+        "empty": "Veuillez choisir un type de séance"
       }
     }
   },
-  "pages" : {
-    "patients" : {
+  "pages": {
+    "patients": {
       "title": "Rechercher un patient",
-      "details" : {
+      "details": {
         "title": "Fiche patient : ",
         "contact": "Coordonnées",
         "saveSuccess": "Les modifications sur la fiche ont été sauvegardées."
