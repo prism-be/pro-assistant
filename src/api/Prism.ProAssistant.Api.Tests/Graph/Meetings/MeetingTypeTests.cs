@@ -25,6 +25,6 @@ public class MeetingTypeTests
         MeetingType.ConfigureMeeting(descriptor.Object);
 
         // Assert
-        descriptor.Invocations.Count.Should().Be(9);
+        descriptor.Invocations.Count.Should().Be(10);
     }
 }

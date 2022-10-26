@@ -10,10 +10,11 @@ import {useMsal} from "@azure/msal-react";
 import useSWR from "swr";
 import {getTariffs} from "../../lib/services/tariffs";
 import {Calendar} from "../forms/Calendar";
-import {add, format, parse} from "date-fns";
+import {add, format, formatISO, parse} from "date-fns";
 import {fr} from "date-fns/locale";
 import Button from "../forms/Button";
 import {alertSuccess} from "../../lib/events/alert";
+import {Meeting, upsertMeeting} from "../../lib/services/meetings";
 
 interface Props {
     meetingId?: string;
@@ -23,7 +24,7 @@ interface Props {
 export const MeetingPopup = ({meetingId, hide}: Props) => {
     
     const now = new Date();
-    
+
     const {t} = useTranslation('common');
     const {register, setValue, formState: {errors}, watch, getValues, handleSubmit} = useForm();
     const watchSuggestion = watch(["lastName", "firstName"]);
@@ -70,8 +71,6 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
             
             setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate(), newHour.getHours(), newHour.getMinutes()));
         }
-        
-        
     }, [watchHour]);
 
     const suggestPatients = async () => {
@@ -117,7 +116,20 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
         }
     }
     
-    const onSubmit = (data: any) => {
+    const onSubmit = async (data: any) => {
+        const meeting : Meeting = {
+            id: meetingId ?? '',
+            patientId: patient?.id ?? null,
+            title: data.lastName + " " + data.firstName + (data.type ? " (" + data.type + ")" : ""),
+            price: parseFloat(data.price),
+            duration: duration,
+            startDate: formatISO(date),
+            type: data.type,
+            state: 0,
+            payment: 0
+        }
+
+        await upsertMeeting(meeting, instance, accounts[0]);
         hide();
         alertSuccess(t("alerts.saveSuccess"));
     }

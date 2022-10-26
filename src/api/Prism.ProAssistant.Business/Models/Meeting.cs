@@ -31,16 +31,19 @@ public class Meeting
     public int Duration { get; set; }
 
     [JsonPropertyName("state")]
-    public MeetingState State { get; set; }
+    public int State { get; set; }
 
     [JsonPropertyName("price")]
     public decimal Price { get; set; }
 
     [JsonPropertyName("payment")]
-    public PaymentTypes Payment { get; set; }
+    public int Payment { get; set; }
 
     [JsonPropertyName("paymentDate")]
     public DateTime? PaymentDate { get; set; }
+
+    [JsonPropertyName("type")]
+    public string? Type { get; set; }
 }
 
 public enum MeetingState

@@ -23,9 +23,9 @@ public class SerializationTests
         {
             Id = Identifier.GenerateString(),
             Duration = _dice.Next(0, 42),
-            Payment = PaymentTypes.Wire,
+            Payment = (int)PaymentTypes.Wire,
             Price = _dice.Next(0, 42),
-            State = MeetingState.Confirmed,
+            State = (int)MeetingState.Confirmed,
             PaymentDate = DateTime.UtcNow,
             Title = Identifier.GenerateString(),
             PatientId = Identifier.GenerateString(),

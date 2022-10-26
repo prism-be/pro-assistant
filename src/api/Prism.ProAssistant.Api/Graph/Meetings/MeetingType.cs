@@ -25,5 +25,6 @@ public class MeetingType : ObjectType<Meeting>
         descriptor.Field(_ => _.PatientId);
         descriptor.Field(_ => _.PaymentDate);
         descriptor.Field(_ => _.StartDate);
+        descriptor.Field(_ => _.Type);
     }
 }
