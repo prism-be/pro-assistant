@@ -37,19 +37,6 @@ public class SerializationTests
     }
 
     [Fact]
-    public void Organization_Ok()
-    {
-        // Arrange
-        var organization = new Organization
-        {
-            Id = Identifier.GenerateString()
-        };
-
-        // Act and Assert
-        CheckSerialization(organization);
-    }
-
-    [Fact]
     public void Patient_Ok()
     {
         // Arrange
