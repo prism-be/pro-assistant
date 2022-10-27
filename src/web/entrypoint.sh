@@ -18,7 +18,7 @@ find /app/.next \( -type d -name .git -prune \) -o -type f -print0 | xargs -0 se
 echo "Check that we have NEXT_PUBLIC_AZURE_AD_USER_FLOW vars"
 test -n "NEXT_PUBLIC_AZURE_AD_USER_FLOW"
  
-find /app/.next \( -type d -name .git -prune \) -o -type f -print0 | xargs -0 sed -i "s#APP_NEXT_PUBLIC_AZURE_AD_CLIENT_ID#$NEXT_PUBLIC_AZURE_AD_USER_FLOW#g"
+find /app/.next \( -type d -name .git -prune \) -o -type f -print0 | xargs -0 sed -i "s#APP_NEXT_PUBLIC_AZURE_AD_USER_FLOW#$NEXT_PUBLIC_AZURE_AD_USER_FLOW#g"
  
 echo "Starting Nextjs"
 exec "$@"
