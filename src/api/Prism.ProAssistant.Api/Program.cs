@@ -14,6 +14,7 @@ using MongoDB.Driver;
 using Prism.ProAssistant.Api.Graph.Meetings;
 using Prism.ProAssistant.Api.Graph.Patients;
 using Prism.ProAssistant.Api.Graph.Tariffs;
+using Prism.ProAssistant.Api.Middlewares;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Behaviors;
 using Prism.ProAssistant.Business.Security;
@@ -94,6 +95,7 @@ builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 
 var app = builder.Build();
+app.UseMiddleware<ErrorLoggingMiddleware>();
 
 app.UseCors(opt =>
 {
@@ -104,6 +106,7 @@ app.UseCors(opt =>
             EnvironmentConfiguration.GetMandatoryConfiguration("FRONT_DOMAIN_CUSTOM")
         );
 });
+
 
 app.UseHealthChecks("/health");
 app.MapControllers();
