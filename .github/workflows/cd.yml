@@ -9,7 +9,7 @@ jobs:
   api:
     uses: ./.github/workflows/cd-docker.yml
     with:
-      dockerFile: ./Prism.Picshare.Services.Api/Dockerfile
+      dockerFile: ./Prism.ProAssistant.Api/Dockerfile
       imageTag: api
       workingDirectory: src/api/
       isProduction: true
