@@ -28,11 +28,6 @@ public class OrganizationContext : IOrganizationContext
         var client = new MongoClient(mongoDbConfiguration.ConnectionString);
         var database = client.GetDatabase(userContextAccessor.OrganisationId);
 
-        if (!database.ListCollectionNames().Any())
-        {
-            Initialize(database);
-        }
-
         History = database.GetCollection<History>(CollectionNames.History);
         Patients = database.GetCollection<Patient>(CollectionNames.Patients);
         Meetings = database.GetCollection<Meeting>(CollectionNames.Meetings);
@@ -46,19 +41,6 @@ public class OrganizationContext : IOrganizationContext
     public IMongoCollection<Meeting> Meetings { get; }
 
     public IMongoCollection<History> History { get; }
-
-    private void Initialize(IMongoDatabase database)
-    {
-        database.CreateCollection(CollectionNames.Patients, new CreateCollectionOptions
-        {
-            Collation = CaseInsensitiveCollation
-        });
-
-        var firstNameIndexModel = new CreateIndexModel<Patient>(Builders<Patient>.IndexKeys.Ascending(x => x.FirstName));
-        database.GetCollection<Patient>(CollectionNames.Patients).Indexes.CreateOne(firstNameIndexModel);
-        var lastNameIndexModel = new CreateIndexModel<Patient>(Builders<Patient>.IndexKeys.Ascending(x => x.LastName));
-        database.GetCollection<Patient>(CollectionNames.Patients).Indexes.CreateOne(lastNameIndexModel);
-    }
 
     public static class CollectionNames
     {
