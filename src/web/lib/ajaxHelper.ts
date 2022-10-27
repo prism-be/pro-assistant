@@ -1,4 +1,6 @@
 ﻿import {AccountInfo, InteractionRequiredAuthError, IPublicClientApplication} from "@azure/msal-browser";
+import getConfig from 'next/config'
+const { publicRuntimeConfig: config } = getConfig()
 
 interface ObjectResult<TData> {
     status: number;
@@ -121,7 +123,7 @@ export async function postFile(route: string, file: File): Promise<any> {
 
 export const getAuthorization = async (instance: IPublicClientApplication, account: AccountInfo): Promise<string> => {
     const accessTokenRequest = {
-        scopes: ["https://byprism.onmicrosoft.com/b210005a-b610-43e2-9dd5-824e50b9f692/records.manage"],
+        scopes: ["https://" + config.tenantName + ".onmicrosoft.com/" + config.clientId + "/records.manage"],
         account: account,
     };
 

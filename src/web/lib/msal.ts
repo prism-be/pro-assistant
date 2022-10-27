@@ -1,29 +1,33 @@
 ﻿import * as msal from "@azure/msal-browser";
 
+import getConfig from 'next/config'
+const { publicRuntimeConfig: config } = getConfig()
 
 export const b2cPolicies = {
     names: {
-        signUpSignIn: process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW,
-        forgotPassword: process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW,
-        editProfile: process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW
+        signUpSignIn: config.userFlow,
+        forgotPassword: config.userFlow,
+        editProfile: config.userFlow
     },
     authorities: {
         signUpSignIn: {
-            authority: "https://" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".b2clogin.com/" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".onmicrosoft.com/" + process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW,
+            authority: "https://" + config.tenantName + ".b2clogin.com/" + config.tenantName + ".onmicrosoft.com/" + config.userFlow,
         },
         forgotPassword: {
-            authority: "https://" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".b2clogin.com/" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".onmicrosoft.com/" + process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW,
+            authority: "https://" + config.tenantName + ".b2clogin.com/" + config.tenantName + ".onmicrosoft.com/" + config.userFlow,
         },
         editProfile: {
-            authority: "https://" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".b2clogin.com/" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".onmicrosoft.com/" + process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW
+            authority: "https://" + config.tenantName + ".b2clogin.com/" + config.tenantName + ".onmicrosoft.com/" + config.userFlow
         }
     },
-    authorityDomain: process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".b2clogin.com"
+    authorityDomain: config.tenantName + ".b2clogin.com"
 }
+
+console.log(b2cPolicies);
 
 export const msalConfig = {
     auth: {
-        clientId: process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID!,
+        clientId: config.clientId,
         authority: b2cPolicies.authorities.signUpSignIn.authority,
         knownAuthorities: [b2cPolicies.authorityDomain],
         redirectUri: "/",

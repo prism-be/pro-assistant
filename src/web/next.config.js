@@ -7,7 +7,10 @@ const nextConfig = {
     swcMinify: true,
     output: "standalone",
     publicRuntimeConfig: {
-        apiRoot: process.env.NEXT_PUBLIC_API_URL
+        clientId: process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID,
+        tenantId: process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID,
+        tenantName: process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME,
+        userFlow: process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW
     },
     async rewrites() {
         return [
