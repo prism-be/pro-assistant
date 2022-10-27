@@ -20,9 +20,6 @@ public interface IOrganizationContext
 
 public class OrganizationContext : IOrganizationContext
 {
-
-    private static readonly Collation CaseInsensitiveCollation = new("fr", strength: CollationStrength.Primary);
-
     public OrganizationContext(MongoDbConfiguration mongoDbConfiguration, IUserContextAccessor userContextAccessor)
     {
         var client = new MongoClient(mongoDbConfiguration.ConnectionString);
