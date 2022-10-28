@@ -7,21 +7,27 @@ interface Props {
     label: string;
     name: string;
     type: string;
-    required: boolean;
+    required?: boolean;
     register: UseFormRegister<FieldValues>;
     setValue: UseFormSetValue<FieldValues>;
-    error: any;
+    error?: any;
     autoCapitalize?: boolean;
     className?:string;
+    onChange?: (value: string) => void;
 }
 
 
-const InputText = ({label, name, type, required, register, error, autoCapitalize, setValue, className}: Props) => {
+const InputText = ({label, name, type, required, register, error, autoCapitalize, setValue, className, onChange}: Props) => {
 
-    const autoCapitalizeContent = (e: { target: { value: any; }; }) => {
+    const valueChanged = (e: { target: { value: any; }; }) => {
         if (autoCapitalize === true)
         {
             setValue(name, e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1));
+        }
+        
+        if (onChange)
+        {
+            onChange(e.target.value);
         }
     }
     
@@ -30,7 +36,7 @@ const InputText = ({label, name, type, required, register, error, autoCapitalize
         <input
             className={error ? styles.errorInput : styles.input}
             type={type}
-            {...register(name, {required, onChange: (e) => { autoCapitalizeContent(e) }})}/>
+            {...register(name, {required, onChange: (e) => { valueChanged(e) }})}/>
         {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
     </div>
 }
