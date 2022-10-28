@@ -1,0 +1,24 @@
+﻿@import "../../vars";
+
+.label
+{
+  display: block;
+}
+.input, .errorInput
+{
+  display: block;
+  border: 1px $grey solid;
+  outline: none;
+  padding: 0.5rem;
+  width: 100%;
+}
+
+.errorInput
+{
+  border-color: $red;
+}
+
+.input:focus, .input:active
+{
+  border: 1px $light solid;
+}

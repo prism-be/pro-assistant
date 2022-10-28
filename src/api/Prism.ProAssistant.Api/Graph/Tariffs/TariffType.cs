@@ -19,5 +19,6 @@ public class TariffType : ObjectType<Tariff>
         descriptor.Field(_ => _.Id);
         descriptor.Field(_ => _.Name);
         descriptor.Field(_ => _.Price);
+        descriptor.Field(_ => _.DefaultDuration);
     }
 }

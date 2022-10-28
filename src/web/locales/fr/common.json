@@ -32,7 +32,9 @@
     "hour": "Heure",
     "duration": "Durée",
     "fromHour": "à",
-    "toHour": "jusque"
+    "toHour": "jusque",
+    "payment": "Mode de paiement",
+    "meetingState": "Etat du rendez-vous"
   },
   "results": {
     "doSearch": "Veuillez faire une recherche pour avoir des résultats",
@@ -63,6 +65,9 @@
         "contact": "Coordonnées",
         "saveSuccess": "Les modifications sur la fiche ont été sauvegardées."
       }
+    },
+    "calendar": {
+      "title": "Agenda de la semaine du"
     }
   },
   "days": {
@@ -74,6 +79,23 @@
       "day5": "Ve",
       "day6": "Sa",
       "day7": "Di"
+    }
+  },
+  "options": {
+    "unknown": "Inconnu",
+    "payments" :
+    {
+      "state0": "Non payé",
+      "state1": "En liquide",
+      "state2": "Par virement",
+      "state3": "Par carte"
+    },
+    "meetings" :
+    {
+      "state0": "Créé",
+      "state1": "Confirmé",
+      "state10": "Terminé",
+      "state100": "Annulé"
     }
   }
 }

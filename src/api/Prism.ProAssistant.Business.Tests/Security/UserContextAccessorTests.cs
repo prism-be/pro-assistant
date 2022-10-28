@@ -4,9 +4,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Security.Authentication;
 using System.Security.Claims;
 using FluentAssertions;
-using MediatR;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using Prism.ProAssistant.Business.Security;
@@ -137,8 +137,31 @@ public class UserContextAccessorTests
         userContextAccessor.UserId.Should().Be(id);
         userContextAccessor.Name.Should().Be(name);
         userContextAccessor.OrganisationId.Should().Be(organizationId);
+    }
+    
+    [Fact]
+    public void OrganisationId_Empty()
+    {
+        // Arrange
+        var name = Identifier.GenerateString();
 
-        // twice to ckeck Lazy
-        userContextAccessor.OrganisationId.Should().Be(organizationId);
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        var context = new DefaultHttpContext
+        {
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                {
+                    new(ClaimTypes.NameIdentifier, Identifier.GenerateString()),
+                    new Claim("name", name)
+                }, "TestAuthType")
+            )
+        };
+        httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
+
+        // Act
+        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object);
+
+        // Assert
+        userContextAccessor.IsAuthenticated.Should().BeTrue();
+        Assert.Throws<AuthenticationException>(() => userContextAccessor.OrganisationId.Should().BeEmpty());
     }
 }

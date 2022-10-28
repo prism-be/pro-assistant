@@ -24,6 +24,12 @@ public class Meeting
     [JsonPropertyName("title")]
     public string Title { get; set; } = string.Empty;
 
+    [JsonPropertyName("lastName")]
+    public string LastName { get; set; } = string.Empty;
+    
+    [JsonPropertyName("firstName")]
+    public string FirstName { get; set; } = string.Empty;
+
     [JsonPropertyName("startDate")]
     public DateTime StartDate { get; set; }
 

@@ -25,7 +25,7 @@
 
 .tariffGridRow {
   display: grid;
-  grid-template-columns: 1fr 5rem 5fr;
+  grid-template-columns: 1fr 5rem 2fr;
   line-height: 24px;
 
   a {
@@ -51,11 +51,11 @@
 .tariffEditionGridButtonCancel {
   margin-top: 1rem;
   grid-column: 1;
-  grid-row: 3;
+  grid-row: 4;
 }
 
 .tariffEditionGridButtonSave {
   margin-top: 1rem;
   grid-column: 3;
-  grid-row: 3;
+  grid-row: 4;
 }

@@ -5,16 +5,18 @@ import useTranslation from "next-translate/useTranslation";
 import InputText from "../forms/InputText";
 import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
-import {PatientSummary, searchPatients} from "../../lib/services/patients";
+import {getPatient, PatientSummary, searchPatients} from "../../lib/services/patients";
 import {useMsal} from "@azure/msal-react";
 import useSWR from "swr";
 import {getTariffs} from "../../lib/services/tariffs";
 import {Calendar} from "../forms/Calendar";
-import {add, format, formatISO, parse} from "date-fns";
-import {fr} from "date-fns/locale";
+import {add, format, formatISO, parse, parseISO} from "date-fns";
 import Button from "../forms/Button";
 import {alertSuccess} from "../../lib/events/alert";
-import {Meeting, upsertMeeting} from "../../lib/services/meetings";
+import {getMeetingById, Meeting, upsertMeeting} from "../../lib/services/meetings";
+import InputSelect from "../forms/InputSelect";
+import {getLocale} from "../../lib/localization";
+import {dataUpdated} from "../../lib/events/data";
 
 interface Props {
     meetingId?: string;
@@ -22,19 +24,31 @@ interface Props {
 }
 
 export const MeetingPopup = ({meetingId, hide}: Props) => {
-    
+
     const now = new Date();
 
     const {t} = useTranslation('common');
-    const {register, setValue, formState: {errors}, watch, getValues, handleSubmit} = useForm();
-    const watchSuggestion = watch(["lastName", "firstName"]);
-    const watchHour = watch(["hour", "duration"]);
+    const {register, setValue, formState: {errors}, getValues, handleSubmit} = useForm();
     const {instance, accounts} = useMsal();
     const [patientsSuggestions, setPatientsSuggestions] = useState<PatientSummary[]>([]);
     const [patient, setPatient] = useState<PatientSummary>();
     const [suggested, setSuggested] = useState<string>();
     const [date, setDate] = useState<Date>(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
     const [duration, setDuration] = useState<number>(60);
+
+    const paymentOptions = [
+        {value: "0", text: t("options.payments.state0")},
+        {value: "1", text: t("options.payments.state1")},
+        {value: "2", text: t("options.payments.state2")},
+        {value: "3", text: t("options.payments.state3")}
+    ]
+
+    const stateOptions = [
+        {value: "0", text: t("options.meetings.state0")},
+        {value: "1", text: t("options.meetings.state1")},
+        {value: "10", text: t("options.meetings.state10")},
+        {value: "100", text: t("options.meetings.state100")}
+    ]
 
     const loadTariffs = async () => {
         return await getTariffs(instance, accounts[0]);
@@ -44,40 +58,79 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
     useEffect(() => {
         setValue("duration", 60);
         setValue("hour", format(date, "HH:mm"));
-    }, []);
-    
-    useEffect(() => {
-        const searchPatientsTimeout = setTimeout(() => suggestPatients(), 500);
-        return () => clearTimeout(searchPatientsTimeout);
-    }, [watchSuggestion]);
 
-    
-    useEffect(() => {
+        if (meetingId) {
+            loadExistingMeeting(meetingId);
+        }
+
+    }, []);
+
+    const loadExistingMeeting = async (meetingId: string) => {
+        const m = await getMeetingById(meetingId, instance, accounts[0]);
+        Object.getOwnPropertyNames(m).forEach(p => {
+            setValue(p, (m as any)[p]);
+        });
+
+        if (m.patientId) {
+            const patient = await getPatient(m.patientId, instance, accounts[0]);
+
+            if (patient) {
+                setPatient(patient);
+            }
+        }
+
+        const d = parseISO(m.startDate);
+        setDate(d);
+        setDuration(m.duration);
+        setValue("hour", format(d, "HH:mm"));
+        
+        const tariff = tariffs.data?.find(x => x.name == m.type);
+        
+        if (tariff)
+        {
+            setValue("tariff", tariff.id);
+        }
+    }
+
+    const computeDate = () => {
         const newDuration = parseInt(getValues("duration"));
 
-        if (newDuration > 0 && newDuration !== duration)
-        {
+        if (newDuration > 0 && newDuration !== duration) {
             setDuration(newDuration);
         }
-        
+
         const newHour = parse(getValues('hour'), "HH:mm", new Date());
-        
+
         if (newHour.getFullYear()) {
 
-            if (newHour.getHours() === date.getHours() && newHour.getMinutes() === date.getMinutes())
-            {
+            if (newHour.getHours() === date.getHours() && newHour.getMinutes() === date.getMinutes()) {
                 return;
             }
-            
+
             setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate(), newHour.getHours(), newHour.getMinutes()));
         }
-    }, [watchHour]);
+    }
+    
+    const selectDate =(d : Date) => {
+        const newHour = parse(getValues('hour'), "HH:mm", new Date());
+        setDate(new Date(d.getFullYear(), d.getMonth(), d.getDate(), newHour.getHours(), newHour.getMinutes()));
+    }
 
+    let searchPatientsTimeout: any;
+    const startSuggestPatients = () => {
+        if (searchPatientsTimeout)
+        {
+            clearTimeout(searchPatientsTimeout);
+        }
+        searchPatientsTimeout = setTimeout(() => suggestPatients(), 500);
+    }
+    
     const suggestPatients = async () => {
         const lastName = getValues('lastName');
         const firstName = getValues('firstName');
 
         if (lastName === "" && firstName === "") {
+            setPatientsSuggestions([]);
             return;
         }
 
@@ -110,14 +163,15 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
         if (tariff) {
             setValue("type", tariff.name);
             setValue("price", tariff.price.toFixed(2));
+            setValue("duration", tariff.defaultDuration);
         } else {
             setValue("type", "");
             setValue("price", "");
         }
     }
-    
+
     const onSubmit = async (data: any) => {
-        const meeting : Meeting = {
+        const meeting: Meeting = {
             id: meetingId ?? '',
             patientId: patient?.id ?? null,
             title: data.lastName + " " + data.firstName + (data.type ? " (" + data.type + ")" : ""),
@@ -125,13 +179,33 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
             duration: duration,
             startDate: formatISO(date),
             type: data.type,
-            state: 0,
-            payment: 0
+            state: parseInt(data.state),
+            payment: parseInt(data.payment),
+            paymentDate: parseInt(data.payment) !== 0 ? formatISO(new Date()) : null,
+            firstName: data.firstName,
+            lastName: data.lastName
         }
 
         await upsertMeeting(meeting, instance, accounts[0]);
         hide();
         alertSuccess(t("alerts.saveSuccess"));
+        dataUpdated({type: "meeting"});
+    }
+
+    const getTariffsOptions = () => {
+        let options = tariffs.data?.map(x => {
+            return {
+                value: x.id,
+                text: x.name + " (" + x.price.toFixed(2) + "€)"
+            }
+        }) ?? [];
+
+        options.unshift({
+            value: "",
+            text: t("popups.meeting.tariffs.empty")
+        });
+
+        return options;
     }
 
     return <Popup>
@@ -140,34 +214,29 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
             {meetingId !== undefined && <h1>{t("popups.meeting.titleEditing")}</h1>}
 
             <form className={styles.content} onSubmit={handleSubmit(onSubmit)}>
-                <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.lastName}/>
-                <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.firstName}/>
+                <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName} onChange={() => startSuggestPatients()}/>
+                <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.firstName} onChange={() => startSuggestPatients()}/>
                 {patientsSuggestions.length !== 0 && <div className={styles.patientsSuggestions}>
                     <h2>{t("popups.meeting.patientsSuggestions.title")}</h2>
                     {patientsSuggestions.map(p => <div key={p.id} className={styles.patientsSuggestion} onClick={() => selectPatient(p)}>
                         {p.lastName} {p.firstName} {p.birthDate && p.birthDate !== "" && <>({p.birthDate})</>}
                     </div>)}
                 </div>}
-                <div className={styles.tariffs}>
-                    <span>{t("popups.meeting.tariffs.title")}</span>
-                    {tariffs.data && <div>
-                        <select onChange={(e) => setMeetingType(e.target.value)}>
-                            <option value="">{t("popups.meeting.tariffs.empty")}</option>
-                            {tariffs.data.map(t => <option key={t.id} value={t.id}>{t.name} ({t.price.toFixed(2)}€)</option>)}
-                        </select>
-                    </div>
-                    }
-                </div>
-                <InputText className={styles.type} label={t("fields.meetingType")} name={"type"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.type}/>
-                <InputText className={styles.price} label={t("fields.price")} name={"price"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.price}/>
-                <Calendar className={styles.date} value={date} onChange={(d) => setDate(d)}/>
-                <InputText className={styles.hour} label={t("fields.hour")} name={"hour"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.hour}/>
-                <InputText className={styles.duration} label={t("fields.duration")} name={"duration"} autoCapitalize={true} required={false} type={"text"} register={register} setValue={setValue} error={errors.duration}/>
+                <InputSelect className={styles.tariffs} label={t("popups.meeting.tariffs.title")} name={"tariff"} register={register} options={getTariffsOptions()} onChange={(v) => setMeetingType(v)}/>
+                <InputText className={styles.type} label={t("fields.meetingType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>
+                <InputText className={styles.price} label={t("fields.price")} name={"price"} required={true} type={"text"} register={register} setValue={setValue} error={errors.price}/>
+                <Calendar className={styles.date} value={date} onChange={(d) => selectDate(d)}/>
+                <InputText className={styles.hour} label={t("fields.hour")} name={"hour"} required={true} type={"text"} register={register} setValue={setValue} error={errors.hour} onChange={() => computeDate()}/>
+                <InputText className={styles.duration} label={t("fields.duration")} name={"duration"} required={true} type={"text"} register={register} setValue={setValue} error={errors.duration} onChange={() => computeDate()}/>
                 <div className={styles.durationText}>
-                    <div>{format(date, "EEEE dd MMMM", { locale: fr})} {t("fields.fromHour")} {format(date, "HH:mm", { locale: fr})} {t("fields.toHour")} {format(add(date, {minutes: duration}), "HH:mm", { locale: fr})}</div>
+                    <div>{format(date, "EEEE dd MMMM", {locale: getLocale()})} {t("fields.fromHour")} {format(date, "HH:mm", {locale: getLocale()})} {t("fields.toHour")} {format(add(date, {minutes: duration}), "HH:mm")}</div>
                 </div>
-                <Button text={t("actions.cancel")} secondary={true} className={styles.cancel} onClick={() => hide()} />
-                <Button text={t("actions.save")}  className={styles.save}  onClick={handleSubmit(onSubmit)}/>
+
+                <InputSelect className={styles.payment} label={t("fields.payment")} name={"payment"} required={false} register={register} error={errors.payment} options={paymentOptions}/>
+                <InputSelect className={styles.state} label={t("fields.meetingState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions}/>
+
+                <Button text={t("actions.cancel")} secondary={true} className={styles.cancel} onClick={() => hide()}/>
+                <Button text={t("actions.save")} className={styles.save} onClick={handleSubmit(onSubmit)}/>
             </form>
         </>
     </Popup>

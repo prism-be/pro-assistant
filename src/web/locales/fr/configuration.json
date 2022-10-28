@@ -1,8 +1,9 @@
 ﻿{
   "tariffs": {
-    "title": "Configuration des tarifs des séances",
-    "titleExisting": "Liste des tarifs existants",
+    "title": "Configuration des types de rendez-vous",
+    "titleExisting": "Liste des types de rendez-vous existants",
     "name": "Nom",
-    "price": "Prix"
+    "price": "Prix",
+    "defaultDuration": "Durée par défaut"
   }
 }

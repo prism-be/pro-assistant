@@ -2,8 +2,8 @@
 import styles from '../../styles/components/forms/calendar.module.scss'
 import {useEffect, useState} from "react";
 import {ArrowLeft, ArrowRight} from "../icons/Icons";
-import { fr } from 'date-fns/locale'
 import useTranslation from "next-translate/useTranslation";
+import {getLocale} from "../../lib/localization";
 
 interface Props {
     value?: Date;
@@ -69,7 +69,7 @@ export const Calendar = ({value, onChange, className}: Props) => {
     return <div className={styles.calendar + " " + className}>
         <div className={styles.previous} onClick={() => setMonth(add(month, { months: -1 })) }><ArrowLeft /></div>
         <div className={styles.next} onClick={() => setMonth(add(month, { months: 1 })) }><ArrowRight /></div>
-        <div className={styles.month}>{format(month, "MMMM yyyy", { locale: fr })}</div>
+        <div className={styles.month}>{format(month, "MMMM yyyy", { locale: getLocale() })}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day1}>{t("days.short.day1")}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day2}>{t("days.short.day2")}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day3}>{t("days.short.day3")}</div>
