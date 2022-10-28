@@ -22,12 +22,17 @@ public class MeetingQuery
         return organizationContext.Meetings.Find(x => x.Id == id).AsExecutable();
     }
 
-    [UsePaging]
-    [UseProjection]
     [UseSorting]
-    [UseFiltering]
-    public IExecutable<Meeting> GetMeetings([Service] IOrganizationContext organizationContext)
+    public IExecutable<Meeting> GetMeetings(DateTime startDate, DateTime endDate, [Service] IOrganizationContext organizationContext)
     {
-        return organizationContext.Meetings.AsExecutable();
+        var filters = new List<FilterDefinition<Meeting>>
+        {
+            Builders<Meeting>.Filter.Gte(x => x.StartDate, startDate),
+            Builders<Meeting>.Filter.Lte(x => x.StartDate, endDate)
+        };
+
+        return organizationContext.Meetings
+            .Find(Builders<Meeting>.Filter.And(filters))
+            .AsExecutable();
     }
 }

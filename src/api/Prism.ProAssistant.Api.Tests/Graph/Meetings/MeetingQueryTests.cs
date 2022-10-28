@@ -4,7 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Threading;
+using System;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Prism.ProAssistant.Api.Graph.Meetings;
@@ -49,23 +49,26 @@ public class MeetingQueryTests
         await organisationContext.Meetings.InsertOneAsync(new Meeting
         {
             Id = Identifier.GenerateString(),
-            Title = Identifier.GenerateString()
+            Title = Identifier.GenerateString(),
+            StartDate = DateTime.UtcNow
         });
 
         await organisationContext.Meetings.InsertOneAsync(new Meeting
         {
             Id = Identifier.GenerateString(),
-            Title = Identifier.GenerateString()
+            Title = Identifier.GenerateString(),
+            StartDate = DateTime.UtcNow
         });
         await organisationContext.Meetings.InsertOneAsync(new Meeting
         {
             Id = Identifier.GenerateString(),
-            Title = Identifier.GenerateString()
+            Title = Identifier.GenerateString(),
+            StartDate = DateTime.UtcNow
         });
 
         // Act
         var query = new MeetingQuery();
-        var result = query.GetMeetings(organisationContext);
+        var result = query.GetMeetings(DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1), organisationContext);
 
         // Assert
         result.Should().NotBeNull();

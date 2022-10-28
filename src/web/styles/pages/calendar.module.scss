@@ -37,9 +37,12 @@
 
 .headerDay
 {
+  height: 3rem;
+  line-height: 3rem;
   grid-row: 1;
   text-align: center;
   border-bottom: 1px $mediumGrey solid;
+  border-right: 1px $light solid;
 }
 
 .hour {
@@ -50,6 +53,36 @@
   border-right: 1px $mediumGrey solid;
   vertical-align: middle;
 }
+
+@for $i from 0 to 24 {
+  .hour#{$i} {
+    grid-row-start: calc($i * 2 + 1);
+  }
+}
+
+@for $i from 0 to 24 {
+  .hourEnd#{$i} {
+    grid-row-start: calc($i * 2 + 2);
+  }
+}
+
+@for $i from 1 to 8 {
+  .day#{$i} {
+    grid-column-start: $i + 1;
+  }
+}
+
+.day6, .day7
+{
+  background-color: $greyLight;
+}
+
+@for $i from 1 to 10 {
+  .duration#{($i * 30)} {
+    grid-row-end: span $i;
+  }
+}
+
 
 .dayHourFirst,.dayHourSecond
 {
@@ -66,4 +99,14 @@
 {
   padding: 0.25rem;
   border-bottom: 1px $mediumGrey solid;
+}
+
+.calendarItem
+{
+  height: 100%;
+  font-size:0.75rem;
+  line-height: 1.5rem;
+  padding-left: 0.5rem;
+  background-color: $primaryColor;
+  color: $light;
 }

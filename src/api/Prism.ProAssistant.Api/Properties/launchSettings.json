@@ -3,7 +3,7 @@
     "Prism.ProAssistant.Api": {
       "commandName": "Project",
       "dotnetRunMessages": true,
-      "launchBrowser": true,
+      "launchBrowser": false,
       "launchUrl": "http://localhost:7013/api/graphql",
       "applicationUrl": "http://localhost:7013",
       "environmentVariables": {
