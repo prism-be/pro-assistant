@@ -11,6 +11,7 @@ import {useKeyPressEvent} from "react-use";
 import {useMsal} from "@azure/msal-react";
 import {getMeetings, Meeting} from "../lib/services/meetings";
 import {popupNewMeeting} from "../lib/events/globalPopups";
+import {onDataUpdated} from "../lib/events/data";
 
 const Calendar: NextPage = () => {
     const getMonday = (d: Date) => {
@@ -34,8 +35,12 @@ const Calendar: NextPage = () => {
 
     useEffect(() => {
         reloadMeetings();
+        const subscription = onDataUpdated({type: "meeting"}).subscribe(() => {
+            reloadMeetings();
+        });
+        return () => subscription.unsubscribe();
     }, [monday]);
-
+    
     const reloadMeetings = async () => {
         const m = await getMeetings(monday, add(monday, {days: 8}), instance, accounts[0]);
         setMeetings(m);

@@ -16,6 +16,7 @@ import {alertSuccess} from "../../lib/events/alert";
 import {getMeetingById, Meeting, upsertMeeting} from "../../lib/services/meetings";
 import InputSelect from "../forms/InputSelect";
 import {getLocale} from "../../lib/localization";
+import {dataUpdated} from "../../lib/events/data";
 
 interface Props {
     meetingId?: string;
@@ -109,6 +110,11 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
             setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate(), newHour.getHours(), newHour.getMinutes()));
         }
     }
+    
+    const selectDate =(d : Date) => {
+        const newHour = parse(getValues('hour'), "HH:mm", new Date());
+        setDate(new Date(d.getFullYear(), d.getMonth(), d.getDate(), newHour.getHours(), newHour.getMinutes()));
+    }
 
     let searchPatientsTimeout: any;
     const startSuggestPatients = () => {
@@ -183,6 +189,7 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
         await upsertMeeting(meeting, instance, accounts[0]);
         hide();
         alertSuccess(t("alerts.saveSuccess"));
+        dataUpdated({type: "meeting"});
     }
 
     const getTariffsOptions = () => {
@@ -218,7 +225,7 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
                 <InputSelect className={styles.tariffs} label={t("popups.meeting.tariffs.title")} name={"tariff"} register={register} options={getTariffsOptions()} onChange={(v) => setMeetingType(v)}/>
                 <InputText className={styles.type} label={t("fields.meetingType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>
                 <InputText className={styles.price} label={t("fields.price")} name={"price"} required={true} type={"text"} register={register} setValue={setValue} error={errors.price}/>
-                <Calendar className={styles.date} value={date} onChange={(d) => setDate(d)}/>
+                <Calendar className={styles.date} value={date} onChange={(d) => selectDate(d)}/>
                 <InputText className={styles.hour} label={t("fields.hour")} name={"hour"} required={true} type={"text"} register={register} setValue={setValue} error={errors.hour} onChange={() => computeDate()}/>
                 <InputText className={styles.duration} label={t("fields.duration")} name={"duration"} required={true} type={"text"} register={register} setValue={setValue} error={errors.duration} onChange={() => computeDate()}/>
                 <div className={styles.durationText}>
