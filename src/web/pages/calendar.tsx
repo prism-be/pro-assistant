@@ -2,7 +2,7 @@
 import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import {useEffect, useState} from "react";
-import {add, format, formatISO, parse, parseISO} from "date-fns";
+import {add, format, parseISO} from "date-fns";
 import useTranslation from "next-translate/useTranslation";
 import {getLocale} from "../lib/localization";
 import React from 'react';
