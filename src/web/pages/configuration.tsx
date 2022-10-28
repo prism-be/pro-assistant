@@ -42,11 +42,13 @@ const Tariffs = () => {
         setValue("id", tariff.id);
         setValue("name", tariff.name);
         setValue("price", tariff.price.toFixed(2));
+        setValue("defaultDuration", tariff.defaultDuration);
         setEditing(true);
     }
 
     const onSaveTariff = async (data: any) => {
         data.price = parseFloat(data.price);
+        data.defaultDuration = parseInt(data.defaultDuration);
         await upsertTariff(data, instance, accounts[0]);
         setEditing(false);
         alertSuccess(t("common:alerts.saveSuccess"), {});
@@ -68,6 +70,9 @@ const Tariffs = () => {
                     <div className={styles.tariffEditionGridField}>
                         <InputText label={t("tariffs.price")} name={"price"} type={"text"} required={true} register={register} setValue={setValue} error={errors.price}/>
                     </div>
+                    <div className={styles.tariffEditionGridField}>
+                        <InputText label={t("tariffs.defaultDuration")} name={"defaultDuration"} type={"number"} required={true} register={register} setValue={setValue} error={errors.defaultDuration}/>
+                    </div>
                     <Button className={styles.tariffEditionGridButtonCancel} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
                     <Button className={styles.tariffEditionGridButtonSave} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
                 </div>
@@ -78,7 +83,7 @@ const Tariffs = () => {
             {tariffs?.map(tariff =>
                 <div key={tariff.id} className={styles.tariffGridRow}>
                     <div>
-                        {tariff.name}
+                        {tariff.name} - {tariff.defaultDuration}m
                     </div>
                     <div>
                         {tariff.price.toFixed(2)} &euro;

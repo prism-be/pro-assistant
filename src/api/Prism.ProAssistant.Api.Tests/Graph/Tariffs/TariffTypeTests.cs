@@ -25,6 +25,6 @@ public class TariffTypeTests
         TariffType.ConfigureTariff(descriptor.Object);
 
         // Assert
-        descriptor.Invocations.Count.Should().Be(3);
+        descriptor.Invocations.Count.Should().Be(4);
     }
 }

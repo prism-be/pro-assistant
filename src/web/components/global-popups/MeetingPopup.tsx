@@ -125,6 +125,7 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
         if (tariff) {
             setValue("type", tariff.name);
             setValue("price", tariff.price.toFixed(2));
+            setValue("duration", tariff.defaultDuration);
         } else {
             setValue("type", "");
             setValue("price", "");

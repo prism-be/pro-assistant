@@ -86,7 +86,7 @@ const Calendar: NextPage = () => {
                 </React.Fragment>)}
 
                 {meetings.map(m => <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}>
-                    <div>{m.title}</div>
+                    <div>{m.title?.slice(0, 30)}</div>
                 </div> )}
                 
             </div>

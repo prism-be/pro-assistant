@@ -22,4 +22,7 @@ public class Tariff
 
     [JsonPropertyName("price")]
     public decimal Price { get; set; }
+
+    [JsonPropertyName("defaultDuration")]
+    public int DefaultDuration { get; set; } = 60;
 }

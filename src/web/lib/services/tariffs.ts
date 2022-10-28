@@ -6,6 +6,7 @@ export interface Tariff {
     id: string;
     name: string;
     price: number;
+    defaultDuration: number;
 }
 
 export const upsertTariff = async (tariff: Tariff, instance: IPublicClientApplication, account: AccountInfo): Promise<boolean> => {
@@ -40,6 +41,7 @@ export const getTariffs = async (instance: IPublicClientApplication, account: Ac
                 id: true,
                 name: true,
                 price: true,
+                defaultDuration: true
             }
         }
     }

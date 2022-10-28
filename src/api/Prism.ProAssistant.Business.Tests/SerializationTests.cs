@@ -65,7 +65,8 @@ public class SerializationTests
         {
             Id = Identifier.GenerateString(),
             Name = Identifier.GenerateString(),
-            Price = (decimal)_dice.NextDouble()
+            Price = (decimal)_dice.NextDouble(),
+            DefaultDuration = _dice.Next(0, 42)
         };
 
         // Act and Assert

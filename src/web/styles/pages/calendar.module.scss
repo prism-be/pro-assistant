@@ -43,6 +43,7 @@
   text-align: center;
   border-bottom: 1px $mediumGrey solid;
   border-right: 1px $light solid;
+  white-space: nowrap;
 }
 
 .hour {
@@ -109,4 +110,5 @@
   padding-left: 0.5rem;
   background-color: $primaryColor;
   color: $light;
+  white-space: nowrap;
 }
