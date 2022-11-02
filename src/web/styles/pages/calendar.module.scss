@@ -113,3 +113,12 @@
   white-space: nowrap;
   cursor: pointer;
 }
+
+.dayAction
+{
+  cursor: pointer;
+  &:hover
+  {
+    background-color: opacify($light, 0.1);
+  }
+}

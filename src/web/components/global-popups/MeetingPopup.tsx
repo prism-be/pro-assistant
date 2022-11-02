@@ -20,10 +20,11 @@ import {dataUpdated} from "../../lib/events/data";
 
 interface Props {
     meetingId?: string;
+    startDate?: Date;
     hide: () => void;
 }
 
-export const MeetingPopup = ({meetingId, hide}: Props) => {
+export const MeetingPopup = ({meetingId, startDate, hide}: Props) => {
 
     const now = new Date();
 
@@ -61,9 +62,15 @@ export const MeetingPopup = ({meetingId, hide}: Props) => {
 
         if (meetingId) {
             loadExistingMeeting(meetingId);
+            return;
+        }
+        
+        if (startDate)
+        {
+            setDate(startDate);
         }
 
-    }, []);
+    }, [meetingId, startDate]);
 
     const loadExistingMeeting = async (meetingId: string) => {
         const m = await getMeetingById(meetingId, instance, accounts[0]);
