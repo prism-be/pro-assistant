@@ -5,7 +5,6 @@ export interface PopupParameters
 {
     id: string;
     type: 'new-meeting';
-    existingId?: string;
     data: any;
 }
 

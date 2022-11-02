@@ -98,7 +98,7 @@ const Calendar: NextPage = () => {
 
                 {meetings.map(m => <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
                                         onClick={() => {
-                                            popupNewMeeting({existingId: m.id})
+                                            popupNewMeeting({data : { meetingId: m.id}});
                                         }}>
                     <div>{m.title?.slice(0, 30)}</div>
                 </div>)}

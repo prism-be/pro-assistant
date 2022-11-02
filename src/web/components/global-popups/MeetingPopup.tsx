@@ -19,12 +19,11 @@ import {getLocale} from "../../lib/localization";
 import {dataUpdated} from "../../lib/events/data";
 
 interface Props {
-    meetingId?: string;
-    startDate?: Date;
+    data?: any;
     hide: () => void;
 }
 
-export const MeetingPopup = ({meetingId, startDate, hide}: Props) => {
+export const MeetingPopup = ({data, hide}: Props) => {
 
     const now = new Date();
 
@@ -36,6 +35,7 @@ export const MeetingPopup = ({meetingId, startDate, hide}: Props) => {
     const [suggested, setSuggested] = useState<string>();
     const [date, setDate] = useState<Date>(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
     const [duration, setDuration] = useState<number>(60);
+    const [meetingId, setMeetingId] = useState<string>();
 
     const paymentOptions = [
         {value: "0", text: t("options.payments.state0")},
@@ -60,17 +60,17 @@ export const MeetingPopup = ({meetingId, startDate, hide}: Props) => {
         setValue("duration", 60);
         setValue("hour", format(date, "HH:mm"));
 
-        if (meetingId) {
-            loadExistingMeeting(meetingId);
+        if (data?.meetingId) {
+            setMeetingId(data?.meetingId);
+            loadExistingMeeting(data?.meetingId);
             return;
         }
-        
-        if (startDate)
-        {
-            setDate(startDate);
+
+        if (data?.startDate) {
+            setDate(data?.startDate);
         }
 
-    }, [meetingId, startDate]);
+    }, [data]);
 
     const loadExistingMeeting = async (meetingId: string) => {
         const m = await getMeetingById(meetingId, instance, accounts[0]);
@@ -90,11 +90,10 @@ export const MeetingPopup = ({meetingId, startDate, hide}: Props) => {
         setDate(d);
         setDuration(m.duration);
         setValue("hour", format(d, "HH:mm"));
-        
+
         const tariff = tariffs.data?.find(x => x.name == m.type);
-        
-        if (tariff)
-        {
+
+        if (tariff) {
             setValue("tariff", tariff.id);
         }
     }
@@ -117,21 +116,20 @@ export const MeetingPopup = ({meetingId, startDate, hide}: Props) => {
             setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate(), newHour.getHours(), newHour.getMinutes()));
         }
     }
-    
-    const selectDate =(d : Date) => {
+
+    const selectDate = (d: Date) => {
         const newHour = parse(getValues('hour'), "HH:mm", new Date());
         setDate(new Date(d.getFullYear(), d.getMonth(), d.getDate(), newHour.getHours(), newHour.getMinutes()));
     }
 
     let searchPatientsTimeout: any;
     const startSuggestPatients = () => {
-        if (searchPatientsTimeout)
-        {
+        if (searchPatientsTimeout) {
             clearTimeout(searchPatientsTimeout);
         }
         searchPatientsTimeout = setTimeout(() => suggestPatients(), 500);
     }
-    
+
     const suggestPatients = async () => {
         const lastName = getValues('lastName');
         const firstName = getValues('firstName');
@@ -217,8 +215,8 @@ export const MeetingPopup = ({meetingId, startDate, hide}: Props) => {
 
     return <Popup>
         <>
-            {meetingId === undefined && <h1>{t("popups.meeting.titleNew")}</h1>}
-            {meetingId !== undefined && <h1>{t("popups.meeting.titleEditing")}</h1>}
+            {data?.meetingId === undefined && <h1>{t("popups.meeting.titleNew")}</h1>}
+            {data?.meetingId !== undefined && <h1>{t("popups.meeting.titleEditing")}</h1>}
 
             <form className={styles.content} onSubmit={handleSubmit(onSubmit)}>
                 <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName} onChange={() => startSuggestPatients()}/>
