@@ -15,6 +15,7 @@ import {alertSuccess} from "../lib/events/alert";
 import {Pencil} from "../components/icons/Icons";
 import {DocumentSettings, getSettings, saveSettings} from "../lib/services/settings";
 import TextArea from "../components/forms/TextArea";
+import InputImage from "../components/forms/InputImage";
 
 
 const Tariffs = () => {
@@ -102,12 +103,16 @@ const Tariffs = () => {
 const Documents = () => {
     const {t} = useTranslation("configuration");
     const {register, setValue, getValues} = useForm();
-    const headers = useSWR('documents-headers', getSettings)
+    const headers = useSWR('documents-headers', getSettings) as any;
+    const [logo, setLogo] = useState<string>();
     
     useEffect(() => {
-        const s = headers.data as DocumentSettings;
-        setValue('name', s.name)
-        setValue('address', s.address)
+        if (headers.data) {
+            setValue('name', headers.data.name)
+            setValue('address', headers.data.address)
+            setValue('logo', headers.data.logo)
+            setLogo(headers.data.logo);
+        }
     }, [headers]);
     
     const saveDocumentHeaders = async () => {
@@ -123,7 +128,8 @@ const Documents = () => {
         </header>
         <div className={styles.keyValueForm}>
             <InputText label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue} />
-            <TextArea label={t("documents.header.address")} name={"address"} type={"text"} register={register} setValue={setValue} />
+            <TextArea label={t("documents.header.address")} name={"address"} register={register} setValue={setValue} />
+            <InputImage label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo} />
         </div>
     </section>
 }

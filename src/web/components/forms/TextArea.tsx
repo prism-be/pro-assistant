@@ -6,7 +6,6 @@ import {UseFormSetValue} from "react-hook-form/dist/types/form";
 interface Props {
     label: string;
     name: string;
-    type: string;
     required?: boolean;
     register: UseFormRegister<FieldValues>;
     setValue: UseFormSetValue<FieldValues>;
@@ -17,7 +16,7 @@ interface Props {
 }
 
 
-const TextArea = ({label, name, type, required, register, error, autoCapitalize, setValue, className, onChange}: Props) => {
+const TextArea = ({label, name, required, register, error, autoCapitalize, setValue, className, onChange}: Props) => {
 
     const valueChanged = (e: { target: { value: any; }; }) => {
         if (autoCapitalize === true)
