@@ -1,5 +1,6 @@
 ﻿import {AccountInfo, InteractionRequiredAuthError, IPublicClientApplication} from "@azure/msal-browser";
 import getConfig from 'next/config'
+import {msalInstance} from "./msal";
 const { publicRuntimeConfig: config } = getConfig()
 
 interface ObjectResult<TData> {
@@ -7,8 +8,8 @@ interface ObjectResult<TData> {
     data: TData | undefined;
 }
 
-export async function getData<TResult>(route: string, instance: IPublicClientApplication, account: AccountInfo): Promise<ObjectResult<TResult>> {
-    const bearer = await getAuthorization(instance, account);
+export async function getData<TResult>(route: string): Promise<ObjectResult<TResult>> {
+    const bearer = await getAuthorization();
 
     const response = await fetch(route, {
         method: "GET",
@@ -32,9 +33,9 @@ export async function getData<TResult>(route: string, instance: IPublicClientApp
     }
 }
 
-export async function postData<TResult>(route: string, instance: IPublicClientApplication, account: AccountInfo, body: any): Promise<ObjectResult<TResult>> {
+export async function postData<TResult>(route: string, body: any): Promise<ObjectResult<TResult>> {
 
-    const bearer = await getAuthorization(instance, account);
+    const bearer = await getAuthorization();
 
     const response = await fetch(route, {
         body: JSON.stringify(body),
@@ -59,8 +60,8 @@ export async function postData<TResult>(route: string, instance: IPublicClientAp
     }
 }
 
-export async function queryItems<TResult>(instance: IPublicClientApplication, account: AccountInfo, query: string): Promise<TResult> {
-    const bearer = await getAuthorization(instance, account);
+export async function queryItems<TResult>(query: string): Promise<TResult> {
+    const bearer = await getAuthorization();
 
     const body = {
 
@@ -121,16 +122,16 @@ export async function postFile(route: string, file: File): Promise<any> {
     }
 }*/
 
-export const getAuthorization = async (instance: IPublicClientApplication, account: AccountInfo): Promise<string> => {
+export const getAuthorization = async (): Promise<string> => {
     const accessTokenRequest = {
         scopes: ["https://" + config.tenantName + ".onmicrosoft.com/" + config.clientId + "/records.manage"],
-        account: account,
+        account: msalInstance.getAllAccounts()[0],
     };
 
     let accessToken = '';
 
     try {
-        const accessTokenResponse = await instance.acquireTokenSilent(accessTokenRequest);
+        const accessTokenResponse = await msalInstance.acquireTokenSilent(accessTokenRequest);
 
         if (accessTokenResponse?.accessToken) {
             accessToken = accessTokenResponse?.accessToken;
@@ -140,7 +141,7 @@ export const getAuthorization = async (instance: IPublicClientApplication, accou
 
         if (error instanceof InteractionRequiredAuthError) {
             try {
-                const accessTokenResponse = await instance.acquireTokenPopup(accessTokenRequest);
+                const accessTokenResponse = await msalInstance.acquireTokenPopup(accessTokenRequest);
 
                 if (accessTokenResponse?.accessToken) {
                     accessToken = accessTokenResponse?.accessToken;

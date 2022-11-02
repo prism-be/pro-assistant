@@ -5,5 +5,14 @@
     "name": "Nom",
     "price": "Prix",
     "defaultDuration": "Durée par défaut"
+  },
+  "documents": {
+    "header": {
+      "title": "Entête et pied de page des documents",
+      "name": "Nom",
+      "address": "Adresse",
+      "logo": "Logo",
+      "saveSuccess": "L'entête et pied des pages des documents ont bien été enregistrés."
+    }
   }
 }

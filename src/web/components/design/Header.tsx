@@ -18,8 +18,8 @@ const Header = () => {
         return src;
     }
 
-    const {instance, accounts} = useMsal();
-    const {data} = useSWR('/api/authentication/user', (apiURL: string) => getData<any>(apiURL, instance, accounts[0]))
+    const {instance} = useMsal();
+    const {data} = useSWR('/api/authentication/user', (apiURL: string) => getData<any>(apiURL))
 
     return <>
         <div className={styles.bar}>

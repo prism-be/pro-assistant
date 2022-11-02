@@ -1,5 +1,4 @@
 ﻿import {queryItems} from "../ajaxHelper";
-import {AccountInfo, IPublicClientApplication} from "@azure/msal-browser";
 import {EnumType, jsonToGraphQLQuery} from "json-to-graphql-query";
 
 export interface SearchParameter {
@@ -31,7 +30,7 @@ export interface Patient {
     country:string;
 }
 
-export const createPatient = async (patient: Patient, instance: IPublicClientApplication, account: AccountInfo): Promise<boolean> => {
+export const createPatient = async (patient: Patient): Promise<boolean> => {
     
     patient.id = "";
     
@@ -48,12 +47,12 @@ export const createPatient = async (patient: Patient, instance: IPublicClientApp
 
     const graph = jsonToGraphQLQuery(query);
 
-    const result = await queryItems<any>(instance, account, graph);
+    const result = await queryItems<any>(graph);
 
     return result.data.createPatient.id;
 }
 
-export const savePatient = async (patient: Patient, instance: IPublicClientApplication, account: AccountInfo): Promise<boolean> => {
+export const savePatient = async (patient: Patient): Promise<boolean> => {
     const query = {
         mutation : {
             updatePatient: {
@@ -67,12 +66,12 @@ export const savePatient = async (patient: Patient, instance: IPublicClientAppli
 
     const graph = jsonToGraphQLQuery(query);
 
-    const result = await queryItems<any>(instance, account, graph);
+    const result = await queryItems<any>(graph);
 
     return result !== null;
 }
 
-export const getPatient = async (id: string, instance: IPublicClientApplication, account: AccountInfo): Promise<Patient | null> => {
+export const getPatient = async (id: string): Promise<Patient | null> => {
     const query = {
         query : {
             patientById: {
@@ -96,7 +95,7 @@ export const getPatient = async (id: string, instance: IPublicClientApplication,
 
     const graph = jsonToGraphQLQuery(query);
 
-    const result = await queryItems<any>(instance, account, graph);
+    const result = await queryItems<any>(graph);
 
     if (result.data) {
         return result.data.patientById;
@@ -105,7 +104,7 @@ export const getPatient = async (id: string, instance: IPublicClientApplication,
     return null;
 }
 
-export const searchPatients = async (search: SearchParameter, instance: IPublicClientApplication, account: AccountInfo): Promise<PatientSummary[]> => {
+export const searchPatients = async (search: SearchParameter): Promise<PatientSummary[]> => {
 
     const query = {
         query: {
@@ -131,7 +130,7 @@ export const searchPatients = async (search: SearchParameter, instance: IPublicC
 
     const graph = jsonToGraphQLQuery(query, {pretty: true});
 
-    const result = await queryItems<any>(instance, account, graph);
+    const result = await queryItems<any>(graph);
 
     if (result.data) {
         return result.data.searchPatients;

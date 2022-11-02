@@ -14,6 +14,7 @@ using MongoDB.Driver;
 using Prism.ProAssistant.Api.Graph;
 using Prism.ProAssistant.Api.Graph.Meetings;
 using Prism.ProAssistant.Api.Graph.Patients;
+using Prism.ProAssistant.Api.Graph.Settings;
 using Prism.ProAssistant.Api.Graph.Tariffs;
 using Prism.ProAssistant.Api.Middlewares;
 using Prism.ProAssistant.Business;
@@ -93,13 +94,16 @@ builder.Services
     .AddQueryType(d => d.Name("Query"))
     .AddTypeExtension<MeetingQuery>()
     .AddTypeExtension<PatientQuery>()
+    .AddTypeExtension<SettingQuery>()
     .AddTypeExtension<TariffQuery>()
     .AddMutationType(d => d.Name("Mutation"))
     .AddTypeExtension<MeetingMutation>()
     .AddTypeExtension<PatientMutation>()
+    .AddTypeExtension<SettingMutation>()
     .AddTypeExtension<TariffMutation>()
     .AddType<MeetingType>()
     .AddType<PatientType>()
+    .AddType<SettingType>()
     .AddType<TariffType>()
     .AddMongoDbFiltering()
     .AddMongoDbSorting()

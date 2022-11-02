@@ -34,6 +34,11 @@ public class OrganizationContextFake : IOrganizationContext
         {
             Id = Identifier.GenerateString()
         };
+        
+        SettingsReplace = new Setting
+        {
+            Id = Identifier.GenerateString()
+        };
 
         TariffsReplace = new Tariff
         {
@@ -43,21 +48,25 @@ public class OrganizationContextFake : IOrganizationContext
         HistoryMock = new Lazy<Mock<IMongoCollection<History>>>(() => database.SetupCollectionAndReplace(HistoryReplace));
         PatientsMock = new Lazy<Mock<IMongoCollection<Patient>>>(() => database.SetupCollectionAndReplace(PatientsReplace));
         MeetingsMock = new Lazy<Mock<IMongoCollection<Meeting>>>(() => database.SetupCollectionAndReplace(MeetingsReplace));
+        SettingsMock = new Lazy<Mock<IMongoCollection<Setting>>>(() => database.SetupCollectionAndReplace(SettingsReplace));
         TariffsMock = new Lazy<Mock<IMongoCollection<Tariff>>>(() => database.SetupCollectionAndReplace(TariffsReplace));
     }
 
     public History HistoryReplace { get; set; }
     public Patient PatientsReplace { get; set; }
     public Meeting MeetingsReplace { get; set; }
+    public Setting SettingsReplace { get; set; }
     public Tariff TariffsReplace { get; set; }
 
     public Lazy<Mock<IMongoCollection<History>>> HistoryMock { get; }
     public Lazy<Mock<IMongoCollection<Patient>>> PatientsMock { get; }
     public Lazy<Mock<IMongoCollection<Meeting>>> MeetingsMock { get; }
+    public Lazy<Mock<IMongoCollection<Setting>>> SettingsMock { get; }
     public Lazy<Mock<IMongoCollection<Tariff>>> TariffsMock { get; }
     
     public IMongoCollection<History> History => HistoryMock.Value.Object;
     public IMongoCollection<Patient> Patients => PatientsMock.Value.Object;
     public IMongoCollection<Meeting> Meetings => MeetingsMock.Value.Object;
+    public IMongoCollection<Setting> Settings => SettingsMock.Value.Object;
     public IMongoCollection<Tariff> Tariffs => TariffsMock.Value.Object;
 }

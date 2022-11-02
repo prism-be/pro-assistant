@@ -2,7 +2,6 @@
 
 import {NextPage} from "next";
 import useTranslation from "next-translate/useTranslation";
-import {useMsal} from "@azure/msal-react";
 import ContentContainer from "../../components/design/ContentContainer";
 import {useRouter} from "next/router";
 import useSWR from "swr";
@@ -18,7 +17,6 @@ import InputDate from "../../components/forms/InputDate";
 
 const Patient: NextPage = () => {
     const {t} = useTranslation('common');
-    const {instance, accounts} = useMsal();
     const router = useRouter();
     const {pid} = router.query;
 
@@ -29,7 +27,7 @@ const Patient: NextPage = () => {
             return null;
         }
         
-        return await getPatient(id, instance, accounts[0]);
+        return await getPatient(id);
     }
     const {data: patient, mutate: mutatePatient} = useSWR(pid, loadPatient);
     
@@ -48,13 +46,13 @@ const Patient: NextPage = () => {
         if (pid === '000000000000000000000000')
         {
             data.id = '';
-            const newPid = await createPatient(data, instance, accounts[0]);
+            const newPid = await createPatient(data);
             alertSuccess(t("details.saveSuccess"), { autoClose: true });
             await router.push("/patients/" + newPid);
             return;
         }
         
-        await savePatient(data, instance, accounts[0]);
+        await savePatient(data);
         await mutatePatient();
         alertSuccess(t("pages.patients.details.saveSuccess"), { autoClose: true });
     }
