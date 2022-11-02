@@ -15,13 +15,13 @@ export const GlobalPopupsContainer = () => {
     }, [isNewMeetingPressed]);
     
     const [displayNewMeeting, setDisplayNewMeeting] = useState(false);
-    const [meetingId, setMeetingId] = useState<string>();
+    const [meetingData, setMeetingData] = useState<any>();
 
     useEffect(() => {
         onPopup().subscribe((popup: PopupParameters) => {
             switch (popup.type) {
                 case "new-meeting":
-                    setMeetingId(popup.existingId);
+                    setMeetingData(popup.data ?? null);
                     setDisplayNewMeeting(true);
                     break;
             }
@@ -34,7 +34,7 @@ export const GlobalPopupsContainer = () => {
 
     return <div>
         {displayNewMeeting && <>
-            <MeetingPopup meetingId={meetingId} hide={() => setDisplayNewMeeting(false)} />
+            <MeetingPopup data={meetingData} hide={() => setDisplayNewMeeting(false)} />
         </>}
     </div>
 }

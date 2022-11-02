@@ -40,7 +40,7 @@ const Calendar: NextPage = () => {
         });
         return () => subscription.unsubscribe();
     }, [monday]);
-    
+
     const reloadMeetings = async () => {
         const m = await getMeetings(monday, add(monday, {days: 8}), instance, accounts[0]);
         setMeetings(m);
@@ -63,6 +63,16 @@ const Calendar: NextPage = () => {
         return styles["duration" + d];
     }
 
+    const addMeeting = (d: number, h: number, m: number) => {
+        const startDate = add(new Date(monday.getFullYear(), monday.getMonth(), monday.getDate()), {days: d - 1, hours: h, minutes: m});
+        popupNewMeeting({
+            data: {
+                startDate
+            }
+        });
+    }
+
+
     return <ContentContainer>
         <>
             <h1>{t("pages.calendar.title")} {format(monday, "EEEE dd MMMM yyyy", {locale: getLocale()})}</h1>
@@ -81,14 +91,14 @@ const Calendar: NextPage = () => {
 
                 {days.map(d => <React.Fragment key={d}>
                     {hours.map(h => <React.Fragment key={h}>
-                        <div className={styles.dayHourFirst + " " + getHourClassName(h) + " " + getDayClassName(d)}></div>
-                        <div className={styles.dayHourSecond + " " + getHourEndClassName(h) + " " + getDayClassName(d)}></div>
+                        <div className={styles.dayAction + " " + styles.dayHourFirst + " " + getHourClassName(h) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 0)}></div>
+                        <div className={styles.dayAction + " " + styles.dayHourSecond + " " + getHourEndClassName(h) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 30)}></div>
                     </React.Fragment>)}
                 </React.Fragment>)}
 
                 {meetings.map(m => <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
                                         onClick={() => {
-                                            popupNewMeeting({existingId: m.id})
+                                            popupNewMeeting({data : { meetingId: m.id}});
                                         }}>
                     <div>{m.title?.slice(0, 30)}</div>
                 </div>)}
