@@ -11,6 +11,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using Prism.ProAssistant.Api.Graph;
 using Prism.ProAssistant.Api.Graph.Meetings;
 using Prism.ProAssistant.Api.Graph.Patients;
 using Prism.ProAssistant.Api.Graph.Tariffs;
@@ -45,9 +46,12 @@ builder.Services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString))
 
 builder.Services.AddScoped<IOrganizationContext, OrganizationContext>();
 
+builder.Services.AddSingleton<LogExecutionDiagnosticEventListener>();
+
 // GraphQL
 builder.Services
     .AddGraphQLServer()
+    .AddDiagnosticEventListener<LogExecutionDiagnosticEventListener>()
     .AddAuthorization()
     .AddQueryType(d => d.Name("Query"))
     .AddTypeExtension<MeetingQuery>()
