@@ -33,7 +33,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
     const [patientsSuggestions, setPatientsSuggestions] = useState<PatientSummary[]>([]);
     const [patient, setPatient] = useState<PatientSummary>();
     const [suggested, setSuggested] = useState<string>();
-    const [date, setDate] = useState<Date>(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
+    const [date, setDate] = useState<Date>(data?.startDate ?? new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
     const [duration, setDuration] = useState<number>(60);
     const [meetingId, setMeetingId] = useState<string>();
 
@@ -57,18 +57,14 @@ export const MeetingPopup = ({data, hide}: Props) => {
     const tariffs = useSWR('/tariffs', loadTariffs);
 
     useEffect(() => {
-        setValue("duration", 60);
-        setValue("hour", format(date, "HH:mm"));
-
         if (data?.meetingId) {
             setMeetingId(data?.meetingId);
             loadExistingMeeting(data?.meetingId);
             return;
         }
 
-        if (data?.startDate) {
-            setDate(data?.startDate);
-        }
+        setValue("duration", 60);
+        setValue("hour", format(date, "HH:mm"));
 
     }, [data]);
 
@@ -173,6 +169,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
             setValue("type", "");
             setValue("price", "");
         }
+        computeDate();
     }
 
     const onSubmit = async (data: any) => {
