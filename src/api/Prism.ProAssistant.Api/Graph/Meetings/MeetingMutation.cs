@@ -6,7 +6,6 @@
 
 using HotChocolate.AspNetCore.Authorization;
 using MongoDB.Driver;
-using Prism.ProAssistant.Api.Graph.Patients;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
@@ -19,6 +18,19 @@ public class MeetingMutation
 {
     public async Task<Meeting> UpsertMeetingAsync(Meeting meeting, [Service] IOrganizationContext organizationContext, [Service] ILogger<MeetingMutation> logger, [Service]IUserContextAccessor userContextAccessor)
     {
+        if (string.IsNullOrWhiteSpace(meeting.PatientId))
+        {
+            var patient = new Patient
+            {
+                LastName = meeting.LastName,
+                FirstName = meeting.FirstName
+            };
+            
+            await organizationContext.Patients.InsertOneAsync(patient);
+
+            meeting.PatientId = patient.Id;
+        }
+        
         if (string.IsNullOrWhiteSpace(meeting.Id))
         {
             await organizationContext.Meetings.InsertOneAsync(meeting);
