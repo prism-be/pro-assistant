@@ -21,6 +21,7 @@ using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Behaviors;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
+using Prism.ProAssistant.Documents.Generators;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
@@ -113,6 +114,9 @@ builder.Services
 // Add business services
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextAccessor, UserContextAccessor>();
+
+// Add documents serivces
+builder.Services.AddScoped<IReceiptGenerator, ReceiptGenerator>();
 
 // Add JWT
 builder.Services.AddAuthentication(options =>

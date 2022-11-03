@@ -16,7 +16,7 @@ import {getMeetingById, Meeting, upsertMeeting} from "../../lib/services/meeting
 import InputSelect from "../forms/InputSelect";
 import {getLocale} from "../../lib/localization";
 import {dataUpdated} from "../../lib/events/data";
-import {generateReceipt} from "../../lib/services/documents/receipt";
+import {displayFile} from "../../lib/ajaxHelper";
 
 interface Props {
     data?: any;
@@ -209,10 +209,10 @@ export const MeetingPopup = ({data, hide}: Props) => {
         return options;
     }
     
-    const receipt = () => {
+    const receipt = async () => {
         if (meetingId)
         {
-            generateReceipt(meetingId);
+            await displayFile("api/documents/receipt/" + meetingId);
         }
     }
 

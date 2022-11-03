@@ -1,4 +1,4 @@
-﻿import {AccountInfo, InteractionRequiredAuthError, IPublicClientApplication} from "@azure/msal-browser";
+﻿import {InteractionRequiredAuthError} from "@azure/msal-browser";
 import getConfig from 'next/config'
 import {msalInstance} from "./msal";
 const { publicRuntimeConfig: config } = getConfig()
@@ -30,6 +30,35 @@ export async function getData<TResult>(route: string): Promise<ObjectResult<TRes
     return {
         status: response.status,
         data: undefined
+    }
+}
+
+export async function displayFile<TResult>(route: string): Promise<void> {
+    const bearer = await getAuthorization();
+
+    const response = await fetch(route, {
+        method: "GET",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+    });
+
+    if (response.status === 200) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+
+        a.click();
+
+        setTimeout(function () {
+            // For Firefox it is necessary to delay revoking the ObjectURL
+            a.remove();
+            URL.revokeObjectURL(url);
+        }, 100);
     }
 }
 

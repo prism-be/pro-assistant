@@ -9,12 +9,14 @@
     "configuration": "Configuration"
   },
   "actions": {
+    "back": "Retour",
     "add": "Ajouter",
     "save": "Sauvegarder",
     "cancel": "Annuler",
     "search": "Rechercher",
     "reset": "Vider",
-    "new": "Nouveau"
+    "new": "Nouveau",
+    "receipt": "Reçu"
   },
   "fields": {
     "firstName": "Prénom",

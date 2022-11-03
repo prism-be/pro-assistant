@@ -9,6 +9,7 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Prism.ProAssistant.Business\Prism.ProAssistant.Business.csproj" />
+        <ProjectReference Include="..\Prism.ProAssistant.Documents\Prism.ProAssistant.Documents.csproj" />
     </ItemGroup>
 
     <ItemGroup>
