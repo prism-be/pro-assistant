@@ -10,6 +10,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Api.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Documents", "Prism.ProAssistant.Documents\Prism.ProAssistant.Documents.csproj", "{832CD796-C4AD-4896-9A2A-144415D8F79D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Documents.Tests", "Prism.ProAssistant.Documents.Tests\Prism.ProAssistant.Documents.Tests.csproj", "{58AC7790-3895-4B72-8E77-4E1E4F890072}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.UnitTesting", "Prism.ProAssistant.UnitTesting\Prism.ProAssistant.UnitTesting.csproj", "{D4AB2BA4-43CF-4FBC-A15F-D8AFCCDBB597}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,5 +40,13 @@ Global
 		{832CD796-C4AD-4896-9A2A-144415D8F79D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{832CD796-C4AD-4896-9A2A-144415D8F79D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{832CD796-C4AD-4896-9A2A-144415D8F79D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58AC7790-3895-4B72-8E77-4E1E4F890072}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58AC7790-3895-4B72-8E77-4E1E4F890072}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58AC7790-3895-4B72-8E77-4E1E4F890072}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58AC7790-3895-4B72-8E77-4E1E4F890072}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4AB2BA4-43CF-4FBC-A15F-D8AFCCDBB597}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4AB2BA4-43CF-4FBC-A15F-D8AFCCDBB597}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4AB2BA4-43CF-4FBC-A15F-D8AFCCDBB597}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4AB2BA4-43CF-4FBC-A15F-D8AFCCDBB597}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

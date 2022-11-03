@@ -4,14 +4,10 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading;
 using MongoDB.Driver;
 using Moq;
-using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Storage;
 
-namespace Prism.ProAssistant.Api.Tests;
+namespace Prism.ProAssistant.UnitTesting;
 
 public static class MongoTestsExtensions
 {

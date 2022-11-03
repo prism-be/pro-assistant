@@ -4,7 +4,11 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Globalization;
+using MongoDB.Driver;
+using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Storage;
+using Prism.ProAssistant.Documents.Locales;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -13,20 +17,40 @@ namespace Prism.ProAssistant.Documents.Generators;
 
 public interface IReceiptGenerator
 {
-    byte[]? Generate(string meetingId);
+    Task<byte[]?> Generate(string meetingId);
 }
 
 public class ReceiptGenerator : IReceiptGenerator
 {
     private readonly IOrganizationContext _organizationContext;
+    private readonly ILocalizator _localizator;
 
-    public ReceiptGenerator(IOrganizationContext organizationContext)
+    public ReceiptGenerator(IOrganizationContext organizationContext, ILocalizator localizator)
     {
         _organizationContext = organizationContext;
+        _localizator = localizator;
     }
 
-    public byte[]? Generate(string meetingId)
+    public async Task<byte[]?> Generate(string meetingId)
     {
+        var meetings = await _organizationContext.Meetings.FindAsync(Builders<Meeting>.Filter.Eq("Id", meetingId));
+        var meeting = await meetings.SingleOrDefaultAsync();
+
+        if (meeting == null)
+        {
+            return null;
+        }
+        
+        var settings = await _organizationContext.Settings.FindAsync(Builders<Setting>.Filter.Eq("Id", "documents-headers"));
+        var setting = await settings.SingleOrDefaultAsync();
+
+        if (setting == null)
+        {
+            return null;
+        }
+        
+        Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(_localizator.Locale);
+        
         var document = Document.Create(container =>
         {
             container.Page(page =>
@@ -67,7 +91,7 @@ public class ReceiptGenerator : IReceiptGenerator
 
                     table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(10, Unit.Centimetre)).Column(c =>
                     {
-                        c.Item().Text(Placeholders.Sentence()).Bold();
+                        c.Item().Text(_localizator.GetTranslation("receipt", "title")).Bold();
                         c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(Placeholders.LoremIpsum());
                     });
 

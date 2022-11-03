@@ -13,6 +13,7 @@ using Prism.ProAssistant.Api.Graph.Tariffs;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
+using Prism.ProAssistant.UnitTesting;
 using Xunit;
 
 namespace Prism.ProAssistant.Api.Tests.Graph.Tariffs;

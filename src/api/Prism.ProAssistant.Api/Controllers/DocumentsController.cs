@@ -21,9 +21,9 @@ public class DocumentsController: Controller
 
     [HttpGet]
     [Route("api/documents/receipt/{meetingId}")]
-    public IActionResult Receipt(string meetingId)
+    public async Task<IActionResult> Receipt(string meetingId)
     {
-        var pdfBytes = _receiptGenerator.Generate(meetingId);
+        var pdfBytes = await _receiptGenerator.Generate(meetingId);
 
         if (pdfBytes == null)
         {
