@@ -11,14 +11,12 @@ import * as yup from "yup";
 import {useForm} from "react-hook-form";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {useEffect, useState} from "react";
-import {useMsal} from "@azure/msal-react";
 import {useRouter} from "next/router";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 
 const Patients: NextPage = () => {
 
     const {t} = useTranslation('common');
-    const {instance, accounts} = useMsal();
     const router = useRouter();
 
     const [patients, setPatients] = useState<PatientSummary[] | null>(null);
@@ -41,7 +39,7 @@ const Patients: NextPage = () => {
 
     const onSubmit = async (data: any) => {
         sessionStorage.setItem('patients/search-patients', JSON.stringify(data));
-        const result = await searchPatients(data, instance, accounts[0]);
+        const result = await searchPatients(data);
         setPatients(result);
     }
 

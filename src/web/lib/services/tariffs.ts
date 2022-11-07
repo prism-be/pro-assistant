@@ -1,5 +1,4 @@
-﻿import {AccountInfo, IPublicClientApplication} from "@azure/msal-browser";
-import {EnumType, jsonToGraphQLQuery} from "json-to-graphql-query";
+﻿import {EnumType, jsonToGraphQLQuery} from "json-to-graphql-query";
 import {queryItems} from "../ajaxHelper";
 
 export interface Tariff {
@@ -9,7 +8,7 @@ export interface Tariff {
     defaultDuration: number;
 }
 
-export const upsertTariff = async (tariff: Tariff, instance: IPublicClientApplication, account: AccountInfo): Promise<boolean> => {
+export const upsertTariff = async (tariff: Tariff): Promise<boolean> => {
     const query = {
         mutation : {
             upsertTariff: {
@@ -23,12 +22,12 @@ export const upsertTariff = async (tariff: Tariff, instance: IPublicClientApplic
 
     const graph = jsonToGraphQLQuery(query);
 
-    const result = await queryItems<any>(instance, account, graph);
+    const result = await queryItems<any>(graph);
 
     return result !== null;
 }
 
-export const getTariffs = async (instance: IPublicClientApplication, account: AccountInfo): Promise<Tariff[]> => {
+export const getTariffs = async (): Promise<Tariff[]> => {
 
     const query = {
         query: {
@@ -48,7 +47,7 @@ export const getTariffs = async (instance: IPublicClientApplication, account: Ac
 
     const graph = jsonToGraphQLQuery(query, {pretty: true});
 
-    const result = await queryItems<any>(instance, account, graph);
+    const result = await queryItems<any>(graph);
 
     if (result.data) {
         return result.data.tariffs;

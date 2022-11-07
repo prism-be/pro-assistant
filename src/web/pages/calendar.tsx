@@ -8,7 +8,6 @@ import {getLocale} from "../lib/localization";
 import React from 'react';
 import {ArrowLeft, ArrowRight} from "../components/icons/Icons";
 import {useKeyPressEvent} from "react-use";
-import {useMsal} from "@azure/msal-react";
 import {getMeetings, Meeting} from "../lib/services/meetings";
 import {popupNewMeeting} from "../lib/events/globalPopups";
 import {onDataUpdated} from "../lib/events/data";
@@ -18,7 +17,6 @@ const Calendar: NextPage = () => {
         return add(d, {days: -d.getDay() + 1});
     }
 
-    const {instance, accounts} = useMsal();
     const [monday, setMonday] = useState(getMonday(new Date()));
     const [meetings, setMeetings] = useState<Meeting[]>([]);
     const {t} = useTranslation("common");
@@ -42,7 +40,7 @@ const Calendar: NextPage = () => {
     }, [monday]);
 
     const reloadMeetings = async () => {
-        const m = await getMeetings(monday, add(monday, {days: 8}), instance, accounts[0]);
+        const m = await getMeetings(monday, add(monday, {days: 8}));
         setMeetings(m);
     }
 

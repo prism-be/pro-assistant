@@ -5,5 +5,17 @@
     "name": "Nom",
     "price": "Prix",
     "defaultDuration": "Durée par défaut"
+  },
+  "documents": {
+    "header": {
+      "title": "Entête et pied de page des documents",
+      "name": "Nom",
+      "address": "Adresse",
+      "logo": "Logo",
+      "yourName": "Nom pour la signature",
+      "yourCity": "Ville pour la signature",
+      "signature": "Signature",
+      "saveSuccess": "L'entête et pied des pages des documents ont bien été enregistrés."
+    }
   }
 }

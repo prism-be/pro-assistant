@@ -18,8 +18,8 @@ const Header = () => {
         return src;
     }
 
-    const {instance, accounts} = useMsal();
-    const {data} = useSWR('/api/authentication/user', (apiURL: string) => getData<any>(apiURL, instance, accounts[0]))
+    const {instance} = useMsal();
+    const {data} = useSWR('/api/authentication/user', (apiURL: string) => getData<any>(apiURL))
 
     return <>
         <div className={styles.bar}>
@@ -34,7 +34,7 @@ const Header = () => {
             </div>
             <div className={styles.hello}>
                 <div className="m-auto pl-2 pr-2 text-sm">
-                    {t("header.hello")} {data?.data.name} !<br/>
+                    {t("header.hello")} {data?.data?.name} !<br/>
                     <a href="#" onClick={() => instance.logout()}>{t("header.logout")}</a>
                 </div>
             </div>

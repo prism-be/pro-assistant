@@ -1,5 +1,4 @@
-﻿import {AccountInfo, IPublicClientApplication} from "@azure/msal-browser";
-import {jsonToGraphQLQuery} from "json-to-graphql-query";
+﻿import {jsonToGraphQLQuery} from "json-to-graphql-query";
 import {queryItems} from "../ajaxHelper";
 import {formatISO} from "date-fns";
 
@@ -18,7 +17,7 @@ export interface Meeting {
     type: string;
 }
 
-export const upsertMeeting = async (meeting: Meeting, instance: IPublicClientApplication, account: AccountInfo): Promise<boolean> => {
+export const upsertMeeting = async (meeting: Meeting): Promise<boolean> => {
     const query = {
         mutation : {
             upsertMeeting: {
@@ -32,12 +31,12 @@ export const upsertMeeting = async (meeting: Meeting, instance: IPublicClientApp
 
     const graph = jsonToGraphQLQuery(query);
 
-    const result = await queryItems<any>(instance, account, graph);
+    const result = await queryItems<any>(graph);
 
     return result !== null;
 }
 
-export const getMeetingById = async (meetingId: string, instance: IPublicClientApplication, account: AccountInfo): Promise<Meeting> => {
+export const getMeetingById = async (meetingId: string): Promise<Meeting> => {
     const query = {
         query: {
             meetingById: {
@@ -62,10 +61,10 @@ export const getMeetingById = async (meetingId: string, instance: IPublicClientA
 
     const graph = jsonToGraphQLQuery(query);
 
-    return (await queryItems<any>(instance, account, graph)).data.meetingById;
+    return (await queryItems<any>(graph)).data.meetingById;
 }
 
-export const getMeetings = async (startDate: Date, endDate: Date, instance: IPublicClientApplication, account: AccountInfo): Promise<Meeting[]> => {
+export const getMeetings = async (startDate: Date, endDate: Date): Promise<Meeting[]> => {
     const query = {
         query: {
             meetings: {
@@ -91,5 +90,5 @@ export const getMeetings = async (startDate: Date, endDate: Date, instance: IPub
 
     const graph = jsonToGraphQLQuery(query);
 
-    return (await queryItems<any>(instance, account, graph)).data.meetings;
+    return (await queryItems<any>(graph)).data.meetings;
 }

@@ -14,12 +14,15 @@ using MongoDB.Driver;
 using Prism.ProAssistant.Api.Graph;
 using Prism.ProAssistant.Api.Graph.Meetings;
 using Prism.ProAssistant.Api.Graph.Patients;
+using Prism.ProAssistant.Api.Graph.Settings;
 using Prism.ProAssistant.Api.Graph.Tariffs;
 using Prism.ProAssistant.Api.Middlewares;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Behaviors;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
+using Prism.ProAssistant.Documents.Generators;
+using Prism.ProAssistant.Documents.Locales;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
@@ -93,13 +96,16 @@ builder.Services
     .AddQueryType(d => d.Name("Query"))
     .AddTypeExtension<MeetingQuery>()
     .AddTypeExtension<PatientQuery>()
+    .AddTypeExtension<SettingQuery>()
     .AddTypeExtension<TariffQuery>()
     .AddMutationType(d => d.Name("Mutation"))
     .AddTypeExtension<MeetingMutation>()
     .AddTypeExtension<PatientMutation>()
+    .AddTypeExtension<SettingMutation>()
     .AddTypeExtension<TariffMutation>()
     .AddType<MeetingType>()
     .AddType<PatientType>()
+    .AddType<SettingType>()
     .AddType<TariffType>()
     .AddMongoDbFiltering()
     .AddMongoDbSorting()
@@ -109,6 +115,10 @@ builder.Services
 // Add business services
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextAccessor, UserContextAccessor>();
+
+// Add documents serivces
+builder.Services.AddScoped<ILocalizator, Localizator>();
+builder.Services.AddScoped<IReceiptGenerator, ReceiptGenerator>();
 
 // Add JWT
 builder.Services.AddAuthentication(options =>

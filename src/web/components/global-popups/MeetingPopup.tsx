@@ -6,7 +6,6 @@ import InputText from "../forms/InputText";
 import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
 import {getPatient, PatientSummary, searchPatients} from "../../lib/services/patients";
-import {useMsal} from "@azure/msal-react";
 import useSWR from "swr";
 import {getTariffs} from "../../lib/services/tariffs";
 import {Calendar} from "../forms/Calendar";
@@ -17,6 +16,7 @@ import {getMeetingById, Meeting, upsertMeeting} from "../../lib/services/meeting
 import InputSelect from "../forms/InputSelect";
 import {getLocale} from "../../lib/localization";
 import {dataUpdated} from "../../lib/events/data";
+import {displayFile} from "../../lib/ajaxHelper";
 
 interface Props {
     data?: any;
@@ -29,7 +29,6 @@ export const MeetingPopup = ({data, hide}: Props) => {
 
     const {t} = useTranslation('common');
     const {register, setValue, formState: {errors}, getValues, handleSubmit} = useForm();
-    const {instance, accounts} = useMsal();
     const [patientsSuggestions, setPatientsSuggestions] = useState<PatientSummary[]>([]);
     const [patient, setPatient] = useState<PatientSummary>();
     const [suggested, setSuggested] = useState<string>();
@@ -52,7 +51,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
     ]
 
     const loadTariffs = async () => {
-        return await getTariffs(instance, accounts[0]);
+        return await getTariffs();
     }
     const tariffs = useSWR('/tariffs', loadTariffs);
 
@@ -69,13 +68,13 @@ export const MeetingPopup = ({data, hide}: Props) => {
     }, [data]);
 
     const loadExistingMeeting = async (meetingId: string) => {
-        const m = await getMeetingById(meetingId, instance, accounts[0]);
+        const m = await getMeetingById(meetingId);
         Object.getOwnPropertyNames(m).forEach(p => {
             setValue(p, (m as any)[p]);
         });
 
         if (m.patientId) {
-            const patient = await getPatient(m.patientId, instance, accounts[0]);
+            const patient = await getPatient(m.patientId);
 
             if (patient) {
                 setPatient(patient);
@@ -144,7 +143,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
             firstName,
             birthDate: '',
             phoneNumber: ''
-        }, instance, accounts[0]);
+        });
         setPatientsSuggestions(patients);
 
         setSuggested(lastName + "|" + firstName);
@@ -188,7 +187,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
             lastName: data.lastName
         }
 
-        await upsertMeeting(meeting, instance, accounts[0]);
+        await upsertMeeting(meeting);
         hide();
         alertSuccess(t("alerts.saveSuccess"));
         dataUpdated({type: "meeting"});
@@ -208,6 +207,13 @@ export const MeetingPopup = ({data, hide}: Props) => {
         });
 
         return options;
+    }
+    
+    const receipt = async () => {
+        if (meetingId)
+        {
+            await displayFile("api/documents/receipt/" + meetingId);
+        }
     }
 
     return <Popup>
@@ -238,6 +244,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
                 <InputSelect className={styles.state} label={t("fields.meetingState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions}/>
 
                 <Button text={t("actions.cancel")} secondary={true} className={styles.cancel} onClick={() => hide()}/>
+                <Button text={t("actions.receipt")} secondary={true} className={styles.receipt} onClick={() => receipt()}/>
                 <Button text={t("actions.save")} className={styles.save} onClick={handleSubmit(onSubmit)}/>
             </form>
         </>

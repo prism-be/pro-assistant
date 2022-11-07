@@ -16,6 +16,20 @@ public class SerializationTests
     private readonly Random _dice = new();
 
     [Fact]
+    public void Configuration_Ok()
+    {
+        // Arrange
+        var source = new Setting
+        {
+            Id = Identifier.GenerateString(),
+            Value = Identifier.GenerateString()
+        };
+
+        // Act and Assert
+        CheckSerialization(source);
+    }
+
+    [Fact]
     public void Meeting_Ok()
     {
         // Arrange
@@ -58,7 +72,7 @@ public class SerializationTests
     }
 
     [Fact]
-    public void Tarif_Ok()
+    public void Tariff_Ok()
     {
         // Arrange
         var organization = new Tariff

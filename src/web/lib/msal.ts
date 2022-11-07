@@ -23,8 +23,6 @@ export const b2cPolicies = {
     authorityDomain: config.tenantName + ".b2clogin.com"
 }
 
-console.log(b2cPolicies);
-
 export const msalConfig = {
     auth: {
         clientId: config.clientId,
