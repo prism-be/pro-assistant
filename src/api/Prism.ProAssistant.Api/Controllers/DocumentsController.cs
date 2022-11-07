@@ -36,9 +36,7 @@ public class DocumentsController : Controller
         }
 
         var stream = new MemoryStream(pdfBytes);
-        var fileName = $"receipt-{meetingKey}.pdf";
 
-        Response.Headers.ContentDisposition = "inline; filename=" + fileName;
         return File(stream, "application/pdf");
     }
 

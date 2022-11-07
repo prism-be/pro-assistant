@@ -28,9 +28,8 @@ public class DocumentsControllerTests
         var meetingId = Identifier.GenerateString();
         var meetingKey = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
-        cache.Setup(x => x.GetAsync(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync(Encoding.Default.GetBytes(meetingId));
+        cache.Setup(x => x.GetAsync(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((byte[]) null!);
         var receiptGenerator = new Mock<IReceiptGenerator>();
-        receiptGenerator.Setup(x => x.Generate(meetingId)).ReturnsAsync((byte[])null!);
 
         // Act
         var controller = new DocumentsController(receiptGenerator.Object, cache.Object);
