@@ -10,3 +10,9 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=proassistant
       - MONGO_INITDB_ROOT_PASSWORD=Toto123Toto123
+  
+  redis:
+    image: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"

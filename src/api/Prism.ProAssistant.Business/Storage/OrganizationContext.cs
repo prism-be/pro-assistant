@@ -24,7 +24,10 @@ public class OrganizationContext : IOrganizationContext
     public OrganizationContext(MongoDbConfiguration mongoDbConfiguration, IUserContextAccessor userContextAccessor)
     {
         var client = new MongoClient(mongoDbConfiguration.ConnectionString);
-        var database = client.GetDatabase(userContextAccessor.OrganisationId);
+
+        var database = string.IsNullOrWhiteSpace(userContextAccessor.OrganisationId)
+            ? client.GetDatabase("unknown")
+            : client.GetDatabase(userContextAccessor.OrganisationId);
 
         History = database.GetCollection<History>(CollectionNames.History);
         Patients = database.GetCollection<Patient>(CollectionNames.Patients);

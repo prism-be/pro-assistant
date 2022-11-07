@@ -19,6 +19,8 @@
         "ELK_INDEX_AUTH_USER": "elastic",
         "ELK_INDEX_AUTH_PASSWORD": "elastic",
         
+        "REDIS_CONNECTION_STRING": "localhost:6379",
+        
         "ENVIRONMENT": "proassistant-dev"
       }
     }

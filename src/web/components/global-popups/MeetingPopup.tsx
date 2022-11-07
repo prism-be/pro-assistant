@@ -212,7 +212,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
     const receipt = async () => {
         if (meetingId)
         {
-            await displayFile("api/documents/receipt/" + meetingId);
+            await displayFile("api/documents/receipt", meetingId);
         }
     }
 

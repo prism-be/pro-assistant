@@ -33,11 +33,11 @@ export async function getData<TResult>(route: string): Promise<ObjectResult<TRes
     }
 }
 
-export async function displayFile<TResult>(route: string): Promise<void> {
+export async function displayFile<TResult>(route: string, id: string): Promise<void> {
     const bearer = await getAuthorization();
 
-    const response = await fetch(route, {
-        method: "GET",
+    const response = await fetch(route + "/" + id, {
+        method: "POST",
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -46,19 +46,8 @@ export async function displayFile<TResult>(route: string): Promise<void> {
     });
 
     if (response.status === 200) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-
-        a.click();
-
-        setTimeout(function () {
-            // For Firefox it is necessary to delay revoking the ObjectURL
-            a.remove();
-            URL.revokeObjectURL(url);
-        }, 100);
+        const data = await response.json();
+        window.open(route + "/" + data.key, "_blank");
     }
 }
 

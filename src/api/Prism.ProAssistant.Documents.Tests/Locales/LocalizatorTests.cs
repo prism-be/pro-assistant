@@ -24,7 +24,7 @@ public class LocalizatorTests
         var title = localizator.GetTranslation("receipt", "title");
 
         // Assert
-        title.Should().Be("Reçu de paiement pour une scéance de type: ");
+        title.Should().Be("Reçu de paiement pour une séance de type: ");
     }
 
     [Fact]
@@ -37,6 +37,6 @@ public class LocalizatorTests
         var title = localizator.GetTranslation("receipt", "title");
 
         // Assert
-        title.Should().Be("Reçu de paiement pour une scéance de type: ");
+        title.Should().Be("Reçu de paiement pour une séance de type: ");
     }
 }
