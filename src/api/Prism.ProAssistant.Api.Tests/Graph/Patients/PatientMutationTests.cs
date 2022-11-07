@@ -7,12 +7,10 @@
 using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Graph.Patients;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
-using Prism.ProAssistant.Business.Storage;
 using Prism.ProAssistant.UnitTesting.Fakes;
 using Xunit;
 
@@ -62,6 +60,5 @@ public class PatientMutationTests
 
         // Assert
         result.Should().NotBeNull();
-        result.Id.Should().Be(patientId);
     }
 }
