@@ -13,7 +13,7 @@ import {Popup} from '../components/Pops';
 import {useKeyPressEvent} from "react-use";
 import {alertSuccess} from "../lib/events/alert";
 import {Pencil} from "../components/icons/Icons";
-import {DocumentSettings, getSettings, saveSettings} from "../lib/services/settings";
+import {getSettings, saveSettings} from "../lib/services/settings";
 import TextArea from "../components/forms/TextArea";
 import InputImage from "../components/forms/InputImage";
 
@@ -133,7 +133,7 @@ const Documents = () => {
         </header>
         <div className={styles.keyValueForm}>
             <InputText label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue} />
-            <TextArea label={t("documents.header.address")} name={"address"} register={register} setValue={setValue} />
+            <TextArea label={t("documents.header.address")} name={"address"} register={register} />
             <InputImage label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo} />
             <InputText label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue} />
             <InputText label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue} />

@@ -10,7 +10,7 @@ interface Props {
     required?: boolean;
     register: UseFormRegister<FieldValues>;
     setValue: UseFormSetValue<FieldValues>;
-    initialPreview?: string | undefined;
+    initialPreview?: string;
     error?: any;
     className?: string;
     onChange?: (value: string | ArrayBuffer | null) => void;
