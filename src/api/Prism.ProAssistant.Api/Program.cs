@@ -26,6 +26,7 @@ using Prism.ProAssistant.Documents.Locales;
 using Serilog;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
+using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,7 +117,14 @@ builder.Services
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextAccessor, UserContextAccessor>();
 
-// Add documents serivces
+// Add Cache
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = EnvironmentConfiguration.GetMandatoryConfiguration("REDIS_CONNECTION_STRING");
+    options.InstanceName = EnvironmentConfiguration.GetMandatoryConfiguration("ENVIRONMENT");
+});
+
+// Add documents services
 builder.Services.AddScoped<ILocalizator, Localizator>();
 builder.Services.AddScoped<IReceiptGenerator, ReceiptGenerator>();
 
