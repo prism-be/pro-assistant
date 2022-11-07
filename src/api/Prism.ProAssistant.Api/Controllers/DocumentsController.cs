@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Text;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -29,9 +28,7 @@ public class DocumentsController : Controller
     [Route("api/documents/receipt/{meetingKey}")]
     public async Task<IActionResult> Receipt(string meetingKey)
     {
-        var meetingIdBytes = await _cache.GetAsync(GenerateMeetingKey(meetingKey));
-        var meetingId = Encoding.Default.GetString(meetingIdBytes);
-        var pdfBytes = await _receiptGenerator.Generate(meetingId);
+        var pdfBytes = await _cache.GetAsync(GenerateMeetingKey(meetingKey));
 
         if (pdfBytes == null)
         {
@@ -39,22 +36,26 @@ public class DocumentsController : Controller
         }
 
         var stream = new MemoryStream(pdfBytes);
-        return File(stream, "application/pdf", $"receipt-{meetingId}.pdf");
+        var fileName = $"receipt-{meetingKey}.pdf";
+
+        Response.Headers.ContentDisposition = "inline; filename=" + fileName;
+        return File(stream, "application/pdf");
     }
 
     [HttpPost]
-    [Route("api/documents/receipt")]
+    [Route("api/documents/receipt/{meetingId}")]
     public async Task<IActionResult> StartReceipt(string meetingId)
     {
         var meetingKey = Identifier.GenerateString();
-        await _cache.SetAsync(GenerateMeetingKey(meetingKey), Encoding.Default.GetBytes(meetingId), new DistributedCacheEntryOptions
+        var pdfBytes = await _receiptGenerator.Generate(meetingId);
+        await _cache.SetAsync(GenerateMeetingKey(meetingKey), pdfBytes, new DistributedCacheEntryOptions
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
         });
 
         return Ok(new
         {
-            meetingKey
+            key = meetingKey
         });
     }
 
