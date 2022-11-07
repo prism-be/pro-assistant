@@ -105,13 +105,18 @@ const Documents = () => {
     const {register, setValue, getValues} = useForm();
     const headers = useSWR('documents-headers', getSettings) as any;
     const [logo, setLogo] = useState<string>();
+    const [signature, setSignature] = useState<string>();
     
     useEffect(() => {
         if (headers.data) {
             setValue('name', headers.data.name)
             setValue('address', headers.data.address)
             setValue('logo', headers.data.logo)
+            setValue('yourName', headers.data.yourName)
+            setValue('yourCity', headers.data.yourCity)
+            setValue('signature', headers.data.signature)
             setLogo(headers.data.logo);
+            setSignature(headers.data.signature);
         }
     }, [headers]);
     
@@ -130,6 +135,9 @@ const Documents = () => {
             <InputText label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue} />
             <TextArea label={t("documents.header.address")} name={"address"} register={register} setValue={setValue} />
             <InputImage label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo} />
+            <InputText label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue} />
+            <InputText label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue} />
+            <InputImage label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature} />
         </div>
     </section>
 }

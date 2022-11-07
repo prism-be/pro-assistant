@@ -1,7 +1,7 @@
 ﻿import styles from "../../styles/components/forms/input.image.module.scss"
 
 import {FieldValues, UseFormRegister} from "react-hook-form";
-import {UseFormGetValues, UseFormSetValue} from "react-hook-form/dist/types/form";
+import {UseFormSetValue} from "react-hook-form/dist/types/form";
 import {useEffect, useState} from "react";
 
 interface Props {
