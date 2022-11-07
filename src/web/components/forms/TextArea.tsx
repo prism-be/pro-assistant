@@ -1,29 +1,21 @@
 ﻿import styles from "../../styles/components/forms/input.text.module.scss"
 
 import {FieldValues, UseFormRegister} from "react-hook-form";
-import {UseFormSetValue} from "react-hook-form/dist/types/form";
 
 interface Props {
     label: string;
     name: string;
     required?: boolean;
     register: UseFormRegister<FieldValues>;
-    setValue: UseFormSetValue<FieldValues>;
     error?: any;
-    autoCapitalize?: boolean;
     className?:string;
     onChange?: (value: string) => void;
 }
 
 
-const TextArea = ({label, name, required, register, error, autoCapitalize, setValue, className, onChange}: Props) => {
+const TextArea = ({label, name, required, register, error, className, onChange}: Props) => {
 
     const valueChanged = (e: { target: { value: any; }; }) => {
-        if (autoCapitalize === true)
-        {
-            setValue(name, e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1));
-        }
-        
         if (onChange)
         {
             onChange(e.target.value);
