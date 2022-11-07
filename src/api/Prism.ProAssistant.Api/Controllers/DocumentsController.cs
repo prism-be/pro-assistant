@@ -57,7 +57,7 @@ public class DocumentsController : Controller
         });
     }
 
-    private string GenerateMeetingKey(string meetingKey)
+    private static string GenerateMeetingKey(string meetingKey)
     {
         return $"documents/receipt/{meetingKey}";
     }
