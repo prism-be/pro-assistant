@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "MeetingMutation.cs" company = "Prism">
+//  <copyright file = "SettingMutation.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -21,7 +21,11 @@ public class SettingMutation
     {
         logger.LogInformation("Updating settings {meetingId}", setting.Id);
         await organizationContext.History.InsertOneAsync(new History(userContextAccessor.UserId, setting));
-        await organizationContext.Settings.ReplaceOneAsync(Builders<Setting>.Filter.Eq("Id", setting.Id), setting);
+        await organizationContext.Settings.ReplaceOneAsync(Builders<Setting>.Filter.Eq("Id", setting.Id), setting, new ReplaceOptions
+        {
+            IsUpsert = true
+        });
+
         return setting;
     }
 }

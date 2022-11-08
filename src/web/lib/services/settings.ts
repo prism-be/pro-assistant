@@ -7,7 +7,7 @@ export interface DocumentSettings {
     logo?: string;
 }
 
-export const getSettings = async <T>(key: 'documents-headers'): Promise<T> => {
+export const getSettings = async <T>(key: string): Promise<T> => {
 
     const query = {
         query: {
@@ -27,7 +27,7 @@ export const getSettings = async <T>(key: 'documents-headers'): Promise<T> => {
     return value ? JSON.parse(value) : {};
 }
 
-export const saveSettings = async <T>(key: 'documents-headers', value: T): Promise<boolean> => {
+export const saveSettings = async <T>(key: string, value: T): Promise<boolean> => {
 
     const query = {
         mutation: {

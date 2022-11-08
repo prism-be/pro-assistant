@@ -46,6 +46,8 @@ public class ReceiptGenerator : IReceiptGenerator
             return null;
         }
 
+        var (title, content) = await GetTitleContent();
+
         Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(_localizator.Locale);
         Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(_localizator.Locale);
 
@@ -98,8 +100,8 @@ public class ReceiptGenerator : IReceiptGenerator
 
                     table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(10, Unit.Centimetre)).Column(c =>
                     {
-                        c.Item().Text(_localizator.GetTranslation("receipt", "title") + " " + data.Value.meeting.Type).Bold();
-                        c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(GetContent(data.Value.meeting, data.Value.patient, data.Value.headers));
+                        c.Item().Text(ReplaceContent(title, data.Value.meeting, data.Value.patient, data.Value.headers)).Bold();
+                        c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.meeting, data.Value.patient, data.Value.headers));
                     });
 
                     table.Cell().Row(6).Column(3).PaddingTop(1, Unit.Centimetre).Column(c =>
@@ -122,9 +124,24 @@ public class ReceiptGenerator : IReceiptGenerator
         return document.GeneratePdf();
     }
 
-    private string GetContent(Meeting meeting, Patient patient, JsonNode headers)
+    private async Task<(string title, string content)> GetTitleContent()
     {
-        var template = Template.Parse(_localizator.GetTranslation("receipt", "content"));
+        var settings = _organizationContext.Settings.FindAsync(Builders<Setting>.Filter.Eq("Id", "document-receipt"));
+        var setting = await settings.Result.SingleOrDefaultAsync();
+
+        if (setting?.Value == null)
+        {
+            return (_localizator.GetTranslation("receipt", "title"), _localizator.GetTranslation("receipt", "content"));
+        }
+
+        var receiptSetting = JsonNode.Parse(setting.Value);
+
+        return (receiptSetting?["title"]?.ToString() ?? string.Empty, receiptSetting?["content"]?.ToString() ?? string.Empty);
+    }
+
+    private string ReplaceContent(string templateContent, Meeting meeting, Patient patient, JsonNode headers)
+    {
+        var template = Template.Parse(templateContent);
 
         var data = new
         {

@@ -106,7 +106,7 @@ const Documents = () => {
     const headers = useSWR('documents-headers', getSettings) as any;
     const [logo, setLogo] = useState<string>();
     const [signature, setSignature] = useState<string>();
-    
+
     useEffect(() => {
         if (headers.data) {
             setValue('name', headers.data.name)
@@ -119,7 +119,7 @@ const Documents = () => {
             setSignature(headers.data.signature);
         }
     }, [headers]);
-    
+
     const saveDocumentHeaders = async () => {
         const data = getValues();
         await saveSettings("documents-headers", data);
@@ -132,12 +132,46 @@ const Documents = () => {
             <Button text={t("common:actions.save")} onClick={() => saveDocumentHeaders()} secondary={true}></Button>
         </header>
         <div className={styles.keyValueForm}>
-            <InputText label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue} />
-            <TextArea label={t("documents.header.address")} name={"address"} register={register} />
-            <InputImage label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo} />
-            <InputText label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue} />
-            <InputText label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue} />
-            <InputImage label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature} />
+            <InputText label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
+            <TextArea label={t("documents.header.address")} name={"address"} register={register}/>
+            <InputImage label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>
+            <InputImage label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
+            <InputText label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
+            <InputText label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
+        </div>
+    </section>
+}
+
+const DocumentReceipt = () => {
+
+    const {t} = useTranslation("configuration");
+    const {register, setValue, getValues} = useForm();
+    const document = useSWR('document-receipt', getSettings) as any;
+
+    useEffect(() => {
+        if (document.data) {
+            setValue('title', document.data.title);
+            setValue('content', document.data.content);
+        } else {
+            setValue('title', t("documents.receipt.default.title"));
+            setValue('content', t("documents.receipt.default.content"));
+        }
+    }, [document]);
+
+    const saveReceipt = async () => {
+        const data = getValues();
+        await saveSettings("document-receipt", data);
+        alertSuccess(t("documents.receipt.saveSuccess"));
+    }
+
+    return <section className={styles.section}>
+        <header>
+            <h2>{t("documents.receipt.title")}</h2>
+            <Button text={t("common:actions.save")} onClick={() => saveReceipt()} secondary={true}></Button>
+        </header>
+        <div className={styles.keyValueForm}>
+            <InputText label={t("documents.receipt.document.title")} name={"title"} type={"text"} register={register} setValue={setValue}/>
+            <TextArea className={styles.bigText} label={t("documents.receipt.document.content")} name={"content"} register={register}/>
         </div>
     </section>
 }
@@ -147,6 +181,7 @@ const Configuration: NextPage = () => {
         <>
             <Tariffs/>
             <Documents/>
+            <DocumentReceipt/>
         </>
     </ContentContainer>
 }
