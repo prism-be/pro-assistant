@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "Tarif.cs" company = "Prism">
+//  <copyright file = "Tariff.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -10,8 +10,16 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Prism.ProAssistant.Business.Models;
 
-public class Tariff
+[BsonCollection("tariffs")]
+public class Tariff : IDataModel
 {
+
+    [JsonPropertyName("price")]
+    public decimal Price { get; set; }
+
+    [JsonPropertyName("defaultDuration")]
+    public int DefaultDuration { get; set; } = 60;
+
     [JsonPropertyName("id")]
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -19,10 +27,4 @@ public class Tariff
 
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
-
-    [JsonPropertyName("price")]
-    public decimal Price { get; set; }
-
-    [JsonPropertyName("defaultDuration")]
-    public int DefaultDuration { get; set; } = 60;
 }

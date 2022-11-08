@@ -10,12 +10,13 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Prism.ProAssistant.Business.Models;
 
-public class History
+[BsonCollection("history")]
+public class History: IDataModel
 {
     public History()
     {
     }
-    
+
     public History(string userId, object actual)
     {
         Actual = actual;
@@ -35,9 +36,9 @@ public class History
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = string.Empty;
 
-    [JsonPropertyName("userId")]
-    public string? UserId { get; set; }
-
     [JsonPropertyName("typeName")]
     public string? TypeName { get; set; }
+
+    [JsonPropertyName("userId")]
+    public string? UserId { get; set; }
 }

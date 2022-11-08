@@ -11,11 +11,6 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
-using Prism.ProAssistant.Api.Graph;
-using Prism.ProAssistant.Api.Graph.Meetings;
-using Prism.ProAssistant.Api.Graph.Patients;
-using Prism.ProAssistant.Api.Graph.Settings;
-using Prism.ProAssistant.Api.Graph.Tariffs;
 using Prism.ProAssistant.Api.Middlewares;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Behaviors;
@@ -24,14 +19,14 @@ using Prism.ProAssistant.Business.Storage;
 using Prism.ProAssistant.Documents.Generators;
 using Prism.ProAssistant.Documents.Locales;
 using Serilog;
+using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Logs
-Serilog.Debugging.SelfLog.Enable(Console.WriteLine);
+SelfLog.Enable(Console.WriteLine);
 var logBuilder = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
@@ -45,6 +40,7 @@ var logBuilder = new LoggerConfiguration()
     .Enrich.WithProperty("environment", Environment.GetEnvironmentVariable("ENVIRONMENT") ?? "proassistant");
 
 var elkUri = Environment.GetEnvironmentVariable("ELK_URI");
+
 if (!string.IsNullOrWhiteSpace(elkUri) && !builder.Environment.IsDevelopment())
 {
     logBuilder.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elkUri))
@@ -86,32 +82,6 @@ builder.Services.AddSingleton(database);
 builder.Services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
 
 builder.Services.AddScoped<IOrganizationContext, OrganizationContext>();
-
-builder.Services.AddSingleton<LogExecutionDiagnosticEventListener>();
-
-// GraphQL
-builder.Services
-    .AddGraphQLServer()
-    .AddDiagnosticEventListener<LogExecutionDiagnosticEventListener>()
-    .AddAuthorization()
-    .AddQueryType(d => d.Name("Query"))
-    .AddTypeExtension<MeetingQuery>()
-    .AddTypeExtension<PatientQuery>()
-    .AddTypeExtension<SettingQuery>()
-    .AddTypeExtension<TariffQuery>()
-    .AddMutationType(d => d.Name("Mutation"))
-    .AddTypeExtension<MeetingMutation>()
-    .AddTypeExtension<PatientMutation>()
-    .AddTypeExtension<SettingMutation>()
-    .AddTypeExtension<TariffMutation>()
-    .AddType<MeetingType>()
-    .AddType<PatientType>()
-    .AddType<SettingType>()
-    .AddType<TariffType>()
-    .AddMongoDbFiltering()
-    .AddMongoDbSorting()
-    .AddMongoDbProjections()
-    .AddMongoDbPagingProviders();
 
 // Add business services
 builder.Services.AddHttpContextAccessor();
@@ -165,7 +135,6 @@ app.UseCors(opt =>
             EnvironmentConfiguration.GetMandatoryConfiguration("FRONT_DOMAIN_CUSTOM")
         );
 });
-
 
 app.UseHealthChecks("/health");
 app.MapControllers();

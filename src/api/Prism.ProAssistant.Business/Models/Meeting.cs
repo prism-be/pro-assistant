@@ -10,46 +10,53 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Prism.ProAssistant.Business.Models;
 
-public class Meeting
+[BsonCollection("meetings")]
+public class Meeting : IDataModel
 {
+
+    [JsonPropertyName("startDate")]
+    public DateTime StartDate { get; set; }
+
+    [JsonPropertyName("paymentDate")]
+    public DateTime? PaymentDate { get; set; }
+
+    [JsonPropertyName("price")]
+    public decimal Price { get; set; }
+
+    [JsonPropertyName("duration")]
+    public int Duration { get; set; }
+
+    [JsonPropertyName("payment")]
+    public int Payment { get; set; }
+
+    [JsonPropertyName("state")]
+    public int State { get; set; }
+
+    [JsonPropertyName("firstName")]
+    public string FirstName { get; set; } = string.Empty;
+
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     [JsonPropertyName("id")]
     public string Id { get; set; } = string.Empty;
 
-    [JsonPropertyName("patientId")]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string? PatientId { get; set; }
+    [JsonPropertyName("lastName")]
+    public string LastName { get; set; } = string.Empty;
 
     [JsonPropertyName("title")]
     public string Title { get; set; } = string.Empty;
 
-    [JsonPropertyName("lastName")]
-    public string LastName { get; set; } = string.Empty;
-    
-    [JsonPropertyName("firstName")]
-    public string FirstName { get; set; } = string.Empty;
-
-    [JsonPropertyName("startDate")]
-    public DateTime StartDate { get; set; }
-
-    [JsonPropertyName("duration")]
-    public int Duration { get; set; }
-
-    [JsonPropertyName("state")]
-    public int State { get; set; }
-
-    [JsonPropertyName("price")]
-    public decimal Price { get; set; }
-
-    [JsonPropertyName("payment")]
-    public int Payment { get; set; }
-
-    [JsonPropertyName("paymentDate")]
-    public DateTime? PaymentDate { get; set; }
+    [JsonPropertyName("patientId")]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? PatientId { get; set; }
 
     [JsonPropertyName("type")]
     public string? Type { get; set; }
+
+    public string GetCollectionName()
+    {
+        return "meetings";
+    }
 }
 
 public enum MeetingState

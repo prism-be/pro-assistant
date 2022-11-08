@@ -7,19 +7,19 @@
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Business.Models;
 
-public class Patient
+[BsonCollection("patients")]
+public class Patient : IDataModel
 {
-    [JsonPropertyName("birthDate")]
-    public string? BirthDate { get; set; }
-
     [JsonPropertyName("id")]
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = string.Empty;
+
+    [JsonPropertyName("birthDate")]
+    public string? BirthDate { get; set; }
 
     [JsonPropertyName("city")]
     public string? City { get; set; }
