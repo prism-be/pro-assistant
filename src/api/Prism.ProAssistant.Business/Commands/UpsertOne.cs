@@ -26,7 +26,7 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
     private readonly IOrganizationContext _organizationContext;
     private readonly IUserContextAccessor _userContextAccessor;
 
-    public UpsertOneHandler(IOrganizationContext organizationContext, ILogger<UpsertOneHandler<T>> logger, IUserContextAccessor userContextAccessor)
+    public UpsertOneHandler(ILogger<UpsertOneHandler<T>> logger,IOrganizationContext organizationContext,  IUserContextAccessor userContextAccessor)
     {
         _organizationContext = organizationContext;
         _logger = logger;
