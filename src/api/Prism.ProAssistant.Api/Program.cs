@@ -141,9 +141,5 @@ app.MapControllers();
 
 app.UseRouting();
 app.UseAuthentication().UseAuthorization();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapGraphQL("/api/graphql");
-});
 
 app.Run();
