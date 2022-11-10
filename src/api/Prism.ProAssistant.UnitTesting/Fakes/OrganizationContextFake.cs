@@ -11,7 +11,7 @@ using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.UnitTesting.Fakes;
-
+/*
 public class OrganizationContextFake : IOrganizationContext
 {
 
@@ -69,4 +69,4 @@ public class OrganizationContextFake : IOrganizationContext
     public IMongoCollection<Meeting> Meetings => MeetingsMock.Object;
     public IMongoCollection<Setting> Settings => SettingsMock.Object;
     public IMongoCollection<Tariff> Tariffs => TariffsMock.Object;
-}
+}*/

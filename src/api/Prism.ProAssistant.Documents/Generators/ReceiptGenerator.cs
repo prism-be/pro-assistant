@@ -7,15 +7,16 @@
 using System.Globalization;
 using System.Text.Json.Nodes;
 using DotLiquid;
+using MediatR;
 using Microsoft.Extensions.Logging;
-using MongoDB.Driver;
 using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Storage;
+using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Documents.Locales;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using Document = QuestPDF.Fluent.Document;
+using Unit = QuestPDF.Infrastructure.Unit;
 
 namespace Prism.ProAssistant.Documents.Generators;
 
@@ -28,11 +29,11 @@ public class ReceiptGenerator : IReceiptGenerator
 {
     private readonly ILocalizator _localizator;
     private readonly ILogger<ReceiptGenerator> _logger;
-    private readonly IOrganizationContext _organizationContext;
+    private readonly IMediator _mediator;
 
-    public ReceiptGenerator(IOrganizationContext organizationContext, ILocalizator localizator, ILogger<ReceiptGenerator> logger)
+    public ReceiptGenerator(IMediator mediator, ILocalizator localizator, ILogger<ReceiptGenerator> logger)
     {
-        _organizationContext = organizationContext;
+        _mediator = mediator;
         _localizator = localizator;
         _logger = logger;
     }
@@ -124,10 +125,52 @@ public class ReceiptGenerator : IReceiptGenerator
         return document.GeneratePdf();
     }
 
+    private async Task<(Meeting meeting, Patient patient, Setting setting, JsonNode headers)?> GetData(string meetingId)
+    {
+        var meeting = await _mediator.Send(new FindOne<Meeting>(meetingId));
+
+        if (meeting == null)
+        {
+            _logger.LogWarning("Cannot find meeting {meetingId}", meetingId);
+            return null;
+        }
+
+        if (string.IsNullOrWhiteSpace(meeting.PatientId))
+        {
+            _logger.LogWarning("Cannot find patient for meeting {meetingId}", meetingId);
+            return null;
+        }
+
+        var patient = await _mediator.Send(new FindOne<Patient>(meeting.PatientId));
+
+        if (patient == null)
+        {
+            _logger.LogWarning("Cannot find patient {patientId}", meeting.PatientId);
+            return null;
+        }
+
+        var setting = await _mediator.Send(new FindOne<Setting>("documents-headers"));
+
+        if (setting == null || setting.Value == null)
+        {
+            _logger.LogWarning("Cannot find setting {settingId}", "documents-headers");
+            return null;
+        }
+
+        var headers = JsonNode.Parse(setting.Value);
+
+        if (headers == null)
+        {
+            _logger.LogWarning("Setting value is not a valid JSON");
+            return null;
+        }
+
+        return (meeting, patient, setting, headers);
+    }
+
     private async Task<(string title, string content)> GetTitleContent()
     {
-        var settings = _organizationContext.Settings.FindAsync(Builders<Setting>.Filter.Eq("Id", "document-receipt"));
-        var setting = await settings.Result.SingleOrDefaultAsync();
+        var setting = await _mediator.Send(new FindOne<Setting>("document-receipt"));
 
         if (setting?.Value == null)
         {
@@ -156,51 +199,5 @@ public class ReceiptGenerator : IReceiptGenerator
         };
 
         return template.Render(Hash.FromAnonymousObject(data));
-    }
-
-    private async Task<(Meeting meeting, Patient patient, Setting setting, JsonNode headers)?> GetData(string meetingId)
-    {
-        var meetings = await _organizationContext.Meetings.FindAsync(Builders<Meeting>.Filter.Eq("Id", meetingId));
-        var meeting = await meetings.SingleOrDefaultAsync();
-
-        if (meeting == null)
-        {
-            _logger.LogWarning("Cannot find meeting {meetingId}", meetingId);
-            return null;
-        }
-
-        if (string.IsNullOrWhiteSpace(meeting.PatientId))
-        {
-            _logger.LogWarning("Cannot find patient for meeting {meetingId}", meetingId);
-            return null;
-        }
-
-        var patients = await _organizationContext.Patients.FindAsync(Builders<Patient>.Filter.Eq("Id", meeting.PatientId));
-        var patient = await patients.SingleOrDefaultAsync();
-
-        if (patient == null)
-        {
-            _logger.LogWarning("Cannot find patient {patientId}", meeting.PatientId);
-            return null;
-        }
-
-        var settings = await _organizationContext.Settings.FindAsync(Builders<Setting>.Filter.Eq("Id", "documents-headers"));
-        var setting = await settings.SingleOrDefaultAsync();
-
-        if (setting == null || setting.Value == null)
-        {
-            _logger.LogWarning("Cannot find setting {settingId}", "documents-headers");
-            return null;
-        }
-
-        var headers = JsonNode.Parse(setting.Value);
-
-        if (headers == null)
-        {
-            _logger.LogWarning("Setting value is not a valid JSON");
-            return null;
-        }
-
-        return (meeting, patient, setting, headers);
     }
 }
