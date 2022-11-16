@@ -1,6 +1,5 @@
 ﻿import styles from '../../styles/pages/patients.module.scss';
 
-import {PatientSummary, searchPatients} from "../../lib/services/patients";
 import ContentContainer from "../../components/design/ContentContainer";
 import InputText from "../../components/forms/InputText";
 import InputDate from "../../components/forms/InputDate";
@@ -13,13 +12,15 @@ import {yupResolver} from "@hookform/resolvers/yup";
 import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
+import {postData} from "../../lib/ajaxHelper";
+import {IPatientSummary} from "../../lib/contracts";
 
 const Patients: NextPage = () => {
 
     const {t} = useTranslation('common');
     const router = useRouter();
 
-    const [patients, setPatients] = useState<PatientSummary[] | null>(null);
+    const [patients, setPatients] = useState<IPatientSummary[] | null>(null);
 
     const schema = yup.object({}).required();
 
@@ -39,7 +40,7 @@ const Patients: NextPage = () => {
 
     const onSubmit = async (data: any) => {
         sessionStorage.setItem('patients/search-patients', JSON.stringify(data));
-        const result = await searchPatients(data);
+        const result = await postData<IPatientSummary[]>("/patients", data);
         setPatients(result);
     }
 

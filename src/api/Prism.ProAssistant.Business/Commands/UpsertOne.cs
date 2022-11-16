@@ -42,8 +42,8 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
         {
             _logger.LogInformation("Inserting an new item of type {itemType} by user {userId}", typeof(T).FullName, _userContextAccessor.UserId);
             
-            await history.InsertOneAsync(new History(_userContextAccessor.UserId, request.Item), cancellationToken: cancellationToken);
             await collection.InsertOneAsync(request.Item, cancellationToken: cancellationToken);
+            await history.InsertOneAsync(new History(_userContextAccessor.UserId, request.Item), cancellationToken: cancellationToken);
             
             _logger.LogInformation("Inserted an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
             

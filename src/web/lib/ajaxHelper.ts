@@ -3,15 +3,10 @@ import getConfig from 'next/config'
 import {msalInstance} from "./msal";
 const { publicRuntimeConfig: config } = getConfig()
 
-interface ObjectResult<TData> {
-    status: number;
-    data: TData | undefined;
-}
-
-export async function getData<TResult>(route: string): Promise<ObjectResult<TResult>> {
+export async function getData<TResult>(route: string): Promise<TResult | null> {
     const bearer = await getAuthorization();
 
-    const response = await fetch(route, {
+    const response = await fetch("/api" + route, {
         method: "GET",
         headers: {
             'Accept': 'application/json',
@@ -21,16 +16,10 @@ export async function getData<TResult>(route: string): Promise<ObjectResult<TRes
     });
 
     if (response.status === 200) {
-        return {
-            status: response.status,
-            data: await response.json()
-        }
+        return await response.json()
     }
 
-    return {
-        status: response.status,
-        data: undefined
-    }
+    return null;
 }
 
 export async function displayFile<TResult>(route: string, id: string): Promise<void> {
@@ -51,11 +40,11 @@ export async function displayFile<TResult>(route: string, id: string): Promise<v
     }
 }
 
-export async function postData<TResult>(route: string, body: any): Promise<ObjectResult<TResult>> {
+export async function postData<TResult>(route: string, body: any): Promise<TResult | null> {
 
     const bearer = await getAuthorization();
 
-    const response = await fetch(route, {
+    const response = await fetch("/api" + route, {
         body: JSON.stringify(body),
         method: "POST",
         headers: {
@@ -66,41 +55,10 @@ export async function postData<TResult>(route: string, body: any): Promise<Objec
     });
 
     if (response.status === 200) {
-        return {
-            status: response.status,
-            data: await response.json()
-        }
+        return await response.json();
     }
 
-    return {
-        status: response.status,
-        data: undefined
-    }
-}
-
-export async function queryItems<TResult>(query: string): Promise<TResult> {
-    const bearer = await getAuthorization();
-
-    const body = {
-
-        query: query
-    };
-
-    const response = await fetch("/api/graphql", {
-        body: JSON.stringify(body),
-        method: "POST",
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-            'Authorization': bearer
-        },
-    });
-
-    if (response.status === 200) {
-        return response.json();
-    }
-
-    throw response;
+    return null;
 }
 
 /*
@@ -175,19 +133,4 @@ export const getAuthorization = async (): Promise<string> => {
     }
 
     return '';
-}
-
-export const buildWhere= (query: any) => {
-    let where: any = {};
-
-    Object.getOwnPropertyNames(query).forEach(p => {
-        if (query[p] && query[p] != "" && query[p] != 0)
-        {
-            where[p] = {
-                contains: query[p]
-            }
-        }
-    })
-
-    return where;
 }

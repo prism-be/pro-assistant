@@ -14,6 +14,9 @@ using MongoDB.Driver;
 using Prism.ProAssistant.Api.Middlewares;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Behaviors;
+using Prism.ProAssistant.Business.Commands;
+using Prism.ProAssistant.Business.Models;
+using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 using Prism.ProAssistant.Documents.Generators;
@@ -66,9 +69,28 @@ builder.Services.AddMediatR(new[]
 {
     applicationAssembly
 }, config => config.AsScoped());
+
+builder.Services.AddScoped<IRequestHandler<FindOne<Patient>, Patient?>, FindOneHandler<Patient>>();
+builder.Services.AddScoped<IRequestHandler<FindMany<Patient>, List<Patient>>, FindManyHandler<Patient>>();
+builder.Services.AddScoped<IRequestHandler<UpsertOne<Patient>, UpsertResult>, UpsertOneHandler<Patient>>();
+
+builder.Services.AddScoped<IRequestHandler<FindOne<Meeting>, Meeting?>, FindOneHandler<Meeting>>();
+builder.Services.AddScoped<IRequestHandler<FindMany<Meeting>, List<Meeting>>, FindManyHandler<Meeting>>();
+builder.Services.AddScoped<IRequestHandler<UpsertOne<Meeting>, UpsertResult>, UpsertOneHandler<Meeting>>();
+
+builder.Services.AddScoped<IRequestHandler<FindOne<Tariff>, Tariff?>, FindOneHandler<Tariff>>();
+builder.Services.AddScoped<IRequestHandler<FindMany<Tariff>, List<Tariff>>, FindManyHandler<Tariff>>();
+builder.Services.AddScoped<IRequestHandler<UpsertOne<Tariff>, UpsertResult>, UpsertOneHandler<Tariff>>();
+builder.Services.AddScoped<IRequestHandler<RemoveOne<Tariff>>, RemoveOneHandler<Tariff>>();
+
+builder.Services.AddScoped<IRequestHandler<FindOne<Setting>, Setting?>, FindOneHandler<Setting>>();
+builder.Services.AddScoped<IRequestHandler<UpsertOne<Setting>, UpsertResult>, UpsertOneHandler<Setting>>();
+
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
+
 builder.Services.AddValidatorsFromAssembly(applicationAssembly);
+
 
 // Add Mongo
 var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");

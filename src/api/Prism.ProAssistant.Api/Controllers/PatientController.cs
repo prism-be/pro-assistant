@@ -45,10 +45,10 @@ public class PatientController : Controller
     }
 
     [Route("api/patients")]
-    [HttpGet]
-    public async Task<ActionResult<List<Patient>>> SearchPatients([FromQuery] string lastName, [FromQuery] string firstName, [FromQuery] string phoneNumber, [FromQuery] string birthDate)
+    [HttpPost]
+    public async Task<ActionResult<List<Patient>>> SearchPatients([FromBody]SearchPatients search)
     {
-        var result = await _mediator.Send(new SearchPatients(lastName, firstName, phoneNumber, birthDate));
+        var result = await _mediator.Send(search);
         return result
             .OrderBy(x => x.LastName)
             .ThenBy(x => x.FirstName)

@@ -5,18 +5,16 @@ import useTranslation from "next-translate/useTranslation";
 import InputText from "../forms/InputText";
 import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
-import {getPatient, PatientSummary, searchPatients} from "../../lib/services/patients";
 import useSWR from "swr";
-import {getTariffs} from "../../lib/services/tariffs";
 import {Calendar} from "../forms/Calendar";
 import {add, format, formatISO, parse, parseISO} from "date-fns";
 import Button from "../forms/Button";
 import {alertSuccess} from "../../lib/events/alert";
-import {getMeetingById, Meeting, upsertMeeting} from "../../lib/services/meetings";
 import InputSelect from "../forms/InputSelect";
 import {getLocale} from "../../lib/localization";
 import {dataUpdated} from "../../lib/events/data";
-import {displayFile} from "../../lib/ajaxHelper";
+import {displayFile, getData, postData} from "../../lib/ajaxHelper";
+import {IMeeting, IPatient, IPatientSummary, ITariff} from "../../lib/contracts";
 
 interface Props {
     data?: any;
@@ -29,8 +27,8 @@ export const MeetingPopup = ({data, hide}: Props) => {
 
     const {t} = useTranslation('common');
     const {register, setValue, formState: {errors}, getValues, handleSubmit} = useForm();
-    const [patientsSuggestions, setPatientsSuggestions] = useState<PatientSummary[]>([]);
-    const [patient, setPatient] = useState<PatientSummary>();
+    const [patientsSuggestions, setPatientsSuggestions] = useState<IPatientSummary[]>([]);
+    const [patient, setPatient] = useState<IPatientSummary>();
     const [suggested, setSuggested] = useState<string>();
     const [date, setDate] = useState<Date>(data?.startDate ?? new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
     const [duration, setDuration] = useState<number>(60);
@@ -50,10 +48,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
         {value: "100", text: t("options.meetings.state100")}
     ]
 
-    const loadTariffs = async () => {
-        return await getTariffs();
-    }
-    const tariffs = useSWR('/tariffs', loadTariffs);
+    const tariffs = useSWR<ITariff[]>('/tariffs');
 
     useEffect(() => {
         if (data?.meetingId) {
@@ -68,13 +63,18 @@ export const MeetingPopup = ({data, hide}: Props) => {
     }, [data]);
 
     const loadExistingMeeting = async (meetingId: string) => {
-        const m = await getMeetingById(meetingId);
+        const m = await getData<IMeeting>("/meeting/" + meetingId);
         Object.getOwnPropertyNames(m).forEach(p => {
             setValue(p, (m as any)[p]);
         });
+        
+        if (m == null)
+        {
+            return;
+        }
 
         if (m.patientId) {
-            const patient = await getPatient(m.patientId);
+            const patient = await getData<IPatient>("/patient/" + m.patientId);
 
             if (patient) {
                 setPatient(patient);
@@ -138,18 +138,18 @@ export const MeetingPopup = ({data, hide}: Props) => {
             return;
         }
 
-        const patients = await searchPatients({
+        const patients = await postData<IPatientSummary[]>("/patients",{
             lastName,
             firstName,
             birthDate: '',
             phoneNumber: ''
         });
-        setPatientsSuggestions(patients);
+        setPatientsSuggestions(patients ?? []);
 
         setSuggested(lastName + "|" + firstName);
     }
 
-    const selectPatient = (patient: PatientSummary) => {
+    const selectPatient = (patient: IPatientSummary) => {
         setPatient(patient);
         setSuggested(patient.lastName + "|" + patient.firstName);
         setValue("lastName", patient.lastName);
@@ -172,7 +172,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
     }
 
     const onSubmit = async (data: any) => {
-        const meeting: Meeting = {
+        const meeting: IMeeting = {
             id: meetingId ?? '',
             patientId: patient?.id ?? null,
             title: data.lastName + " " + data.firstName + (data.type ? " (" + data.type + ")" : ""),
@@ -187,7 +187,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
             lastName: data.lastName
         }
 
-        await upsertMeeting(meeting);
+        await postData("/meeting", meeting);
         hide();
         alertSuccess(t("alerts.saveSuccess"));
         dataUpdated({type: "meeting"});

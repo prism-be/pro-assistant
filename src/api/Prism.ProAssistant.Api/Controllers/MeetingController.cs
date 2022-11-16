@@ -25,10 +25,10 @@ public class MeetingController : Controller
     }
 
     [Route("api/meetings")]
-    [HttpGet]
-    public async Task<ActionResult<List<Meeting>>> FindMany([FromQuery] DateTime startDate, [FromQuery] DateTime endDate)
+    [HttpPost]
+    public async Task<ActionResult<List<Meeting>>> FindMany([FromBody]SearchMeetings search)
     {
-        var result = await _mediator.Send(new SearchMeetings(startDate, endDate));
+        var result = await _mediator.Send(search);
         return result.ToActionResult();
     }
 
