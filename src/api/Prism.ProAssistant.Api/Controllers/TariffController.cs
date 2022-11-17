@@ -24,11 +24,12 @@ public class TariffController : Controller
 
     [Route("api/tariffs")]
     [HttpGet]
-    public async Task<ActionResult<IOrderedEnumerable<Tariff>>> FindMany()
+    public async Task<ActionResult<List<Tariff>>> FindMany()
     {
         var result = await _mediator.Send(new FindMany<Tariff>());
         return result
             .OrderBy(x => x.Name)
+            .ToList()
             .ToActionResult();
     }
 

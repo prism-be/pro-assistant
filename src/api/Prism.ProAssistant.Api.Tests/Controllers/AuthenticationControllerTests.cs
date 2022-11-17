@@ -10,50 +10,51 @@ using Prism.ProAssistant.Api.Controllers;
 using Prism.ProAssistant.Business.Security;
 using Xunit;
 
-namespace Prism.ProAssistant.Api.Tests.Controllers;
-
-public class AuthenticationControllerTests
+namespace Prism.ProAssistant.Api.Tests.Controllers
 {
-
-    [Fact]
-    public void GetUser_Anonymous()
+    public class AuthenticationControllerTests
     {
-        // Arrange
-        var userContextAccessor = new Mock<IUserContextAccessor>();
-        userContextAccessor.Setup(x => x.Name).Returns(string.Empty);
-        userContextAccessor.Setup(x => x.IsAuthenticated).Returns(false);
 
-        // Act
-        var controller = new AuthenticationController(userContextAccessor.Object);
-        var result = controller.GetUser();
-
-        // Assert
-        ControllerTestsExtensions.Validate(result, x =>
+        [Fact]
+        public void GetUser_Anonymous()
         {
-            x.Authenticated.Should().BeFalse();
-            x.Name.Should().BeNull();
-        });
-    }
+            // Arrange
+            var userContextAccessor = new Mock<IUserContextAccessor>();
+            userContextAccessor.Setup(x => x.Name).Returns(string.Empty);
+            userContextAccessor.Setup(x => x.IsAuthenticated).Returns(false);
 
-    [Fact]
-    public void GetUser_Ok()
-    {
-        // Arrange
-        var name = Identifier.GenerateString();
+            // Act
+            var controller = new AuthenticationController(userContextAccessor.Object);
+            var result = controller.GetUser();
 
-        var userContextAccessor = new Mock<IUserContextAccessor>();
-        userContextAccessor.Setup(x => x.Name).Returns(name);
-        userContextAccessor.Setup(x => x.IsAuthenticated).Returns(true);
+            // Assert
+            ControllerTestsExtensions.Validate(result, x =>
+            {
+                x.Authenticated.Should().BeFalse();
+                x.Name.Should().BeNull();
+            });
+        }
 
-        // Act
-        var controller = new AuthenticationController(userContextAccessor.Object);
-        var result = controller.GetUser();
-
-        // Assert
-        ControllerTestsExtensions.Validate(result, x =>
+        [Fact]
+        public void GetUser_Ok()
         {
-            x.Authenticated.Should().BeTrue();
-            x.Name.Should().BeEquivalentTo(name);
-        });
+            // Arrange
+            var name = Identifier.GenerateString();
+
+            var userContextAccessor = new Mock<IUserContextAccessor>();
+            userContextAccessor.Setup(x => x.Name).Returns(name);
+            userContextAccessor.Setup(x => x.IsAuthenticated).Returns(true);
+
+            // Act
+            var controller = new AuthenticationController(userContextAccessor.Object);
+            var result = controller.GetUser();
+
+            // Assert
+            ControllerTestsExtensions.Validate(result, x =>
+            {
+                x.Authenticated.Should().BeTrue();
+                x.Name.Should().BeEquivalentTo(name);
+            });
+        }
     }
 }

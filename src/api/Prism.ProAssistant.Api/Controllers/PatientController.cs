@@ -46,7 +46,7 @@ public class PatientController : Controller
 
     [Route("api/patients")]
     [HttpPost]
-    public async Task<ActionResult<List<Patient>>> SearchPatients([FromBody]SearchPatients search)
+    public async Task<ActionResult<List<Patient>>> Search([FromBody]SearchPatients search)
     {
         var result = await _mediator.Send(search);
         return result
