@@ -26,7 +26,7 @@ public class MeetingController : Controller
 
     [Route("api/meetings")]
     [HttpPost]
-    public async Task<ActionResult<List<Meeting>>> FindMany([FromBody]SearchMeetings search)
+    public async Task<ActionResult<List<Meeting>>> Search([FromBody]SearchMeetings search)
     {
         var result = await _mediator.Send(search);
         return result.ToActionResult();
