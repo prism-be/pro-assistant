@@ -1,0 +1,15 @@
+name: TEST
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: proassistant
+    steps:
+      - name: Compose Pull Image
+        working-directory: /srv/proassistant
+        run: sudo docker compose pull
+      - name: Compose Up
+        working-directory: /srv/proassistant
+        run: sudo docker compose up -d
