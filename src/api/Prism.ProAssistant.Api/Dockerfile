@@ -12,12 +12,11 @@ RUN dotnet restore
 RUN dotnet publish Prism.ProAssistant.Api/Prism.ProAssistant.Api.csproj -c release -o /app --no-restore
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
+FROM mcr.microsoft.com/dotnet/aspnet:6.0-jammy
 EXPOSE 80
 ENV DOTNET_RUNNING_IN_CONTAINER=true
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
-RUN apk add --no-cache icu-libs
-RUN apk add --no-cache icu-data-full
+RUN apt-get update && apt-get install -y ttf-mscorefonts-installer fontconfig libc6 libc6-dev libgtk2.0-0 libnss3 libatk-bridge2.0-0 libx11-xcb1 libxcb-dri3-0 libdrm-common libgbm1 libasound2 libappindicator3-1 libxrender1 libfontconfig1 libxshmfence1
 WORKDIR /app
 COPY --from=build /app .
 ENTRYPOINT ["dotnet", "Prism.ProAssistant.Api.dll"]

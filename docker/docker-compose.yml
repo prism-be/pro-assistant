@@ -10,6 +10,22 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=proassistant
       - MONGO_INITDB_ROOT_PASSWORD=Toto123Toto123
+        
+  service-api:
+    image: "simonbaudart/pro-assistant:api-latest"
+    restart: unless-stopped
+    depends_on:
+      - redis
+    ports:
+      - "8081:80"
+    environment:
+      - FRONT_DOMAIN_CUSTOM=https://web.pro-assistant.eu
+      - FRONT_DOMAIN_FQDN=https://web.pro-assistant.eu
+      - MONGODB_CONNECTION_STRING=mongodb://proassistant:Toto123Toto123@mongo:27017/?authSource=admin
+      - AZURE_AD_AUTHORITY=https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/
+      - AZURE_AD_CLIENT_ID=b210005a-b610-43e2-9dd5-824e50b9f692
+      - ENVIRONMENT=proassistant-local
+      - REDIS_CONNECTION_STRING=redis:6379
   
   redis:
     image: redis
