@@ -17,7 +17,6 @@ public interface IOrganizationContext
 
 public class OrganizationContext : IOrganizationContext
 {
-
     private readonly IMongoDatabase _database;
 
     public OrganizationContext(MongoDbConfiguration mongoDbConfiguration, IUserContextAccessor userContextAccessor)
