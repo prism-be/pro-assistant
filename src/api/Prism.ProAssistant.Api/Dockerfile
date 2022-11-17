@@ -17,6 +17,7 @@ EXPOSE 80
 ENV DOTNET_RUNNING_IN_CONTAINER=true
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 RUN apk add --no-cache icu-libs
+RUN apk add --no-cache icu-data-full
 WORKDIR /app
 COPY --from=build /app .
 ENTRYPOINT ["dotnet", "Prism.ProAssistant.Api.dll"]
