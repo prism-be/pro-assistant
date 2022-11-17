@@ -37,4 +37,4 @@ jobs:
           -H "Authorization: Bearer ${{secrets.PRISM_ACCESS_TOKEN}}" \
           -H "Accept: application/vnd.github.v3+json" \
           https://api.github.com/repos/prism-be/pro-assistant-deploy/actions/workflows/deploy.yml/dispatches \
-          -d '{"ref": "master"}'
+          -d '{"ref": "main"}'
