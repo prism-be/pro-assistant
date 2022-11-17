@@ -30,7 +30,7 @@ jobs:
   
   deploy:
     needs: [api, web]
-    runs-on: [self-hosted, proassistant]
+    runs-on: [proassistant]
     steps:
       - name: Compose Pull Image
         working-directory: /srv/proassistant
