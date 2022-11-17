@@ -15,7 +15,8 @@ RUN dotnet publish Prism.ProAssistant.Api/Prism.ProAssistant.Api.csproj -c relea
 FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine
 EXPOSE 80
 ENV DOTNET_RUNNING_IN_CONTAINER=true
-ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true
+ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+RUN apk add --no-cache icu-libs
 WORKDIR /app
 COPY --from=build /app .
 ENTRYPOINT ["dotnet", "Prism.ProAssistant.Api.dll"]
