@@ -30,11 +30,11 @@ jobs:
   
   deploy:
     needs: [api, web]
-    runs-on: proassistant
+    runs-on: ubuntu-latest
     steps:
-      - name: Compose Pull Image
-        working-directory: /srv/proassistant
-        run: sudo docker compose pull
-      - name: Compose Up
-        working-directory: /srv/proassistant
-        run: sudo docker compose up -d
+      - run: |
+          curl -X POST \
+          -H "Authorization: Bearer ${{secrets.PRISM_ACCESS_TOKEN}}" \
+          -H "Accept: application/vnd.github.v3+json" \
+          https://api.github.com/repos/prism-be/pro-assistant-deploy/actions/workflows/deploy.yml/dispatches \
+          -d '{"ref": "master"}'
