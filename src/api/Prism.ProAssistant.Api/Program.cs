@@ -4,23 +4,9 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using FluentValidation;
-using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
+using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Api.Middlewares;
 using Prism.ProAssistant.Business;
-using Prism.ProAssistant.Business.Behaviors;
-using Prism.ProAssistant.Business.Commands;
-using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Queries;
-using Prism.ProAssistant.Business.Security;
-using Prism.ProAssistant.Business.Storage;
-using Prism.ProAssistant.Documents.Generators;
-using Prism.ProAssistant.Documents.Locales;
 using Serilog;
 using Serilog.Debugging;
 using Serilog.Events;
@@ -64,87 +50,25 @@ Log.Logger = logBuilder.CreateLogger();
 builder.Host.UseSerilog();
 
 // Add Mediatr
-var applicationAssembly = typeof(EntryPoint).Assembly;
-builder.Services.AddMediatR(new[]
-{
-    applicationAssembly
-}, config => config.AsScoped());
-
-builder.Services.AddScoped<IRequestHandler<FindOne<Patient>, Patient?>, FindOneHandler<Patient>>();
-builder.Services.AddScoped<IRequestHandler<FindMany<Patient>, List<Patient>>, FindManyHandler<Patient>>();
-builder.Services.AddScoped<IRequestHandler<UpsertOne<Patient>, UpsertResult>, UpsertOneHandler<Patient>>();
-
-builder.Services.AddScoped<IRequestHandler<FindOne<Meeting>, Meeting?>, FindOneHandler<Meeting>>();
-builder.Services.AddScoped<IRequestHandler<FindMany<Meeting>, List<Meeting>>, FindManyHandler<Meeting>>();
-builder.Services.AddScoped<IRequestHandler<UpsertOne<Meeting>, UpsertResult>, UpsertOneHandler<Meeting>>();
-
-builder.Services.AddScoped<IRequestHandler<FindOne<Tariff>, Tariff?>, FindOneHandler<Tariff>>();
-builder.Services.AddScoped<IRequestHandler<FindMany<Tariff>, List<Tariff>>, FindManyHandler<Tariff>>();
-builder.Services.AddScoped<IRequestHandler<UpsertOne<Tariff>, UpsertResult>, UpsertOneHandler<Tariff>>();
-builder.Services.AddScoped<IRequestHandler<RemoveOne<Tariff>>, RemoveOneHandler<Tariff>>();
-
-builder.Services.AddScoped<IRequestHandler<FindOne<Setting>, Setting?>, FindOneHandler<Setting>>();
-builder.Services.AddScoped<IRequestHandler<UpsertOne<Setting>, UpsertResult>, UpsertOneHandler<Setting>>();
-
-builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
-
-builder.Services.AddValidatorsFromAssembly(applicationAssembly);
-
+builder.Services.AddQueriesCommands();
 
 // Add Mongo
-var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");
-
-BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
-var client = new MongoClient(mongoDbConnectionString);
-var database = client.GetDatabase("proassistant");
-builder.Services.AddSingleton<IMongoClient>(client);
-builder.Services.AddSingleton(database);
-
-builder.Services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
-
-builder.Services.AddScoped<IOrganizationContext, OrganizationContext>();
+builder.Services.AddDatabase();
 
 // Add business services
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IUserContextAccessor, UserContextAccessor>();
+builder.Services.AddBusinessServices();
 
 // Add Cache
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = EnvironmentConfiguration.GetMandatoryConfiguration("REDIS_CONNECTION_STRING");
-    options.InstanceName = EnvironmentConfiguration.GetMandatoryConfiguration("ENVIRONMENT");
-});
+builder.Services.AddCache();
 
-// Add documents services
-builder.Services.AddScoped<ILocalizator, Localizator>();
-builder.Services.AddScoped<IReceiptGenerator, ReceiptGenerator>();
-
-// Add JWT
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(jwtOptions =>
-    {
-        jwtOptions.Authority = "https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/";
-        jwtOptions.Audience = EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_AD_CLIENT_ID");
-        jwtOptions.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = AuthenticationFailed
-        };
-    });
-
-Task AuthenticationFailed(AuthenticationFailedContext arg)
-{
-    // TODO : LOG
-    return Task.FromResult(0);
-}
+// Add Bearer
+builder.Services.AddBearer();
 
 // Add web stuff
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 
+// Build and start app
 var app = builder.Build();
 app.UseMiddleware<ErrorLoggingMiddleware>();
 
