@@ -5,7 +5,6 @@ import useTranslation from "next-translate/useTranslation";
 import ContentContainer from "../../components/design/ContentContainer";
 import {useRouter} from "next/router";
 import useSWR from "swr";
-import {createPatient, getPatient, savePatient} from "../../lib/services/patients";
 import InputText from "../../components/forms/InputText";
 import {useForm} from "react-hook-form";
 import {useEffect} from "react";
@@ -14,22 +13,24 @@ import {alertSuccess} from "../../lib/events/alert";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {Back} from "../../components/icons/Back";
 import InputDate from "../../components/forms/InputDate";
+import {getData, postData} from "../../lib/ajaxHelper";
+import {IPatient, IUpsertResult} from "../../lib/contracts";
 
 const Patient: NextPage = () => {
     const {t} = useTranslation('common');
     const router = useRouter();
     const {pid} = router.query;
 
-    const loadPatient = async (id: string) => {
+    const loadPatient = async (route: string) => {
         
-        if (id === "000000000000000000000000")
+        if (route === "/patient/000000000000000000000000")
         {
             return null;
         }
         
-        return await getPatient(id);
+        return await getData<IPatient>(route);
     }
-    const {data: patient, mutate: mutatePatient} = useSWR(pid, loadPatient);
+    const {data: patient, mutate: mutatePatient} = useSWR("/patient/" + pid, loadPatient);
     
     useEffect(() => {
         if (patient) {
@@ -46,13 +47,14 @@ const Patient: NextPage = () => {
         if (pid === '000000000000000000000000')
         {
             data.id = '';
-            const newPid = await createPatient(data);
+            const newPid = await postData<IUpsertResult>("/patient", data);
+            console.log(newPid);
             alertSuccess(t("details.saveSuccess"), { autoClose: true });
-            await router.push("/patients/" + newPid);
+            await router.push("/patients/" + newPid?.id);
             return;
         }
         
-        await savePatient(data);
+        await postData("/patient", data);
         await mutatePatient();
         alertSuccess(t("pages.patients.details.saveSuccess"), { autoClose: true });
     }

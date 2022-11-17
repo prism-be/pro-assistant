@@ -2,15 +2,16 @@
 import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import {useEffect, useState} from "react";
-import {add, format, parseISO} from "date-fns";
+import {add, format, formatISO, parseISO} from "date-fns";
 import useTranslation from "next-translate/useTranslation";
 import {getLocale} from "../lib/localization";
 import React from 'react';
 import {ArrowLeft, ArrowRight} from "../components/icons/Icons";
 import {useKeyPressEvent} from "react-use";
-import {getMeetings, Meeting} from "../lib/services/meetings";
 import {popupNewMeeting} from "../lib/events/globalPopups";
 import {onDataUpdated} from "../lib/events/data";
+import {IMeeting} from "../lib/contracts";
+import {postData} from "../lib/ajaxHelper";
 
 const Calendar: NextPage = () => {
     const getMonday = (d: Date) => {
@@ -18,7 +19,7 @@ const Calendar: NextPage = () => {
     }
 
     const [monday, setMonday] = useState(getMonday(new Date()));
-    const [meetings, setMeetings] = useState<Meeting[]>([]);
+    const [meetings, setMeetings] = useState<IMeeting[]>([]);
     const {t} = useTranslation("common");
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
     const days = [1, 2, 3, 4, 5, 6, 7];
@@ -40,8 +41,11 @@ const Calendar: NextPage = () => {
     }, [monday]);
 
     const reloadMeetings = async () => {
-        const m = await getMeetings(monday, add(monday, {days: 8}));
-        setMeetings(m);
+        const m = await postData<IMeeting[]> ("/meetings", {
+            startDate:formatISO(monday),
+            endDate: formatISO(add(monday, {days: 8}))
+        });
+        setMeetings(m ?? []);
     }
 
     const getDayClassName = (d: number) => {

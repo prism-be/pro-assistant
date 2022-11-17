@@ -8,7 +8,7 @@ using MongoDB.Driver;
 using Moq;
 
 namespace Prism.ProAssistant.UnitTesting;
-
+/*
 public static class MongoTestsExtensions
 {
     public static Mock<IMongoCollection<T>> SetupCollection<T>(this Mock<IMongoDatabase> database, params T[] samples) where T : new()
@@ -56,4 +56,4 @@ public static class MongoTestsExtensions
         collection.Setup(x => x.DeleteOneAsync(It.IsAny<FilterDefinition<T>>(), CancellationToken.None)).ReturnsAsync(new DeleteResult.Acknowledged(1));
         return collection;
     }
-}
+}*/

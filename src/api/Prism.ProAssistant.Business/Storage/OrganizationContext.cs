@@ -12,42 +12,37 @@ namespace Prism.ProAssistant.Business.Storage;
 
 public interface IOrganizationContext
 {
-    IMongoCollection<History> History { get; }
-    IMongoCollection<Meeting> Meetings { get; }
-    IMongoCollection<Patient> Patients { get; }
-    IMongoCollection<Setting> Settings { get; }
-    IMongoCollection<Tariff> Tariffs { get; }
+    IMongoCollection<T> GetCollection<T>();
 }
 
 public class OrganizationContext : IOrganizationContext
 {
+    private readonly IMongoDatabase _database;
+
     public OrganizationContext(MongoDbConfiguration mongoDbConfiguration, IUserContextAccessor userContextAccessor)
     {
         var client = new MongoClient(mongoDbConfiguration.ConnectionString);
 
-        var database = string.IsNullOrWhiteSpace(userContextAccessor.OrganisationId)
+        _database = string.IsNullOrWhiteSpace(userContextAccessor.OrganisationId)
             ? client.GetDatabase("unknown")
             : client.GetDatabase(userContextAccessor.OrganisationId);
-
-        History = database.GetCollection<History>(CollectionNames.History);
-        Patients = database.GetCollection<Patient>(CollectionNames.Patients);
-        Meetings = database.GetCollection<Meeting>(CollectionNames.Meetings);
-        Settings = database.GetCollection<Setting>(CollectionNames.Settings);
-        Tariffs = database.GetCollection<Tariff>(CollectionNames.Tariffs);
     }
 
-    public IMongoCollection<History> History { get; }
-    public IMongoCollection<Patient> Patients { get; }
-    public IMongoCollection<Meeting> Meetings { get; }
-    public IMongoCollection<Setting> Settings { get; }
-    public IMongoCollection<Tariff> Tariffs { get; }
-
-    public static class CollectionNames
+    public IMongoCollection<T> GetCollection<T>()
     {
-        public const string History = "history";
-        public const string Meetings = "meetings";
-        public const string Patients = "patients";
-        public const string Settings = "settings";
-        public const string Tariffs = "tariffs";
+        var collectionName = GetCollectionName<T>();
+
+        if (string.IsNullOrWhiteSpace(collectionName))
+        {
+            throw new NotSupportedException("The type is not supported as a data model : " + typeof(T).FullName);
+        }
+
+        return _database.GetCollection<T>(collectionName);
+    }
+
+    private static string? GetCollectionName<T>()
+    {
+        return (typeof(T).GetCustomAttributes(typeof(BsonCollectionAttribute), true).FirstOrDefault()
+            as BsonCollectionAttribute)?.CollectionName;
     }
 }

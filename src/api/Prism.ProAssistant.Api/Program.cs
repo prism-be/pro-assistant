@@ -4,34 +4,18 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using FluentValidation;
-using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization;
-using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
-using Prism.ProAssistant.Api.Graph;
-using Prism.ProAssistant.Api.Graph.Meetings;
-using Prism.ProAssistant.Api.Graph.Patients;
-using Prism.ProAssistant.Api.Graph.Settings;
-using Prism.ProAssistant.Api.Graph.Tariffs;
+using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Api.Middlewares;
 using Prism.ProAssistant.Business;
-using Prism.ProAssistant.Business.Behaviors;
-using Prism.ProAssistant.Business.Security;
-using Prism.ProAssistant.Business.Storage;
-using Prism.ProAssistant.Documents.Generators;
-using Prism.ProAssistant.Documents.Locales;
 using Serilog;
+using Serilog.Debugging;
 using Serilog.Events;
 using Serilog.Sinks.Elasticsearch;
-using StackExchange.Redis;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Logs
-Serilog.Debugging.SelfLog.Enable(Console.WriteLine);
+SelfLog.Enable(Console.WriteLine);
 var logBuilder = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
@@ -45,6 +29,7 @@ var logBuilder = new LoggerConfiguration()
     .Enrich.WithProperty("environment", Environment.GetEnvironmentVariable("ENVIRONMENT") ?? "proassistant");
 
 var elkUri = Environment.GetEnvironmentVariable("ELK_URI");
+
 if (!string.IsNullOrWhiteSpace(elkUri) && !builder.Environment.IsDevelopment())
 {
     logBuilder.WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(elkUri))
@@ -65,94 +50,25 @@ Log.Logger = logBuilder.CreateLogger();
 builder.Host.UseSerilog();
 
 // Add Mediatr
-var applicationAssembly = typeof(EntryPoint).Assembly;
-builder.Services.AddMediatR(new[]
-{
-    applicationAssembly
-}, config => config.AsScoped());
-builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-builder.Services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
-builder.Services.AddValidatorsFromAssembly(applicationAssembly);
+builder.Services.AddQueriesCommands();
 
 // Add Mongo
-var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");
-
-BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
-var client = new MongoClient(mongoDbConnectionString);
-var database = client.GetDatabase("proassistant");
-builder.Services.AddSingleton<IMongoClient>(client);
-builder.Services.AddSingleton(database);
-
-builder.Services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
-
-builder.Services.AddScoped<IOrganizationContext, OrganizationContext>();
-
-builder.Services.AddSingleton<LogExecutionDiagnosticEventListener>();
-
-// GraphQL
-builder.Services
-    .AddGraphQLServer()
-    .AddDiagnosticEventListener<LogExecutionDiagnosticEventListener>()
-    .AddAuthorization()
-    .AddQueryType(d => d.Name("Query"))
-    .AddTypeExtension<MeetingQuery>()
-    .AddTypeExtension<PatientQuery>()
-    .AddTypeExtension<SettingQuery>()
-    .AddTypeExtension<TariffQuery>()
-    .AddMutationType(d => d.Name("Mutation"))
-    .AddTypeExtension<MeetingMutation>()
-    .AddTypeExtension<PatientMutation>()
-    .AddTypeExtension<SettingMutation>()
-    .AddTypeExtension<TariffMutation>()
-    .AddType<MeetingType>()
-    .AddType<PatientType>()
-    .AddType<SettingType>()
-    .AddType<TariffType>()
-    .AddMongoDbFiltering()
-    .AddMongoDbSorting()
-    .AddMongoDbProjections()
-    .AddMongoDbPagingProviders();
+builder.Services.AddDatabase();
 
 // Add business services
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<IUserContextAccessor, UserContextAccessor>();
+builder.Services.AddBusinessServices();
 
 // Add Cache
-builder.Services.AddStackExchangeRedisCache(options =>
-{
-    options.Configuration = EnvironmentConfiguration.GetMandatoryConfiguration("REDIS_CONNECTION_STRING");
-    options.InstanceName = EnvironmentConfiguration.GetMandatoryConfiguration("ENVIRONMENT");
-});
+builder.Services.AddCache();
 
-// Add documents services
-builder.Services.AddScoped<ILocalizator, Localizator>();
-builder.Services.AddScoped<IReceiptGenerator, ReceiptGenerator>();
-
-// Add JWT
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(jwtOptions =>
-    {
-        jwtOptions.Authority = "https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/";
-        jwtOptions.Audience = EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_AD_CLIENT_ID");
-        jwtOptions.Events = new JwtBearerEvents
-        {
-            OnAuthenticationFailed = AuthenticationFailed
-        };
-    });
-
-Task AuthenticationFailed(AuthenticationFailedContext arg)
-{
-    // TODO : LOG
-    return Task.FromResult(0);
-}
+// Add Bearer
+builder.Services.AddBearer();
 
 // Add web stuff
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
 
+// Build and start app
 var app = builder.Build();
 app.UseMiddleware<ErrorLoggingMiddleware>();
 
@@ -166,15 +82,10 @@ app.UseCors(opt =>
         );
 });
 
-
 app.UseHealthChecks("/health");
 app.MapControllers();
 
 app.UseRouting();
 app.UseAuthentication().UseAuthorization();
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapGraphQL("/api/graphql");
-});
 
 app.Run();
