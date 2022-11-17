@@ -13,7 +13,6 @@ namespace Prism.ProAssistant.Business.Models;
 [BsonCollection("meetings")]
 public class Meeting : IDataModel
 {
-
     [JsonPropertyName("startDate")]
     public DateTime StartDate { get; set; }
 
@@ -52,11 +51,6 @@ public class Meeting : IDataModel
 
     [JsonPropertyName("type")]
     public string? Type { get; set; }
-
-    public string GetCollectionName()
-    {
-        return "meetings";
-    }
 }
 
 public enum MeetingState

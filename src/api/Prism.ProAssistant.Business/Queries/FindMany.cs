@@ -25,6 +25,6 @@ public class FindManyHandler<T> : IRequestHandler<FindMany<T>, List<T>>
     {
         var collection = _organizationContext.GetCollection<T>();
         var results = await collection.FindAsync<T>(Builders<T>.Filter.Empty, cancellationToken: cancellationToken);
-        return results.ToList();
+        return results.ToList(cancellationToken: cancellationToken);
     }
 }
