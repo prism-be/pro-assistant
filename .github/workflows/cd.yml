@@ -30,7 +30,7 @@ jobs:
   
   deploy:
     needs: [api, web]
-    runs-on: [proassistant]
+    runs-on: ncc-1706
     steps:
       - name: Compose Pull Image
         working-directory: /srv/proassistant
