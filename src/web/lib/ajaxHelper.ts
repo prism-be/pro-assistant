@@ -61,42 +61,19 @@ export async function postData<TResult>(route: string, body: any): Promise<TResu
     return null;
 }
 
-/*
-export async function postFile(route: string, file: File): Promise<any> {
-    
-    const data = new FormData();
-    data.append('file', file, file.name);
-    
-    const response = await fetch(config.apiRoot + route, {
-        body: data,
-        method: "POST",
+export async function deleteData<TResult>(route: string): Promise<void> {
+
+    const bearer = await getAuthorization();
+
+    await fetch("/api" + route, {
+        method: "DELETE",
         headers: {
             'Accept': 'application/json',
-            'Authorization': await getAuthorization()
+            'Content-Type': 'application/json',
+            'Authorization': bearer
         },
     });
-
-    if (response.status === 401)
-    {
-        if (await performRefreshToken())
-        {
-            return postFile(route, file);
-        }
-    }
-
-    if (response.status === 200)
-    {
-        return {
-            status: response.status,
-            data: undefined
-        }
-    }
-
-    return {
-        status: response.status,
-        data: undefined
-    }
-}*/
+}
 
 export const getAuthorization = async (): Promise<string> => {
     const accessTokenRequest = {

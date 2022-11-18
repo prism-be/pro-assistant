@@ -77,6 +77,11 @@ namespace Prism.ProAssistant.Api.Extensions
             services.AddScoped<IRequestHandler<FindMany<Tariff>, List<Tariff>>, FindManyHandler<Tariff>>();
             services.AddScoped<IRequestHandler<UpsertOne<Tariff>, UpsertResult>, UpsertOneHandler<Tariff>>();
             services.AddScoped<IRequestHandler<RemoveOne<Tariff>>, RemoveOneHandler<Tariff>>();
+            
+            services.AddScoped<IRequestHandler<FindOne<Document>, Document?>, FindOneHandler<Document>>();
+            services.AddScoped<IRequestHandler<FindMany<Document>, List<Document>>, FindManyHandler<Document>>();
+            services.AddScoped<IRequestHandler<UpsertOne<Document>, UpsertResult>, UpsertOneHandler<Document>>();
+            services.AddScoped<IRequestHandler<RemoveOne<Document>, Unit>, RemoveOneHandler<Document>>();
 
             services.AddScoped<IRequestHandler<FindOne<Setting>, Setting?>, FindOneHandler<Setting>>();
             services.AddScoped<IRequestHandler<UpsertOne<Setting>, UpsertResult>, UpsertOneHandler<Setting>>();

@@ -6,7 +6,8 @@
   "menu": {
     "patients": "Fiches Patients",
     "calendar": "Calendrier",
-    "configuration": "Configuration"
+    "configuration": "Configuration",
+    "documents": "Types de documents"
   },
   "actions": {
     "back": "Retour",
