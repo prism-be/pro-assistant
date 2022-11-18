@@ -19,8 +19,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <None Update="Locales\fr\receipt.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <None Update="Locales\fr\documents.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
     </ItemGroup>
 

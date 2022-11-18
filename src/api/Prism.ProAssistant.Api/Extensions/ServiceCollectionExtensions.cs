@@ -18,7 +18,7 @@ using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
-using Prism.ProAssistant.Documents.Generators;
+using Prism.ProAssistant.Documents;
 using Prism.ProAssistant.Documents.Locales;
 
 namespace Prism.ProAssistant.Api.Extensions
@@ -85,6 +85,8 @@ namespace Prism.ProAssistant.Api.Extensions
 
             services.AddScoped<IRequestHandler<FindOne<Setting>, Setting?>, FindOneHandler<Setting>>();
             services.AddScoped<IRequestHandler<UpsertOne<Setting>, UpsertResult>, UpsertOneHandler<Setting>>();
+            
+            services.AddScoped<IRequestHandler<GenerateDocument, byte[]>, GenerateDocumentHandler>();
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
@@ -114,7 +116,6 @@ namespace Prism.ProAssistant.Api.Extensions
             
             // Add documents services
             services.AddScoped<ILocalizator, Localizator>();
-            services.AddScoped<IReceiptGenerator, ReceiptGenerator>();
         }
     }
 }

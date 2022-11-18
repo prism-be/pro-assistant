@@ -1,8 +1,0 @@
-﻿{
-  "title": "Reçu de paiement pour une séance de type: {{meetingType}}",
-  "content": "Je, soussigné, {{name}}, déclare avoir reçu de la part de {{patientName}} la somme de {{price}} pour un rendez-vous de type {{meetingType}} en date du {{meetingDate}} à {{meetingHour}}.\n\nPatient: {{patientName}}\nSéance: {{meetingType}}\nDate de paiement: {{paymentDate}}\nMode de paiement: {{paymentMode}}\nMontant: {{price}}",
-  "payment0": "Non payé",
-  "payment1": "En liquide",
-  "payment2": "Par virement",
-  "payment3": "Par carte"
-}
