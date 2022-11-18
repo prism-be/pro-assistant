@@ -16,6 +16,7 @@ import TextArea from "../components/forms/TextArea";
 import InputImage from "../components/forms/InputImage";
 import {ITariff} from "../lib/contracts";
 import {getData, postData} from "../lib/ajaxHelper";
+import Section from "../components/design/Section";
 
 
 const Tariffs = () => {
@@ -53,58 +54,59 @@ const Tariffs = () => {
         await mutateTariffs();
     }
 
-    return <section className={styles.section}>
-        <header>
-            <h2>{t("tariffs.title")}</h2>
-            <Button text={t("common:actions.add")} onClick={() => addTariff()} secondary={true}></Button>
-        </header>
+    return <Section>
+        <>
+            <header>
+                <h2>{t("tariffs.title")}</h2>
+                <Button text={t("common:actions.add")} onClick={() => addTariff()} secondary={true}></Button>
+            </header>
 
-        {editing && <Popup>
-            <form>
-                <div className={styles.tariffEditionGrid}>
-                    <div className={styles.tariffEditionGridField}>
-                        <InputText label={t("tariffs.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
+            {editing && <Popup>
+                <form>
+                    <div className={styles.tariffEditionGrid}>
+                        <div className={styles.tariffEditionGridField}>
+                            <InputText label={t("tariffs.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
+                        </div>
+                        <div className={styles.tariffEditionGridField}>
+                            <InputText label={t("tariffs.price")} name={"price"} type={"text"} required={true} register={register} setValue={setValue} error={errors.price}/>
+                        </div>
+                        <div className={styles.tariffEditionGridField}>
+                            <InputText label={t("tariffs.defaultDuration")} name={"defaultDuration"} type={"number"} required={true} register={register} setValue={setValue} error={errors.defaultDuration}/>
+                        </div>
+                        <Button className={styles.tariffEditionGridButtonCancel} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
+                        <Button className={styles.tariffEditionGridButtonSave} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
                     </div>
-                    <div className={styles.tariffEditionGridField}>
-                        <InputText label={t("tariffs.price")} name={"price"} type={"text"} required={true} register={register} setValue={setValue} error={errors.price}/>
-                    </div>
-                    <div className={styles.tariffEditionGridField}>
-                        <InputText label={t("tariffs.defaultDuration")} name={"defaultDuration"} type={"number"} required={true} register={register} setValue={setValue} error={errors.defaultDuration}/>
-                    </div>
-                    <Button className={styles.tariffEditionGridButtonCancel} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
-                    <Button className={styles.tariffEditionGridButtonSave} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
-                </div>
-            </form>
-        </Popup>}
+                </form>
+            </Popup>}
 
-        <div className={styles.tariffGrid}>
-            {tariffs?.map(tariff =>
-                <div key={tariff.id} className={styles.tariffGridRow}>
-                    <div>
-                        {tariff.name} - {tariff.defaultDuration}m
-                    </div>
-                    <div>
-                        {tariff.price.toFixed(2)} &euro;
-                    </div>
-                    <div>
-                        <a onClick={() => editTariff(tariff)}>
-                            <Pencil/>
-                        </a>
-                    </div>
-                </div>)}
+            <div className={styles.tariffGrid}>
+                {tariffs?.map(tariff =>
+                    <div key={tariff.id} className={styles.tariffGridRow}>
+                        <div>
+                            {tariff.name} - {tariff.defaultDuration}m
+                        </div>
+                        <div>
+                            {tariff.price.toFixed(2)} &euro;
+                        </div>
+                        <div>
+                            <a onClick={() => editTariff(tariff)}>
+                                <Pencil/>
+                            </a>
+                        </div>
+                    </div>)}
 
-        </div>
-    </section>
+            </div>
+        </>
+    </Section>
 }
 
 const getSetting = async (route: string) => {
     const result = await getData<any>(route);
-    
-    if (result == null)
-    {
+
+    if (result == null) {
         return null;
     }
-    
+
     return JSON.parse(result.value);
 }
 
@@ -139,20 +141,22 @@ const Documents = () => {
         await mutateHeaders();
     }
 
-    return <section className={styles.section}>
-        <header>
-            <h2>{t("documents.header.title")}</h2>
-            <Button text={t("common:actions.save")} onClick={() => saveDocumentHeaders()} secondary={true}></Button>
-        </header>
-        <div className={styles.keyValueForm}>
-            <InputText label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
-            <TextArea label={t("documents.header.address")} name={"address"} register={register}/>
-            <InputImage label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>
-            <InputImage label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
-            <InputText label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
-            <InputText label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
-        </div>
-    </section>
+    return <Section>
+        <>
+            <header>
+                <h2>{t("documents.header.title")}</h2>
+                <Button text={t("common:actions.save")} onClick={() => saveDocumentHeaders()} secondary={true}></Button>
+            </header>
+            <div className={styles.keyValueForm}>
+                <InputText label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
+                <TextArea label={t("documents.header.address")} name={"address"} register={register}/>
+                <InputImage label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>
+                <InputImage label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
+                <InputText label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
+                <InputText label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
+            </div>
+        </>
+    </Section>
 }
 
 const DocumentReceipt = () => {
@@ -182,16 +186,18 @@ const DocumentReceipt = () => {
         await mutateDocument();
     }
 
-    return <section className={styles.section}>
-        <header>
-            <h2>{t("documents.receipt.title")}</h2>
-            <Button text={t("common:actions.save")} onClick={() => saveReceipt()} secondary={true}></Button>
-        </header>
-        <div className={styles.keyValueForm}>
-            <InputText label={t("documents.receipt.document.title")} name={"title"} type={"text"} register={register} setValue={setValue}/>
-            <TextArea className={styles.bigText} label={t("documents.receipt.document.content")} name={"content"} register={register}/>
-        </div>
-    </section>
+    return <Section>
+        <>
+            <header>
+                <h2>{t("documents.receipt.title")}</h2>
+                <Button text={t("common:actions.save")} onClick={() => saveReceipt()} secondary={true}></Button>
+            </header>
+            <div className={styles.keyValueForm}>
+                <InputText label={t("documents.receipt.document.title")} name={"title"} type={"text"} register={register} setValue={setValue}/>
+                <TextArea className={styles.bigText} label={t("documents.receipt.document.content")} name={"content"} register={register}/>
+            </div>
+        </>
+    </Section>
 }
 
 const Configuration: NextPage = () => {

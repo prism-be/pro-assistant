@@ -59,3 +59,10 @@ export interface IDocumentSettings {
     address?: string;
     logo?: string;
 }
+
+export interface IDocument {
+    id?: string;
+    name?: string;
+    title?: string;
+    body?: string;
+}

@@ -1,0 +1,16 @@
+﻿{
+  "title": "Gestion des templates de documents",
+  "list": {
+    "NoElements": "Vous n'avez pas encore de documents, cliquez sur ajouter pour en créer un."
+  },
+  "edit": {
+    "title": "Edition d'un type de document",
+    "confirmDelete": "Souhaitez vous vraiment supprimer le type de document suivant : ",
+    "form":
+    {
+      "name": "Nom du document",
+      "title": "Titre du document",
+      "body": "Contenu du document"
+    }
+  }
+}

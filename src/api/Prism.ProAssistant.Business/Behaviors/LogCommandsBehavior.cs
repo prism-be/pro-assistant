@@ -46,7 +46,7 @@ public sealed class LogCommandsBehavior<TRequest, TResponse> : IPipelineBehavior
             userId = userIdProperty.GetValue(request)?.ToString();
         }
         
-        _logger.LogInformation("Processing request '{command}' (organisation: {organisationId} - id: {id} - userId: {userId})", typeof(TRequest).FullName, organisationId, id, userId);
+        _logger.LogDebug("Processing request '{command}' (organisation: {organisationId} - id: {id} - userId: {userId})", typeof(TRequest).FullName, organisationId, id, userId);
         
         
         var sw = new Stopwatch();
@@ -54,7 +54,7 @@ public sealed class LogCommandsBehavior<TRequest, TResponse> : IPipelineBehavior
         var reponse = await next();
         sw.Stop();
         
-        _logger.LogInformation("Processed request '{command}' (organisation: {organisationId} - id: {id} - userId: {userId}) - {elapsed}", typeof(TRequest).FullName, organisationId, id, userId, sw.Elapsed);
+        _logger.LogDebug("Processed request '{command}' (organisation: {organisationId} - id: {id} - userId: {userId}) - {elapsed}", typeof(TRequest).FullName, organisationId, id, userId, sw.Elapsed);
         
         return reponse;
     }

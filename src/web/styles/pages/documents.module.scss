@@ -1,0 +1,35 @@
+﻿.tip {
+  display: block;
+  padding: 1rem;
+  text-align: center;
+}
+
+.body > textarea
+{
+  height: 20rem;
+}
+
+.edition
+{
+  display: grid;
+  grid-template-columns: 32px 32px 1fr;
+}
+
+.editionPencil
+{
+  grid-column-start: 1;
+  height: 32px;
+  cursor: pointer;
+}
+
+.editionTrash
+{
+  grid-column-start: 2;
+  height: 32px;
+  cursor: pointer;
+}
+
+.editionName
+{
+  grid-column-start: 3;
+}

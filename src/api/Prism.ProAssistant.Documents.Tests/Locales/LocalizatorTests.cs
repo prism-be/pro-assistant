@@ -12,7 +12,6 @@ namespace Prism.ProAssistant.Documents.Tests.Locales;
 
 public class LocalizatorTests
 {
-
     [Fact]
     public void GetLocale_DontDoubleLoad()
     {
@@ -20,11 +19,11 @@ public class LocalizatorTests
         var localizator = new Localizator();
 
         // Act
-        localizator.GetTranslation("receipt", "title");
-        var title = localizator.GetTranslation("receipt", "title");
+        localizator.GetTranslation("documents", "payment0");
+        var title = localizator.GetTranslation("documents", "payment0");
 
         // Assert
-        title.Should().Be("Reçu de paiement pour une séance de type: {{meetingType}}");
+        title.Should().Be("Non payé");
     }
 
     [Fact]
@@ -34,9 +33,9 @@ public class LocalizatorTests
         var localizator = new Localizator();
 
         // Act
-        var title = localizator.GetTranslation("receipt", "title");
+        var title = localizator.GetTranslation("documents", "payment0");
 
         // Assert
-        title.Should().Be("Reçu de paiement pour une séance de type: {{meetingType}}");
+        title.Should().Be("Non payé");
     }
 }

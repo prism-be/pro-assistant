@@ -9,6 +9,7 @@ using System.Text.Json.Nodes;
 using DotLiquid;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using Prism.ProAssistant.Business.Exceptions;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Documents.Locales;
@@ -18,36 +19,33 @@ using QuestPDF.Infrastructure;
 using Document = QuestPDF.Fluent.Document;
 using Unit = QuestPDF.Infrastructure.Unit;
 
-namespace Prism.ProAssistant.Documents.Generators;
+namespace Prism.ProAssistant.Documents;
 
-public interface IReceiptGenerator
-{
-    Task<byte[]?> Generate(string meetingId);
-}
+public record GenerateDocument(string DocumentId, string MeetingId) : IRequest<byte[]>;
 
-public class ReceiptGenerator : IReceiptGenerator
+public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 {
     private readonly ILocalizator _localizator;
-    private readonly ILogger<ReceiptGenerator> _logger;
+    private readonly ILogger<GenerateDocumentHandler> _logger;
     private readonly IMediator _mediator;
 
-    public ReceiptGenerator(IMediator mediator, ILocalizator localizator, ILogger<ReceiptGenerator> logger)
+    public GenerateDocumentHandler(IMediator mediator, ILogger<GenerateDocumentHandler> logger, ILocalizator localizator)
     {
         _mediator = mediator;
-        _localizator = localizator;
         _logger = logger;
+        _localizator = localizator;
     }
 
-    public async Task<byte[]?> Generate(string meetingId)
+    public async Task<byte[]> Handle(GenerateDocument request, CancellationToken cancellationToken)
     {
-        var data = await GetData(meetingId);
+        var data = await GetData(request.MeetingId);
 
         if (data == null)
         {
-            return null;
+            throw new NotSupportedException("The document cannot be generated, check logs.");
         }
 
-        var (title, content) = await GetTitleContent();
+        var (title, content) = await GetTitleContent(request.DocumentId);
 
         Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(_localizator.Locale);
         Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(_localizator.Locale);
@@ -99,7 +97,7 @@ public class ReceiptGenerator : IReceiptGenerator
                         c.Item().Text(data.Value.patient.Country);
                     });
 
-                    table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(10, Unit.Centimetre)).Column(c =>
+                    table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(13, Unit.Centimetre)).Column(c =>
                     {
                         c.Item().Text(ReplaceContent(title, data.Value.meeting, data.Value.patient, data.Value.headers)).Bold();
                         c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.meeting, data.Value.patient, data.Value.headers));
@@ -168,18 +166,16 @@ public class ReceiptGenerator : IReceiptGenerator
         return (meeting, patient, setting, headers);
     }
 
-    private async Task<(string title, string content)> GetTitleContent()
+    private async Task<(string title, string content)> GetTitleContent(string documentId)
     {
-        var setting = await _mediator.Send(new FindOne<Setting>("document-receipt"));
+        var document = await _mediator.Send(new FindOne<Business.Models.Document>(documentId));
 
-        if (setting?.Value == null)
+        if (document == null)
         {
-            return (_localizator.GetTranslation("receipt", "title"), _localizator.GetTranslation("receipt", "content"));
+            throw new NotFoundException($"The document with id {documentId} cannot be found");
         }
 
-        var receiptSetting = JsonNode.Parse(setting.Value);
-
-        return (receiptSetting?["title"]?.ToString() ?? string.Empty, receiptSetting?["content"]?.ToString() ?? string.Empty);
+        return (document.Title ?? string.Empty, document.Body ?? string.Empty);
     }
 
     private string ReplaceContent(string templateContent, Meeting meeting, Patient patient, JsonNode headers)
@@ -195,7 +191,7 @@ public class ReceiptGenerator : IReceiptGenerator
             meetingDate = meeting.StartDate.ToLongDateString(),
             meetingHour = meeting.StartDate.ToShortTimeString(),
             paymentDate = (meeting.PaymentDate ?? meeting.StartDate).ToString("dd/MM/yyyy"),
-            paymentMode = _localizator.GetTranslation("receipt", "payment" + meeting.Payment)
+            paymentMode = _localizator.GetTranslation("documents", "payment" + meeting.Payment)
         };
 
         return template.Render(Hash.FromAnonymousObject(data));

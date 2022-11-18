@@ -13,6 +13,9 @@
     ],
     "/configuration": [
       "configuration"
+    ],
+    "/documents": [
+      "documents"
     ]
   }
 }

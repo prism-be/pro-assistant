@@ -14,6 +14,22 @@ namespace Prism.ProAssistant.Business.Tests
     public class SerializationTests
     {
         private readonly Random _dice = new();
+        
+        [Fact]
+        public void Document()
+        {
+            // Arrange
+            var source = new Document
+            {
+                Id = Identifier.GenerateString(),
+                Name = Identifier.GenerateString(),
+                Title = Identifier.GenerateString(),
+                Body = Identifier.GenerateString()
+            };
+
+            // Act and Assert
+            CheckSerialization(source);
+        }
 
         [Fact]
         public void Configuration_Ok()
