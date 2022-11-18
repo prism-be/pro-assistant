@@ -97,7 +97,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
                         c.Item().Text(data.Value.patient.Country);
                     });
 
-                    table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(10, Unit.Centimetre)).Column(c =>
+                    table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(13, Unit.Centimetre)).Column(c =>
                     {
                         c.Item().Text(ReplaceContent(title, data.Value.meeting, data.Value.patient, data.Value.headers)).Bold();
                         c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.meeting, data.Value.patient, data.Value.headers));
@@ -191,7 +191,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
             meetingDate = meeting.StartDate.ToLongDateString(),
             meetingHour = meeting.StartDate.ToShortTimeString(),
             paymentDate = (meeting.PaymentDate ?? meeting.StartDate).ToString("dd/MM/yyyy"),
-            paymentMode = _localizator.GetTranslation("receipt", "payment" + meeting.Payment)
+            paymentMode = _localizator.GetTranslation("documents", "payment" + meeting.Payment)
         };
 
         return template.Render(Hash.FromAnonymousObject(data));

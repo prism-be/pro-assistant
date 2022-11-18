@@ -13,8 +13,8 @@ import {alertSuccess} from "../../lib/events/alert";
 import InputSelect from "../forms/InputSelect";
 import {getLocale} from "../../lib/localization";
 import {dataUpdated} from "../../lib/events/data";
-import {displayFile, getData, postData} from "../../lib/ajaxHelper";
-import {IMeeting, IPatient, IPatientSummary, ITariff} from "../../lib/contracts";
+import {downloadDocument, getData, postData} from "../../lib/ajaxHelper";
+import {IDocument, IMeeting, IPatient, IPatientSummary, ITariff} from "../../lib/contracts";
 
 interface Props {
     data?: any;
@@ -33,6 +33,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
     const [date, setDate] = useState<Date>(data?.startDate ?? new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
     const [duration, setDuration] = useState<number>(60);
     const [meetingId, setMeetingId] = useState<string>();
+    const {data: documents} = useSWR<IDocument[]>("/documents");
 
     const paymentOptions = [
         {value: "0", text: t("options.payments.state0")},
@@ -209,11 +210,13 @@ export const MeetingPopup = ({data, hide}: Props) => {
         return options;
     }
     
-    const receipt = async () => {
-        if (meetingId)
+    const generateDocument = async (documentId: string) => {
+        if (documentId === "" || meetingId == null)
         {
-            await displayFile("api/documents/receipt", meetingId);
+            return;
         }
+        
+        await downloadDocument(documentId, meetingId);
     }
 
     return <Popup>
@@ -244,7 +247,12 @@ export const MeetingPopup = ({data, hide}: Props) => {
                 <InputSelect className={styles.state} label={t("fields.meetingState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions}/>
 
                 <Button text={t("actions.cancel")} secondary={true} className={styles.cancel} onClick={() => hide()}/>
-                <Button text={t("actions.receipt")} secondary={true} className={styles.receipt} onClick={() => receipt()}/>
+                
+                <select className={styles.documents} onChange={(e) => generateDocument(e.target.value)}>
+                    <option value={""}>{t("popups.meeting.generateDocument")}</option>
+                    { documents?.map(d => <option key={d.id} value={d.id}>{d.name}</option>) }
+                </select>
+                
                 <Button text={t("actions.save")} className={styles.save} onClick={handleSubmit(onSubmit)}/>
             </form>
         </>

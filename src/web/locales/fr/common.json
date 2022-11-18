@@ -57,7 +57,8 @@
       "tariffs": {
         "title": "Type de séance",
         "empty": "Veuillez choisir un type de séance"
-      }
+      },
+      "generateDocument": "Générer le document ..."
     }
   },
   "pages": {

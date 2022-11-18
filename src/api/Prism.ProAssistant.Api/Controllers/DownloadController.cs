@@ -43,7 +43,7 @@ public class DownloadController : Controller
 
     [HttpPost]
     [Route("api/downloads")]
-    public async Task<IActionResult> Start(GenerateDocument request)
+    public async Task<IActionResult> Start([FromBody]GenerateDocument request)
     {
         var downloadKey = Identifier.GenerateString();
         var pdfBytes = await _mediator.Send(request);

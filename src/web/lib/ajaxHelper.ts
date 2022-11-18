@@ -22,11 +22,17 @@ export async function getData<TResult>(route: string): Promise<TResult | null> {
     return null;
 }
 
-export async function displayFile<TResult>(route: string, id: string): Promise<void> {
+export async function downloadDocument<TResult>(documentId: string, meetingId: string): Promise<void> {
     const bearer = await getAuthorization();
+    
+    const body = {
+        documentId,
+        meetingId
+    };
 
-    const response = await fetch(route + "/" + id, {
+    const response = await fetch("/api/downloads", {
         method: "POST",
+        body: JSON.stringify(body),
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
@@ -36,7 +42,7 @@ export async function displayFile<TResult>(route: string, id: string): Promise<v
 
     if (response.status === 200) {
         const data = await response.json();
-        window.open(route + "/" + data.key, "_blank");
+        window.open("/api/downloads/" + data.key, "_blank");
     }
 }
 
