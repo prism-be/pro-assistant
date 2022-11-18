@@ -13,6 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Prism.ProAssistant.Api.Controllers;
+using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Documents.Generators;
 using Xunit;
@@ -21,6 +22,19 @@ namespace Prism.ProAssistant.Api.Tests.Controllers
 {
     public class DocumentsControllerTests
     {
+
+        [Fact]
+        public async Task FindMany()
+        {
+            await CrudTests.FindMany<DocumentsController, Document>(c => c.FindMany());
+        }
+
+        [Fact]
+        public async Task FindOne()
+        {
+            await CrudTests.FindOne<DocumentsController, Document>(c => c.FindOne(Identifier.GenerateString()));
+        }
+
         [Fact]
         public async Task Receipt_NotFound()
         {
@@ -31,7 +45,7 @@ namespace Prism.ProAssistant.Api.Tests.Controllers
             var receiptGenerator = new Mock<IReceiptGenerator>();
 
             // Act
-            var controller = new DocumentsController(receiptGenerator.Object, cache.Object);
+            var controller = new OldDocumentController(receiptGenerator.Object, cache.Object);
             var result = await controller.Receipt(meetingKey);
 
             // Assert
@@ -50,7 +64,7 @@ namespace Prism.ProAssistant.Api.Tests.Controllers
             receiptGenerator.Setup(x => x.Generate(meetingId)).ReturnsAsync(Guid.NewGuid().ToByteArray);
 
             // Act
-            var controller = new DocumentsController(receiptGenerator.Object, cache.Object);
+            var controller = new OldDocumentController(receiptGenerator.Object, cache.Object);
             var result = await controller.Receipt(meetingKey);
 
             // Assert
@@ -67,11 +81,26 @@ namespace Prism.ProAssistant.Api.Tests.Controllers
             receiptGenerator.Setup(x => x.Generate(meetingId)).ReturnsAsync((byte[])null!);
 
             // Act
-            var controller = new DocumentsController(receiptGenerator.Object, cache.Object);
+            var controller = new OldDocumentController(receiptGenerator.Object, cache.Object);
             var result = await controller.StartReceipt(meetingId);
 
             // Assert
             result.Should().BeAssignableTo<OkObjectResult>();
+        }
+
+        [Fact]
+        public async Task RemoveOne()
+        {
+            await CrudTests.RemoveOne<DocumentsController, Document>(c => c.RemoveOne(Identifier.GenerateString()));
+        }
+
+        [Fact]
+        public async Task UpsertOne()
+        {
+            await CrudTests.UpsertOne<DocumentsController, Document>(c => c.UpsertOne(new Document
+            {
+                Id = Identifier.GenerateString()
+            }));
         }
     }
 }
