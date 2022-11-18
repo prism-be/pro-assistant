@@ -1,5 +1,6 @@
 ﻿import styles from '../styles/pages/documents.module.scss';
 
+import React from 'react';
 import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
@@ -11,9 +12,8 @@ import Button from "../components/forms/Button";
 import {useForm} from "react-hook-form";
 import InputText from "../components/forms/InputText";
 import TextArea from "../components/forms/TextArea";
-import {deleteData, getData, postData} from "../lib/ajaxHelper";
+import {deleteData, postData} from "../lib/ajaxHelper";
 import {Delete, Pencil} from "../components/icons/Icons";
-import React from 'react';
 
 const Documents: NextPage = () => {
 
