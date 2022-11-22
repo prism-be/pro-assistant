@@ -48,7 +48,7 @@ export async function downloadDocument<TResult>(documentId: string, meetingId: s
 }
 
 function globalTrim(obj: any) {
-    Object.keys(obj).map(k => obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k]);
+    Object.keys(obj).forEach(k => obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k]);
 }
 
 export async function postData<TResult>(route: string, body: any): Promise<TResult | null> {
