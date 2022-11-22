@@ -4,33 +4,30 @@
   padding: 1rem;
   border-bottom: 1px $grey solid;
   box-shadow: 0 0 7px 0 #00000021;
-  
+
   h1 {
     font-size: 1.50rem;
   }
-  
+
   h2 {
     font-size: 1.15rem;
     padding-top: 1rem;
   }
 }
 
-.cardTitle
-{
+.cardTitle {
   display: grid;
   grid-template-columns: 2rem auto;
-  
-  & > a
-  {
+
+  & > a {
     display: block;
     height: 1.5rem;
     width: 1.5rem;
     grid-column: 1;
     cursor: pointer;
   }
-  
-  & > h1
-  {
+
+  & > h1 {
     grid-column: 2;
   }
 }
@@ -44,22 +41,38 @@
 
 .contactFieldSmall {
   grid-column: auto / span 1;
+
+  @media (max-width: $breakpointSM) {
+    grid-column: auto / span 2;
+  }
 }
 
 .contactField {
   grid-column: auto / span 2;
+
+  @media (max-width: $breakpointSM) {
+    grid-column: auto / span 4;
+  }
 }
 
 .contactFieldWide {
   grid-column: auto / span 3;
+
+  @media (max-width: $breakpointSM) {
+    grid-column: auto / span 4;
+  }
 }
 
-.saveButton
-{
+.saveButton {
   grid-column: 4;
   text-align: right;
-  &>button {
+
+  & > button {
     width: 100%;
+  }
+
+  @media (max-width: $breakpointSM) {
+    grid-column: auto / span 4;
   }
 }
 

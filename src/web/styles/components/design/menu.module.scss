@@ -6,6 +6,16 @@
   height: calc(100vh - 4rem);
   width: 15rem;
   border-right: 1px $grey solid;
+  background-color: white;
+
+  @media (max-width: $breakpointMD) {
+    display: none;
+  }
+}
+
+.mobile
+{
+  display: block;
 }
 
 .item a
@@ -35,4 +45,12 @@
 {
   border-right: 0.25rem $primaryColor solid;
   background-color: $greyLight;
+}
+
+.hideMobile
+{
+  display : none;
+  @media (min-width: $breakpointMD) {
+    display: block;
+  }
 }

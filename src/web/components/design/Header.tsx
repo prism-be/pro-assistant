@@ -9,6 +9,7 @@ import useSWR from "swr";
 import Link from "next/link";
 import {useMsal} from "@azure/msal-react";
 import {getData} from "../../lib/ajaxHelper";
+import {toggledMobileMenu} from "../../lib/events/mobileMenu";
 
 const Header = () => {
 
@@ -23,10 +24,10 @@ const Header = () => {
 
     return <>
         <div className={styles.bar}>
-            <div className={styles.logo}>
-                <Link href="/">
+            <div className={styles.logo} onClick={() => toggledMobileMenu()}>
+                <div>
                     <Image loader={myLoader} src="/images/logo.svg" height={42} width={42} alt={"ProAssistant by PRISM"} unoptimized={true}></Image>
-                </Link>
+                </div>
             </div>
             <div className={styles.menu}>
             </div>

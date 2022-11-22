@@ -47,7 +47,8 @@
     "title": "Résultats de la recherche"
   },
   "alerts": {
-    "saveSuccess": "Les modifications ont été enregistrées."
+    "saveSuccess": "Les modifications ont été enregistrées.",
+    "mobileWarning": "Cette fonctionnalité n'est pas prévue pour la taille d'écran actuelle."
   },
   "popups": {
     "meeting": {

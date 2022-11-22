@@ -28,6 +28,10 @@
       width: 1.5rem;
     }
   }
+
+  @media (max-width: $breakpointMD) {
+    width: 90%;
+  }
 }
 
 .toasterSuccess{
