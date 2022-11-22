@@ -7,7 +7,7 @@
   box-shadow: 0 0 7px 0 #00000021;
 
   @media (max-width: $breakpointMD) {
-    padding: 0;
+    padding: 0 0 1rem 0;
     box-shadow: none;
     border-bottom: none;
   }

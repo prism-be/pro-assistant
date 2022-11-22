@@ -1,0 +1,74 @@
+﻿@import "../../vars";
+
+.mobileDisplaySM
+{
+  display: block;
+
+  @media (min-width: $breakpointSM) {
+    display: none;
+  }
+}
+
+.mobileDisplayMD
+{
+  display: block;
+  
+  @media (min-width: $breakpointMD) {
+    display: none;
+  }
+}
+
+.mobileDisplayLG
+{
+  display: block;
+
+  @media (min-width: $breakpointLG) {
+    display: none;
+  }
+}
+
+.mobileDisplayXL
+{
+  display: block;
+
+  @media (min-width: $breakpointXL) {
+    display: none;
+  }
+}
+
+.mobileHideSM
+{
+  display: none;
+
+  @media (min-width: $breakpointSM) {
+    display: block;
+  }
+}
+
+.mobileHideMD
+{
+  display: none;
+
+  @media (min-width: $breakpointMD) {
+    display: block;
+  }
+}
+
+.mobileHideLG
+{
+  display: none;
+
+  @media (min-width: $breakpointLG) {
+    display: block;
+  }
+}
+
+.mobileHideXL
+{
+  display: none;
+
+  @media (min-width: $breakpointXL) {
+    display: block;
+  }
+}
+
