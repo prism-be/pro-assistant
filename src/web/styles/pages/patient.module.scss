@@ -1,20 +1,5 @@
 ﻿@import "../vars";
 
-.card {
-  padding: 1rem;
-  border-bottom: 1px $grey solid;
-  box-shadow: 0 0 7px 0 #00000021;
-
-  h1 {
-    font-size: 1.50rem;
-  }
-
-  h2 {
-    font-size: 1.15rem;
-    padding-top: 1rem;
-  }
-}
-
 .cardTitle {
   display: grid;
   grid-template-columns: 2rem auto;
