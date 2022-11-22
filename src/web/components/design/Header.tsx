@@ -25,9 +25,7 @@ const Header = () => {
         <div className={styles.bar}>
             <div className={styles.logo}>
                 <Link href="/">
-                    <a>
-                        <Image loader={myLoader} src="/images/logo.svg" height={42} width={42} alt={"ProAssistant by PRISM"} unoptimized={true}></Image>
-                    </a>
+                    <Image loader={myLoader} src="/images/logo.svg" height={42} width={42} alt={"ProAssistant by PRISM"} unoptimized={true}></Image>
                 </Link>
             </div>
             <div className={styles.menu}>
