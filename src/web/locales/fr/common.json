@@ -4,9 +4,11 @@
     "logout": "Se déconnecter"
   },
   "menu": {
+    "global": "Pro Assistant",
     "patients": "Fiches Patients",
     "calendar": "Calendrier",
-    "configuration": "Configuration",
+    "configurationTitle": "Configuration",
+    "configuration": "Général",
     "documents": "Types de documents"
   },
   "actions": {

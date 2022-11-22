@@ -11,19 +11,28 @@
 .item a
 {
   display: block;
-  line-height: 3rem;
-  padding-left: 2rem;
-  margin: 0.2rem;
-  border-radius: 0.25rem;
+  line-height: 2.5rem;
+  padding-left: 1rem;
   
   &:hover
   {
     text-decoration: none;
-    background-color: $grey;
+    background-color: $greyLight;
   }
+}
+
+.title
+{
+  margin-top: 1rem;
+  font-weight: bold;
+  display: block;
+  line-height: 2.5rem;
+  padding-left: 1rem;
+  color: $primaryColorDark;
 }
 
 .active
 {
-  text-decoration: underline;
+  border-right: 0.25rem $primaryColor solid;
+  background-color: $greyLight;
 }
