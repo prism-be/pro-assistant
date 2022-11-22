@@ -5,15 +5,15 @@ import Section from "../components/design/Section";
 import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import {useEffect, useState} from "react";
-import {add, format, formatISO, getDate, parseISO, startOfToday} from "date-fns";
+import {add, format, formatISO, parseISO, startOfToday} from "date-fns";
 import {getLocale} from "../lib/localization";
 import Button from "../components/forms/Button";
 import {postData} from "../lib/ajaxHelper";
 import {IMeeting} from "../lib/contracts";
-import Mobile from "../components/design/Mobile";
 import React from 'react';
 import {popupNewMeeting} from "../lib/events/globalPopups";
 import {onDataUpdated} from "../lib/events/data";
+import Mobile from "../components/design/Mobile";
 
 const Agenda: NextPage = () => {
 

@@ -25,7 +25,11 @@
   padding: 0;
   text-align: center;
   > h1 {
-    line-height: 2rem;
+    line-height: 1.5rem;
+
+    @media (min-width: $breakpointMD) {
+      line-height: 3rem;
+    }
   }
 }
 
