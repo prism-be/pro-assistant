@@ -1,7 +1,8 @@
 ﻿import {InteractionRequiredAuthError} from "@azure/msal-browser";
 import getConfig from 'next/config'
 import {msalInstance} from "./msal";
-const { publicRuntimeConfig: config } = getConfig()
+
+const {publicRuntimeConfig: config} = getConfig()
 
 export async function getData<TResult>(route: string): Promise<TResult | null> {
     const bearer = await getAuthorization();
@@ -24,7 +25,7 @@ export async function getData<TResult>(route: string): Promise<TResult | null> {
 
 export async function downloadDocument<TResult>(documentId: string, meetingId: string): Promise<void> {
     const bearer = await getAuthorization();
-    
+
     const body = {
         documentId,
         meetingId
@@ -46,7 +47,13 @@ export async function downloadDocument<TResult>(documentId: string, meetingId: s
     }
 }
 
+function globalTrim(obj: any) {
+    Object.keys(obj).map(k => obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k]);
+}
+
 export async function postData<TResult>(route: string, body: any): Promise<TResult | null> {
+
+    globalTrim(body);
 
     const bearer = await getAuthorization();
 
