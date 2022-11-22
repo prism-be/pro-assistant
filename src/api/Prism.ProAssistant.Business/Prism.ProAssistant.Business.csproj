@@ -8,14 +8,14 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="FluentValidation" Version="11.2.2" />
+      <PackageReference Include="FluentValidation" Version="11.3.0" />
       <PackageReference Include="Isopoh.Cryptography.Argon2" Version="1.1.12" />
-      <PackageReference Include="MediatR" Version="11.0.0" />
+      <PackageReference Include="MediatR" Version="11.1.0" />
       <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-      <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="6.0.0" />
-      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+      <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="7.0.0" />
+      <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="7.0.0" />
       <PackageReference Include="MongoDB.Driver" Version="2.18.0" />
-      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.24.0" />
+      <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.25.0" />
     </ItemGroup>
 
 </Project>
