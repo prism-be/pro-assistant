@@ -5,35 +5,40 @@
   box-shadow: 0 0 7px 0 #00000021;
 }
 
-.searchTitle {
-  padding: 1rem 0 0 1rem;
-}
-
 .searchPanel {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-gap: 1rem;
-  padding: 1rem;
 }
 
 .searchField {
-  grid-column: auto;
-  grid-row: 1;
+  grid-column: auto / span 1;
+  grid-row: auto;
+
+  @media (max-width: $breakpointMD) {
+    grid-column: auto / span 2;
+    grid-row: auto;
+  }
+
+  @media (max-width: $breakpointSM) {
+    grid-column: auto / span 4;
+    grid-row: auto;
+  }
 }
 
 .searchButton {
   grid-column: 4;
-  grid-row: 2;
+  grid-row: auto;
 }
 
 .resetButton {
   grid-column: 1;
-  grid-row: 2;
+  grid-row: auto;
 }
 
 .newButton {
   grid-column: 3;
-  grid-row: 2;
+  grid-row: auto;
 }
 
 .searchResults {

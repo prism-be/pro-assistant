@@ -1,11 +1,10 @@
 ﻿@import '../vars';
 
-.navigationHeader
-{
+.navigationHeader {
   padding-top: 0.5rem;
   display: grid;
   grid-template-columns: 24px auto 24px;
-  
+
   svg {
     height: 24px;
     width: 24px;
@@ -13,30 +12,26 @@
   }
 }
 
-.navigationLeft
-{
+.navigationLeft {
   grid-column: 1;
   display: block;
   cursor: pointer;
 }
 
-.navigationRight
-{
+.navigationRight {
   grid-column: 3;
   display: block;
   cursor: pointer;
 }
 
-.calendar
-{
+.calendar {
   display: grid;
   grid-template-columns: 2rem repeat(7, 1fr);
   font-size: 0.8rem;
   padding-top: 0.5rem;
 }
 
-.headerDay
-{
+.headerDay {
   height: 3rem;
   line-height: 3rem;
   grid-row: 1;
@@ -73,8 +68,7 @@
   }
 }
 
-.day6, .day7
-{
+.day6, .day7 {
   background-color: $greyLight;
 }
 
@@ -85,40 +79,65 @@
 }
 
 
-.dayHourFirst,.dayHourSecond
-{
+.dayHourFirst, .dayHourSecond {
   height: 1.5rem;
   border-right: 1px $light solid;
 }
-.dayHourFirst
-{
+
+.dayHourFirst {
   padding: 0.25rem;
   border-bottom: 1px $light dashed;
 }
 
-.dayHourSecond
-{
+.dayHourSecond {
   padding: 0.25rem;
   border-bottom: 1px $mediumGrey solid;
 }
 
-.calendarItem
-{
+.calendarItem {
   height: 100%;
-  font-size:0.85rem;
+  font-size: 0.85rem;
   line-height: 1.5rem;
   padding-left: 0.5rem;
   background-color: $primaryColor;
   color: white;
   white-space: nowrap;
   cursor: pointer;
+
+  @media (max-width: $breakpointLG) {
+    font-size: 0.7rem;
+    padding-left: 0.1rem;
+    white-space: normal;
+  }
+
+  @media (max-width: $breakpointMD) {
+    > div {
+      display: none;
+    }
+  }
 }
 
-.dayAction
+.mobileWarning {
+  color: $warning;
+  text-align: center;
+  font-style: italic;
+  @media (min-width: $breakpointMD) {
+    display: none;
+  }
+}
+
+.hideMobile
 {
+  display : none;
+  @media (min-width: $breakpointMD) {
+    display: block;
+  }
+}
+
+.dayAction {
   cursor: pointer;
-  &:hover
-  {
+
+  &:hover {
     background-color: opacify($light, 0.1);
   }
 }

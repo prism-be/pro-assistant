@@ -14,6 +14,7 @@ import {useRouter} from "next/router";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {postData} from "../../lib/ajaxHelper";
 import {IPatientSummary} from "../../lib/contracts";
+import Section from "../../components/design/Section";
 
 const Patients: NextPage = () => {
 
@@ -48,7 +49,7 @@ const Patients: NextPage = () => {
         await router.push('/patients/' + id);
     }
 
-    const resetSearch=()=> {
+    const resetSearch = () => {
         sessionStorage.removeItem('patients/search-patients');
         reset();
         setPatients(null);
@@ -57,8 +58,7 @@ const Patients: NextPage = () => {
 
     const [isNewPressed, isNewPressedEvent] = useKeyboardJs("alt + n")
     useEffect(() => {
-        if (isNewPressed)
-        {
+        if (isNewPressed) {
             isNewPressedEvent?.preventDefault();
             router.push("/patients/000000000000000000000000");
         }
@@ -66,59 +66,64 @@ const Patients: NextPage = () => {
 
     return <ContentContainer>
         <>
-            <div className={styles.searchContainer}>
-                <h1 className={styles.searchTitle}>{t("pages.patients.title")}</h1>
-                <form className={styles.searchPanel} onSubmit={handleSubmit(onSubmit)}>
-                    <div className={styles.searchField}>
-                        <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
-                    </div>
-                    <div className={styles.searchField}>
-                        <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} setValue={setValue} error={errors.firstName} autoCapitalize={true}/>
-                    </div>
-                    <div className={styles.searchField}>
-                        <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
-                    </div>
-                    <div className={styles.searchField}>
-                        <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
-                    </div>
-                    <div className={styles.resetButton}>
-                        <Button text={t("actions.reset")} onClick={resetSearch} secondary={true}/>
-                    </div>
-                    <div className={styles.newButton}>
-                        <Button text={t("actions.new")} onClick={() => router.push("/patients/000000000000000000000000")} secondary={true}/>
-                    </div>
-                    <div className={styles.searchButton}>
-                        <Button text={t("actions.search")} onClick={handleSubmit(onSubmit)}/>
-                    </div>
-                </form>
-            </div>
-            <div className={styles.searchResults}>
-                {patients && <>
-                    <h2>{t("results.title")}</h2>
-                    {patients.length !== 0 && <div className={styles.searchResultsTable}>
-                        <div className={styles.searchResultsRow}>
-                            <div className={styles.searchResultsHeader}>{t("fields.lastName")}</div>
-                            <div className={styles.searchResultsHeader}>{t("fields.firstName")}</div>
-                            <div className={styles.searchResultsHeader}>{t("fields.phoneNumber")}</div>
-                            <div className={styles.searchResultsHeader}>{t("fields.birthDate")}</div>
+            <Section>
+                <>
+                    <h1 className={styles.searchTitle}>{t("pages.patients.title")}</h1>
+                    <form className={styles.searchPanel} onSubmit={handleSubmit(onSubmit)}>
+                        <div className={styles.searchField}>
+                            <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                         </div>
-                        {patients?.map(patient =>
-                            <div className={styles.searchResultsRow + " " + styles.searchResultsRowPatient} key={patient.id} onClick={() => navigate(patient.id)}>
-                                <div className={styles.searchResultsCell}>{patient.lastName}</div>
-                                <div className={styles.searchResultsCell}>{patient.firstName}</div>
-                                <div className={styles.searchResultsCell}>{patient.phoneNumber}</div>
-                                <div className={styles.searchResultsCell}>{patient.birthDate}</div>
+                        <div className={styles.searchField}>
+                            <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} setValue={setValue} error={errors.firstName} autoCapitalize={true}/>
+                        </div>
+                        <div className={styles.searchField}>
+                            <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
+                        </div>
+                        <div className={styles.searchField}>
+                            <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
+                        </div>
+                        <div className={styles.resetButton}>
+                            <Button text={t("actions.reset")} onClick={resetSearch} secondary={true}/>
+                        </div>
+                        <div className={styles.newButton}>
+                            <Button text={t("actions.new")} onClick={() => router.push("/patients/000000000000000000000000")} secondary={true}/>
+                        </div>
+                        <div className={styles.searchButton}>
+                            <Button text={t("actions.search")} onClick={handleSubmit(onSubmit)}/>
+                        </div>
+                    </form>
+                </>
+            </Section>
+
+            <Section>
+                <>
+                    {patients && <>
+                        <h2>{t("results.title")}</h2>
+                        {patients.length !== 0 && <div className={styles.searchResultsTable}>
+                            <div className={styles.searchResultsRow}>
+                                <div className={styles.searchResultsHeader}>{t("fields.lastName")}</div>
+                                <div className={styles.searchResultsHeader}>{t("fields.firstName")}</div>
+                                <div className={styles.searchResultsHeader}>{t("fields.phoneNumber")}</div>
+                                <div className={styles.searchResultsHeader}>{t("fields.birthDate")}</div>
                             </div>
-                        )}
-                    </div>}
+                            {patients?.map(patient =>
+                                <div className={styles.searchResultsRow + " " + styles.searchResultsRowPatient} key={patient.id} onClick={() => navigate(patient.id)}>
+                                    <div className={styles.searchResultsCell}>{patient.lastName}</div>
+                                    <div className={styles.searchResultsCell}>{patient.firstName}</div>
+                                    <div className={styles.searchResultsCell}>{patient.phoneNumber}</div>
+                                    <div className={styles.searchResultsCell}>{patient.birthDate}</div>
+                                </div>
+                            )}
+                        </div>}
 
-                    {patients.length === 0 && <div className={styles.helpText}>{t("results.noResults")}</div>}
-                </>}
+                        {patients.length === 0 && <div className={styles.helpText}>{t("results.noResults")}</div>}
+                    </>}
 
-                {!patients && <>
-                    <div className={styles.helpText}>{t("results.doSearch")}</div>
-                </>}
-            </div>
+                    {!patients && <>
+                        <div className={styles.helpText}>{t("results.doSearch")}</div>
+                    </>}
+                </>
+            </Section>
         </>
     </ContentContainer>
 }
