@@ -20,10 +20,10 @@ const Menu = () => {
     
     return <div className={styles.container}>
         <ul>
-            <li className={styles.item + getActiveLinkClass('/patients')}><Link href={"/patients"}><a>{t("menu.patients")}</a></Link></li>
-            <li className={styles.item + getActiveLinkClass('/calendar')}><Link href={"/calendar"}><a>{t("menu.calendar")}</a></Link></li>
-            <li className={styles.item + getActiveLinkClass('/configuration')}><Link href={"/configuration"}><a>{t("menu.configuration")}</a></Link></li>
-            <li className={styles.item + getActiveLinkClass('/documents')}><Link href={"/documents"}><a>{t("menu.documents")}</a></Link></li>
+            <li className={styles.item + getActiveLinkClass('/patients')}><Link href={"/patients"}>{t("menu.patients")}</Link></li>
+            <li className={styles.item + getActiveLinkClass('/calendar')}><Link href={"/calendar"}>{t("menu.calendar")}</Link></li>
+            <li className={styles.item + getActiveLinkClass('/configuration')}><Link href={"/configuration"}>{t("menu.configuration")}</Link></li>
+            <li className={styles.item + getActiveLinkClass('/documents')}><Link href={"/documents"}>{t("menu.documents")}</Link></li>
         </ul>
     </div>
 }
