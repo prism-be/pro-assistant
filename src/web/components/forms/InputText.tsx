@@ -12,7 +12,7 @@ interface Props {
     setValue: UseFormSetValue<FieldValues>;
     error?: any;
     autoCapitalize?: boolean;
-    className?:string;
+    className?: string;
     onChange?: (value: string) => void;
 }
 
@@ -20,23 +20,26 @@ interface Props {
 const InputText = ({label, name, type, required, register, error, autoCapitalize, setValue, className, onChange}: Props) => {
 
     const valueChanged = (e: { target: { value: any; }; }) => {
-        if (autoCapitalize === true)
-        {
+        if (autoCapitalize === true) {
             setValue(name, e.target.value.charAt(0).toUpperCase() + e.target.value.slice(1));
         }
-        
-        if (onChange)
-        {
+
+        if (onChange) {
             onChange(e.target.value);
         }
     }
-    
+
     return <div className={styles.container + " " + className}>
         <label className={styles.label}>{label} {required && " *"} </label>
         <input
             className={error ? styles.errorInput : styles.input}
             type={type}
-            {...register(name, {required, onChange: (e) => { valueChanged(e) }})}/>
+            {...register(name, {
+                required, onChange: (e) => {
+                    valueChanged(e)
+                }
+            })}
+            autoComplete="off"/>
         {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
     </div>
 }
