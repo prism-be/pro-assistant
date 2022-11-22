@@ -6,7 +6,6 @@ import Image, {ImageLoaderProps} from "next/image";
 import useTranslation from "next-translate/useTranslation"
 import useSWR from "swr";
 
-import Link from "next/link";
 import {useMsal} from "@azure/msal-react";
 import {getData} from "../../lib/ajaxHelper";
 import {toggledMobileMenu} from "../../lib/events/mobileMenu";

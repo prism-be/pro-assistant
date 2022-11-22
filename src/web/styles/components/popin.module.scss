@@ -20,10 +20,16 @@
   
   > div {
     background-color: white;
-    margin: 5rem auto 1rem auto;
+    margin: 0;
     max-width: $breakpointMD;
     width: 100%;
     border: 1px $grey solid;
     padding: 1rem;
+
+    @media (min-width: $breakpointMD) {
+      margin: 5rem auto 1rem auto;
+    }
   }
+
+  
 }

@@ -1,0 +1,117 @@
+﻿@import "../vars";
+
+.agenda
+{
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+}
+
+.previous
+{
+  grid-column: 1 / span 2;
+  grid-row: 1;
+
+  @media (min-width: $breakpointMD) {
+    grid-column: 1 / span 1;
+  }
+}
+
+.next
+{
+  grid-column: 7 / span 2;
+  grid-row: 1;
+
+  @media (min-width: $breakpointMD) {
+    grid-column: 8 / span 1;
+  }
+}
+
+.title
+{
+  grid-column: 3 / span 4;
+  grid-row: 1;
+  padding: 0;
+  text-align: center;
+  > h1 {
+    line-height: 1.5rem;
+
+    @media (min-width: $breakpointMD) {
+      line-height: 3rem;
+    }
+  }
+}
+
+.noMeeting
+{
+  padding: 1rem;
+  text-align: center;
+  font-style: italic;
+  grid-column: 1 / span 8;
+  grid-row: 2;
+}
+
+.gap
+{
+  grid-column: 1 / span 8;
+  grid-row: 3;
+  height: 1rem;
+}
+
+.hour
+{
+  display: flex;
+  align-items: flex-end;
+  grid-column: 1;
+  grid-row: auto / span 2;
+  height: 3rem;
+  vertical-align: bottom;
+  border-bottom: 1px $mediumGrey solid;
+  border-right: 1px $mediumGrey solid;
+}
+
+.halfHour
+{
+  border-bottom: 1px $mediumGrey dashed;
+  grid-column: 2 / span 7;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.halfHourEnd
+{
+  border-bottom: 1px $mediumGrey solid;
+  grid-column: 2 / span 7;
+  height: 1.5rem;
+  cursor: pointer;
+}
+
+.calendarItem
+{
+  grid-column: 2 / span 7;
+  height: 100%;
+  font-size: 0.85rem;
+  line-height: 1.5rem;
+  padding-left: 0.5rem;
+  background-color: $primaryColor;
+  color: white;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+@for $i from 1 to 10 {
+  .duration#{($i * 30)} {
+    grid-row-end: span $i;
+  }
+}
+
+@for $i from 0 to 24 {
+  .hour#{$i} {
+    grid-row-start: calc($i * 2 + 1);
+  }
+}
+
+@for $i from 0 to 24 {
+  .hourEnd#{$i} {
+    grid-row-start: calc($i * 2 + 2);
+  }
+}

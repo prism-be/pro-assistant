@@ -6,6 +6,7 @@
   "menu": {
     "global": "Pro Assistant",
     "patients": "Fiches Patients",
+    "agenda": "Agenda",
     "calendar": "Calendrier",
     "configurationTitle": "Configuration",
     "configuration": "Général",
@@ -19,7 +20,11 @@
     "search": "Rechercher",
     "reset": "Vider",
     "new": "Nouveau",
-    "receipt": "Reçu"
+    "receipt": "Reçu",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "prev": "Préc.",
+    "nex": "Suiv."
   },
   "fields": {
     "firstName": "Prénom",
@@ -75,6 +80,10 @@
     },
     "calendar": {
       "title": "Agenda de la semaine du"
+    },
+    "agenda": {
+      "title": "Agenda du",
+      "noMeeting": "Vous n'avez pas de rendez-vous ce jour."
     }
   },
   "days": {
