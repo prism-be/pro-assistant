@@ -96,6 +96,7 @@ const Agenda: NextPage = () => {
                     {meetings.map(m =>
                         <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours()) + " " + getDurationClassName(m.duration)} key={m.id}
                              onClick={() => {
+                                 window.scroll({top: 0});
                                  popupNewMeeting({data: {meetingId: m.id}});
                              }}>
                             <div>{m.title?.slice(0, 40)}</div>
