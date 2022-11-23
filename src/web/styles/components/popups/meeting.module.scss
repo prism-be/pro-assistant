@@ -86,7 +86,7 @@
 .date {
   grid-row: 7;
   grid-column: 1 / span 4;
-  
+
   @media (min-width: $breakpointMD) {
     grid-row: 5 / span 3;
     grid-column: 1 / span 2;
@@ -116,7 +116,7 @@
 .durationText {
   grid-row: 9;
   grid-column: 1 / span 4;
-  
+
   @media (min-width: $breakpointMD) {
     grid-row: 7;
     grid-column: 3 / span 2;
@@ -144,14 +144,22 @@
 }
 
 .documents {
-  grid-row: 12;
+  grid-row: 13;
   grid-column: 1 / span 4;
-  display: block;
-  border: 1px $light solid;
-  outline: none;
-  padding: 0.5rem;
-  width: 100%;
-  color: $primaryColor;
+  
+  display: grid;
+  grid-template-columns: 1fr 32px;
+  grid-gap: 0.25rem;
+
+  > select {
+    grid-column: 1;
+    display: block;
+    border: 1px $light solid;
+    outline: none;
+    padding: 0.5rem;
+    width: 100%;
+    color: $primaryColor;
+  }
 
   @media (min-width: $breakpointMD) {
     grid-row: 9;
@@ -159,8 +167,25 @@
   }
 }
 
+.documentsSave
+{
+  height: 100%;
+  width: 32px;
+  cursor: pointer;
+  background-color: $primaryColor;
+  
+  svg {
+    color: white;
+    display: block;
+    margin: auto;
+    height: 29px;
+    width: 24px;
+    padding-top: 5px;
+  }
+}
+
 .cancel {
-  grid-row: 13;
+  grid-row: 12;
   grid-column: 1 / span 2;
 
   @media (min-width: $breakpointMD) {
@@ -170,7 +195,7 @@
 }
 
 .save {
-  grid-row: 13;
+  grid-row: 12;
   grid-column: 3 / span 2;
 
   @media (min-width: $breakpointMD) {

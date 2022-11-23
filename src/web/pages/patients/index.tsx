@@ -89,7 +89,7 @@ const Patients: NextPage = () => {
                             <Button text={t("actions.new")} onClick={() => router.push("/patients/000000000000000000000000")} secondary={true}/>
                         </div>
                         <div className={styles.searchButton}>
-                            <Button text={t("actions.search")} onClick={handleSubmit(onSubmit)}/>
+                            <Button submit={true} text={t("actions.search")} onClick={handleSubmit(onSubmit)}/>
                         </div>
                     </form>
                 </>

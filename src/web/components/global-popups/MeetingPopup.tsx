@@ -15,6 +15,7 @@ import {getLocale} from "../../lib/localization";
 import {dataUpdated} from "../../lib/events/data";
 import {downloadDocument, getData, postData} from "../../lib/ajaxHelper";
 import {IDocument, IMeeting, IPatient, IPatientSummary, ITariff} from "../../lib/contracts";
+import {Save} from "../icons/Save";
 
 interface Props {
     data?: any;
@@ -68,9 +69,8 @@ export const MeetingPopup = ({data, hide}: Props) => {
         Object.getOwnPropertyNames(m).forEach(p => {
             setValue(p, (m as any)[p]);
         });
-        
-        if (m == null)
-        {
+
+        if (m == null) {
             return;
         }
 
@@ -139,7 +139,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
             return;
         }
 
-        const patients = await postData<IPatientSummary[]>("/patients",{
+        const patients = await postData<IPatientSummary[]>("/patients", {
             lastName,
             firstName,
             birthDate: '',
@@ -210,13 +210,18 @@ export const MeetingPopup = ({data, hide}: Props) => {
         return options;
     }
     
-    const generateDocument = async (documentId: string) => {
-        if (documentId === "" || meetingId == null)
-        {
+    let currentDocumentId: string = '';
+
+    const selectDocument = async (documentId: string) => {
+        currentDocumentId = documentId;
+    }
+    
+    async function startDownloadDocument() {
+        if (currentDocumentId === "" || meetingId == null) {
             return;
         }
-        
-        await downloadDocument(documentId, meetingId);
+
+        await downloadDocument(currentDocumentId, meetingId);
     }
 
     return <Popup>
@@ -247,12 +252,17 @@ export const MeetingPopup = ({data, hide}: Props) => {
                 <InputSelect className={styles.state} label={t("fields.meetingState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions}/>
 
                 <Button text={t("actions.cancel")} secondary={true} className={styles.cancel} onClick={() => hide()}/>
-                
-                <select className={styles.documents} onChange={(e) => generateDocument(e.target.value)}>
-                    <option value={""}>{t("popups.meeting.generateDocument")}</option>
-                    { documents?.map(d => <option key={d.id} value={d.id}>{d.name}</option>) }
-                </select>
-                
+
+                <div className={styles.documents}>
+                    <select onChange={(e) => selectDocument(e.target.value)}>
+                        <option value={""}>{t("popups.meeting.generateDocument")}</option>
+                        {documents?.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
+                    </select>
+                    <div onClick={() => startDownloadDocument()} className={styles.documentsSave}>
+                        <Save />
+                    </div>
+                </div>
+
                 <Button text={t("actions.save")} className={styles.save} onClick={handleSubmit(onSubmit)}/>
             </form>
         </>

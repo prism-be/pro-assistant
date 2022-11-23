@@ -16,18 +16,6 @@
       "yourCity": "Ville pour la signature",
       "signature": "Signature",
       "saveSuccess": "L'entête et pied des pages des documents ont bien été enregistrés."
-    },
-    "receipt": {
-      "title": "Contenu du document: Reçu de paiement",
-      "saveSuccess": "Les modifications sur le reçu ont bien été enregistrées.",
-      "document": {
-        "title": "Titre du document",
-        "content": "Contenu du document"
-      },
-      "default": {
-        "title": "Reçu de paiement pour une séance de type: {{meetingType}}",
-        "content": "Je, soussigné, {{name}}, déclare avoir reçu de la part de {{patientName}} la somme de {{price}} pour un rendez-vous de type {{meetingType}} en date du {{meetingDate}} à {{meetingHour}}.\n\nPatient: {{patientName}}\nSéance: {{meetingType}}\nDate de paiement: {{paymentDate}}\nMode de paiement: {{paymentMode}}\nMontant: {{price}}"
-      }
     }
   }
 }
