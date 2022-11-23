@@ -18,7 +18,6 @@ import {ITariff} from "../lib/contracts";
 import {getData, postData} from "../lib/ajaxHelper";
 import Section from "../components/design/Section";
 
-
 const Tariffs = () => {
     const {t} = useTranslation("configuration");
     const {register, handleSubmit, formState: {errors}, setValue} = useForm();
@@ -159,53 +158,11 @@ const Documents = () => {
     </Section>
 }
 
-const DocumentReceipt = () => {
-
-    const {t} = useTranslation("configuration");
-    const {register, setValue, getValues} = useForm();
-    const {data: document, mutate: mutateDocument} = useSWR("/setting/document-receipt", getSetting) as any;
-
-    useEffect(() => {
-        if (document) {
-            setValue('title', document.title);
-            setValue('content', document.content);
-        } else {
-            setValue('title', t("documents.receipt.default.title"));
-            setValue('content', t("documents.receipt.default.content"));
-        }
-    }, [document]);
-
-    const saveReceipt = async () => {
-        const data = getValues();
-        const setting = {
-            value: JSON.stringify(data),
-            id: "document-receipt"
-        }
-        await postData("/setting", setting);
-        alertSuccess(t("documents.receipt.saveSuccess"));
-        await mutateDocument();
-    }
-
-    return <Section>
-        <>
-            <header>
-                <h2>{t("documents.receipt.title")}</h2>
-                <Button text={t("common:actions.save")} onClick={() => saveReceipt()} secondary={true}></Button>
-            </header>
-            <div className={styles.keyValueForm}>
-                <InputText label={t("documents.receipt.document.title")} name={"title"} type={"text"} register={register} setValue={setValue}/>
-                <TextArea className={styles.bigText} label={t("documents.receipt.document.content")} name={"content"} register={register}/>
-            </div>
-        </>
-    </Section>
-}
-
 const Configuration: NextPage = () => {
     return <ContentContainer>
         <>
             <Tariffs/>
             <Documents/>
-            <DocumentReceipt/>
         </>
     </ContentContainer>
 }
