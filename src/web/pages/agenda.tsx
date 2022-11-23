@@ -14,6 +14,7 @@ import React from 'react';
 import {popupNewMeeting} from "../lib/events/globalPopups";
 import {onDataUpdated} from "../lib/events/data";
 import Mobile from "../components/design/Mobile";
+import {useSwipeable} from "react-swipeable";
 
 const Agenda: NextPage = () => {
 
@@ -42,6 +43,11 @@ const Agenda: NextPage = () => {
         return () => subscription.unsubscribe();
     }, [day]);
 
+    const swipeHandlers = useSwipeable({
+        onSwipedLeft: () => setDay(add(day, {days: 1})),
+        onSwipedRight: () => setDay(add(day, {days: -1})),
+    });
+
     function getHourRowClassName(h: number) {
         return styles["hour" + h];
     }
@@ -55,7 +61,6 @@ const Agenda: NextPage = () => {
         return styles["duration" + d];
     }
 
-
     function addMeeting (h: number, m: number) {
         const startDate = add(new Date(day.getFullYear(), day.getMonth(), day.getDate()), {hours: h, minutes: m});
         popupNewMeeting({
@@ -67,7 +72,7 @@ const Agenda: NextPage = () => {
     return <ContentContainer>
         <Section>
             <>
-                <div className={styles.agenda}>
+                <div className={styles.agenda} {...swipeHandlers}>
                     <Button secondary={true} onClick={() => setDay(add(day, {days: -1}))} className={styles.previous} text={t("actions.prev")}></Button>
                     <Button secondary={true} onClick={() => setDay(add(day, {days: 1}))} className={styles.next} text={t("actions.nex")}></Button>
 
