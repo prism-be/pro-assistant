@@ -68,8 +68,8 @@ const Agenda: NextPage = () => {
         <Section>
             <>
                 <div className={styles.agenda}>
-                    <Button onClick={() => setDay(add(day, {days: -1}))} className={styles.previous} text={t("actions.prev")}></Button>
-                    <Button onClick={() => setDay(add(day, {days: 1}))} className={styles.next} text={t("actions.nex")}></Button>
+                    <Button secondary={true} onClick={() => setDay(add(day, {days: -1}))} className={styles.previous} text={t("actions.prev")}></Button>
+                    <Button secondary={true} onClick={() => setDay(add(day, {days: 1}))} className={styles.next} text={t("actions.nex")}></Button>
 
                     <Mobile className={styles.title} visible={false} breakpoint={"MD"}>
                         <h1>{t("pages.agenda.title")} {format(day, "EEEE d MMMM yyyy", {locale: getLocale()})}</h1>
