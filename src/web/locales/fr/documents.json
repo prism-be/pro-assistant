@@ -11,6 +11,19 @@
       "name": "Nom du document",
       "title": "Titre du document",
       "body": "Contenu du document"
+    },
+    "help": {
+      "title": "Balises de contenu automatique",
+      "help": "Dans le titre et le contenu des documents, vous pouvez utiliser les balises suivantes qui seront automatiquement remplacées:",
+      "name": "Votre nom",
+      "patientName": "Nom du patient",
+      "price": "Prix de la séance",
+      "meetingType": "Type de séance",
+      "meetingDate": "Date de la séance",
+      "meetingHour": "Heure de la séance",
+      "paymentDate": "Date de paiement",
+      "paymentMode": "Mode de paiement"
     }
+    
   }
 }

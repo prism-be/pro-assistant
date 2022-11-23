@@ -24,6 +24,9 @@ const Documents: NextPage = () => {
 
     const createNew = () => {
         setCurrentDocument({});
+        setValue("name", "");
+        setValue("title", "");
+        setValue("body", "");
     }
     
     const editDocument = async (document: IDocument) => {
@@ -81,9 +84,23 @@ const Documents: NextPage = () => {
                         <Button secondary={true} onClick={() => saveDocument()} text={t("common:actions.save")}/>
                     </header>
                     <div>
-                        <InputText label={t("edit.form.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
-                        <InputText label={t("edit.form.title")} name={"title"} type={"text"} required={true} register={register} setValue={setValue} error={errors.title}/>
+                        <InputText className={styles.input} label={t("edit.form.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
+                        <InputText className={styles.input} label={t("edit.form.title")} name={"title"} type={"text"} required={true} register={register} setValue={setValue} error={errors.title}/>
                         <TextArea className={styles.body} label={t("edit.form.body")} name={"body"} required={true} register={register} error={errors.body}/>
+                    </div>
+                    <div className={styles.help}>
+                        <b>{t("edit.help.title")}</b>
+                        <div>{t("edit.help.help")}</div>
+                        <ul>
+                            <li><b>{"{{name}}"}</b> : {t("edit.help.name")}</li>
+                            <li><b>{"{{patientName}}"}</b> : {t("edit.help.patientName")}</li>
+                            <li><b>{"{{price}}"}</b> : {t("edit.help.price")}</li>
+                            <li><b>{"{{meetingType}}"}</b> : {t("edit.help.meetingType")}</li>
+                            <li><b>{"{{meetingDate}}"}</b> : {t("edit.help.meetingDate")}</li>
+                            <li><b>{"{{meetingHour}}"}</b> : {t("edit.help.meetingHour")}</li>
+                            <li><b>{"{{paymentDate}}"}</b> : {t("edit.help.paymentDate")}</li>
+                            <li><b>{"{{paymentMode}}"}</b> : {t("edit.help.paymentMode")}</li>
+                        </ul>
                     </div>
                 </>
             </Section>}

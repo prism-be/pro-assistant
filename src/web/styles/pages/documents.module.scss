@@ -4,32 +4,40 @@
   text-align: center;
 }
 
-.body > textarea
-{
-  height: 20rem;
+.input {
+  padding-bottom: 1rem;
 }
 
-.edition
-{
+.body {
+  > textarea {
+    height: 20rem;
+  }
+}
+
+.help{
+  padding-top: 1rem;
+  ul {
+    margin-left: 0.5rem;
+  }
+}
+
+.edition {
   display: grid;
   grid-template-columns: 32px 32px 1fr;
 }
 
-.editionPencil
-{
+.editionPencil {
   grid-column-start: 1;
   height: 32px;
   cursor: pointer;
 }
 
-.editionTrash
-{
+.editionTrash {
   grid-column-start: 2;
   height: 32px;
   cursor: pointer;
 }
 
-.editionName
-{
+.editionName {
   grid-column-start: 3;
 }
