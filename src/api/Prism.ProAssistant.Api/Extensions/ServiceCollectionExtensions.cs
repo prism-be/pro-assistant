@@ -7,6 +7,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MongoDB.ApplicationInsights.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
@@ -99,11 +100,7 @@ namespace Prism.ProAssistant.Api.Extensions
             var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");
 
             BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
-            var client = new MongoClient(mongoDbConnectionString);
-            var database = client.GetDatabase("proassistant");
-            services.AddSingleton<IMongoClient>(client);
-            services.AddSingleton(database);
-
+            services.AddMongoClient(mongoDbConnectionString);
             services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
 
             services.AddScoped<IOrganizationContext, OrganizationContext>();

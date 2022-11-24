@@ -11,7 +11,7 @@ using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Business.Queries;
 
-public record SearchMeetings(DateTime StartDate, DateTime EndDate) : IRequest<List<Meeting>>;
+public record SearchMeetings(DateTime StartDate, DateTime EndDate, string? PatientId) : IRequest<List<Meeting>>;
 
 public class SearchMeetingsHandler : IRequestHandler<SearchMeetings, List<Meeting>>
 {
@@ -24,11 +24,16 @@ public class SearchMeetingsHandler : IRequestHandler<SearchMeetings, List<Meetin
 
     public async Task<List<Meeting>> Handle(SearchMeetings request, CancellationToken cancellationToken)
     {
-        var filters = Builders<Meeting>.Filter.And(new List<FilterDefinition<Meeting>>
+        var filters = new List<FilterDefinition<Meeting>>
         {
             Builders<Meeting>.Filter.Gte(x => x.StartDate, request.StartDate),
             Builders<Meeting>.Filter.Lte(x => x.StartDate, request.EndDate)
-        });
+        };
+
+        if (!string.IsNullOrWhiteSpace(request.PatientId))
+        {
+            filters.Add(Builders<Meeting>.Filter.Eq(x => x.PatientId, request.PatientId));
+        }
 
         var collection = _organizationContext.GetCollection<Meeting>();
         var results = await collection.FindAsync(Builders<Meeting>.Filter.And(filters), cancellationToken: cancellationToken);

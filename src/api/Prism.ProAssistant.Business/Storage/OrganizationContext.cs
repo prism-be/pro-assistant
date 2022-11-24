@@ -19,10 +19,8 @@ public class OrganizationContext : IOrganizationContext
 {
     private readonly IMongoDatabase _database;
 
-    public OrganizationContext(MongoDbConfiguration mongoDbConfiguration, IUserContextAccessor userContextAccessor)
+    public OrganizationContext(IMongoClient client, IUserContextAccessor userContextAccessor)
     {
-        var client = new MongoClient(mongoDbConfiguration.ConnectionString);
-
         _database = string.IsNullOrWhiteSpace(userContextAccessor.OrganisationId)
             ? client.GetDatabase("unknown")
             : client.GetDatabase(userContextAccessor.OrganisationId);
