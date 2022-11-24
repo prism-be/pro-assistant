@@ -1,31 +1,32 @@
 ﻿import * as msal from "@azure/msal-browser";
 
-import getConfig from 'next/config'
-const { publicRuntimeConfig: config } = getConfig()
+const userFlow = process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW!;
+const tenantName = process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME!;
+const clientId = process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID!;
 
 export const b2cPolicies = {
     names: {
-        signUpSignIn: config.userFlow,
-        forgotPassword: config.userFlow,
-        editProfile: config.userFlow
+        signUpSignIn: userFlow,
+        forgotPassword: userFlow,
+        editProfile: userFlow
     },
     authorities: {
         signUpSignIn: {
-            authority: "https://" + config.tenantName + ".b2clogin.com/" + config.tenantName + ".onmicrosoft.com/" + config.userFlow,
+            authority: "https://" + tenantName + ".b2clogin.com/" + tenantName + ".onmicrosoft.com/" + userFlow,
         },
         forgotPassword: {
-            authority: "https://" + config.tenantName + ".b2clogin.com/" + config.tenantName + ".onmicrosoft.com/" + config.userFlow,
+            authority: "https://" + tenantName + ".b2clogin.com/" + tenantName + ".onmicrosoft.com/" + userFlow,
         },
         editProfile: {
-            authority: "https://" + config.tenantName + ".b2clogin.com/" + config.tenantName + ".onmicrosoft.com/" + config.userFlow
+            authority: "https://" + tenantName + ".b2clogin.com/" + tenantName + ".onmicrosoft.com/" + userFlow
         }
     },
-    authorityDomain: config.tenantName + ".b2clogin.com"
+    authorityDomain: tenantName + ".b2clogin.com"
 }
 
 export const msalConfig = {
     auth: {
-        clientId: config.clientId,
+        clientId: clientId,
         authority: b2cPolicies.authorities.signUpSignIn.authority,
         knownAuthorities: [b2cPolicies.authorityDomain],
         redirectUri: "/",

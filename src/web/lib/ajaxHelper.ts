@@ -1,8 +1,6 @@
 ﻿import {InteractionRequiredAuthError} from "@azure/msal-browser";
-import getConfig from 'next/config'
 import {msalInstance} from "./msal";
 
-const {publicRuntimeConfig: config} = getConfig()
 
 export async function getData<TResult>(route: string): Promise<TResult | null> {
     const bearer = await getAuthorization();
@@ -90,7 +88,7 @@ export async function deleteData<TResult>(route: string): Promise<void> {
 
 export const getAuthorization = async (): Promise<string> => {
     const accessTokenRequest = {
-        scopes: ["https://" + config.tenantName + ".onmicrosoft.com/" + config.clientId + "/records.manage"],
+        scopes: ["https://" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".onmicrosoft.com/" + process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID + "/records.manage"],
         account: msalInstance.getAllAccounts()[0],
     };
 
