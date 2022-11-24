@@ -9,9 +9,6 @@ import {msalInstance} from "../lib/msal";
 import {Alert} from "../components/Alert";
 import {GlobalPopupsContainer} from "../components/global-popups/GlobalPopupsContainer";
 import { withApplicationInsights } from 'next-applicationinsights';
-import getConfig from "next/config";
-
-const { publicRuntimeConfig: config } = getConfig()
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
@@ -34,7 +31,7 @@ const MyApp = ({Component, pageProps}: AppProps) => {
 
 export default withApplicationInsights({
     namePrefix: 'proassistant',
-    connectionString: config.aiConnectionString,
+    connectionString: process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING,
     isEnabled: true}
 // @ts-ignore
 )(MyApp);
