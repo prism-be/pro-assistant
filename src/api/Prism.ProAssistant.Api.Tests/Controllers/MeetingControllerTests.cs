@@ -4,10 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -40,7 +36,7 @@ namespace Prism.ProAssistant.Api.Tests.Controllers
 
             // Act
             var controller = new MeetingController(mediator.Object);
-            var result = await controller.Search(new SearchMeetings(DateTime.Today, DateTime.Today.AddDays(-7)));
+            var result = await controller.Search(new SearchMeetings(DateTime.Today, DateTime.Today.AddDays(-7), null));
 
             // Assert
             result.Result.Should().BeAssignableTo<OkObjectResult>();

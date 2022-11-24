@@ -52,7 +52,7 @@ namespace Prism.ProAssistant.Business.Tests.Queries
 
             // Act
             var handler = new SearchMeetingsHandler(organisationContext.Object);
-            var result = await handler.Handle(new SearchMeetings(DateTime.Now, DateTime.Now.AddDays(7)), CancellationToken.None);
+            var result = await handler.Handle(new SearchMeetings(DateTime.Now, DateTime.Now.AddDays(7), null), CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();
