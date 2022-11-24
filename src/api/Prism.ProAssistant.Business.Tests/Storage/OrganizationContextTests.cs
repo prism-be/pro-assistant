@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using FluentAssertions;
+using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
@@ -22,7 +23,7 @@ namespace Prism.ProAssistant.Business.Tests.Storage
             var userContextAccessor = new Mock<IUserContextAccessor>();
 
             // Act
-            var context = new OrganizationContext(configuration, userContextAccessor.Object);
+            var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), userContextAccessor.Object);
 
             // Assert
             Assert.Throws<NotSupportedException>(() => context.GetCollection<object>());
@@ -36,7 +37,7 @@ namespace Prism.ProAssistant.Business.Tests.Storage
             var userContextAccessor = new Mock<IUserContextAccessor>();
 
             // Act
-            var context = new OrganizationContext(configuration, userContextAccessor.Object);
+            var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), userContextAccessor.Object);
             var collection = context.GetCollection<Patient>();
 
             // Assert
@@ -52,7 +53,7 @@ namespace Prism.ProAssistant.Business.Tests.Storage
             userContextAccessor.Setup(x => x.OrganisationId).Returns(Identifier.GenerateString);
 
             // Act
-            var context = new OrganizationContext(configuration, userContextAccessor.Object);
+            var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), userContextAccessor.Object);
             var collection = context.GetCollection<Patient>();
 
             // Assert
