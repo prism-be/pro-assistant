@@ -10,7 +10,8 @@ const nextConfig = {
         clientId: process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID,
         tenantId: process.env.NEXT_PUBLIC_AZURE_AD_TENANT_ID,
         tenantName: process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME,
-        userFlow: process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW
+        userFlow: process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW,
+        aiConnectionString: process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING
     },
     async rewrites() {
         return [
