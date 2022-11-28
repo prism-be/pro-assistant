@@ -2,13 +2,15 @@
 
 .container
 {
-  position: fixed;
-  height: calc(100vh - 4rem);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  height: 100%;
   width: 15rem;
   border-right: 1px $grey solid;
   background-color: white;
 
-  @media (max-width: $breakpointMD) {
+  @media (max-width: $breakpointLG) {
     display: none;
   }
 }

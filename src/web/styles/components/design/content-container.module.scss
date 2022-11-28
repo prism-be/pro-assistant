@@ -1,13 +1,14 @@
 ﻿@import "../../vars";
 .container {
   width: 100%;
+  position: relative;
 }
 
 .content {
   padding: 1rem 1rem 0 0;
   margin-left: 16rem;
 
-  @media (max-width: $breakpointMD) {
+  @media (max-width: $breakpointLG) {
     margin-left: 1rem;
   }
 }
