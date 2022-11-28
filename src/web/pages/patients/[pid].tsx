@@ -30,7 +30,9 @@ const Patient: NextPage = () => {
 
         return await getData<IPatient>(route);
     }
+    
     const {data: patient, mutate: mutatePatient} = useSWR("/patient/" + pid, loadPatient);
+    const {register, handleSubmit, formState: {errors}, setValue, getValues} = useForm();
 
     useEffect(() => {
         if (patient) {
@@ -39,9 +41,8 @@ const Patient: NextPage = () => {
                 setValue(field, d[field]);
             })
         }
-    }, [patient])
+    }, [patient, setValue])
 
-    const {register, handleSubmit, formState: {errors}, setValue, getValues} = useForm();
 
     const savePatientForm = async (data: any) => {
         if (pid === '000000000000000000000000') {
@@ -68,7 +69,7 @@ const Patient: NextPage = () => {
             const data = getValues();
             savePatientForm(data);
         }
-    }, [isSavePressed])
+    }, [isSavePressed, getValues])
 
 
     return <ContentContainer>

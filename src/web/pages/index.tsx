@@ -9,7 +9,7 @@ const Home: NextPage = () => {
 
     useEffect(() => {
         router.push('/patients');
-    }, []);
+    }, [router]);
 
     return (
         <ContentContainer>

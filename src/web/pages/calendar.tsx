@@ -32,6 +32,14 @@ const Calendar: NextPage = () => {
         setMonday(add(monday, {weeks: 1}));
     })
 
+    async function reloadMeetings() {
+        const m = await postData<IMeeting[]>("/meetings", {
+            startDate: formatISO(monday),
+            endDate: formatISO(add(monday, {days: 8}))
+        });
+        setMeetings(m ?? []);
+    }
+
     useEffect(() => {
         reloadMeetings();
         const subscription = onDataUpdated({type: "meeting"}).subscribe(() => {
@@ -39,14 +47,6 @@ const Calendar: NextPage = () => {
         });
         return () => subscription.unsubscribe();
     }, [monday]);
-
-    const reloadMeetings = async () => {
-        const m = await postData<IMeeting[]>("/meetings", {
-            startDate: formatISO(monday),
-            endDate: formatISO(add(monday, {days: 8}))
-        });
-        setMeetings(m ?? []);
-    }
 
     const getDayClassName = (d: number) => {
         return styles["day" + d];
