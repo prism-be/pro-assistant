@@ -36,4 +36,4 @@ template: |
 
   $CHANGES
 
-  **Full Changelog**: https://github.com/prism-be/Prism.NoTrack.Shortener/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
+  **Full Changelog**: https://github.com/prism-be/pro-assistant/compare/$PREVIOUS_TAG...v$RESOLVED_VERSION
