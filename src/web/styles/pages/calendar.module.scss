@@ -109,7 +109,7 @@
     white-space: normal;
   }
 
-  @media (max-width: $breakpointMD) {
+  @media (max-width: $breakpointLG) {
     > div {
       display: none;
     }
