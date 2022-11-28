@@ -1,26 +1,26 @@
-﻿import styles from '../styles/pages/agenda.module.scss';
+﻿import styles from '../../styles/pages/agenda.module.scss';
 
 import {NextPage} from "next";
-import Section from "../components/design/Section";
-import ContentContainer from "../components/design/ContentContainer";
+import Section from "../../components/design/Section";
+import ContentContainer from "../../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import {useEffect, useState} from "react";
-import {add, format, formatISO, parseISO, startOfToday} from "date-fns";
-import {getLocale} from "../lib/localization";
-import Button from "../components/forms/Button";
-import {postData} from "../lib/ajaxHelper";
-import {IMeeting} from "../lib/contracts";
+import {add, format, formatISO, parse, parseISO} from "date-fns";
+import {getLocale} from "../../lib/localization";
+import Button from "../../components/forms/Button";
+import {postData} from "../../lib/ajaxHelper";
+import {IMeeting} from "../../lib/contracts";
 import React from 'react';
-import {popupNewMeeting} from "../lib/events/globalPopups";
-import {onDataUpdated} from "../lib/events/data";
-import Mobile from "../components/design/Mobile";
+import {popupNewMeeting} from "../../lib/events/globalPopups";
+import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
+import {useRouter} from "next/router";
 
 const Agenda: NextPage = () => {
-
+    const router = useRouter();
+    const day = parse(router.query.pid as string, "yyyy-MM-dd", new Date());
     const {t} = useTranslation("common");
 
-    const [day, setDay] = useState(startOfToday());
     const [meetings, setMeetings] = useState<IMeeting[]>([]);
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
@@ -34,18 +34,17 @@ const Agenda: NextPage = () => {
 
     useEffect(() => {
         reloadMeetings();
-    }, [day]);
-
-    useEffect(() => {
-        const subscription = onDataUpdated({type: "meeting"}).subscribe(() => {
-            reloadMeetings();
-        });
-        return () => subscription.unsubscribe();
-    }, [day]);
+    }, [router]);
+    
+    function changeDay(delta: number)
+    {
+        const newDay = add(day, {days: delta});
+        router.push("/agenda/" + format(newDay, "yyyy-MM-dd"));
+    }
 
     const swipeHandlers = useSwipeable({
-        onSwipedLeft: () => setDay(add(day, {days: 1})),
-        onSwipedRight: () => setDay(add(day, {days: -1})),
+        onSwipedLeft: () => changeDay(1),
+        onSwipedRight: () => changeDay(-1),
     });
 
     function getHourRowClassName(h: number) {
@@ -73,8 +72,8 @@ const Agenda: NextPage = () => {
         <Section>
             <>
                 <div className={styles.agenda} {...swipeHandlers}>
-                    <Button secondary={true} onClick={() => setDay(add(day, {days: -1}))} className={styles.previous} text={t("actions.prev")}></Button>
-                    <Button secondary={true} onClick={() => setDay(add(day, {days: 1}))} className={styles.next} text={t("actions.nex")}></Button>
+                    <Button secondary={true} onClick={() => changeDay(-1)} className={styles.previous} text={t("actions.prev")}></Button>
+                    <Button secondary={true} onClick={() => changeDay(1)} className={styles.next} text={t("actions.nex")}></Button>
 
                     <Mobile className={styles.title} visible={false} breakpoint={"MD"}>
                         <h1>{t("pages.agenda.title")} {format(day, "EEEE d MMMM yyyy", {locale: getLocale()})}</h1>
