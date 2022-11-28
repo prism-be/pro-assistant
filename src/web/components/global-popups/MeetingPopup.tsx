@@ -52,18 +52,6 @@ export const MeetingPopup = ({data, hide}: Props) => {
 
     const tariffs = useSWR<ITariff[]>('/tariffs');
 
-    useEffect(() => {
-        if (data?.meetingId) {
-            setMeetingId(data?.meetingId);
-            loadExistingMeeting(data?.meetingId);
-            return;
-        }
-
-        setValue("duration", 60);
-        setValue("hour", format(date, "HH:mm"));
-
-    }, [data]);
-
     const loadExistingMeeting = async (meetingId: string) => {
         const m = await getData<IMeeting>("/meeting/" + meetingId);
         Object.getOwnPropertyNames(m).forEach(p => {
@@ -93,6 +81,18 @@ export const MeetingPopup = ({data, hide}: Props) => {
             setValue("tariff", tariff.id);
         }
     }
+    
+    useEffect(() => {
+        if (data?.meetingId) {
+            setMeetingId(data?.meetingId);
+            loadExistingMeeting(data?.meetingId);
+            return;
+        }
+
+        setValue("duration", 60);
+        setValue("hour", format(date, "HH:mm"));
+
+    }, [data, date, loadExistingMeeting, setValue]);
 
     const computeDate = () => {
         const newDuration = parseInt(getValues("duration"));

@@ -3,7 +3,6 @@
 import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import {AlertType, clear, onAlert} from "../lib/events/alert";
-import { Subscription } from "rxjs";
 import {Close} from "./icons/Close";
 
 interface Props {
@@ -16,12 +15,10 @@ export const Alert = ({id, fade}: Props) => {
     const router = useRouter();
     const [alerts, setAlerts] = useState<any[]>([]);
 
-    let subscription: Subscription;
-
     useEffect(() => {
         mounted.current = true;
 
-        subscription = onAlert(id)
+        const subscription = onAlert(id)
             .subscribe(alert => {
                 if (!alert.message)
                 {

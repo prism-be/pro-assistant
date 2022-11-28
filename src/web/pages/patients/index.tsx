@@ -37,7 +37,7 @@ const Patients: NextPage = () => {
             onSubmit(data);
         }
         setFocus('lastName');
-    }, [])
+    }, [setFocus])
 
     const onSubmit = async (data: any) => {
         sessionStorage.setItem('patients/search-patients', JSON.stringify(data));
@@ -62,7 +62,7 @@ const Patients: NextPage = () => {
             isNewPressedEvent?.preventDefault();
             router.push("/patients/000000000000000000000000");
         }
-    }, [isNewPressed])
+    }, [isNewPressed, router])
 
     return <ContentContainer>
         <>

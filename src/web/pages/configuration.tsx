@@ -127,7 +127,7 @@ const Documents = () => {
             setLogo(headers.logo);
             setSignature(headers.signature);
         }
-    }, [headers]);
+    }, [headers, setValue]);
 
     const saveDocumentHeaders = async () => {
         const data = getValues();
