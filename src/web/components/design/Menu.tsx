@@ -5,6 +5,7 @@ import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {onToggledMobileMenu, toggledMobileMenu} from "../../lib/events/mobileMenu";
 import Mobile from "./Mobile";
+import {format} from "date-fns";
 
 const Menu = () => {
 
@@ -33,7 +34,7 @@ const Menu = () => {
         <ul>
             <li className={styles.title}>{t("menu.global")}</li>
             <li className={styles.item + getActiveLinkClass('/patients')}><Link href={"/patients"}>{t("menu.patients")}</Link></li>
-            <li className={styles.item + getActiveLinkClass('/agenda')}><Link href={"/agenda"}>{t("menu.agenda")}</Link></li>
+            <li className={styles.item + getActiveLinkClass('/agenda')}><Link href={"/agenda/" + format(new Date(), "yyyy-MM-dd")}>{t("menu.agenda")}</Link></li>
             <li className={styles.item + getActiveLinkClass('/calendar')}><Link href={"/calendar"}>{t("menu.calendar")}</Link></li>
             
             <Mobile breakpoint={"MD"}>
