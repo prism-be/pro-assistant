@@ -12,6 +12,7 @@ import {popupNewMeeting} from "../lib/events/globalPopups";
 import {onDataUpdated} from "../lib/events/data";
 import {IMeeting} from "../lib/contracts";
 import {postData} from "../lib/ajaxHelper";
+import Mobile from "../components/design/Mobile";
 
 const Calendar: NextPage = () => {
     const getMonday = (d: Date) => {
@@ -77,9 +78,11 @@ const Calendar: NextPage = () => {
 
     return <ContentContainer>
         <>
-            <div className={styles.mobileWarning}>{t("alerts.mobileWarning")}</div>
+            <Mobile breakpoint={"SM"} visible={true}>
+                <div className={styles.mobileWarning}>{t("alerts.mobileWarning")}</div>
+            </Mobile>
 
-            <div className={styles.hideMobile}>
+            <Mobile breakpoint={"SM"}>
 
                 <h1>{t("pages.calendar.title")} {format(monday, "EEEE dd MMMM yyyy", {locale: getLocale()})}</h1>
 
@@ -113,7 +116,7 @@ const Calendar: NextPage = () => {
                         </div>)}
 
                 </div>
-            </div>
+            </Mobile>
         </>
     </ContentContainer>
 }

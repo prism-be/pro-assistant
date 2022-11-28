@@ -53,7 +53,7 @@
   },
   "alerts": {
     "saveSuccess": "Les modifications ont été enregistrées.",
-    "mobileWarning": "Cette fonctionnalité n'est pas prévue pour la taille d'écran actuelle."
+    "mobileWarning": "Cette fonctionnalité n'est pas prévue pour la taille d'écran actuelle. Veuillez pivoter votre mobile ou utiliser une écran avec une plus grande résolution."
   },
   "popups": {
     "meeting": {

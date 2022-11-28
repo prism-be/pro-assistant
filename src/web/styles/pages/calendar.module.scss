@@ -120,17 +120,6 @@
   color: $warning;
   text-align: center;
   font-style: italic;
-  @media (min-width: $breakpointMD) {
-    display: none;
-  }
-}
-
-.hideMobile
-{
-  display : none;
-  @media (min-width: $breakpointMD) {
-    display: block;
-  }
 }
 
 .dayAction {
