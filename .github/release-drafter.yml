@@ -1,7 +1,10 @@
 name-template: 'v$RESOLVED_VERSION 🌈'
 tag-template: 'v$RESOLVED_VERSION'
 categories:
-  - title: '🚀 Features'
+  - title: '✨ New Features'
+    labels:
+      - 'new-feature'
+  - title: '👍 Improved Features'
     labels:
       - 'feature'
       - 'enhancement'
