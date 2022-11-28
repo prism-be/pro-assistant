@@ -1,7 +1,10 @@
 name-template: 'v$RESOLVED_VERSION 🌈'
 tag-template: 'v$RESOLVED_VERSION'
 categories:
-  - title: '🚀 Features'
+  - title: '✨ New Features'
+    labels:
+      - 'new-feature'
+  - title: '👍 Improved Features'
     labels:
       - 'feature'
       - 'enhancement'
@@ -24,9 +27,11 @@ version-resolver:
   major:
     labels:
       - 'major'
+      - 'breaking'
   minor:
     labels:
       - 'minor'
+      - 'new-feature'
   patch:
     labels:
       - 'patch'
