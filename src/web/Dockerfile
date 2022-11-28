@@ -48,10 +48,19 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+COPY entrypoint.sh .
+
+RUN apk add --no-cache --upgrade bash
+RUN apk add dos2unix --update-cache --repository http://dl-3.alpinelinux.org/alpine/edge/community/ --allow-untrusted
+
+RUN chmod +x ./entrypoint.sh
+RUN dos2unix ./entrypoint.sh
+
 USER nextjs
 
 EXPOSE 3000
 
 ENV PORT 3000
 
+ENTRYPOINT ["/app/entrypoint.sh"]
 CMD ["node", "server.js"]
