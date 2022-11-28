@@ -46,11 +46,3 @@
   border-right: 0.25rem $primaryColor solid;
   background-color: $greyLight;
 }
-
-.hideMobile
-{
-  display : none;
-  @media (min-width: $breakpointMD) {
-    display: block;
-  }
-}

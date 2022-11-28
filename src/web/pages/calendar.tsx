@@ -12,6 +12,8 @@ import {popupNewMeeting} from "../lib/events/globalPopups";
 import {onDataUpdated} from "../lib/events/data";
 import {IMeeting} from "../lib/contracts";
 import {postData} from "../lib/ajaxHelper";
+import Mobile from "../components/design/Mobile";
+import {useSwipeable} from "react-swipeable";
 
 const Calendar: NextPage = () => {
     const getMonday = (d: Date) => {
@@ -74,46 +76,52 @@ const Calendar: NextPage = () => {
         });
     }
 
+    const swipeHandlers = useSwipeable({
+        onSwipedLeft: () => setMonday(add(monday, {weeks: 1})),
+        onSwipedRight: () => setMonday(add(monday, {weeks: -1})),
+    });
 
     return <ContentContainer>
         <>
-            <div className={styles.mobileWarning}>{t("alerts.mobileWarning")}</div>
+            <Mobile breakpoint={"SM"} visible={true}>
+                <div className={styles.mobileWarning}>{t("alerts.mobileWarning")}</div>
+            </Mobile>
 
-            <div className={styles.hideMobile}>
+            <Mobile breakpoint={"SM"}>
+                <div {...swipeHandlers}>
+                    <h1>{t("pages.calendar.title")} {format(monday, "EEEE dd MMMM yyyy", {locale: getLocale()})}</h1>
 
-                <h1>{t("pages.calendar.title")} {format(monday, "EEEE dd MMMM yyyy", {locale: getLocale()})}</h1>
 
+                    <div className={styles.navigationHeader}>
+                        <div className={styles.navigationLeft} onClick={() => setMonday(add(monday, {weeks: -1}))}><ArrowLeft/></div>
+                        <div className={styles.navigationRight} onClick={() => setMonday(add(monday, {weeks: 1}))}><ArrowRight/></div>
+                    </div>
+                    <div className={styles.calendar}>
+                        <div className={styles.hour + " " + styles.hour0}></div>
 
-                <div className={styles.navigationHeader}>
-                    <div className={styles.navigationLeft} onClick={() => setMonday(add(monday, {weeks: -1}))}><ArrowLeft/></div>
-                    <div className={styles.navigationRight} onClick={() => setMonday(add(monday, {weeks: 1}))}><ArrowRight/></div>
-                </div>
-                <div className={styles.calendar}>
-                    <div className={styles.hour + " " + styles.hour0}></div>
-
-                    {days.map(d => <div className={styles.headerDay + " " + getDayClassName(d)} key={d}>
-                        {t("days.short.day" + d)} {format(add(monday, {days: d - 1}), "dd MMM", {locale: getLocale()})}
-                    </div>)}
-
-                    {hours.map(h => <div key={h} className={styles.hour + " " + getHourClassName(h)}>{h}H</div>)}
-
-                    {days.map(d => <React.Fragment key={d}>
-                        {hours.map(h => <React.Fragment key={h}>
-                            <div className={styles.dayAction + " " + styles.dayHourFirst + " " + getHourClassName(h) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 0)}></div>
-                            <div className={styles.dayAction + " " + styles.dayHourSecond + " " + getHourEndClassName(h) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 30)}></div>
-                        </React.Fragment>)}
-                    </React.Fragment>)}
-
-                    {meetings.map(m =>
-                        <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
-                             onClick={() => {
-                                 popupNewMeeting({data: {meetingId: m.id}});
-                             }}>
-                            <div>{m.title?.slice(0, 30)}</div>
+                        {days.map(d => <div className={styles.headerDay + " " + getDayClassName(d)} key={d}>
+                            {t("days.short.day" + d)} {format(add(monday, {days: d - 1}), "dd MMM", {locale: getLocale()})}
                         </div>)}
 
+                        {hours.map(h => <div key={h} className={styles.hour + " " + getHourClassName(h)}>{h}H</div>)}
+
+                        {days.map(d => <React.Fragment key={d}>
+                            {hours.map(h => <React.Fragment key={h}>
+                                <div className={styles.dayAction + " " + styles.dayHourFirst + " " + getHourClassName(h) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 0)}></div>
+                                <div className={styles.dayAction + " " + styles.dayHourSecond + " " + getHourEndClassName(h) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 30)}></div>
+                            </React.Fragment>)}
+                        </React.Fragment>)}
+
+                        {meetings.map(m =>
+                            <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
+                                 onClick={() => {
+                                     popupNewMeeting({data: {meetingId: m.id}});
+                                 }}>
+                                <div>{m.title?.slice(0, 30)}</div>
+                            </div>)}
+                    </div>
                 </div>
-            </div>
+            </Mobile>
         </>
     </ContentContainer>
 }

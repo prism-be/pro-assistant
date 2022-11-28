@@ -92,7 +92,7 @@ export const MeetingPopup = ({data, hide}: Props) => {
         setValue("duration", 60);
         setValue("hour", format(date, "HH:mm"));
 
-    }, [data, date, loadExistingMeeting, setValue]);
+    }, [data, setValue]);
 
     const computeDate = () => {
         const newDuration = parseInt(getValues("duration"));
