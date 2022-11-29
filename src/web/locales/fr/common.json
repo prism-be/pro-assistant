@@ -10,7 +10,8 @@
     "calendar": "Calendrier",
     "configurationTitle": "Configuration",
     "configuration": "Général",
-    "documents": "Types de documents"
+    "documents": "Types de documents",
+    "meetings": "Rendez-vous"
   },
   "actions": {
     "back": "Retour",
