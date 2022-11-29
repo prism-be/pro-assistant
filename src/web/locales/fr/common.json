@@ -10,7 +10,8 @@
     "calendar": "Calendrier",
     "configurationTitle": "Configuration",
     "configuration": "Général",
-    "documents": "Types de documents"
+    "documents": "Types de documents",
+    "meetings": "Rendez-vous"
   },
   "actions": {
     "back": "Retour",
@@ -79,7 +80,7 @@
       }
     },
     "calendar": {
-      "title": "Agenda de la semaine du"
+      "title": "Calendrier de la semaine du"
     },
     "agenda": {
       "title": "Agenda du",
