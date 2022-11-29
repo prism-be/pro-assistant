@@ -15,13 +15,15 @@ import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
 import Section from "../../components/design/Section";
 import {useRouter} from "next/router";
+import useSWR from "swr";
 
 const Calendar: NextPage = () => {
 
     const router = useRouter();
     const monday = startOfWeek(parse(router.query.date as string, "yyyy-MM-dd", new Date()), { weekStartsOn: 1 });
+
+    const {data: meetings} = useSWR(router.asPath, loadMeetings);
     
-    const [meetings, setMeetings] = useState<IMeeting[]>([]);
     const {t} = useTranslation("common");
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
     const days = [1, 2, 3, 4, 5, 6, 7];
@@ -44,17 +46,12 @@ const Calendar: NextPage = () => {
         goNextWeek();
     })
 
-    async function reloadMeetings() {
-        const m = await postData<IMeeting[]>("/meetings", {
+    async function loadMeetings() {
+        return await postData<IMeeting[]>("/meetings", {
             startDate: formatISO(monday),
             endDate: formatISO(add(monday, {days: 8}))
         });
-        setMeetings(m ?? []);
     }
-
-    useEffect(() => {
-        reloadMeetings();
-    }, [router]);
 
     const getDayClassName = (d: number) => {
         return styles["day" + d];
@@ -119,7 +116,7 @@ const Calendar: NextPage = () => {
                                 </React.Fragment>)}
                             </React.Fragment>)}
 
-                            {meetings.map(m =>
+                            {meetings?.map(m =>
                                 <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
                                      onClick={() => {
                                          window.scroll({top: 0});

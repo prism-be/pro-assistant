@@ -4,7 +4,6 @@ import {NextPage} from "next";
 import Section from "../../components/design/Section";
 import ContentContainer from "../../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
-import {useEffect, useState} from "react";
 import {add, format, formatISO, parse, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
 import Button from "../../components/forms/Button";
@@ -15,27 +14,24 @@ import {popupNewMeeting} from "../../lib/events/globalPopups";
 import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
 import {useRouter} from "next/router";
+import useSWR from "swr";
 
 const Agenda: NextPage = () => {
     const router = useRouter();
     const day = parse(router.query.date as string, "yyyy-MM-dd", new Date());
     const {t} = useTranslation("common");
-
-    const [meetings, setMeetings] = useState<IMeeting[]>([]);
+    
+    const {data: meetings} = useSWR(router.asPath, loadMeetings);
+    
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
-    async function reloadMeetings() {
-        const m = await postData<IMeeting[]>("/meetings", {
+    async function loadMeetings() {
+        return await postData<IMeeting[]>("/meetings", {
             startDate: formatISO(day),
             endDate: formatISO(add(day, {days: 1}))
         });
-        setMeetings(m ?? []);
     }
 
-    useEffect(() => {
-        reloadMeetings();
-    }, [router]);
-    
     function changeDay(delta: number)
     {
         const newDay = add(day, {days: delta});
@@ -87,7 +83,7 @@ const Agenda: NextPage = () => {
                         </h1>
                     </Mobile>
 
-                    {meetings.length === 0 && <div className={styles.noMeeting}>{t("pages.agenda.noMeeting")}</div>}
+                    {meetings?.length === 0 && <div className={styles.noMeeting}>{t("pages.agenda.noMeeting")}</div>}
 
                     <div className={styles.gap}/>
 
@@ -97,7 +93,7 @@ const Agenda: NextPage = () => {
                         <div className={styles.halfHourEnd + " " + getHourRowEndClassName(h)} onClick={() => addMeeting(h, 30)}></div>
                     </React.Fragment>)}
 
-                    {meetings.map(m =>
+                    {meetings?.map(m =>
                         <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours()) + " " + getDurationClassName(m.duration)} key={m.id}
                              onClick={() => {
                                  window.scroll({top: 0});
