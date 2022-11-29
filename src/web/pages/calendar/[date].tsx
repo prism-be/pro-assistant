@@ -71,11 +71,7 @@ const Calendar: NextPage = () => {
 
     const addMeeting = (d: number, h: number, m: number) => {
         const startDate = add(new Date(monday.getFullYear(), monday.getMonth(), monday.getDate()), {days: d - 1, hours: h, minutes: m});
-        /*popupNewMeeting({
-            data: {
-                startDate
-            }
-        });*/
+        router.push("/meetings/new?startDate=" + encodeURIComponent(formatISO(startDate)));
     }
 
     const swipeHandlers = useSwipeable({

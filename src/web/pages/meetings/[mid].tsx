@@ -9,7 +9,7 @@ import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
 import InputText from "../../components/forms/InputText";
 import {IDocument, IMeeting, IPatientSummary, ITariff} from "../../lib/contracts";
-import {downloadDocument, postData} from "../../lib/ajaxHelper";
+import {downloadDocument, getData, postData} from "../../lib/ajaxHelper";
 import InputSelect from "../../components/forms/InputSelect";
 import {Calendar} from "../../components/forms/Calendar";
 import {add, format, formatISO, parse, parseISO} from "date-fns";
@@ -23,7 +23,7 @@ const MeetingPopup: NextPage = () => {
     const {t} = useTranslation('common');
     const router = useRouter();
     
-    const {data: meeting} = useSWR("/meeting/" + router.query.mid);
+    const {data: meeting, mutate: mutateMeeting} = useSWR<IMeeting | null>("/meeting/" + router.query.mid, loadMeeting);
     const {data: tariffs} = useSWR<ITariff[]>('/tariffs');
     const {data: documents} = useSWR<IDocument[]>("/documents");
     
@@ -32,7 +32,7 @@ const MeetingPopup: NextPage = () => {
     const [patientsSuggestions, setPatientsSuggestions] = useState<IPatientSummary[]>([]);
     const [suggested, setSuggested] = useState<string>();
     const [patient, setPatient] = useState<IPatientSummary>();
-    const [date, setDate] = useState<Date>(/*data?.startDate ?? */new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
+    const [date, setDate] = useState<Date>(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
     const [duration, setDuration] = useState<number>(60);
     const [document, setDocument] = useState<string>();
 
@@ -49,7 +49,7 @@ const MeetingPopup: NextPage = () => {
         {value: "10", text: t("options.meetings.state10")},
         {value: "100", text: t("options.meetings.state100")}
     ]
-
+    
     useEffect(() => {
         if (!meeting) return;
         
@@ -71,6 +71,29 @@ const MeetingPopup: NextPage = () => {
         
     }, [meeting, tariffs]);
     
+    useEffect(() => {
+        if (router.asPath.startsWith("/meetings/new"))
+        {
+            if (router.query.startDate)
+            {
+                const startDate = parseISO(router.query.startDate as string);
+                setDate(startDate);
+                setValue("duration", 60);
+                setValue("hour", format(date, "HH:mm"));
+            }
+        }
+    }, [router])
+    
+    function loadMeeting(path: string): Promise<IMeeting | null>
+    {
+        if (path === "/meeting/new")
+        {
+            return new Promise(() => null);
+        }
+        
+        return getData(path);
+    }
+    
     async function onSubmit(data: any)
     {
         const updatedMeeting: IMeeting = {
@@ -89,6 +112,7 @@ const MeetingPopup: NextPage = () => {
         }
 
         await postData("/meeting", updatedMeeting);
+        await mutateMeeting();
         
         router.back();
         

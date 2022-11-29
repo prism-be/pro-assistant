@@ -1,4 +1,4 @@
-﻿import {add, format, formatISO} from 'date-fns';
+﻿import {add, format, formatISO, getMonth} from 'date-fns';
 import styles from '../../styles/components/forms/calendar.module.scss'
 import {useEffect, useState} from "react";
 import {ArrowLeft, ArrowRight} from "../icons/Icons";
@@ -6,17 +6,22 @@ import useTranslation from "next-translate/useTranslation";
 import {getLocale} from "../../lib/localization";
 
 interface Props {
-    value?: Date;
+    value: Date;
     onChange: (date: Date) => void;
     className?: string;
 }
 
 export const Calendar = ({value, onChange, className}: Props) => {
 
-    const current = value ?? new Date();
     const {t} = useTranslation('common');
-    const [month, setMonth] = useState<Date>(new Date(current.getFullYear(), current.getMonth()));
+    const [month, setMonth] = useState<Date>(new Date(value.getFullYear(), value.getMonth()));
     const [dates, setDates]= useState<Date[]>([]);
+
+    useEffect(() => {
+        console.log(value);
+        console.log(value.toISOString());
+        console.log(getMonth(value));
+    }, [value])
     
     useEffect(() => {
         let c = month;
@@ -58,7 +63,7 @@ export const Calendar = ({value, onChange, className}: Props) => {
                 break;
         }
         
-        if (d.getFullYear() === current.getFullYear() && d.getMonth() === current.getMonth() && d.getDate() === current.getDate())
+        if (d.getFullYear() === value.getFullYear() && d.getMonth() === value.getMonth() && d.getDate() === value.getDate())
         {
             css += " " + styles.daySelected;
         }
