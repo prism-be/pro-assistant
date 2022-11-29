@@ -18,7 +18,7 @@ import {useRouter} from "next/router";
 
 const Agenda: NextPage = () => {
     const router = useRouter();
-    const day = parse(router.query.pid as string, "yyyy-MM-dd", new Date());
+    const day = parse(router.query.date as string, "yyyy-MM-dd", new Date());
     const {t} = useTranslation("common");
 
     const [meetings, setMeetings] = useState<IMeeting[]>([]);
