@@ -59,8 +59,8 @@
 
 .hour
 {
-  display: flex;
-  align-items: flex-end;
+  text-align: right;
+  padding: 0 0.2rem 0 0;
   grid-column: 1;
   grid-row: auto / span 2;
   height: 3rem;

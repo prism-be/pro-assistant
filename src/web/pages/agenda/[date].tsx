@@ -57,11 +57,7 @@ const Agenda: NextPage = () => {
 
     function addMeeting (h: number, m: number) {
         const startDate = add(new Date(day.getFullYear(), day.getMonth(), day.getDate()), {hours: h, minutes: m});
-        /*popupNewMeeting({
-            data: {
-                startDate
-            }
-        });*/
+        router.push("/meetings/new?startDate=" + encodeURIComponent(formatISO(startDate)));
     }
     return <ContentContainer>
         <Section>

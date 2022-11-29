@@ -83,7 +83,7 @@ const Meeting: NextPage = () => {
 
             setDate(startDate);
             setValue("duration", 60);
-            setValue("hour", format(date, "HH:mm"));
+            setValue("hour", format(startDate, "HH:mm"));
         }
     }, [router])
     
@@ -115,10 +115,8 @@ const Meeting: NextPage = () => {
         }
 
         await postData("/meeting", updatedMeeting);
+        await router.back();
         await mutateMeeting();
-        
-        router.back();
-        
         alertSuccess(t("alerts.saveSuccess"));
     }
 
