@@ -18,7 +18,7 @@ import Button from "../../components/forms/Button";
 import {Save} from "../../components/icons/Save";
 import {alertSuccess} from "../../lib/events/alert";
 
-const MeetingPopup: NextPage = () => {
+const Meeting: NextPage = () => {
     const now = new Date();
     const {t} = useTranslation('common');
     const router = useRouter();
@@ -273,4 +273,4 @@ const MeetingPopup: NextPage = () => {
     </ContentContainer>
 }
 
-export default MeetingPopup;
+export default Meeting;
