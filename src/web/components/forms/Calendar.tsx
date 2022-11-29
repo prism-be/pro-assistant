@@ -34,7 +34,6 @@ export const Calendar = ({value, onChange, className}: Props) => {
     useEffect(() => {
         setDate(value);
         setMonth(startOfMonth(value));
-        console.log(value)
     }, [value]);
 
     const getClass = (d: Date) => {
