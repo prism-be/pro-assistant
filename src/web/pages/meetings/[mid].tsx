@@ -12,7 +12,7 @@ import {IDocument, IMeeting, IPatientSummary, ITariff} from "../../lib/contracts
 import {downloadDocument, getData, postData} from "../../lib/ajaxHelper";
 import InputSelect from "../../components/forms/InputSelect";
 import {Calendar} from "../../components/forms/Calendar";
-import {add, format, formatISO, parse, parseISO} from "date-fns";
+import {add, format, formatISO, parse, parseISO, startOfHour} from "date-fns";
 import {getLocale} from "../../lib/localization";
 import Button from "../../components/forms/Button";
 import {Save} from "../../components/icons/Save";
@@ -74,13 +74,16 @@ const Meeting: NextPage = () => {
     useEffect(() => {
         if (router.asPath.startsWith("/meetings/new"))
         {
+            let startDate = startOfHour(new Date());
+
             if (router.query.startDate)
             {
-                const startDate = parseISO(router.query.startDate as string);
-                setDate(startDate);
-                setValue("duration", 60);
-                setValue("hour", format(date, "HH:mm"));
+                startDate = parseISO(router.query.startDate as string);
             }
+
+            setDate(startDate);
+            setValue("duration", 60);
+            setValue("hour", format(date, "HH:mm"));
         }
     }, [router])
     
