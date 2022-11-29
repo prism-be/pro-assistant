@@ -1,4 +1,4 @@
-﻿import {add, format, formatISO, getMonth, startOfMonth} from 'date-fns';
+﻿import {add, format, formatISO, startOfMonth} from 'date-fns';
 import styles from '../../styles/components/forms/calendar.module.scss'
 import {useEffect, useState} from "react";
 import {ArrowLeft, ArrowRight} from "../icons/Icons";

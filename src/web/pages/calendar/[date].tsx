@@ -1,7 +1,6 @@
 ﻿import styles from '../../styles/pages/calendar.module.scss';
 import {NextPage} from "next";
 import ContentContainer from "../../components/design/ContentContainer";
-import {useEffect, useState} from "react";
 import {add, format, formatISO, parse, parseISO, startOfWeek} from "date-fns";
 import useTranslation from "next-translate/useTranslation";
 import {getLocale} from "../../lib/localization";
