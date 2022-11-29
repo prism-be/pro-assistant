@@ -3,7 +3,7 @@ import {useRouter} from "next/router";
 import {useEffect} from "react";
 import {format} from "date-fns";
 
-const Home: NextPage = () => {
+const Agenda: NextPage = () => {
 
     const router = useRouter();
 
@@ -14,4 +14,4 @@ const Home: NextPage = () => {
     return <></>
 }
 
-export default Home
+export default Agenda
