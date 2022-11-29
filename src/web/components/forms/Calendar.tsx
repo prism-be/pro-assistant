@@ -1,4 +1,4 @@
-﻿import {add, format, formatISO, getMonth} from 'date-fns';
+﻿import {add, format, formatISO, getMonth, startOfMonth} from 'date-fns';
 import styles from '../../styles/components/forms/calendar.module.scss'
 import {useEffect, useState} from "react";
 import {ArrowLeft, ArrowRight} from "../icons/Icons";
@@ -14,15 +14,10 @@ interface Props {
 export const Calendar = ({value, onChange, className}: Props) => {
 
     const {t} = useTranslation('common');
-    const [month, setMonth] = useState<Date>(new Date(value.getFullYear(), value.getMonth()));
+    const [date, setDate] = useState<Date>(value);
+    const [month, setMonth] = useState<Date>(startOfMonth(value));
     const [dates, setDates]= useState<Date[]>([]);
 
-    useEffect(() => {
-        console.log(value);
-        console.log(value.toISOString());
-        console.log(getMonth(value));
-    }, [value])
-    
     useEffect(() => {
         let c = month;
         let d: Date[] = [];
@@ -35,6 +30,11 @@ export const Calendar = ({value, onChange, className}: Props) => {
         
         setDates(d);
     }, [month]);
+    
+    useEffect(() => {
+        setDate(value);
+        setMonth(startOfMonth(value));
+    }, [value])
 
     const getClass = (d: Date) => {
         let css = "";
@@ -63,7 +63,7 @@ export const Calendar = ({value, onChange, className}: Props) => {
                 break;
         }
         
-        if (d.getFullYear() === value.getFullYear() && d.getMonth() === value.getMonth() && d.getDate() === value.getDate())
+        if (d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth() && d.getDate() === date.getDate())
         {
             css += " " + styles.daySelected;
         }
@@ -71,7 +71,7 @@ export const Calendar = ({value, onChange, className}: Props) => {
         return css;
     }
     
-    return <div className={styles.calendar + " " + className}>
+    return <div className={styles.calendar + " " + className} title={formatISO(value)}>
         <div className={styles.previous} onClick={() => setMonth(add(month, { months: -1 })) }><ArrowLeft /></div>
         <div className={styles.next} onClick={() => setMonth(add(month, { months: 1 })) }><ArrowRight /></div>
         <div className={styles.month}>{format(month, "MMMM yyyy", { locale: getLocale() })}</div>
@@ -82,6 +82,9 @@ export const Calendar = ({value, onChange, className}: Props) => {
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day5}>{t("days.short.day5")}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day6}>{t("days.short.day6")}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day7}>{t("days.short.day7")}</div>
-        {dates.map(d => <div key={formatISO(d)} className={styles.day + " " + getClass(d)} onClick={() => onChange(d)}>{d.getDate()}</div>)}
+        {dates.map(d => <div key={formatISO(d)} className={styles.day + " " + getClass(d)} onClick={() => {
+            onChange(d);
+            setDate(d);
+        }}>{d.getDate()}</div>)}
     </div>
 }
