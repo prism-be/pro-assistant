@@ -19,7 +19,6 @@ import {Save} from "../../components/icons/Save";
 import {alertSuccess} from "../../lib/events/alert";
 
 const Meeting: NextPage = () => {
-    const now = new Date();
     const {t} = useTranslation('common');
     const router = useRouter();
     
@@ -32,7 +31,7 @@ const Meeting: NextPage = () => {
     const [patientsSuggestions, setPatientsSuggestions] = useState<IPatientSummary[]>([]);
     const [suggested, setSuggested] = useState<string>();
     const [patient, setPatient] = useState<IPatientSummary>();
-    const [date, setDate] = useState<Date>(new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0));
+    const [date, setDate] = useState<Date>(startOfHour(new Date()));
     const [duration, setDuration] = useState<number>(60);
     const [document, setDocument] = useState<string>();
 
