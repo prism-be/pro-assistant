@@ -1,7 +1,7 @@
 ﻿import styles from '../../styles/components/design/section.module.scss';
 
 interface Props {
-    children: JSX.Element;
+    children: JSX.Element | JSX.Element[];
 }
 
 const Section = ({children}: Props) => {

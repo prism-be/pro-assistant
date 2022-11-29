@@ -8,7 +8,6 @@ import {getLocale} from "../../lib/localization";
 import React from 'react';
 import {ArrowLeft, ArrowRight} from "../../components/icons/Icons";
 import {useKeyPressEvent} from "react-use";
-import {popupNewMeeting} from "../../lib/events/globalPopups";
 import {IMeeting} from "../../lib/contracts";
 import {postData} from "../../lib/ajaxHelper";
 import Mobile from "../../components/design/Mobile";
@@ -72,11 +71,11 @@ const Calendar: NextPage = () => {
 
     const addMeeting = (d: number, h: number, m: number) => {
         const startDate = add(new Date(monday.getFullYear(), monday.getMonth(), monday.getDate()), {days: d - 1, hours: h, minutes: m});
-        popupNewMeeting({
+        /*popupNewMeeting({
             data: {
                 startDate
             }
-        });
+        });*/
     }
 
     const swipeHandlers = useSwipeable({
@@ -118,10 +117,7 @@ const Calendar: NextPage = () => {
 
                             {meetings?.map(m =>
                                 <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
-                                     onClick={() => {
-                                         window.scroll({top: 0});
-                                         popupNewMeeting({data: {meetingId: m.id}});
-                                     }}>
+                                     onClick={() => router.push("/meetings/" + m.id)}>
                                     <div>{m.title?.slice(0, 30)}</div>
                                 </div>)}
                         </div>

@@ -10,7 +10,6 @@ import Button from "../../components/forms/Button";
 import {postData} from "../../lib/ajaxHelper";
 import {IMeeting} from "../../lib/contracts";
 import React from 'react';
-import {popupNewMeeting} from "../../lib/events/globalPopups";
 import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
 import {useRouter} from "next/router";
@@ -58,11 +57,11 @@ const Agenda: NextPage = () => {
 
     function addMeeting (h: number, m: number) {
         const startDate = add(new Date(day.getFullYear(), day.getMonth(), day.getDate()), {hours: h, minutes: m});
-        popupNewMeeting({
+        /*popupNewMeeting({
             data: {
                 startDate
             }
-        });
+        });*/
     }
     return <ContentContainer>
         <Section>
@@ -95,10 +94,7 @@ const Agenda: NextPage = () => {
 
                     {meetings?.map(m =>
                         <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours()) + " " + getDurationClassName(m.duration)} key={m.id}
-                             onClick={() => {
-                                 window.scroll({top: 0});
-                                 popupNewMeeting({data: {meetingId: m.id}});
-                             }}>
+                             onClick={() => router.push("/meetings/" + m.id)}>
                             <div>{m.title?.slice(0, 40)}</div>
                         </div>)}
 

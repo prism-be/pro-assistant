@@ -7,7 +7,6 @@ import {getData} from "../lib/ajaxHelper";
 import {MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "../lib/msal";
 import {Alert} from "../components/Alert";
-import {GlobalPopupsContainer} from "../components/global-popups/GlobalPopupsContainer";
 import { withApplicationInsights } from 'next-applicationinsights';
 
 const MyApp = ({Component, pageProps}: AppProps) => {
@@ -21,7 +20,6 @@ const MyApp = ({Component, pageProps}: AppProps) => {
 
             <SWRConfig value={{fetcher: getData}}>
                 <Component {...pageProps} />
-                <GlobalPopupsContainer />
                 <Alert />
             </SWRConfig>
 
