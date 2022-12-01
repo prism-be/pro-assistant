@@ -8,4 +8,5 @@ namespace Prism.ProAssistant.Business.Storage.Migrations;
 
 public interface IMigrateDocumentConfiguration
 {
+    Task MigrateAsync();
 }

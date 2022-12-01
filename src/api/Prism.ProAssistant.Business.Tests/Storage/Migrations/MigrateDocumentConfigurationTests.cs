@@ -10,6 +10,7 @@ using Moq;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Storage;
 using Prism.ProAssistant.Business.Storage.Migrations;
+using Prism.ProAssistant.UnitTesting.Extensions;
 
 namespace Prism.ProAssistant.Business.Tests.Storage.Migrations;
 
@@ -37,14 +38,7 @@ public class MigrateDocumentConfigurationTests
         await migrator.MigrateAsync();
 
         // Assert
-        logger.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((o, t) => true),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
-            Times.Once);
+        logger.VerifyLog(LogLevel.Information, Times.Once());
         
         database.Verify(x => x.RenameCollectionAsync("documents", "documents-configuration", null, CancellationToken.None), Times.Once);
     }
@@ -71,14 +65,7 @@ public class MigrateDocumentConfigurationTests
         await migrator.MigrateAsync();
 
         // Assert
-        logger.Verify(
-            x => x.Log(
-                LogLevel.Warning,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((o, t) => true),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
-            Times.Once);
+        logger.VerifyLog(LogLevel.Warning, Times.Once());
         
         database.Verify(x => x.RenameCollectionAsync("documents", "documents-configuration", null, CancellationToken.None), Times.Never);
     }

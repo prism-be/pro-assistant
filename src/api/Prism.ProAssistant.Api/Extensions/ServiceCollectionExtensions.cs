@@ -19,6 +19,7 @@ using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
+using Prism.ProAssistant.Business.Storage.Migrations;
 using Prism.ProAssistant.Documents;
 using Prism.ProAssistant.Documents.Locales;
 
@@ -104,6 +105,8 @@ namespace Prism.ProAssistant.Api.Extensions
             services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
 
             services.AddScoped<IOrganizationContext, OrganizationContext>();
+
+            services.AddScoped<IMigrateDocumentConfiguration, MigrateDocumentConfiguration>();
         }
 
         public static void AddBusinessServices(this IServiceCollection services)
