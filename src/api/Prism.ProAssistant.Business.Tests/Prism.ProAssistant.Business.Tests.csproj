@@ -26,6 +26,7 @@
     <ItemGroup>
         <ProjectReference Include="..\Prism.ProAssistant.Api\Prism.ProAssistant.Api.csproj" />
         <ProjectReference Include="..\Prism.ProAssistant.Business\Prism.ProAssistant.Business.csproj" />
+        <ProjectReference Include="..\Prism.ProAssistant.UnitTesting\Prism.ProAssistant.UnitTesting.csproj" />
     </ItemGroup>
 
 </Project>

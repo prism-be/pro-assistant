@@ -19,7 +19,7 @@ namespace Prism.ProAssistant.Business.Tests
         public void Document()
         {
             // Arrange
-            var source = new Document
+            var source = new DocumentConfiguration
             {
                 Id = Identifier.GenerateString(),
                 Name = Identifier.GenerateString(),

@@ -12,31 +12,31 @@ using Xunit;
 
 namespace Prism.ProAssistant.Api.Tests.Controllers;
 
-public class DocumentsControllerTests
+public class DocumentsConfigurationControllerTests
 {
 
     [Fact]
     public async Task FindMany()
     {
-        await CrudTests.FindMany<DocumentsController, Document>(c => c.FindMany());
+        await CrudTests.FindMany<DocumentsConfigurationController, DocumentConfiguration>(c => c.FindMany());
     }
 
     [Fact]
     public async Task FindOne()
     {
-        await CrudTests.FindOne<DocumentsController, Document>(c => c.FindOne(Identifier.GenerateString()));
+        await CrudTests.FindOne<DocumentsConfigurationController, DocumentConfiguration>(c => c.FindOne(Identifier.GenerateString()));
     }
 
     [Fact]
     public async Task RemoveOne()
     {
-        await CrudTests.RemoveOne<DocumentsController, Document>(c => c.RemoveOne(Identifier.GenerateString()));
+        await CrudTests.RemoveOne<DocumentsConfigurationController, DocumentConfiguration>(c => c.RemoveOne(Identifier.GenerateString()));
     }
 
     [Fact]
     public async Task UpsertOne()
     {
-        await CrudTests.UpsertOne<DocumentsController, Document>(c => c.UpsertOne(new Document
+        await CrudTests.UpsertOne<DocumentsConfigurationController, DocumentConfiguration>(c => c.UpsertOne(new DocumentConfiguration
         {
             Id = Identifier.GenerateString()
         }));

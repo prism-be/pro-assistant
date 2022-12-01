@@ -168,7 +168,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
     private async Task<(string title, string content)> GetTitleContent(string documentId)
     {
-        var document = await _mediator.Send(new FindOne<Business.Models.Document>(documentId));
+        var document = await _mediator.Send(new FindOne<Business.Models.DocumentConfiguration>(documentId));
 
         if (document == null)
         {
