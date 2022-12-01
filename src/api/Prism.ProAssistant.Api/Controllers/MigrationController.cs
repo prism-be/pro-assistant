@@ -24,7 +24,7 @@ public class MigrationController : Controller
 
     [HttpPost]
     [Route("api/admin/migrate/{migrationName}")]
-    public async Task ExecuteMigration(string migrationName)
+    public async Task ExecuteMigration([FromRoute]string migrationName)
     {
         switch (migrationName)
         {

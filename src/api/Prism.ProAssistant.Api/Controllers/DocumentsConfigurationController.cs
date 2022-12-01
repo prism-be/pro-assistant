@@ -13,16 +13,16 @@ using Prism.ProAssistant.Business.Queries;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
-public class DocumentsController : Controller
+public class DocumentsConfigurationController : Controller
 {
     private readonly IMediator _mediator;
 
-    public DocumentsController(IMediator mediator)
+    public DocumentsConfigurationController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [Route("api/documents")]
+    [Route("api/documents-configuration")]
     [HttpGet]
     public async Task<ActionResult<List<DocumentConfiguration>>> FindMany()
     {
@@ -33,7 +33,7 @@ public class DocumentsController : Controller
             .ToActionResult();
     }
 
-    [Route("api/documents/{documentId}")]
+    [Route("api/documents-configuration/{documentId}")]
     [HttpGet]
     public async Task<ActionResult<DocumentConfiguration>> FindOne(string documentId)
     {
@@ -41,14 +41,14 @@ public class DocumentsController : Controller
         return result.ToActionResult();
     }
 
-    [Route("api/documents/{documentId}")]
+    [Route("api/documents-configuration/{documentId}")]
     [HttpDelete]
     public async Task RemoveOne(string documentId)
     {
         await _mediator.Send(new RemoveOne<DocumentConfiguration>(documentId));
     }
 
-    [Route("api/documents")]
+    [Route("api/documents-configuration")]
     [HttpPost]
     public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] DocumentConfiguration documentConfiguration)
     {

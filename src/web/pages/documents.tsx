@@ -18,7 +18,7 @@ import {Delete, Pencil} from "../components/icons/Icons";
 const Documents: NextPage = () => {
 
     const {t} = useTranslation("documents");
-    const {data: documents, mutate: mutateDocuments} = useSWR<IDocument[] | null>('/documents');
+    const {data: documents, mutate: mutateDocuments} = useSWR<IDocument[] | null>('/documents-configuration');
     const [currentDocument, setCurrentDocument] = useState<IDocument | null>(null);
     const {register, getValues, formState: {errors}, setValue} = useForm();
 
@@ -39,7 +39,7 @@ const Documents: NextPage = () => {
     const deleteDocument = async (document: IDocument) => {
         if (confirm(t("edit.confirmDelete")  + document.name))
         {
-            await deleteData("/documents/" + document.id);
+            await deleteData("/documents-configuration/" + document.id);
             await mutateDocuments();
         }
     }
@@ -47,7 +47,7 @@ const Documents: NextPage = () => {
     const saveDocument = async () => {
         const data = getValues();
         data.id = currentDocument?.id ?? '';
-        await postData("/documents", data);
+        await postData("/documents-configuration", data);
         await mutateDocuments();
         setCurrentDocument(null);
     }
