@@ -8,7 +8,7 @@ import useSWR from "swr";
 import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
 import InputText from "../../components/forms/InputText";
-import {IDocument, IMeeting, IPatientSummary, ITariff} from "../../lib/contracts";
+import {IDocumentConfiguration, IMeeting, IPatientSummary, ITariff} from "../../lib/contracts";
 import {downloadDocument, getData, postData} from "../../lib/ajaxHelper";
 import InputSelect from "../../components/forms/InputSelect";
 import {Calendar} from "../../components/forms/Calendar";
@@ -24,7 +24,7 @@ const Meeting: NextPage = () => {
     
     const {data: meeting, mutate: mutateMeeting} = useSWR<IMeeting | null>("/meeting/" + router.query.mid, loadMeeting);
     const {data: tariffs} = useSWR<ITariff[]>('/tariffs');
-    const {data: documents} = useSWR<IDocument[]>("/documents");
+    const {data: documents} = useSWR<IDocumentConfiguration[]>("/documents-configuration");
     
     const {register, setValue, formState: {errors}, getValues, handleSubmit} = useForm();
     

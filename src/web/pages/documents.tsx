@@ -6,7 +6,7 @@ import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import Section from "../components/design/Section";
 import useSWR from "swr";
-import {IDocument} from "../lib/contracts";
+import {IDocumentConfiguration} from "../lib/contracts";
 import {useState} from "react";
 import Button from "../components/forms/Button";
 import {useForm} from "react-hook-form";
@@ -18,8 +18,8 @@ import {Delete, Pencil} from "../components/icons/Icons";
 const Documents: NextPage = () => {
 
     const {t} = useTranslation("documents");
-    const {data: documents, mutate: mutateDocuments} = useSWR<IDocument[] | null>('/documents-configuration');
-    const [currentDocument, setCurrentDocument] = useState<IDocument | null>(null);
+    const {data: documents, mutate: mutateDocuments} = useSWR<IDocumentConfiguration[] | null>('/documents-configuration');
+    const [currentDocument, setCurrentDocument] = useState<IDocumentConfiguration | null>(null);
     const {register, getValues, formState: {errors}, setValue} = useForm();
 
     const createNew = () => {
@@ -29,14 +29,14 @@ const Documents: NextPage = () => {
         setValue("body", "");
     }
     
-    const editDocument = async (document: IDocument) => {
+    const editDocument = async (document: IDocumentConfiguration) => {
         setCurrentDocument(document);
         setValue("name", document.name);
         setValue("title", document.title);
         setValue("body", document.body);
     }
     
-    const deleteDocument = async (document: IDocument) => {
+    const deleteDocument = async (document: IDocumentConfiguration) => {
         if (confirm(t("edit.confirmDelete")  + document.name))
         {
             await deleteData("/documents-configuration/" + document.id);

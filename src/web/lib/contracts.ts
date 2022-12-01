@@ -60,7 +60,7 @@ export interface IDocumentSettings {
     logo?: string;
 }
 
-export interface IDocument {
+export interface IDocumentConfiguration {
     id?: string;
     name?: string;
     title?: string;
