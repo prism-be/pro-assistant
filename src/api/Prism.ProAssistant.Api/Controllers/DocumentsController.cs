@@ -24,9 +24,9 @@ public class DocumentsController : Controller
 
     [Route("api/documents")]
     [HttpGet]
-    public async Task<ActionResult<List<Document>>> FindMany()
+    public async Task<ActionResult<List<DocumentConfiguration>>> FindMany()
     {
-        var result = await _mediator.Send(new FindMany<Document>());
+        var result = await _mediator.Send(new FindMany<DocumentConfiguration>());
         return result
             .OrderBy(x => x.Name)
             .ToList()
@@ -35,9 +35,9 @@ public class DocumentsController : Controller
 
     [Route("api/documents/{documentId}")]
     [HttpGet]
-    public async Task<ActionResult<Document>> FindOne(string documentId)
+    public async Task<ActionResult<DocumentConfiguration>> FindOne(string documentId)
     {
-        var result = await _mediator.Send(new FindOne<Document>(documentId));
+        var result = await _mediator.Send(new FindOne<DocumentConfiguration>(documentId));
         return result.ToActionResult();
     }
 
@@ -45,14 +45,14 @@ public class DocumentsController : Controller
     [HttpDelete]
     public async Task RemoveOne(string documentId)
     {
-        await _mediator.Send(new RemoveOne<Document>(documentId));
+        await _mediator.Send(new RemoveOne<DocumentConfiguration>(documentId));
     }
 
     [Route("api/documents")]
     [HttpPost]
-    public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] Document document)
+    public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] DocumentConfiguration documentConfiguration)
     {
-        var result = await _mediator.Send(new UpsertOne<Document>(document));
+        var result = await _mediator.Send(new UpsertOne<DocumentConfiguration>(documentConfiguration));
         return result.ToActionResult();
     }
 }

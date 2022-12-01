@@ -18,25 +18,25 @@ public class DocumentsControllerTests
     [Fact]
     public async Task FindMany()
     {
-        await CrudTests.FindMany<DocumentsController, Document>(c => c.FindMany());
+        await CrudTests.FindMany<DocumentsController, DocumentConfiguration>(c => c.FindMany());
     }
 
     [Fact]
     public async Task FindOne()
     {
-        await CrudTests.FindOne<DocumentsController, Document>(c => c.FindOne(Identifier.GenerateString()));
+        await CrudTests.FindOne<DocumentsController, DocumentConfiguration>(c => c.FindOne(Identifier.GenerateString()));
     }
 
     [Fact]
     public async Task RemoveOne()
     {
-        await CrudTests.RemoveOne<DocumentsController, Document>(c => c.RemoveOne(Identifier.GenerateString()));
+        await CrudTests.RemoveOne<DocumentsController, DocumentConfiguration>(c => c.RemoveOne(Identifier.GenerateString()));
     }
 
     [Fact]
     public async Task UpsertOne()
     {
-        await CrudTests.UpsertOne<DocumentsController, Document>(c => c.UpsertOne(new Document
+        await CrudTests.UpsertOne<DocumentsController, DocumentConfiguration>(c => c.UpsertOne(new DocumentConfiguration
         {
             Id = Identifier.GenerateString()
         }));

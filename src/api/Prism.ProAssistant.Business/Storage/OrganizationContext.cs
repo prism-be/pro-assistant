@@ -12,16 +12,18 @@ namespace Prism.ProAssistant.Business.Storage;
 
 public interface IOrganizationContext
 {
+    IMongoDatabase Database { get; }
+    
     IMongoCollection<T> GetCollection<T>();
 }
 
 public class OrganizationContext : IOrganizationContext
 {
-    private readonly IMongoDatabase _database;
+    public IMongoDatabase Database { get; }
 
     public OrganizationContext(IMongoClient client, IUserContextAccessor userContextAccessor)
     {
-        _database = string.IsNullOrWhiteSpace(userContextAccessor.OrganisationId)
+        Database = string.IsNullOrWhiteSpace(userContextAccessor.OrganisationId)
             ? client.GetDatabase("unknown")
             : client.GetDatabase(userContextAccessor.OrganisationId);
     }
@@ -35,7 +37,7 @@ public class OrganizationContext : IOrganizationContext
             throw new NotSupportedException("The type is not supported as a data model : " + typeof(T).FullName);
         }
 
-        return _database.GetCollection<T>(collectionName);
+        return Database.GetCollection<T>(collectionName);
     }
 
     private static string? GetCollectionName<T>()

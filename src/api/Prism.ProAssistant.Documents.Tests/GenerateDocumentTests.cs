@@ -202,8 +202,8 @@ public class GenerateDocumentTests
                 Id = meeting.PatientId
             });
 
-        mediator.Setup(x => x.Send(It.Is<FindOne<Document>>(d => d.Id == documentId), CancellationToken.None))
-            .ReturnsAsync(new Document
+        mediator.Setup(x => x.Send(It.Is<FindOne<DocumentConfiguration>>(d => d.Id == documentId), CancellationToken.None))
+            .ReturnsAsync(new DocumentConfiguration
             {
                 Id = documentId,
                 Body = Identifier.GenerateString(),
