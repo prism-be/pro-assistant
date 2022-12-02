@@ -18,10 +18,10 @@ public class UpdateMeetingColorWorker : BaseServiceBusWorker<UpsertResult>
     {
     }
 
-    protected override string Queue => Topics.Tariffs.Updated;
-    protected override string WorkerName => nameof(UpdateMeetingColorWorker);
+    public override string Queue => Topics.Tariffs.Updated;
+    public override string WorkerName => nameof(UpdateMeetingColorWorker);
 
-    protected override async Task ProcessMessageAsync(IMediator mediator, UpsertResult payload)
+    public override async Task ProcessMessageAsync(IMediator mediator, UpsertResult payload)
     {
         await mediator.Send(new UpdateMeetingsColor(payload.Id, payload.Organization));
     }

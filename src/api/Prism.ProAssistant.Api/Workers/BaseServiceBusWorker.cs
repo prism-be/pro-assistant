@@ -29,9 +29,9 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
         _connection = connection;
     }
 
-    protected abstract string Queue { get; }
+    public abstract string Queue { get; }
 
-    protected abstract string WorkerName { get; }
+    public abstract string WorkerName { get; }
 
     protected virtual ushort PrefetchCount => Convert.ToUInt16(EnvironmentConfiguration.GetConfiguration("RABBITMQ_PREFETCH_DEFAULT") ?? "50");
 
@@ -100,5 +100,5 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
         return Task.CompletedTask;
     }
 
-    protected abstract Task ProcessMessageAsync(IMediator mediator, T payload);
+    public abstract Task ProcessMessageAsync(IMediator mediator, T payload);
 }
