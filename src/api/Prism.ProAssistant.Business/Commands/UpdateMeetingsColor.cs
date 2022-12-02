@@ -19,7 +19,7 @@ public class UpdateMeetingsColorHandler : IRequestHandler<UpdateMeetingsColor>
     private readonly ILogger<UpdateMeetingsColorHandler> _logger;
     private readonly IOrganizationContext _organizationContext;
 
-    public UpdateMeetingsColorHandler(IOrganizationContext organizationContext, ILogger<UpdateMeetingsColorHandler> logger)
+    public UpdateMeetingsColorHandler(ILogger<UpdateMeetingsColorHandler> logger, IOrganizationContext organizationContext)
     {
         _organizationContext = organizationContext;
         _logger = logger;
