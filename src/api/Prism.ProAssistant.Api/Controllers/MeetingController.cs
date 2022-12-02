@@ -29,7 +29,10 @@ public class MeetingController : Controller
     public async Task<ActionResult<List<Meeting>>> Search([FromBody]SearchMeetings search)
     {
         var result = await _mediator.Send(search);
-        return result.ToActionResult();
+        return result
+            .Where(x => x.State != (int)MeetingState.Canceled)
+            .ToList()
+            .ToActionResult();
     }
 
     [Route("api/meeting/{meetingId}")]
