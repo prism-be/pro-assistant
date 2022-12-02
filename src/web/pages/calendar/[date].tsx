@@ -112,7 +112,8 @@ const Calendar: NextPage = () => {
 
                             {meetings?.map(m =>
                                 <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
-                                     onClick={() => router.push("/meetings/" + m.id)}>
+                                     onClick={() => router.push("/meetings/" + m.id)}
+                                     style={{backgroundColor: m.backgroundColor}}>
                                     <div>{m.title?.slice(0, 30)}</div>
                                 </div>)}
                         </div>

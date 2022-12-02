@@ -14,14 +14,15 @@ import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
 import {useRouter} from "next/router";
 import useSWR from "swr";
+import Constants from "../../lib/constants";
 
 const Agenda: NextPage = () => {
     const router = useRouter();
     const day = parse(router.query.date as string, "yyyy-MM-dd", new Date());
     const {t} = useTranslation("common");
-    
+
     const {data: meetings} = useSWR(router.asPath, loadMeetings);
-    
+
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
     async function loadMeetings() {
@@ -31,8 +32,7 @@ const Agenda: NextPage = () => {
         });
     }
 
-    function changeDay(delta: number)
-    {
+    function changeDay(delta: number) {
         const newDay = add(day, {days: delta});
         router.push("/agenda/" + format(newDay, "yyyy-MM-dd"));
     }
@@ -55,10 +55,11 @@ const Agenda: NextPage = () => {
         return styles["duration" + d];
     }
 
-    function addMeeting (h: number, m: number) {
+    function addMeeting(h: number, m: number) {
         const startDate = add(new Date(day.getFullYear(), day.getMonth(), day.getDate()), {hours: h, minutes: m});
         router.push("/meetings/new?startDate=" + encodeURIComponent(formatISO(startDate)));
     }
+
     return <ContentContainer>
         <Section>
             <>
@@ -90,7 +91,8 @@ const Agenda: NextPage = () => {
 
                     {meetings?.map(m =>
                         <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours()) + " " + getDurationClassName(m.duration)} key={m.id}
-                             onClick={() => router.push("/meetings/" + m.id)}>
+                             onClick={() => router.push("/meetings/" + m.id)}
+                             style={{backgroundColor: m.backgroundColor}}>
                             <div>{m.title?.slice(0, 40)}</div>
                         </div>)}
 

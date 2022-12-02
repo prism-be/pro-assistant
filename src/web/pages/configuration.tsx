@@ -34,6 +34,7 @@ const Tariffs = () => {
         setValue("id", "");
         setValue("name", "");
         setValue("price", 0);
+        setValue("backgroundColor", "#31859c");
         setEditing(true);
     }
 
@@ -42,7 +43,7 @@ const Tariffs = () => {
         setValue("name", tariff.name);
         setValue("price", tariff.price.toFixed(2));
         setValue("defaultDuration", tariff.defaultDuration);
-        setValue("foreColor", tariff.foreColor);
+        setValue("backgroundColor", tariff.backgroundColor ?? "#31859c");
         setEditing(true);
     }
 
@@ -75,7 +76,7 @@ const Tariffs = () => {
                             <InputText label={t("tariffs.defaultDuration")} name={"defaultDuration"} type={"number"} required={true} register={register} setValue={setValue} error={errors.defaultDuration}/>
                         </div>
                         <div className={styles.tariffEditionGridField}>
-                            <InputColor label={t("tariffs.color")} name={"foreColor"} setValue={setValue} error={errors.foreColor} getValues={getValues}/>
+                            <InputColor label={t("tariffs.color")} name={"backgroundColor"} setValue={setValue} error={errors.backgroundColor} getValues={getValues}/>
                         </div>
                         <Button className={styles.tariffEditionGridButtonCancel} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
                         <Button className={styles.tariffEditionGridButtonSave} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>

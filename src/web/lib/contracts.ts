@@ -45,6 +45,7 @@ export interface IMeeting {
     payment: number;
     paymentDate: string | null;
     type: string;
+    typeId: string;
     foreColor?: string;
     backgroundColor?: string;
 }
