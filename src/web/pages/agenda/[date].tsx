@@ -14,7 +14,6 @@ import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
 import {useRouter} from "next/router";
 import useSWR from "swr";
-import Constants from "../../lib/constants";
 
 const Agenda: NextPage = () => {
     const router = useRouter();
