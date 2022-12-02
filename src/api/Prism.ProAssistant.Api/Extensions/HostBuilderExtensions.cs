@@ -33,7 +33,6 @@ public static class HostBuilderExtensions
             .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
             .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
             .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {CorrelationId} {Level:u3}] {Message} (at {Caller}){NewLine}{Exception}")
-            .WriteTo.File("./logs/pro-assistant.txt", rollingInterval: RollingInterval.Day, retainedFileCountLimit: 7)
             .Enrich.FromLogContext()
             .Enrich.WithCorrelationId()
             .Enrich.WithClientIp()

@@ -6,6 +6,7 @@
 
 using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Api.Middlewares;
+using Prism.ProAssistant.Api.Workers;
 using Prism.ProAssistant.Business;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,9 @@ builder.Services.AddDatabase();
 
 // Add business services
 builder.Services.AddBusinessServices();
+
+// Add Workers
+builder.Services.AddWorkers();
 
 // Add Cache
 builder.Services.AddCache();

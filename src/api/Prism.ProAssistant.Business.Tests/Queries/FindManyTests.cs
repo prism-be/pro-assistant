@@ -20,10 +20,10 @@ namespace Prism.ProAssistant.Business.Tests.Queries
         public async Task Handle_Ok()
         {
             // Arrange
-            var organisationContext = new Mock<IOrganizationContext>();
+            var organizationContext = new Mock<IOrganizationContext>();
 
             var collection = new Mock<IMongoCollection<Patient>>();
-            organisationContext.Setup(x => x.GetCollection<Patient>())
+            organizationContext.Setup(x => x.GetCollection<Patient>())
                 .Returns(collection.Object);
 
             var items = new List<Patient>
@@ -55,7 +55,7 @@ namespace Prism.ProAssistant.Business.Tests.Queries
                 .ReturnsAsync(cursor.Object);
 
             // Act
-            var handler = new FindManyHandler<Patient>(organisationContext.Object);
+            var handler = new FindManyHandler<Patient>(organizationContext.Object);
             var result = await handler.Handle(new FindMany<Patient>(), CancellationToken.None);
 
             // Assert

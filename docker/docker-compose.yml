@@ -32,3 +32,16 @@ services:
     restart: unless-stopped
     ports:
       - "6379:6379"
+  
+  rabbit:
+    image: rabbitmq:3-management
+    restart: unless-stopped
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=proassistant
+      - RABBITMQ_DEFAULT_PASS=Toto123Toto123
+      - RABBITMQ_HIPE_COMPILE=1
+      - RABBITMQ_USE_LONGNAME=true
+      - RABBITMQ_NODENAME=rabbit@rabbit

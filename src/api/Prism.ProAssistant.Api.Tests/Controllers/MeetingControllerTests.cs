@@ -63,7 +63,7 @@ namespace Prism.ProAssistant.Api.Tests.Controllers
                 }),
                 m =>
                 {
-                    m.Setup(x => x.Send(It.IsAny<UpsertOne<Patient>>(), CancellationToken.None)).ReturnsAsync(new UpsertResult(Identifier.GenerateString()));
+                    m.Setup(x => x.Send(It.IsAny<UpsertOne<Patient>>(), CancellationToken.None)).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
                 });
         }
     }

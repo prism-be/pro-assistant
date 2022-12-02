@@ -11,7 +11,7 @@ namespace Prism.ProAssistant.Business.Tests;
 
 public static class TestsExtensions
 {
-    public static void SetupCollectionFindEmpty<T>(this Mock<IMongoDatabase> database, params T[] samples)
+    public static void SetupCollectionFindEmpty<T>(this Mock<IMongoCollection<T>> collection, params T[] samples)
     {
         var items = new List<T>();
         var cursor = new Mock<IAsyncCursor<T>>();
@@ -25,18 +25,15 @@ public static class TestsExtensions
             .ReturnsAsync(true)
             .ReturnsAsync(false);
         
-        var collection = new Mock<IMongoCollection<T>>();
         collection.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<T>>(), 
                 It.IsAny<FindOptions<T, T>>(), 
                 CancellationToken.None))
             .ReturnsAsync(cursor.Object);
         collection.Object.InsertMany(items);
         collection.Setup(x => x.CountDocumentsAsync(FilterDefinition<T>.Empty, null, CancellationToken.None)).ReturnsAsync(samples.Length);
-        
-        database.Setup(x => x.GetCollection<T>(typeof(T).Name.ToLowerInvariant(), null)).Returns(collection.Object);
     }
     
-    public static void SetupCollection<T>(this Mock<IMongoDatabase> database, params T[] samples)
+    public static void SetupCollection<T>(this Mock<IMongoCollection<T>> collection, params T[] samples)
     {
         var items = new List<T>();
         items.AddRange(samples);
@@ -51,14 +48,11 @@ public static class TestsExtensions
             .ReturnsAsync(true)
             .ReturnsAsync(false);
         
-        var collection = new Mock<IMongoCollection<T>>();
         collection.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<T>>(), 
                 It.IsAny<FindOptions<T, T>>(), 
                 CancellationToken.None))
             .ReturnsAsync(cursor.Object);
         collection.Object.InsertMany(items);
         collection.Setup(x => x.CountDocumentsAsync(FilterDefinition<T>.Empty, null, CancellationToken.None)).ReturnsAsync(samples.Length);
-        
-        database.Setup(x => x.GetCollection<T>(typeof(T).Name.ToLowerInvariant(), null)).Returns(collection.Object);
     }
 }

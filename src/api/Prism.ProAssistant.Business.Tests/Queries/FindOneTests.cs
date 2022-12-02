@@ -21,10 +21,10 @@ namespace Prism.ProAssistant.Business.Tests.Queries
         public async Task Handle_Ok()
         {
             // Arrange
-            var organisationContext = new Mock<IOrganizationContext>();
+            var organizationContext = new Mock<IOrganizationContext>();
 
             var collection = new Mock<IMongoCollection<Patient>>();
-            organisationContext.Setup(x => x.GetCollection<Patient>())
+            organizationContext.Setup(x => x.GetCollection<Patient>())
                 .Returns(collection.Object);
 
             var id = Identifier.GenerateString();
@@ -52,7 +52,7 @@ namespace Prism.ProAssistant.Business.Tests.Queries
                 .ReturnsAsync(cursor.Object);
 
             // Act
-            var handler = new FindOneHandler<Patient>(organisationContext.Object);
+            var handler = new FindOneHandler<Patient>(organizationContext.Object);
             var result = await handler.Handle(new FindOne<Patient>(id), CancellationToken.None);
 
             // Assert

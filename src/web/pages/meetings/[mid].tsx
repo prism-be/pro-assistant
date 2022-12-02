@@ -62,10 +62,8 @@ const Meeting: NextPage = () => {
         setDate(d);
         setValue("hour", format(d, "HH:mm"));
 
-        const tariff = tariffs?.find(x => x.name == meeting.type);
-
-        if (tariff) {
-            setValue("tariff", tariff.id);
+        if (meeting.typeId) {
+            setValue("tariff", meeting.typeId);
         }
         
     }, [meeting, tariffs]);
@@ -98,6 +96,8 @@ const Meeting: NextPage = () => {
     
     async function onSubmit(data: any)
     {
+        const tariff = tariffs?.find(x => x.name == data.type);
+        
         const updatedMeeting: IMeeting = {
             id: meeting?.id ?? '',
             patientId: patient?.id ?? null,
@@ -106,6 +106,9 @@ const Meeting: NextPage = () => {
             duration: duration,
             startDate: formatISO(date),
             type: data.type,
+            typeId: tariff?.id ?? "",
+            backgroundColor: tariff?.backgroundColor ?? "#31859c",
+            foreColor: tariff?.foreColor ?? "#ffffff",
             state: parseInt(data.state),
             payment: parseInt(data.payment),
             paymentDate: parseInt(data.payment) !== 0 ? formatISO(new Date()) : null,

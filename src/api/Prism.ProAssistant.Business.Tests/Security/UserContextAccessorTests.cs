@@ -109,7 +109,7 @@ public class UserContextAccessorTests
     }
 
     [Fact]
-    public void OrganisationId_Ok()
+    public void OrganizationId_Ok()
     {
         // Arrange
         var id = Identifier.GenerateString();
@@ -136,11 +136,11 @@ public class UserContextAccessorTests
         userContextAccessor.IsAuthenticated.Should().BeTrue();
         userContextAccessor.UserId.Should().Be(id);
         userContextAccessor.Name.Should().Be(name);
-        userContextAccessor.OrganisationId.Should().Be(organizationId);
+        userContextAccessor.OrganizationId.Should().Be(organizationId);
     }
     
     [Fact]
-    public void OrganisationId_Empty()
+    public void OrganizationId_Empty()
     {
         // Arrange
         var name = Identifier.GenerateString();
@@ -162,6 +162,6 @@ public class UserContextAccessorTests
 
         // Assert
         userContextAccessor.IsAuthenticated.Should().BeTrue();
-        Assert.Throws<AuthenticationException>(() => userContextAccessor.OrganisationId.Should().BeEmpty());
+        Assert.Throws<AuthenticationException>(() => userContextAccessor.OrganizationId.Should().BeEmpty());
     }
 }

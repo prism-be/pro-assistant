@@ -17,25 +17,25 @@ namespace Prism.ProAssistant.Api.Tests.Controllers
         [Fact]
         public async Task FindMany()
         {
-            await CrudTests.FindMany<TariffController, Tariff>(c => c.FindMany());
+            await CrudPublisherTests.FindMany<TariffController, Tariff>(c => c.FindMany());
         }
 
         [Fact]
         public async Task FindOne()
         {
-            await CrudTests.FindOne<TariffController, Tariff>(c => c.FindOne(Identifier.GenerateString()));
+            await CrudPublisherTests.FindOne<TariffController, Tariff>(c => c.FindOne(Identifier.GenerateString()));
         }
 
         [Fact]
         public async Task RemoveOne()
         {
-            await CrudTests.RemoveOne<TariffController, Tariff>(c => c.RemoveOne(Identifier.GenerateString()));
+            await CrudPublisherTests.RemoveOne<TariffController, Tariff>(c => c.RemoveOne(Identifier.GenerateString()));
         }
 
         [Fact]
         public async Task UpsertOne()
         {
-            await CrudTests.UpsertOne<TariffController, Tariff>(c => c.UpsertOne(new Tariff
+            await CrudPublisherTests.UpsertOne<TariffController, Tariff>(c => c.UpsertOne(new Tariff
             {
                 Id = Identifier.GenerateString()
             }));

@@ -45,6 +45,9 @@ export interface IMeeting {
     payment: number;
     paymentDate: string | null;
     type: string;
+    typeId: string;
+    foreColor?: string;
+    backgroundColor?: string;
 }
 
 export interface ITariff {
@@ -52,6 +55,8 @@ export interface ITariff {
     name: string;
     price: number;
     defaultDuration: number;
+    foreColor?: string;
+    backgroundColor?: string;
 }
 
 export interface IDocumentSettings {

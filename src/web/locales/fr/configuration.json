@@ -4,7 +4,8 @@
     "titleExisting": "Liste des types de rendez-vous existants",
     "name": "Nom",
     "price": "Prix",
-    "defaultDuration": "Durée par défaut"
+    "defaultDuration": "Durée par défaut",
+    "color": "Couleur"
   },
   "documents": {
     "header": {
