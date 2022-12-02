@@ -27,4 +27,10 @@ public class Tariff : IDataModel
 
     [JsonPropertyName("name")]
     public string Name { get; set; } = string.Empty;
+    
+    [JsonPropertyName("foreColor")]
+    public string? ForeColor { get; set; }
+
+    [JsonPropertyName("backgroundColor")]
+    public string? BackgroundColor { get; set; }
 }

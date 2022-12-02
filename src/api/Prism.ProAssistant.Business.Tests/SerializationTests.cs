@@ -76,7 +76,12 @@ namespace Prism.ProAssistant.Business.Tests
                 PaymentDate = DateTime.UtcNow,
                 Title = Identifier.GenerateString(),
                 PatientId = Identifier.GenerateString(),
-                StartDate = DateTime.UtcNow.AddHours(-2)
+                StartDate = DateTime.UtcNow.AddHours(-2),
+                Type = Identifier.GenerateString(),
+                BackgroundColor = Identifier.GenerateString(),
+                FirstName = Identifier.GenerateString(),
+                ForeColor = Identifier.GenerateString(),
+                LastName = Identifier.GenerateString()
             };
 
             // Act and Assert
@@ -113,7 +118,9 @@ namespace Prism.ProAssistant.Business.Tests
                 Id = Identifier.GenerateString(),
                 Name = Identifier.GenerateString(),
                 Price = (decimal)_dice.NextDouble(),
-                DefaultDuration = _dice.Next(0, 42)
+                DefaultDuration = _dice.Next(0, 42),
+                BackgroundColor = Identifier.GenerateString(),
+                ForeColor = Identifier.GenerateString()
             };
 
             // Act and Assert

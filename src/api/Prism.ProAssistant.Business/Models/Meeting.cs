@@ -51,6 +51,12 @@ public class Meeting : IDataModel
 
     [JsonPropertyName("type")]
     public string? Type { get; set; }
+    
+    [JsonPropertyName("foreColor")]
+    public string? ForeColor { get; set; }
+
+    [JsonPropertyName("backgroundColor")]
+    public string? BackgroundColor { get; set; }
 }
 
 public enum MeetingState
