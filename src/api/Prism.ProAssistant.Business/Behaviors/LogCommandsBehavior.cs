@@ -22,12 +22,12 @@ public sealed class LogCommandsBehavior<TRequest, TResponse> : IPipelineBehavior
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
-        var organisationId = Guid.Empty.ToString();
-        var organisationIdProperty = typeof(TRequest).GetProperty("OrganisationId");
+        var organizationId = Guid.Empty.ToString();
+        var organizationIdProperty = typeof(TRequest).GetProperty("OrganizationId");
 
-        if (organisationIdProperty != null)
+        if (organizationIdProperty != null)
         {
-            organisationId = organisationIdProperty.GetValue(request)?.ToString();
+            organizationId = organizationIdProperty.GetValue(request)?.ToString();
         }
         
         var id = Guid.Empty.ToString();
@@ -46,7 +46,7 @@ public sealed class LogCommandsBehavior<TRequest, TResponse> : IPipelineBehavior
             userId = userIdProperty.GetValue(request)?.ToString();
         }
         
-        _logger.LogDebug("Processing request '{command}' (organisation: {organisationId} - id: {id} - userId: {userId})", typeof(TRequest).FullName, organisationId, id, userId);
+        _logger.LogDebug("Processing request '{command}' (organization: {organizationId} - id: {id} - userId: {userId})", typeof(TRequest).FullName, organizationId, id, userId);
         
         
         var sw = new Stopwatch();
@@ -54,7 +54,7 @@ public sealed class LogCommandsBehavior<TRequest, TResponse> : IPipelineBehavior
         var reponse = await next();
         sw.Stop();
         
-        _logger.LogDebug("Processed request '{command}' (organisation: {organisationId} - id: {id} - userId: {userId}) - {elapsed}", typeof(TRequest).FullName, organisationId, id, userId, sw.Elapsed);
+        _logger.LogDebug("Processed request '{command}' (organization: {organizationId} - id: {id} - userId: {userId}) - {elapsed}", typeof(TRequest).FullName, organizationId, id, userId, sw.Elapsed);
         
         return reponse;
     }

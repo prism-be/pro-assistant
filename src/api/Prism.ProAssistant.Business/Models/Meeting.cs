@@ -51,6 +51,9 @@ public class Meeting : IDataModel
 
     [JsonPropertyName("type")]
     public string? Type { get; set; }
+
+    [JsonPropertyName("typeId")]
+    public string? TypeId { get; set; }
     
     [JsonPropertyName("foreColor")]
     public string? ForeColor { get; set; }

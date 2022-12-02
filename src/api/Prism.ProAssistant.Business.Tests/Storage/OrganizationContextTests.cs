@@ -50,7 +50,7 @@ namespace Prism.ProAssistant.Business.Tests.Storage
             // Arrange
             var configuration = new MongoDbConfiguration("mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin");
             var userContextAccessor = new Mock<IUserContextAccessor>();
-            userContextAccessor.Setup(x => x.OrganisationId).Returns(Identifier.GenerateString);
+            userContextAccessor.Setup(x => x.OrganizationId).Returns(Identifier.GenerateString);
 
             // Act
             var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), userContextAccessor.Object);

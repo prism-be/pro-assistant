@@ -21,10 +21,10 @@ namespace Prism.ProAssistant.Business.Tests.Queries
         public async Task Handle_Ok()
         {
             // Arrange
-            var organisationContext = new Mock<IOrganizationContext>();
+            var organizationContext = new Mock<IOrganizationContext>();
 
             var collection = new Mock<IMongoCollection<Patient>>();
-            organisationContext.Setup(x => x.GetCollection<Patient>())
+            organizationContext.Setup(x => x.GetCollection<Patient>())
                 .Returns(collection.Object);
 
             var id = Identifier.GenerateString();
@@ -55,7 +55,7 @@ namespace Prism.ProAssistant.Business.Tests.Queries
             var userContextAccessor = new Mock<IUserContextAccessor>();
 
             // Act
-            var handler = new SearchPatientsHandler(organisationContext.Object, logger.Object, userContextAccessor.Object);
+            var handler = new SearchPatientsHandler(organizationContext.Object, logger.Object, userContextAccessor.Object);
             var result = await handler.Handle(new SearchPatients(Identifier.GenerateString(), Identifier.GenerateString(), Identifier.GenerateString(), Identifier.GenerateString()), CancellationToken.None);
 
             // Assert
@@ -67,10 +67,10 @@ namespace Prism.ProAssistant.Business.Tests.Queries
         public async Task Handle_Ok_Empty()
         {
             // Arrange
-            var organisationContext = new Mock<IOrganizationContext>();
+            var organizationContext = new Mock<IOrganizationContext>();
 
             var collection = new Mock<IMongoCollection<Patient>>();
-            organisationContext.Setup(x => x.GetCollection<Patient>())
+            organizationContext.Setup(x => x.GetCollection<Patient>())
                 .Returns(collection.Object);
 
             var cursor = new Mock<IAsyncCursor<Patient>>();
@@ -91,7 +91,7 @@ namespace Prism.ProAssistant.Business.Tests.Queries
             var userContextAccessor = new Mock<IUserContextAccessor>();
 
             // Act
-            var handler = new SearchPatientsHandler(organisationContext.Object, logger.Object, userContextAccessor.Object);
+            var handler = new SearchPatientsHandler(organizationContext.Object, logger.Object, userContextAccessor.Object);
             var result = await handler.Handle(new SearchPatients(string.Empty, string.Empty, string.Empty, string.Empty), CancellationToken.None);
 
             // Assert

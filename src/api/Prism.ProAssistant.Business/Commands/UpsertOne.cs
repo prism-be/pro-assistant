@@ -16,7 +16,7 @@ namespace Prism.ProAssistant.Business.Commands;
 public record UpsertOne<T>(T Item) : IRequest<UpsertResult>
     where T : IDataModel;
 
-public record UpsertResult(string Id);
+public record UpsertResult(string Id, string Organization);
 
 public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
     where T : IDataModel
@@ -26,7 +26,7 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
     private readonly IOrganizationContext _organizationContext;
     private readonly IUserContextAccessor _userContextAccessor;
 
-    public UpsertOneHandler(ILogger<UpsertOneHandler<T>> logger,IOrganizationContext organizationContext,  IUserContextAccessor userContextAccessor)
+    public UpsertOneHandler(ILogger<UpsertOneHandler<T>> logger, IOrganizationContext organizationContext, IUserContextAccessor userContextAccessor)
     {
         _organizationContext = organizationContext;
         _logger = logger;
@@ -41,15 +41,15 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
         if (string.IsNullOrWhiteSpace(request.Item.Id))
         {
             _logger.LogInformation("Inserting an new item of type {itemType} by user {userId}", typeof(T).FullName, _userContextAccessor.UserId);
-            
+
             await collection.InsertOneAsync(request.Item, cancellationToken: cancellationToken);
             await history.InsertOneAsync(new History(_userContextAccessor.UserId, request.Item), cancellationToken: cancellationToken);
-            
+
             _logger.LogInformation("Inserted an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
-            
-            return new UpsertResult(request.Item.Id);
+
+            return new UpsertResult(request.Item.Id, _organizationContext.OrganizationId);
         }
-        
+
         _logger.LogInformation("Updating an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
 
         await history.InsertOneAsync(new History(_userContextAccessor.UserId, request.Item), cancellationToken: cancellationToken);
@@ -57,9 +57,9 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
         {
             IsUpsert = true
         }, cancellationToken);
-        
+
         _logger.LogInformation("Updated an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
 
-        return new UpsertResult(updated.Id);
+        return new UpsertResult(updated.Id, _organizationContext.OrganizationId);
     }
 }

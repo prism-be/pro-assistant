@@ -14,7 +14,7 @@ public interface IUserContextAccessor
 {
     bool IsAuthenticated { get; }
     string Name { get; }
-    string OrganisationId { get; }
+    string OrganizationId { get; }
     string UserId { get; }
 }
 
@@ -27,9 +27,9 @@ public class UserContextAccessor : IUserContextAccessor
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public bool IsAuthenticated => _httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated == true;
+    public bool IsAuthenticated => _httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true;
 
-    public string OrganisationId
+    public string OrganizationId
     {
         get
         {

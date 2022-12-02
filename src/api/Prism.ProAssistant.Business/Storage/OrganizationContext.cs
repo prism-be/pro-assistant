@@ -13,20 +13,32 @@ namespace Prism.ProAssistant.Business.Storage;
 public interface IOrganizationContext
 {
     IMongoDatabase Database { get; }
-    
+
+    string OrganizationId { get; }
+
     IMongoCollection<T> GetCollection<T>();
+
+    void SelectOrganization(string organizationId);
 }
 
 public class OrganizationContext : IOrganizationContext
 {
-    public IMongoDatabase Database { get; }
+    private readonly IMongoClient _client;
 
     public OrganizationContext(IMongoClient client, IUserContextAccessor userContextAccessor)
     {
-        Database = string.IsNullOrWhiteSpace(userContextAccessor.OrganisationId)
-            ? client.GetDatabase("unknown")
-            : client.GetDatabase(userContextAccessor.OrganisationId);
+        _client = client;
+
+        OrganizationId = string.IsNullOrWhiteSpace(userContextAccessor.OrganizationId)
+            ? "unknown"
+            : userContextAccessor.OrganizationId;
+
+        Database = client.GetDatabase(OrganizationId);
     }
+
+    public string OrganizationId { get; private set; }
+
+    public IMongoDatabase Database { get; private set; }
 
     public IMongoCollection<T> GetCollection<T>()
     {
@@ -38,6 +50,12 @@ public class OrganizationContext : IOrganizationContext
         }
 
         return Database.GetCollection<T>(collectionName);
+    }
+
+    public void SelectOrganization(string organizationId)
+    {
+        OrganizationId = organizationId;
+        Database = _client.GetDatabase(organizationId);
     }
 
     private static string? GetCollectionName<T>()

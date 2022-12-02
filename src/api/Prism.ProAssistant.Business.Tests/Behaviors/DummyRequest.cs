@@ -8,10 +8,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Prism.ProAssistant.Business.Tests.Behaviors;
 
 namespace Prism.Picshare.Tests;
 
-public record DummyRequest(string Organisation, string Login, string Password) : IRequest<DummyResponse>;
+public record DummyRequest(string Organization, string Login, string Password) : IRequest<DummyResponse>;
 
 public class DummyRequestHandler : IRequestHandler<DummyRequest, DummyResponse>
 {

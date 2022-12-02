@@ -5,15 +5,15 @@
 // -----------------------------------------------------------------------
 
 using FluentValidation;
-using Prism.ProAssistant.Business;
+using Prism.Picshare.Tests;
 
-namespace Prism.Picshare.Tests;
+namespace Prism.ProAssistant.Business.Tests.Behaviors;
 
 public class DummyRequestValidator : AbstractValidator<DummyRequest>
 {
     public DummyRequestValidator()
     {
-        RuleFor(x => x.Organisation).NotNull().NotEmpty().MaximumLength(Constants.MaxShortStringLength);
+        RuleFor(x => x.Organization).NotNull().NotEmpty().MaximumLength(Constants.MaxShortStringLength);
         RuleFor(x => x.Login).NotNull().NotEmpty().MaximumLength(Constants.MaxShortStringLength);
         RuleFor(x => x.Password).NotNull().NotEmpty().MaximumLength(Constants.MaxShortStringLength);
     }

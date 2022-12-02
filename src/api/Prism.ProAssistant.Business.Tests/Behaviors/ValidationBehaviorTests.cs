@@ -4,6 +4,7 @@ using Moq;
 using Prism.Picshare.Tests;
 using Prism.ProAssistant.Business.Behaviors;
 using Prism.ProAssistant.Business.Exceptions;
+using Prism.ProAssistant.Business.Tests.Behaviors;
 
 namespace Prism.ProAssistant.Tests.Behaviors;
 
