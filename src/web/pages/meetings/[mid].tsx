@@ -61,6 +61,17 @@ const Meeting: NextPage = () => {
         const d = parseISO(meeting.startDate);
         setDate(d);
         setValue("hour", format(d, "HH:mm"));
+        
+        if (meeting.patientId)
+        {
+            setPatient({
+                id: meeting.patientId,
+                firstName: meeting.firstName,
+                lastName: meeting.lastName,
+                birthDate: "",
+                phoneNumber: ""
+            });
+        }
 
         if (meeting.typeId) {
             setValue("tariff", meeting.typeId);
