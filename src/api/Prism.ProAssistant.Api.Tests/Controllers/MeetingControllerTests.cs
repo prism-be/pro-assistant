@@ -15,97 +15,96 @@ using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
 using Xunit;
 
-namespace Prism.ProAssistant.Api.Tests.Controllers
+namespace Prism.ProAssistant.Api.Tests.Controllers;
+
+public class MeetingControllerTests
 {
-    public class MeetingControllerTests
+
+    [Fact]
+    public async Task FindOne()
     {
+        await CrudTests.FindOne<MeetingController, Meeting>(c => c.FindOne(Identifier.GenerateString()));
+    }
 
-        [Fact]
-        public async Task FindOne()
-        {
-            await CrudTests.FindOne<MeetingController, Meeting>(c => c.FindOne(Identifier.GenerateString()));
-        }
+    [Fact]
+    public async Task Search()
+    {
+        // Arrange
+        var mediator = new Mock<IMediator>();
+        mediator.Setup(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None))
+            .ReturnsAsync(new List<Meeting>());
 
-        [Fact]
-        public async Task Search()
-        {
-            // Arrange
-            var mediator = new Mock<IMediator>();
-            mediator.Setup(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None))
-                .ReturnsAsync(new List<Meeting>());
+        // Act
+        var controller = new MeetingController(mediator.Object);
+        var result = await controller.Search(new SearchMeetings(DateTime.Today, DateTime.Today.AddDays(-7), null));
 
-            // Act
-            var controller = new MeetingController(mediator.Object);
-            var result = await controller.Search(new SearchMeetings(DateTime.Today, DateTime.Today.AddDays(-7), null));
+        // Assert
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
+        mediator.Verify(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None), Times.Once);
+    }
 
-            // Assert
-            result.Result.Should().BeAssignableTo<OkObjectResult>();
-            mediator.Verify(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None), Times.Once);
-        }
-        
-        [Fact]
-        public async Task Search_Must_Filter()
-        {
-            // Arrange
-            var mediator = new Mock<IMediator>();
-            mediator.Setup(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None))
-                .ReturnsAsync(new List<Meeting>()
-                {
-                    new Meeting
-                    {
-                        Id = Identifier.GenerateString(),
-                        State = (int)MeetingState.Created
-                    },
-                    new Meeting
-                    {
-                        Id = Identifier.GenerateString(),
-                        State = (int)MeetingState.Confirmed
-                    },
-                    new Meeting
-                    {
-                        Id = Identifier.GenerateString(),
-                        State = (int)MeetingState.Done
-                    },
-                    new Meeting
-                    {
-                        Id = Identifier.GenerateString(),
-                        State = (int)MeetingState.Canceled
-                    }
-                });
-
-            // Act
-            var controller = new MeetingController(mediator.Object);
-            var result = await controller.Search(new SearchMeetings(DateTime.Today, DateTime.Today.AddDays(-7), null));
-
-            // Assert
-            result.Result.Should().BeAssignableTo<OkObjectResult>();
-            mediator.Verify(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None), Times.Once);
-            var items = ((OkObjectResult)result.Result!).Value as List<Meeting>;
-            items!.Count.Should().Be(3);
-        }
-
-        [Fact]
-        public async Task UpsertOne()
-        {
-            await CrudTests.UpsertOne<MeetingController, Meeting>(c => c.UpsertOne(new Meeting
+    [Fact]
+    public async Task Search_Must_Filter()
+    {
+        // Arrange
+        var mediator = new Mock<IMediator>();
+        mediator.Setup(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None))
+            .ReturnsAsync(new List<Meeting>
             {
-                Id = Identifier.GenerateString(),
-                PatientId = Identifier.GenerateString()
-            }));
-        }
-
-        [Fact]
-        public async Task UpsertOne_NoPatient()
-        {
-            await CrudTests.UpsertOne<MeetingController, Meeting>(c => c.UpsertOne(new Meeting
+                new()
                 {
                     Id = Identifier.GenerateString(),
-                    PatientId = string.Empty
-                }),
-                m =>
+                    State = (int)MeetingState.Created
+                },
+                new()
                 {
-                    m.Setup(x => x.Send(It.IsAny<UpsertOne<Patient>>(), CancellationToken.None)).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
-                });
-        }
+                    Id = Identifier.GenerateString(),
+                    State = (int)MeetingState.Confirmed
+                },
+                new()
+                {
+                    Id = Identifier.GenerateString(),
+                    State = (int)MeetingState.Done
+                },
+                new()
+                {
+                    Id = Identifier.GenerateString(),
+                    State = (int)MeetingState.Canceled
+                }
+            });
+
+        // Act
+        var controller = new MeetingController(mediator.Object);
+        var result = await controller.Search(new SearchMeetings(DateTime.Today, DateTime.Today.AddDays(-7), null));
+
+        // Assert
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
+        mediator.Verify(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None), Times.Once);
+        var items = ((OkObjectResult)result.Result!).Value as List<Meeting>;
+        items!.Count.Should().Be(3);
+    }
+
+    [Fact]
+    public async Task UpsertOne()
+    {
+        await CrudTests.UpsertOne<MeetingController, Meeting>(c => c.UpsertOne(new Meeting
+        {
+            Id = Identifier.GenerateString(),
+            PatientId = Identifier.GenerateString()
+        }));
+    }
+
+    [Fact]
+    public async Task UpsertOne_NoPatient()
+    {
+        await CrudTests.UpsertOne<MeetingController, Meeting>(c => c.UpsertOne(new Meeting
+            {
+                Id = Identifier.GenerateString(),
+                PatientId = string.Empty
+            }),
+            m =>
+            {
+                m.Setup(x => x.Send(It.IsAny<UpsertOne<Patient>>(), CancellationToken.None)).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
+            });
     }
 }
