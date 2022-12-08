@@ -6,6 +6,7 @@
 
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Events;
+using Prism.ProAssistant.Business.Models;
 using RabbitMQ.Client;
 
 namespace Prism.ProAssistant.Api.Workers;
@@ -24,9 +25,20 @@ public static class ServiceCollectionExtensions
 
         var channel = connection.CreateModel();
         services.AddSingleton(channel);
+        DeclareExchanges(channel);
 
         services.AddScoped<IPublisher, Publisher>();
 
-        services.AddHostedService<UpdateMeetingColorWorker>();
+        services.AddHostedService<UpdatedTariffServiceBusWorker>();
+    }
+
+    private static void DeclareExchanges(IModel channel)
+    {
+        channel.ExchangeDeclare(Topics.GetExchangeName<Document>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<DocumentConfiguration>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<Meeting>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<Patient>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<Setting>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<Tariff>(Topics.Actions.Updated), "fanout", true);
     }
 }
