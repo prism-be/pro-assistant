@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Business.Commands;
+using Prism.ProAssistant.Business.Events;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
@@ -30,6 +31,7 @@ public class UpsertOneTests
         var logger = new Mock<ILogger<UpsertOneHandler<Meeting>>>();
         var organizationContext = new Mock<IOrganizationContext>();
         var userContextAccessor = new Mock<IUserContextAccessor>();
+        var publisher = new Mock<IPublisher>();
 
         var collection = new Mock<IMongoCollection<Meeting>>();
         organizationContext.Setup(x => x.GetCollection<Meeting>())
@@ -37,6 +39,7 @@ public class UpsertOneTests
 
         collection.Setup(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Meeting>>(), It.IsAny<Meeting>(), It.IsAny<FindOneAndReplaceOptions<Meeting>>(), CancellationToken.None))
             .ReturnsAsync(meeting);
+        collection.SetupCollection();
         
         var collectionHistory = new Mock<IMongoCollection<History>>();
         organizationContext.Setup(x => x.GetCollection<History>())
@@ -44,12 +47,13 @@ public class UpsertOneTests
 
         // Act
         var request = new UpsertOne<Meeting>(meeting);
-        var handler = new UpsertOneHandler<Meeting>(logger.Object, organizationContext.Object, userContextAccessor.Object);
+        var handler = new UpsertOneHandler<Meeting>(logger.Object, organizationContext.Object, userContextAccessor.Object, publisher.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
         collection.Verify(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Meeting>>(), meeting, It.IsAny<FindOneAndReplaceOptions<Meeting>>(), CancellationToken.None));
         collectionHistory.Verify(x => x.InsertOneAsync(It.IsAny<History>(), null, CancellationToken.None));
+        publisher.Verify(x => x.Publish(It.IsAny<string>(), It.IsAny<UpsertedItem<Meeting>>()));
         result.Id.Should().Be(id);
     }
     
@@ -63,6 +67,7 @@ public class UpsertOneTests
         var logger = new Mock<ILogger<UpsertOneHandler<Meeting>>>();
         var organizationContext = new Mock<IOrganizationContext>();
         var userContextAccessor = new Mock<IUserContextAccessor>();
+        var publisher = new Mock<IPublisher>();
 
         var collection = new Mock<IMongoCollection<Meeting>>();
         organizationContext.Setup(x => x.GetCollection<Meeting>())
@@ -76,12 +81,13 @@ public class UpsertOneTests
 
         // Act
         var request = new UpsertOne<Meeting>(meeting);
-        var handler = new UpsertOneHandler<Meeting>(logger.Object, organizationContext.Object, userContextAccessor.Object);
+        var handler = new UpsertOneHandler<Meeting>(logger.Object, organizationContext.Object, userContextAccessor.Object, publisher.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
         collection.Verify(x => x.InsertOneAsync(meeting, null, CancellationToken.None));
         collectionHistory.Verify(x => x.InsertOneAsync(It.IsAny<History>(), null, CancellationToken.None));
+        publisher.Verify(x => x.Publish(It.IsAny<string>(), It.IsAny<UpsertedItem<Meeting>>()));
         result.Id.Should().Be(id);
     }
 }

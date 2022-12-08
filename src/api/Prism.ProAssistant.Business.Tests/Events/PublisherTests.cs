@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.ProAssistant.Business.Events;
 using RabbitMQ.Client;
@@ -16,10 +17,13 @@ public class PublisherTests
     public void Publish_Ok()
     {
         // Arrange
+        var connection = new Mock<IConnection>();
         var channel = new Mock<IModel>();
 
+        connection.Setup(x => x.CreateModel()).Returns(channel.Object);
+
         // Act
-        var publisher = new Publisher(channel.Object);
+        var publisher = new Publisher(connection.Object, Mock.Of<ILogger<Publisher>>());
         publisher.Publish("test", "test");
 
         // Assert

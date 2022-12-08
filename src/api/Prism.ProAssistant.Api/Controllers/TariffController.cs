@@ -8,22 +8,18 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Business.Commands;
-using Prism.ProAssistant.Business.Events;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
-using IPublisher = Prism.ProAssistant.Business.Events.IPublisher;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
 public class TariffController : Controller
 {
     private readonly IMediator _mediator;
-    private readonly IPublisher _publisher;
 
-    public TariffController(IMediator mediator, IPublisher publisher)
+    public TariffController(IMediator mediator)
     {
         _mediator = mediator;
-        _publisher = publisher;
     }
 
     [Route("api/tariffs")]
@@ -57,8 +53,6 @@ public class TariffController : Controller
     public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] Tariff tariff)
     {
         var result = await _mediator.Send(new UpsertOne<Tariff>(tariff));
-        _publisher.Publish(Topics.Tariffs.Updated, result);
-
         return result.ToActionResult();
     }
 }

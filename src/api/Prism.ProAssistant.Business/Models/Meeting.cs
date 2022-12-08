@@ -34,16 +34,17 @@ public class Meeting : IDataModel
     [JsonPropertyName("firstName")]
     public string FirstName { get; set; } = string.Empty;
 
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = string.Empty;
-
     [JsonPropertyName("lastName")]
     public string LastName { get; set; } = string.Empty;
 
     [JsonPropertyName("title")]
     public string Title { get; set; } = string.Empty;
+
+    [JsonPropertyName("backgroundColor")]
+    public string? BackgroundColor { get; set; }
+
+    [JsonPropertyName("foreColor")]
+    public string? ForeColor { get; set; }
 
     [JsonPropertyName("patientId")]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -54,12 +55,11 @@ public class Meeting : IDataModel
 
     [JsonPropertyName("typeId")]
     public string? TypeId { get; set; }
-    
-    [JsonPropertyName("foreColor")]
-    public string? ForeColor { get; set; }
 
-    [JsonPropertyName("backgroundColor")]
-    public string? BackgroundColor { get; set; }
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = string.Empty;
 }
 
 public enum MeetingState

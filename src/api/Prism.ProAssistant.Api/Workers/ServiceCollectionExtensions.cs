@@ -4,9 +4,13 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using MediatR;
 using Prism.ProAssistant.Business;
+using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Events;
+using Prism.ProAssistant.Business.Models;
 using RabbitMQ.Client;
+using IPublisher = Prism.ProAssistant.Business.Events.IPublisher;
 
 namespace Prism.ProAssistant.Api.Workers;
 
@@ -23,10 +27,32 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(connection);
 
         var channel = connection.CreateModel();
-        services.AddSingleton(channel);
+        DeclareExchanges(channel);
 
         services.AddScoped<IPublisher, Publisher>();
 
-        services.AddHostedService<UpdateMeetingColorWorker>();
+        services.AddServiceBusWorker<Tariff>(nameof(UpdateMeetingsColor), payload => new UpdateMeetingsColor(payload.Previous, payload.Current, payload.Organisation));
+    }
+
+    private static void AddServiceBusWorker<T>(this IServiceCollection services, string workerName, Func<UpsertedItem<T>, IRequest> requestFactory)
+    {
+        services.AddHostedService<DataUpdatedServiceBusWorker<T>>(provider =>
+        {
+            var logger = provider.GetService<ILogger<DataUpdatedServiceBusWorker<T>>>() ?? throw new ArgumentNullException(nameof(ILogger<DataUpdatedServiceBusWorker<T>>));
+            var connexion = provider.GetService<IConnection>();
+            var queue = Topics.GetExchangeName<T>(Topics.Actions.Updated);
+
+            return new DataUpdatedServiceBusWorker<T>(logger, provider, connexion, requestFactory, queue, workerName);
+        });
+    }
+
+    private static void DeclareExchanges(IModel channel)
+    {
+        channel.ExchangeDeclare(Topics.GetExchangeName<Document>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<DocumentConfiguration>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<Meeting>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<Patient>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<Setting>(Topics.Actions.Updated), "fanout", true);
+        channel.ExchangeDeclare(Topics.GetExchangeName<Tariff>(Topics.Actions.Updated), "fanout", true);
     }
 }

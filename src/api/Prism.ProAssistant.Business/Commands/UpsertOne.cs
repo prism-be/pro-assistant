@@ -7,9 +7,11 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Prism.ProAssistant.Business.Events;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
+using IPublisher = Prism.ProAssistant.Business.Events.IPublisher;
 
 namespace Prism.ProAssistant.Business.Commands;
 
@@ -25,12 +27,14 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
 
     private readonly IOrganizationContext _organizationContext;
     private readonly IUserContextAccessor _userContextAccessor;
+    private readonly IPublisher _publisher;
 
-    public UpsertOneHandler(ILogger<UpsertOneHandler<T>> logger, IOrganizationContext organizationContext, IUserContextAccessor userContextAccessor)
+    public UpsertOneHandler(ILogger<UpsertOneHandler<T>> logger, IOrganizationContext organizationContext, IUserContextAccessor userContextAccessor, IPublisher publisher)
     {
         _organizationContext = organizationContext;
         _logger = logger;
         _userContextAccessor = userContextAccessor;
+        _publisher = publisher;
     }
 
     public async Task<UpsertResult> Handle(UpsertOne<T> request, CancellationToken cancellationToken)
@@ -47,12 +51,18 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
 
             _logger.LogInformation("Inserted an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
 
+            Publish(default, request.Item);
+
             return new UpsertResult(request.Item.Id, _organizationContext.OrganizationId);
         }
 
         _logger.LogInformation("Updating an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
 
         await history.InsertOneAsync(new History(_userContextAccessor.UserId, request.Item), cancellationToken: cancellationToken);
+        var existing =
+            await (await collection.FindAsync(Builders<T>.Filter.Eq("Id", request.Item.Id), cancellationToken: cancellationToken))
+                .SingleOrDefaultAsync(cancellationToken: cancellationToken);
+        
         var updated = await collection.FindOneAndReplaceAsync(Builders<T>.Filter.Eq("Id", request.Item.Id), request.Item, new FindOneAndReplaceOptions<T>
         {
             IsUpsert = true
@@ -60,6 +70,15 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
 
         _logger.LogInformation("Updated an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
 
+        Publish(existing, request.Item);
+        
         return new UpsertResult(updated.Id, _organizationContext.OrganizationId);
+    }
+
+    private void Publish(T? previous, T current)
+    {
+        var e = new UpsertedItem<T>(previous, current, _organizationContext.OrganizationId);
+        
+        _publisher.Publish(Topics.GetExchangeName<T>(Topics.Actions.Updated), e);
     }
 }
