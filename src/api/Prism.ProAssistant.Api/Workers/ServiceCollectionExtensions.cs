@@ -38,7 +38,13 @@ public static class ServiceCollectionExtensions
     {
         services.AddHostedService<DataUpdatedServiceBusWorker<T>>(provider =>
         {
-            var logger = provider.GetService<ILogger<DataUpdatedServiceBusWorker<T>>>() ?? throw new ArgumentNullException(nameof(ILogger<DataUpdatedServiceBusWorker<T>>));
+            var logger = provider.GetService<ILogger<DataUpdatedServiceBusWorker<T>>>();
+
+            if (logger == null)
+            {
+                throw new NotSupportedException("Logger is not registered");
+            }
+            
             var connexion = provider.GetService<IConnection>();
             var queue = Topics.GetExchangeName<T>(Topics.Actions.Updated);
 
