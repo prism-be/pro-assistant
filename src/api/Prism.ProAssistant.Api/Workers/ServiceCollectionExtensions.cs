@@ -4,10 +4,13 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using MediatR;
 using Prism.ProAssistant.Business;
+using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Events;
 using Prism.ProAssistant.Business.Models;
 using RabbitMQ.Client;
+using IPublisher = Prism.ProAssistant.Business.Events.IPublisher;
 
 namespace Prism.ProAssistant.Api.Workers;
 
@@ -24,12 +27,23 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(connection);
 
         var channel = connection.CreateModel();
-        services.AddSingleton(channel);
         DeclareExchanges(channel);
 
         services.AddScoped<IPublisher, Publisher>();
 
-        services.AddHostedService<UpdatedTariffServiceBusWorker>();
+        services.AddServiceBusWorker<Tariff>(nameof(UpdateMeetingsColor), payload => new UpdateMeetingsColor(payload.Previous, payload.Current, payload.Organisation));
+    }
+
+    private static void AddServiceBusWorker<T>(this IServiceCollection services, string workerName, Func<UpsertedItem<T>, IRequest> requestFactory)
+    {
+        services.AddHostedService<BaseUpdatedServiceBusWorker<T>>(provider =>
+        {
+            var logger = provider.GetService<ILogger<BaseUpdatedServiceBusWorker<T>>>() ?? throw new ArgumentNullException(nameof(ILogger<BaseUpdatedServiceBusWorker<T>>));
+            var connexion = provider.GetService<IConnection>();
+            var queue = Topics.GetExchangeName<T>(Topics.Actions.Updated);
+
+            return new BaseUpdatedServiceBusWorker<T>(logger, provider, connexion, requestFactory, queue, workerName);
+        });
     }
 
     private static void DeclareExchanges(IModel channel)

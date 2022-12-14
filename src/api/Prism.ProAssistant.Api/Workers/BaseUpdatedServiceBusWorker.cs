@@ -5,35 +5,34 @@
 // -----------------------------------------------------------------------
 
 using MediatR;
-using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Events;
-using Prism.ProAssistant.Business.Models;
 using RabbitMQ.Client;
 
 namespace Prism.ProAssistant.Api.Workers;
 
-public abstract class BaseUpdatedServiceBusWorker<TModel, TAction> : BaseServiceBusWorker<UpsertedItem<TModel>>
-    where TAction : UpsertedItem<TModel>
+public class BaseUpdatedServiceBusWorker<TModel> : BaseServiceBusWorker<UpsertedItem<TModel>>
 {
-    protected BaseUpdatedServiceBusWorker(ILogger<BaseUpdatedServiceBusWorker<TModel, TAction>> logger, IServiceProvider serviceProvider, IConnection? connection)
+
+    private readonly Func<UpsertedItem<TModel>, IRequest> _factory;
+
+    private readonly string _queue;
+    private readonly string _workerName;
+
+    public BaseUpdatedServiceBusWorker(ILogger<BaseUpdatedServiceBusWorker<TModel>> logger, IServiceProvider serviceProvider, IConnection? connection,
+        Func<UpsertedItem<TModel>, IRequest> factory, string queue, string workerName)
         : base(logger, serviceProvider, connection)
     {
+        _factory = factory;
+        _queue = queue;
+        _workerName = workerName;
     }
 
-    public override string Queue => Topics.GetExchangeName<TModel>(Topics.Actions.Updated);
-    public override string WorkerName => typeof(TAction).FullName ?? string.Empty;
+    public override string Queue => _queue;
+    public override string WorkerName => _workerName;
 
     public override async Task ProcessMessageAsync(IMediator mediator, UpsertedItem<TModel> payload)
     {
-        var action = Activator.CreateInstance(typeof(TAction), payload.Previous, payload.Current);
-        await mediator.Send(action!);
-    }
-}
-
-public class UpdatedTariffServiceBusWorker : BaseUpdatedServiceBusWorker<Tariff, UpdateMeetingsColor>
-{
-    public UpdatedTariffServiceBusWorker(ILogger<UpdatedTariffServiceBusWorker> logger, IServiceProvider serviceProvider, IConnection? connection)
-        : base(logger, serviceProvider, connection)
-    {
+        var action = _factory(payload);
+        await mediator.Send(action);
     }
 }

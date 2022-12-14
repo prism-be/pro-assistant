@@ -58,11 +58,10 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogInformation("Start listening on queue {queue}", Queue);
+        _logger.LogInformation("Start listening on queue {queue} with worker {workerName}", Queue, WorkerName);
 
         _channel = _connection!.CreateModel();
 
-        _channel.ExchangeDeclare(Queue, "fanout");
         _channel.QueueDeclare("workers/" + WorkerName, true, false, false);
         _channel.QueueBind("workers/" + WorkerName, Queue, "*");
 
@@ -75,7 +74,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
             try
             {
-                _logger.LogInformation("Processing message {id} on queue {queue}", args.DeliveryTag, Queue);
+                _logger.LogInformation("Processing message {id} on queue {queue} with worker {workerName}", args.DeliveryTag, Queue, WorkerName);
 
                 var body = args.Body.ToArray();
                 var json = Encoding.Default.GetString(body);

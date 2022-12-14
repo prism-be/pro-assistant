@@ -57,8 +57,6 @@ public class TariffController : Controller
     public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] Tariff tariff)
     {
         var result = await _mediator.Send(new UpsertOne<Tariff>(tariff));
-        _publisher.Publish(Topics.Tariffs.Updated, result);
-
         return result.ToActionResult();
     }
 }

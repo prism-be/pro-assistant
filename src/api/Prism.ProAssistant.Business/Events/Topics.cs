@@ -12,16 +12,6 @@ public static class Topics
     {
         public const string Updated = "Udpated";
     }
-    
-    public static class Tariffs
-    {
-        public const string Updated = "tariffs/updated";
-    }
-    
-    public static class Meetings
-    {
-        public const string Updated = "meetings/updated";
-    }
 
     public static string GetExchangeName<T>(string action)
     {
