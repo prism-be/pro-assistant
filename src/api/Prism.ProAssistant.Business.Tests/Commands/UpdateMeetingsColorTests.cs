@@ -64,12 +64,16 @@ public class UpdateMeetingsColorTests
         
         var previous = new Tariff
         {
-            Id = Identifier.GenerateString()
+            Id = Identifier.GenerateString(),
+            BackgroundColor = Identifier.GenerateString(),
+            ForeColor = Identifier.GenerateString()
         };
         
         var current = new Tariff
         {
-            Id = Identifier.GenerateString()
+            Id = Identifier.GenerateString(),
+            BackgroundColor = Identifier.GenerateString(),
+            ForeColor = Identifier.GenerateString()
         };
         
         
@@ -94,5 +98,6 @@ public class UpdateMeetingsColorTests
         // Assert
         logger.VerifyLog(LogLevel.Warning, Times.Never());
         logger.VerifyLog(LogLevel.Information, Times.AtLeastOnce());
+        meetingCollection.Verify(x => x.UpdateOneAsync(It.IsAny<FilterDefinition<Meeting>>(), It.IsAny<UpdateDefinition<Meeting>>(), null, CancellationToken.None), Times.Once);
     }
 }
