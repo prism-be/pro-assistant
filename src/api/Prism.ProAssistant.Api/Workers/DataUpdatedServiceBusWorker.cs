@@ -10,7 +10,7 @@ using RabbitMQ.Client;
 
 namespace Prism.ProAssistant.Api.Workers;
 
-public class BaseUpdatedServiceBusWorker<TModel> : BaseServiceBusWorker<UpsertedItem<TModel>>
+public class DataUpdatedServiceBusWorker<TModel> : BaseServiceBusWorker<UpsertedItem<TModel>>
 {
 
     private readonly Func<UpsertedItem<TModel>, IRequest> _factory;
@@ -18,7 +18,7 @@ public class BaseUpdatedServiceBusWorker<TModel> : BaseServiceBusWorker<Upserted
     private readonly string _queue;
     private readonly string _workerName;
 
-    public BaseUpdatedServiceBusWorker(ILogger<BaseUpdatedServiceBusWorker<TModel>> logger, IServiceProvider serviceProvider, IConnection? connection,
+    public DataUpdatedServiceBusWorker(ILogger<DataUpdatedServiceBusWorker<TModel>> logger, IServiceProvider serviceProvider, IConnection? connection,
         Func<UpsertedItem<TModel>, IRequest> factory, string queue, string workerName)
         : base(logger, serviceProvider, connection)
     {

@@ -23,7 +23,23 @@ public class UpdateMeetingsColorTests
         // Arrange
         var logger = new Mock<ILogger<UpdateMeetingsColorHandler>>();
         var organizationContext = new Mock<IOrganizationContext>();
-        var request = new UpdateMeetingsColor(Identifier.GenerateString(), Identifier.GenerateString());
+
+        var previous = new Tariff
+        {
+            Id = Identifier.GenerateString(),
+            BackgroundColor = Identifier.GenerateString(),
+            ForeColor = Identifier.GenerateString()
+        };
+        
+        var current = new Tariff
+        {
+            Id = Identifier.GenerateString(),
+            BackgroundColor = previous.BackgroundColor,
+            ForeColor = previous.ForeColor
+        };
+        
+        
+        var request = new UpdateMeetingsColor(previous, current, Identifier.GenerateString());
 
         var tariffCollection = new Mock<IMongoCollection<Tariff>>();
         tariffCollection.SetupCollectionFindEmpty();
@@ -36,7 +52,7 @@ public class UpdateMeetingsColorTests
         await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        logger.VerifyLog(LogLevel.Warning, Times.Once());
+        logger.VerifyLog(LogLevel.Information, Times.Once());
     }
     
     [Fact]
@@ -45,7 +61,19 @@ public class UpdateMeetingsColorTests
         // Arrange
         var logger = new Mock<ILogger<UpdateMeetingsColorHandler>>();
         var organizationContext = new Mock<IOrganizationContext>();
-        var request = new UpdateMeetingsColor(Identifier.GenerateString(), Identifier.GenerateString());
+        
+        var previous = new Tariff
+        {
+            Id = Identifier.GenerateString()
+        };
+        
+        var current = new Tariff
+        {
+            Id = Identifier.GenerateString()
+        };
+        
+        
+        var request = new UpdateMeetingsColor(previous, current, Identifier.GenerateString());
 
         var tariffCollection = new Mock<IMongoCollection<Tariff>>();
         tariffCollection.SetupCollection(new Tariff() { Id = Identifier.GenerateString() });

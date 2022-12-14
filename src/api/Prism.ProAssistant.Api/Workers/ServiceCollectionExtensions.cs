@@ -36,13 +36,13 @@ public static class ServiceCollectionExtensions
 
     private static void AddServiceBusWorker<T>(this IServiceCollection services, string workerName, Func<UpsertedItem<T>, IRequest> requestFactory)
     {
-        services.AddHostedService<BaseUpdatedServiceBusWorker<T>>(provider =>
+        services.AddHostedService<DataUpdatedServiceBusWorker<T>>(provider =>
         {
-            var logger = provider.GetService<ILogger<BaseUpdatedServiceBusWorker<T>>>() ?? throw new ArgumentNullException(nameof(ILogger<BaseUpdatedServiceBusWorker<T>>));
+            var logger = provider.GetService<ILogger<DataUpdatedServiceBusWorker<T>>>() ?? throw new ArgumentNullException(nameof(ILogger<DataUpdatedServiceBusWorker<T>>));
             var connexion = provider.GetService<IConnection>();
             var queue = Topics.GetExchangeName<T>(Topics.Actions.Updated);
 
-            return new BaseUpdatedServiceBusWorker<T>(logger, provider, connexion, requestFactory, queue, workerName);
+            return new DataUpdatedServiceBusWorker<T>(logger, provider, connexion, requestFactory, queue, workerName);
         });
     }
 
