@@ -24,6 +24,13 @@ jobs:
       - name: Extract Version
         uses: damienaicheh/extract-version-from-tag-action@v1.0.0
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        working-directory: ./src/web
+        with:
+          node-version: '16'
+          cache: 'yarn'
+          
       - name: Install Packages
         working-directory: ./src/web
         run: yarn install --frozen-lockfile
