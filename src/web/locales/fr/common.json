@@ -79,7 +79,8 @@
         "saveSuccess": "Les modifications sur la fiche ont été sauvegardées.",
         "meetings" :
         {
-          "title": "Liste des rendez-vous"
+          "title": "Liste des rendez-vous",
+          "noMeetings": "Aucun rendez-vous planifié pour ce patient"
         }
       }
     },
