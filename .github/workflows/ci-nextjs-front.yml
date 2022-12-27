@@ -29,6 +29,7 @@ jobs:
         with:
           node-version: '16'
           cache: 'yarn'
+          cache-dependency-path: ./src/web/yarn.lock
       
       - name: Cache Modules
         uses: actions/cache@v2
