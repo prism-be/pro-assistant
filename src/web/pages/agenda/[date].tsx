@@ -41,8 +41,12 @@ const Agenda: NextPage = () => {
         onSwipedRight: () => changeDay(-1),
     });
 
-    function getHourRowClassName(h: number) {
-        return styles["hour" + h];
+    function getHourRowClassName(h: number, m: number) {
+        if (m < 30) {
+            return styles["hour" + h];
+        }
+        
+        return styles["hourEnd" + h];
     }
 
     function getHourRowEndClassName(h: number) {
@@ -83,13 +87,13 @@ const Agenda: NextPage = () => {
                     <div className={styles.gap}/>
 
                     {hours.map(h => <React.Fragment key={h}>
-                        <div className={styles.hour + " " + getHourRowClassName(h)}>{h}H</div>
-                        <div className={styles.halfHour + " " + getHourRowClassName(h)} onClick={() => addMeeting(h, 0)}></div>
+                        <div className={styles.hour + " " + getHourRowClassName(h, 0)}>{h}H</div>
+                        <div className={styles.halfHour + " " + getHourRowClassName(h, 0)} onClick={() => addMeeting(h, 0)}></div>
                         <div className={styles.halfHourEnd + " " + getHourRowEndClassName(h)} onClick={() => addMeeting(h, 30)}></div>
                     </React.Fragment>)}
 
                     {meetings?.map(m =>
-                        <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours()) + " " + getDurationClassName(m.duration)} key={m.id}
+                        <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours(), parseISO(m.startDate).getMinutes()) + " " + getDurationClassName(m.duration)} key={m.id}
                              onClick={() => router.push("/meetings/" + m.id)}
                              style={{backgroundColor: m.backgroundColor}}>
                             <div>{m.title?.slice(0, 40)}</div>

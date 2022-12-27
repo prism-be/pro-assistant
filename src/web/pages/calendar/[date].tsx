@@ -55,8 +55,12 @@ const Calendar: NextPage = () => {
         return styles["day" + d];
     }
 
-    const getHourClassName = (h: number) => {
-        return styles["hour" + h];
+    function getHourClassName(h: number, m: number) {
+        if (m < 30) {
+            return styles["hour" + h];
+        }
+
+        return styles["hourEnd" + h];
     }
 
     const getHourEndClassName = (h: number) => {
@@ -101,17 +105,17 @@ const Calendar: NextPage = () => {
                                 {t("days.short.day" + d)} {format(add(monday, {days: d - 1}), "dd MMM", {locale: getLocale()})}
                             </div>)}
 
-                            {hours.map(h => <div key={h} className={styles.hour + " " + getHourClassName(h)}>{h}H</div>)}
+                            {hours.map(h => <div key={h} className={styles.hour + " " + getHourClassName(h, 0)}>{h}H</div>)}
 
                             {days.map(d => <React.Fragment key={d}>
                                 {hours.map(h => <React.Fragment key={h}>
-                                    <div className={styles.dayAction + " " + styles.dayHourFirst + " " + getHourClassName(h) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 0)}></div>
+                                    <div className={styles.dayAction + " " + styles.dayHourFirst + " " + getHourClassName(h, 0) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 0)}></div>
                                     <div className={styles.dayAction + " " + styles.dayHourSecond + " " + getHourEndClassName(h) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 30)}></div>
                                 </React.Fragment>)}
                             </React.Fragment>)}
 
                             {meetings?.map(m =>
-                                <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
+                                <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours(), parseISO(m.startDate).getMinutes()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
                                      onClick={() => router.push("/meetings/" + m.id)}
                                      style={{backgroundColor: m.backgroundColor}}>
                                     <div>{m.title?.slice(0, 30)}</div>
