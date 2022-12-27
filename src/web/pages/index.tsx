@@ -13,7 +13,8 @@ const Home: NextPage = () => {
 
     return (
         <ContentContainer>
-            <div></div>
+            <div>
+            </div>
         </ContentContainer>
     )
 }
