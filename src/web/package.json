@@ -13,7 +13,7 @@
     "@azure/msal-react": "^1.4.7",
     "@hookform/resolvers": "^2.9.8",
     "date-fns": "^2.29.3",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "jwks-rsa": "^2.1.4",
     "keyboardjs": "^2.7.0",
     "next": "^13.0.4",
