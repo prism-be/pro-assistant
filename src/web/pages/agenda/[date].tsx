@@ -41,8 +41,12 @@ const Agenda: NextPage = () => {
         onSwipedRight: () => changeDay(-1),
     });
 
-    function getHourRowClassName(h: number) {
-        return styles["hour" + h];
+    function getHourRowClassName(h: number, m: number) {
+        if (m < 30) {
+            return styles["hour" + h];
+        }
+        
+        return styles["hourEnd" + h];
     }
 
     function getHourRowEndClassName(h: number) {
@@ -58,13 +62,21 @@ const Agenda: NextPage = () => {
         const startDate = add(new Date(day.getFullYear(), day.getMonth(), day.getDate()), {hours: h, minutes: m});
         router.push("/meetings/new?startDate=" + encodeURIComponent(formatISO(startDate)));
     }
+    
+    function previousDay() {
+        changeDay(-1);
+    }
+    
+    function nextDay() { 
+        changeDay(1);
+    }
 
     return <ContentContainer>
         <Section>
             <>
                 <div className={styles.agenda} {...swipeHandlers}>
-                    <Button secondary={true} onClick={() => changeDay(-1)} className={styles.previous} text={t("actions.prev")}></Button>
-                    <Button secondary={true} onClick={() => changeDay(1)} className={styles.next} text={t("actions.nex")}></Button>
+                    <Button secondary={true} onClick={previousDay} className={styles.previous} text={t("actions.prev")}></Button>
+                    <Button secondary={true} onClick={nextDay} className={styles.next} text={t("actions.nex")}></Button>
 
                     <Mobile className={styles.title} visible={false} breakpoint={"MD"}>
                         <h1>{t("pages.agenda.title")} {format(day, "EEEE d MMMM yyyy", {locale: getLocale()})}</h1>
@@ -83,13 +95,13 @@ const Agenda: NextPage = () => {
                     <div className={styles.gap}/>
 
                     {hours.map(h => <React.Fragment key={h}>
-                        <div className={styles.hour + " " + getHourRowClassName(h)}>{h}H</div>
-                        <div className={styles.halfHour + " " + getHourRowClassName(h)} onClick={() => addMeeting(h, 0)}></div>
+                        <div className={styles.hour + " " + getHourRowClassName(h, 0)}>{h}H</div>
+                        <div className={styles.halfHour + " " + getHourRowClassName(h, 0)} onClick={() => addMeeting(h, 0)}></div>
                         <div className={styles.halfHourEnd + " " + getHourRowEndClassName(h)} onClick={() => addMeeting(h, 30)}></div>
                     </React.Fragment>)}
 
                     {meetings?.map(m =>
-                        <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours()) + " " + getDurationClassName(m.duration)} key={m.id}
+                        <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours(), parseISO(m.startDate).getMinutes()) + " " + getDurationClassName(m.duration)} key={m.id}
                              onClick={() => router.push("/meetings/" + m.id)}
                              style={{backgroundColor: m.backgroundColor}}>
                             <div>{m.title?.slice(0, 40)}</div>
