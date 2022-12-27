@@ -52,5 +52,11 @@ export const PatientMeetings = (props: Props) => {
                 </div>
             </div>)}
         </div>
+        <>
+            {meetings?.length === 0 && <div className={styles.noMeetings}>
+                {t("pages.patients.details.meetings.noMeetings")}
+            </div>}
+        </>
+
     </Section>
 }
