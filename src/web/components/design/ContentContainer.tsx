@@ -8,7 +8,7 @@ import useTranslation from "next-translate/useTranslation";
 import {Popin} from "../Pops";
 
 interface Props {
-    children: JSX.Element;
+    children: JSX.Element | JSX.Element[];
 }
 
 const ContentContainer = (props: Props) => {

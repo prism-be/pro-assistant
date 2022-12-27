@@ -76,7 +76,11 @@
       "details": {
         "title": "Fiche patient : ",
         "contact": "Coordonnées",
-        "saveSuccess": "Les modifications sur la fiche ont été sauvegardées."
+        "saveSuccess": "Les modifications sur la fiche ont été sauvegardées.",
+        "meetings" :
+        {
+          "title": "Liste des rendez-vous"
+        }
       }
     },
     "calendar": {

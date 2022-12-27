@@ -24,11 +24,17 @@ public class SearchMeetingsHandler : IRequestHandler<SearchMeetings, List<Meetin
 
     public async Task<List<Meeting>> Handle(SearchMeetings request, CancellationToken cancellationToken)
     {
-        var filters = new List<FilterDefinition<Meeting>>
+        var filters = new List<FilterDefinition<Meeting>>();
+        
+        if (request.StartDate != DateTime.MinValue)
         {
-            Builders<Meeting>.Filter.Gte(x => x.StartDate, request.StartDate),
-            Builders<Meeting>.Filter.Lte(x => x.StartDate, request.EndDate)
-        };
+            filters.Add(Builders<Meeting>.Filter.Gte(x => x.StartDate, request.StartDate));
+        }
+        
+        if (request.EndDate != DateTime.MinValue)
+        {
+            filters.Add(Builders<Meeting>.Filter.Lte(x => x.StartDate, request.EndDate));
+        }
 
         if (!string.IsNullOrWhiteSpace(request.PatientId))
         {

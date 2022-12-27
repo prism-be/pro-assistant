@@ -5,7 +5,12 @@
 
 version: 2
 updates:
-  - package-ecosystem: "" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "npm" # See documentation for possible values
+    directory: "/src/web" # Location of package manifests
+    schedule:
+      interval: "weekly"
+
+  - package-ecosystem: "nuget" # See documentation for possible values
+    directory: "/src/api" # Location of package manifests
     schedule:
       interval: "weekly"
