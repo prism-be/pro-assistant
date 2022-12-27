@@ -1,0 +1,59 @@
+﻿@import "../../vars";
+
+.meeting {
+  display: grid;
+
+  grid-template-rows: 3rem 3rem;
+  grid-template-columns: 0.25rem 1fr 15rem 10rem;
+
+  grid-template-areas: 
+	'typeColor title title title'
+	'typeColor date date hour';
+
+  border-bottom: 1px $light dashed;
+  cursor: pointer;
+
+  @media (min-width: $breakpointMD) {
+    grid-template-rows: 3rem;
+    grid-template-columns: 0.25rem 1fr 15rem 10rem;
+
+    grid-template-areas: 
+	'typeColor title date hour';
+  }
+}
+
+.badge {
+  border: 1px $primaryColor solid;
+  border-radius: 0.25rem;
+  margin: 0.25rem;
+  color: $primaryColor;
+  padding: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.typeColor {
+  grid-area: typeColor;
+}
+
+.title, .date, .hour {
+  margin: 0 0.25rem;
+  line-height: 3rem;
+}
+
+.title {
+  grid-area: title;
+}
+
+.date {
+  grid-area: date;
+
+  @media (min-width: $breakpointMD) {
+    text-align: right;
+  }
+}
+
+.hour {
+  grid-area: hour;
+  text-align: right;
+  margin-right: 1.5rem;
+}
