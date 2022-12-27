@@ -18,7 +18,7 @@ export const PatientMeetings = (props: Props) => {
         return data?.reverse();
     }
 
-    const {data: meetings, mutate: mutateMeetings} = useSWR('/api/patients/' + props.patientId + '/meetings', loadMeetings);
+    const {data: meetings} = useSWR('/api/patients/' + props.patientId + '/meetings', loadMeetings);
 
     const {t} = useTranslation('common');
     const router = useRouter();
