@@ -95,8 +95,8 @@ const Calendar: NextPage = () => {
 
 
                         <div className={styles.navigationHeader}>
-                            <div className={styles.navigationLeft} onClick={() => goPreviousWeek()}><ArrowLeft/></div>
-                            <div className={styles.navigationRight} onClick={() => goNextWeek()}><ArrowRight/></div>
+                            <div className={styles.navigationLeft} onClick={goPreviousWeek}><ArrowLeft/></div>
+                            <div className={styles.navigationRight} onClick={goNextWeek}><ArrowRight/></div>
                         </div>
                         <div className={styles.calendar}>
                             <div className={styles.hour + " " + styles.hour0}></div>

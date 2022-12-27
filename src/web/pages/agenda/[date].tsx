@@ -62,13 +62,21 @@ const Agenda: NextPage = () => {
         const startDate = add(new Date(day.getFullYear(), day.getMonth(), day.getDate()), {hours: h, minutes: m});
         router.push("/meetings/new?startDate=" + encodeURIComponent(formatISO(startDate)));
     }
+    
+    function previousDay() {
+        changeDay(-1);
+    }
+    
+    function nextDay() { 
+        changeDay(1);
+    }
 
     return <ContentContainer>
         <Section>
             <>
                 <div className={styles.agenda} {...swipeHandlers}>
-                    <Button secondary={true} onClick={() => changeDay(-1)} className={styles.previous} text={t("actions.prev")}></Button>
-                    <Button secondary={true} onClick={() => changeDay(1)} className={styles.next} text={t("actions.nex")}></Button>
+                    <Button secondary={true} onClick={previousDay} className={styles.previous} text={t("actions.prev")}></Button>
+                    <Button secondary={true} onClick={nextDay} className={styles.next} text={t("actions.nex")}></Button>
 
                     <Mobile className={styles.title} visible={false} breakpoint={"MD"}>
                         <h1>{t("pages.agenda.title")} {format(day, "EEEE d MMMM yyyy", {locale: getLocale()})}</h1>
