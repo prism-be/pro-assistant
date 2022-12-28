@@ -2,7 +2,7 @@
 import useSWR from "swr";
 import Section from "../design/Section";
 import {postData} from "../../lib/ajaxHelper";
-import {IMeeting} from "../../lib/contracts";
+import {Meeting} from "../../lib/contracts";
 import useTranslation from "next-translate/useTranslation";
 import {add, format, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
@@ -13,17 +13,17 @@ export interface Props {
 }
 
 export const PatientMeetings = (props: Props) => {
-    async function loadMeetings() {
-        const data = await postData<IMeeting[]>("/meetings", {patientId: props.patientId});
-        return data?.reverse();
+    async function loadMeetings(): Promise<Meeting[]> {
+        const data = await postData<Meeting[]>("/meetings", {patientId: props.patientId});
+        return data?.reverse() ?? [];
     }
 
-    const {data: meetings} = useSWR('/api/patients/' + props.patientId + '/meetings', loadMeetings);
+    const {data: meetings} = useSWR<Meeting[]>('/api/patients/' + props.patientId + '/meetings', loadMeetings);
 
     const {t} = useTranslation('common');
     const router = useRouter();
 
-    async function displayMeeting(id: string | undefined) {
+    async function displayMeeting(id: string | null) {
         await router.push("/meetings/" + id);
     }
 
@@ -31,7 +31,7 @@ export const PatientMeetings = (props: Props) => {
         <h2>{t("pages.patients.details.meetings.title")}</h2>
         <div>
             {meetings?.map(m => <div key={m.id} className={styles.meeting} onClick={() => displayMeeting(m.id)}>
-                <div className={styles.typeColor} style={{backgroundColor: m.backgroundColor}}></div>
+                <div className={styles.typeColor} style={{backgroundColor: m.backgroundColor ?? ""}}></div>
                 <div className={styles.title}>
                     {m.title}
                     <span className={styles.badge}>

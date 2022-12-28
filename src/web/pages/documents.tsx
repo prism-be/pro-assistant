@@ -6,7 +6,7 @@ import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import Section from "../components/design/Section";
 import useSWR from "swr";
-import {IDocumentConfiguration} from "../lib/contracts";
+import {DocumentConfiguration} from "../lib/contracts";
 import {useState} from "react";
 import Button from "../components/forms/Button";
 import {useForm} from "react-hook-form";
@@ -18,27 +18,26 @@ import {Delete, Pencil} from "../components/icons/Icons";
 const Documents: NextPage = () => {
 
     const {t} = useTranslation("documents");
-    const {data: documents, mutate: mutateDocuments} = useSWR<IDocumentConfiguration[] | null>('/documents-configuration');
-    const [currentDocument, setCurrentDocument] = useState<IDocumentConfiguration | null>(null);
+    const {data: documents, mutate: mutateDocuments} = useSWR<DocumentConfiguration[] | null>('/documents-configuration');
+    const [currentDocument, setCurrentDocument] = useState<DocumentConfiguration | null>(null);
     const {register, getValues, formState: {errors}, setValue} = useForm();
 
     const createNew = () => {
-        setCurrentDocument({});
+        setCurrentDocument({id: ""});
         setValue("name", "");
         setValue("title", "");
         setValue("body", "");
     }
-    
-    const editDocument = async (document: IDocumentConfiguration) => {
+
+    const editDocument = async (document: DocumentConfiguration) => {
         setCurrentDocument(document);
         setValue("name", document.name);
         setValue("title", document.title);
         setValue("body", document.body);
     }
-    
-    const deleteDocument = async (document: IDocumentConfiguration) => {
-        if (confirm(t("edit.confirmDelete")  + document.name))
-        {
+
+    const deleteDocument = async (document: DocumentConfiguration) => {
+        if (confirm(t("edit.confirmDelete") + document.name)) {
             await deleteData("/documents-configuration/" + document.id);
             await mutateDocuments();
         }

@@ -13,7 +13,7 @@ import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {postData} from "../../lib/ajaxHelper";
-import {IPatientSummary} from "../../lib/contracts";
+import {Patient} from "../../lib/contracts";
 import Section from "../../components/design/Section";
 
 const Patients: NextPage = () => {
@@ -21,7 +21,7 @@ const Patients: NextPage = () => {
     const {t} = useTranslation('common');
     const router = useRouter();
 
-    const [patients, setPatients] = useState<IPatientSummary[] | null>(null);
+    const [patients, setPatients] = useState<Patient[] | null>(null);
 
     const schema = yup.object({}).required();
 
@@ -41,7 +41,7 @@ const Patients: NextPage = () => {
 
     const onSubmit = async (data: any) => {
         sessionStorage.setItem('patients/search-patients', JSON.stringify(data));
-        const result = await postData<IPatientSummary[]>("/patients", data);
+        const result = await postData<Patient[]>("/patients", data);
         setPatients(result);
     }
 

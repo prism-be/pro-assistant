@@ -9,6 +9,7 @@ import useSWR from "swr";
 import {useMsal} from "@azure/msal-react";
 import {getData} from "../../lib/ajaxHelper";
 import {toggledMobileMenu} from "../../lib/events/mobileMenu";
+import {UserInformation} from "../../lib/contracts";
 
 const Header = () => {
 
@@ -19,7 +20,7 @@ const Header = () => {
     }
 
     const {instance} = useMsal();
-    const {data} = useSWR('/authentication/user', (apiURL: string) => getData<any>(apiURL))
+    const {data} = useSWR('/authentication/user', (apiURL: string) => getData<UserInformation>(apiURL))
 
     return <>
         <div className={styles.bar}>
