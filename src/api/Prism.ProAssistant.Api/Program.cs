@@ -36,6 +36,7 @@ builder.Services.AddBearer();
 // Add web stuff
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
 
 // Build and start app
 var app = builder.Build();
@@ -56,5 +57,11 @@ app.MapControllers();
 
 app.UseRouting();
 app.UseAuthentication().UseAuthorization();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.Run();
