@@ -6,6 +6,7 @@
 
 using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Api.Middlewares;
+using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Workers;
 using Prism.ProAssistant.Business;
 
@@ -36,6 +37,11 @@ builder.Services.AddBearer();
 // Add web stuff
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SupportNonNullableReferenceTypes();
+    options.SchemaFilter<RequiredNotNullableSchemaFilter>();
+});
 
 // Build and start app
 var app = builder.Build();
@@ -56,5 +62,11 @@ app.MapControllers();
 
 app.UseRouting();
 app.UseAuthentication().UseAuthorization();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.Run();

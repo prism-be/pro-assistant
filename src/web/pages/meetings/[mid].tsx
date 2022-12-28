@@ -8,7 +8,7 @@ import useSWR from "swr";
 import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
 import InputText from "../../components/forms/InputText";
-import {IDocumentConfiguration, IMeeting, IPatientSummary, ITariff} from "../../lib/contracts";
+import {DocumentConfiguration, Meeting, Patient, Tariff} from "../../lib/contracts";
 import {downloadDocument, getData, postData} from "../../lib/ajaxHelper";
 import InputSelect from "../../components/forms/InputSelect";
 import {Calendar} from "../../components/forms/Calendar";
@@ -22,15 +22,15 @@ const Meeting: NextPage = () => {
     const {t} = useTranslation('common');
     const router = useRouter();
     
-    const {data: meeting, mutate: mutateMeeting} = useSWR<IMeeting | null>("/meeting/" + router.query.mid, loadMeeting);
-    const {data: tariffs} = useSWR<ITariff[]>('/tariffs');
-    const {data: documents} = useSWR<IDocumentConfiguration[]>("/documents-configuration");
+    const {data: meeting, mutate: mutateMeeting} = useSWR<Meeting | null>("/meeting/" + router.query.mid, loadMeeting);
+    const {data: tariffs} = useSWR<Tariff[]>('/tariffs');
+    const {data: documents} = useSWR<DocumentConfiguration[]>("/documents-configuration");
     
     const {register, setValue, formState: {errors}, getValues, handleSubmit} = useForm();
     
-    const [patientsSuggestions, setPatientsSuggestions] = useState<IPatientSummary[]>([]);
+    const [patientsSuggestions, setPatientsSuggestions] = useState<Patient[]>([]);
     const [suggested, setSuggested] = useState<string>();
-    const [patient, setPatient] = useState<IPatientSummary>();
+    const [patient, setPatient] = useState<Patient>();
     const [date, setDate] = useState<Date>(startOfHour(new Date()));
     const [duration, setDuration] = useState<number>(60);
     const [document, setDocument] = useState<string>();
@@ -56,9 +56,9 @@ const Meeting: NextPage = () => {
             setValue(p, (meeting as any)[p]);
         });
 
-        setDuration(meeting.duration);
+        setDuration(meeting.duration ?? 60);
         
-        const d = parseISO(meeting.startDate);
+        const d = parseISO(meeting.startDate ?? formatISO(new Date()));
         setDate(d);
         setValue("hour", format(d, "HH:mm"));
         
@@ -95,7 +95,7 @@ const Meeting: NextPage = () => {
         }
     }, [router])
     
-    function loadMeeting(path: string): Promise<IMeeting | null>
+    function loadMeeting(path: string): Promise<Meeting | null>
     {
         if (path === "/meeting/new")
         {
@@ -109,7 +109,7 @@ const Meeting: NextPage = () => {
     {
         const tariff = tariffs?.find(x => x.name == data.type);
         
-        const updatedMeeting: IMeeting = {
+        const updatedMeeting: Meeting = {
             id: meeting?.id ?? '',
             patientId: patient?.id ?? null,
             title: data.lastName + " " + data.firstName + (data.type ? " (" + data.type + ")" : ""),
@@ -155,7 +155,7 @@ const Meeting: NextPage = () => {
             return;
         }
 
-        const patients = await postData<IPatientSummary[]>("/patients", {
+        const patients = await postData<Patient[]>("/patients", {
             lastName,
             firstName,
             birthDate: '',
@@ -166,7 +166,7 @@ const Meeting: NextPage = () => {
         setSuggested(lastName + "|" + firstName);
     }
     
-    function selectPatient(patient: IPatientSummary)
+    function selectPatient(patient: Patient)
     {
         setPatient(patient);
         setSuggested(patient.lastName + "|" + patient.firstName);
@@ -179,7 +179,7 @@ const Meeting: NextPage = () => {
         let options = tariffs?.map(x => {
             return {
                 value: x.id,
-                text: x.name + " (" + x.price.toFixed(2) + "€)"
+                text: x.name + " (" + x.price?.toFixed(2) + "€)"
             }
         }) ?? [];
 
@@ -196,7 +196,7 @@ const Meeting: NextPage = () => {
 
         if (tariff) {
             setValue("type", tariff.name);
-            setValue("price", tariff.price.toFixed(2));
+            setValue("price", tariff.price?.toFixed(2));
             setValue("duration", tariff.defaultDuration);
         } else {
             setValue("type", "");

@@ -8,7 +8,7 @@ import {add, format, formatISO, parse, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
 import Button from "../../components/forms/Button";
 import {postData} from "../../lib/ajaxHelper";
-import {IMeeting} from "../../lib/contracts";
+import {Meeting} from "../../lib/contracts";
 import React from 'react';
 import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
@@ -25,7 +25,7 @@ const Agenda: NextPage = () => {
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
     async function loadMeetings() {
-        return await postData<IMeeting[]>("/meetings", {
+        return await postData<Meeting[]>("/meetings", {
             startDate: formatISO(day),
             endDate: formatISO(add(day, {days: 1}))
         });
@@ -103,7 +103,7 @@ const Agenda: NextPage = () => {
                     {meetings?.map(m =>
                         <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours(), parseISO(m.startDate).getMinutes()) + " " + getDurationClassName(m.duration)} key={m.id}
                              onClick={() => router.push("/meetings/" + m.id)}
-                             style={{backgroundColor: m.backgroundColor}}>
+                             style={{backgroundColor: m.backgroundColor ?? ""}}>
                             <div>{m.title?.slice(0, 40)}</div>
                         </div>)}
 

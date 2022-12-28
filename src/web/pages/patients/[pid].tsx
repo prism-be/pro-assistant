@@ -14,7 +14,7 @@ import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {Back} from "../../components/icons/Back";
 import InputDate from "../../components/forms/InputDate";
 import {getData, postData} from "../../lib/ajaxHelper";
-import {IPatient, IUpsertResult} from "../../lib/contracts";
+import {Patient, UpsertResult} from "../../lib/contracts";
 import Section from "../../components/design/Section";
 import {PatientMeetings} from "../../components/patients/PatientMeetings";
 
@@ -29,7 +29,7 @@ const Patient: NextPage = () => {
             return null;
         }
 
-        return await getData<IPatient>(route);
+        return await getData<Patient>(route);
     }
 
     const {data: patient, mutate: mutatePatient} = useSWR("/patient/" + pid, loadPatient);
@@ -48,7 +48,7 @@ const Patient: NextPage = () => {
     const savePatientForm = async (data: any) => {
         if (pid === '000000000000000000000000') {
             data.id = '';
-            const newPid = await postData<IUpsertResult>("/patient", data);
+            const newPid = await postData<UpsertResult>("/patient", data);
             alertSuccess(t("details.saveSuccess"), {autoClose: true});
             await router.push("/patients/" + newPid?.id);
             return;

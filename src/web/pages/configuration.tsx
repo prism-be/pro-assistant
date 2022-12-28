@@ -14,7 +14,7 @@ import {alertSuccess} from "../lib/events/alert";
 import {Pencil} from "../components/icons/Icons";
 import TextArea from "../components/forms/TextArea";
 import InputImage from "../components/forms/InputImage";
-import {ITariff} from "../lib/contracts";
+import {Tariff} from "../lib/contracts";
 import {getData, postData} from "../lib/ajaxHelper";
 import Section from "../components/design/Section";
 import InputColor from "../components/forms/InputColor";
@@ -28,7 +28,7 @@ const Tariffs = () => {
         setEditing(false);
     })
 
-    const {data: tariffs, mutate: mutateTariffs} = useSWR<ITariff[]>("/tariffs");
+    const {data: tariffs, mutate: mutateTariffs} = useSWR<Tariff[]>("/tariffs");
 
     const addTariff = () => {
         setValue("id", "");
@@ -38,7 +38,7 @@ const Tariffs = () => {
         setEditing(true);
     }
 
-    const editTariff = (tariff: ITariff) => {
+    const editTariff = (tariff: Tariff) => {
         setValue("id", tariff.id);
         setValue("name", tariff.name);
         setValue("price", tariff.price.toFixed(2));

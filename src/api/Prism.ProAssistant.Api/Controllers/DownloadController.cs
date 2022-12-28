@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Documents;
 
@@ -43,7 +44,7 @@ public class DownloadController : Controller
 
     [HttpPost]
     [Route("api/downloads")]
-    public async Task<IActionResult> Start([FromBody]GenerateDocument request)
+    public async Task<ActionResult<DownloadKey>> Start([FromBody]GenerateDocument request)
     {
         var downloadKey = Identifier.GenerateString();
         var pdfBytes = await _mediator.Send(request);
@@ -53,10 +54,7 @@ public class DownloadController : Controller
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
         });
 
-        return Ok(new
-        {
-            key = downloadKey
-        });
+        return Ok(new DownloadKey(downloadKey));
     }
 
     private static string GenerateDownloadKey(string downloadKey)
