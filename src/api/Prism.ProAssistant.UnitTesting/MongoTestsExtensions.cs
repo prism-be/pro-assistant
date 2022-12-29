@@ -13,13 +13,29 @@ namespace Prism.ProAssistant.UnitTesting;
 
 public static class MongoTestsExtensions
 {
-    public static Mock<IGridFSBucket> SetupBucket(this Mock<IOrganizationContext> organizationContext)
+    public static Mock<IGridFSBucket> SetupBucket(this Mock<IOrganizationContext> organizationContext, params GridFSFileInfo[] files)
     {
         var bucket = new Mock<IGridFSBucket>();
 
         organizationContext.Setup(x => x.GetGridFsBucket())
             .Returns(bucket.Object);
-
+        
+        var items = new List<GridFSFileInfo>();
+        items.AddRange(files);
+        var cursor = new Mock<IAsyncCursor<GridFSFileInfo>>();
+        cursor.Setup(_ => _.Current).Returns(items);
+        cursor
+            .SetupSequence(_ => _.MoveNext(It.IsAny<CancellationToken>()))
+            .Returns(true)
+            .Returns(false);
+        cursor
+            .SetupSequence(_ => _.MoveNextAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true)
+            .ReturnsAsync(false);
+        
+        bucket.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<GridFSFileInfo>>(), null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(cursor.Object);
+        
         return bucket;
     }
 
