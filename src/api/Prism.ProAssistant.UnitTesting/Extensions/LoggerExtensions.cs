@@ -11,6 +11,18 @@ namespace Prism.ProAssistant.UnitTesting.Extensions;
 
 public static class LoggerExtensions
 {
+    public static void VerifyLog<T>(this Mock<ILogger<T>> mock, LogLevel level)
+    {
+        mock.Verify(
+            x => x.Log(
+                level,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((o, t) => true),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
+            Times.Once);
+    }
+    
     public static void VerifyLog<T>(this Mock<ILogger<T>> mock, LogLevel level, Times times)
     {
         mock.Verify(
