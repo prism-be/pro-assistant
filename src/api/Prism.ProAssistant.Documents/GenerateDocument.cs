@@ -9,13 +9,13 @@ using System.Globalization;
 using System.Text.Json.Nodes;
 using Acme.Core.Extensions;
 using DotLiquid;
+using ImageMagick;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Prism.ProAssistant.Business.Exceptions;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
-using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 using Prism.ProAssistant.Documents.Locales;
 using QuestPDF.Fluent;
@@ -116,6 +116,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
                     if (logo != null)
                     {
                         var logoBytes = Convert.FromBase64String(logo);
+                        logoBytes = ResizeImage(logoBytes, 250, 250);
                         table.Cell().Row(1).Column(1).Element(e => e.Height(2, Unit.Centimetre)).Image(logoBytes);
                     }
 
@@ -154,6 +155,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
                         if (signature != null)
                         {
                             var signatureBytes = Convert.FromBase64String(signature);
+                            signatureBytes = ResizeImage(signatureBytes, 400, 200);
                             c.Item().AlignRight().Element(e => e.Height(2, Unit.Centimetre)).Image(signatureBytes, ImageScaling.FitHeight);
                         }
 
@@ -163,6 +165,19 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
                 });
             });
         });
+    }
+
+    private byte[] ResizeImage(byte[] data,int width, int height)
+    {
+        var image = new MagickImage(data);
+        
+        if (image.Height < height && image.Width < width)
+        {
+            return data;
+        }
+        
+        image.Resize(width, height);
+        return image.ToByteArray();
     }
 
     private async Task<(Meeting meeting, Patient patient, Setting setting, JsonNode headers)?> GetData(string meetingId)
