@@ -58,7 +58,7 @@ public class DownloadController : Controller
 
     [HttpPost]
     [Route("api/downloads/start")]
-    public async Task<ActionResult<DownloadKey>> Generate([FromBody] DownloadDocument request)
+    public async Task<ActionResult<DownloadKey>> Start([FromBody] DownloadDocument request)
     {
         var downloadKey = Identifier.GenerateString();
         var document = await _mediator.Send(request);
