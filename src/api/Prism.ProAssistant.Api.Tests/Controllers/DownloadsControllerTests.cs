@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Prism.ProAssistant.Api.Controllers;
+using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Documents;
 using Xunit;
@@ -73,6 +74,6 @@ public class DownloadsControllerTests
         var result = await controller.Start(new GenerateDocument(documentId, meetingId));
 
         // Assert
-        result.Should().BeAssignableTo<OkObjectResult>();
+        result.Should().BeAssignableTo<ActionResult<DownloadKey>>();
     }
 }
