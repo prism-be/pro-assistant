@@ -116,7 +116,8 @@ const Meeting: NextPage = () => {
             payment: parseInt(data.payment),
             paymentDate: parseInt(data.payment) !== 0 ? formatISO(new Date()) : null,
             firstName: data.firstName,
-            lastName: data.lastName
+            lastName: data.lastName,
+            documents: []
         }
 
         await postData("/meeting", updatedMeeting);

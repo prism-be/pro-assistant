@@ -4,6 +4,8 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Text;
+using System.Text.Json;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +30,7 @@ public class DownloadController : Controller
     [AllowAnonymous]
     [HttpGet]
     [Route("api/downloads/{downloadKey}")]
-    public async Task<IActionResult> Download(string downloadKey)
+    public async Task<IActionResult> Download(string downloadKey, [FromQuery] bool download)
     {
         var pdfBytes = await _cache.GetAsync(GenerateDownloadKey(downloadKey));
 
@@ -37,14 +39,47 @@ public class DownloadController : Controller
             return NotFound();
         }
 
-        var stream = new MemoryStream(pdfBytes);
+        var document = JsonSerializer.Deserialize<DownloadDocumentResponse>(pdfBytes);
+        
+        if (document == null)
+        {
+            return NotFound();
+        }
 
-        return File(stream, "application/pdf");
+        var content = new FileContentResult(document.FileContent, "application/pdf");
+
+        if (download)
+        {
+            content.FileDownloadName = document.FileName;
+        }
+
+        return content;
+    }
+
+    [HttpPost]
+    [Route("api/downloads/start")]
+    public async Task<ActionResult<DownloadKey>> Generate([FromBody] DownloadDocument request)
+    {
+        var downloadKey = Identifier.GenerateString();
+        var document = await _mediator.Send(request);
+
+        if (document == null)
+        {
+            return NotFound();
+        }
+
+        var data = Encoding.Default.GetBytes(JsonSerializer.Serialize(document));
+        await _cache.SetAsync(GenerateDownloadKey(downloadKey), data, new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+        });
+
+        return new DownloadKey(downloadKey);
     }
 
     [HttpPost]
     [Route("api/document/generate")]
-    public async Task Generate([FromBody]GenerateDocument request)
+    public async Task Generate([FromBody] GenerateDocument request)
     {
         var downloadKey = Identifier.GenerateString();
         var pdfBytes = await _mediator.Send(request);

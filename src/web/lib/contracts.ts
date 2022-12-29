@@ -10,15 +10,18 @@
 
 
 
+export interface BinaryDocument {
+    date: string;
+    fileName: string;
+    id: string;
+    title: string;
+}
+
 export interface DocumentConfiguration {
     body?: string | null;
     name?: string | null;
     title?: string | null;
     id: string;
-}
-
-export interface DownloadKey {
-    key: string;
 }
 
 export interface GenerateDocument {
@@ -42,6 +45,7 @@ export interface Meeting {
     typeId?: string | null;
     foreColor?: string | null;
     backgroundColor?: string | null;
+    documents: BinaryDocument[];
 }
 
 export interface Patient {

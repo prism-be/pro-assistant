@@ -40,6 +40,29 @@ export async function generateDocument<TResult>(documentId: string, meetingId: s
     });
 }
 
+export async function downloadDocument<TResult>(documentId: string): Promise<void> {
+    const bearer = await getAuthorization();
+
+    const body = {
+        documentId
+    };
+
+    const response = await fetch("/api/downloads/start", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+    });
+
+    if (response.status === 200) {
+        const data = await response.json();
+        window.open("/api/downloads/" + data.key, "_blank");
+    }
+}
+
 function globalTrim(obj: any) {
     Object.keys(obj).forEach(k => obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k]);
 }

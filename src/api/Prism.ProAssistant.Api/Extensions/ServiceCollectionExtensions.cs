@@ -89,6 +89,7 @@ namespace Prism.ProAssistant.Api.Extensions
             services.AddScoped<IRequestHandler<UpsertOne<Setting>, UpsertResult>, UpsertOneHandler<Setting>>();
             
             services.AddScoped<IRequestHandler<GenerateDocument, byte[]>, GenerateDocumentHandler>();
+            services.AddScoped<IRequestHandler<DownloadDocument, DownloadDocumentResponse?>, DownloadDocumentHandler>();
 
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));

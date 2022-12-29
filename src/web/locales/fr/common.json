@@ -88,7 +88,9 @@
       },
       "documents": {
         "title": "Gestion des documents du rendez-vous",
-        "generate": "Générer le document ..."
+        "generate": "Générer le document ...",
+        "no-documents": "Il n'y a pas encore de documents pour ce rendez-vous",
+        "generated": "Document généré le "
       }
     }
   },

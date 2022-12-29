@@ -7,6 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json.Nodes;
+using Acme.Core.Extensions;
 using DotLiquid;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -70,14 +71,16 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         var existings = await collection.FindAsync(Builders<Meeting>.Filter.Eq(x => x.Id, meeting.Id));
         var existing = await existings.FirstAsync();
 
-        string fileName = Identifier.GenerateString() + ".pdf";
+        var documentTitle = $"{meeting.StartDate:yyyy-MM-dd HH:mm} - {meeting.LastName} {meeting.FirstName} - {title}";
+        string fileName = documentTitle.ReplaceSpecialChars(true) + ".pdf";
+        
         var bucket = _organizationContext.GetGridFsBucket();
         var fileId = await bucket.UploadFromBytesAsync(fileName, bytes);
 
         var document = new BinaryDocument
         {
             Id = fileId.ToString(),
-            Title = title,
+            Title = documentTitle,
             Date = DateTime.UtcNow,
             FileName = fileName,
         };
@@ -128,7 +131,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
                     table.Cell().Row(2).Column(1).ColumnSpan(3).PaddingTop(0.5f, Unit.Centimetre).Element(e => e.Height(0.25f, Unit.Centimetre)).LineHorizontal(1);
 
-                    table.Cell().Row(3).Column(1).ColumnSpan(3).AlignRight().Text(data.Value.meeting.StartDate.ToLongDateString()).FontSize(10).LineHeight(0.75f);
+                    table.Cell().Row(3).Column(1).ColumnSpan(3).AlignRight().Text(DateTime.Today.ToLongDateString()).FontSize(10).LineHeight(0.75f);
 
                     table.Cell().Row(4).Column(3).PaddingTop(1, Unit.Centimetre).Element(e => e.Height(5, Unit.Centimetre)).Column(c =>
                     {
@@ -155,7 +158,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
                         }
 
                         c.Item().AlignRight().Text(data.Value.headers["yourName"]?.ToString());
-                        c.Item().AlignRight().Text(data.Value.headers["yourCity"] + ", " + data.Value.meeting.StartDate.ToLongDateString()).FontSize(10);
+                        c.Item().AlignRight().Text(data.Value.headers["yourCity"] + ", " + DateTime.Today.ToLongDateString()).FontSize(10);
                     });
                 });
             });
