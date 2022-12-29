@@ -56,20 +56,6 @@
     "saveSuccess": "Les modifications ont été enregistrées.",
     "mobileWarning": "Cette fonctionnalité n'est pas prévue pour la taille d'écran actuelle. Veuillez pivoter votre mobile ou utiliser une écran avec une plus grande résolution."
   },
-  "popups": {
-    "meeting": {
-      "titleNew": "Ajouter un rendez-vous",
-      "titleEditing": "Edition d'un rendez-vous",
-      "patientsSuggestions": {
-        "title": "Suggestions de patients"
-      },
-      "tariffs": {
-        "title": "Type de séance",
-        "empty": "Veuillez choisir un type de séance"
-      },
-      "generateDocument": "Générer le document ..."
-    }
-  },
   "pages": {
     "patients": {
       "title": "Rechercher un patient",
@@ -77,8 +63,7 @@
         "title": "Fiche patient : ",
         "contact": "Coordonnées",
         "saveSuccess": "Les modifications sur la fiche ont été sauvegardées.",
-        "meetings" :
-        {
+        "meetings": {
           "title": "Liste des rendez-vous",
           "noMeetings": "Aucun rendez-vous planifié pour ce patient"
         }
@@ -90,6 +75,21 @@
     "agenda": {
       "title": "Agenda du",
       "noMeeting": "Vous n'avez pas de rendez-vous ce jour."
+    },
+    "meeting": {
+      "titleNew": "Ajouter un rendez-vous",
+      "titleEditing": "Edition d'un rendez-vous",
+      "patientsSuggestions": {
+        "title": "Suggestions de patients"
+      },
+      "tariffs": {
+        "title": "Type de séance",
+        "empty": "Veuillez choisir un type de séance"
+      },
+      "documents": {
+        "title": "Gestion des documents du rendez-vous",
+        "generate": "Générer le document ..."
+      }
     }
   },
   "days": {
@@ -105,15 +105,13 @@
   },
   "options": {
     "unknown": "Inconnu",
-    "payments" :
-    {
+    "payments": {
       "state0": "Non payé",
       "state1": "En liquide",
       "state2": "Par virement",
       "state3": "Par carte"
     },
-    "meetings" :
-    {
+    "meetings": {
       "state0": "Créé",
       "state1": "Confirmé",
       "state10": "Terminé",

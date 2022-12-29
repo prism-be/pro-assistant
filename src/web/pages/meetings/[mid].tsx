@@ -8,32 +8,30 @@ import useSWR from "swr";
 import {useForm} from "react-hook-form";
 import {useEffect, useState} from "react";
 import InputText from "../../components/forms/InputText";
-import {DocumentConfiguration, Meeting, Patient, Tariff} from "../../lib/contracts";
-import {downloadDocument, getData, postData} from "../../lib/ajaxHelper";
+import {Meeting, Patient, Tariff} from "../../lib/contracts";
+import {getData, postData} from "../../lib/ajaxHelper";
 import InputSelect from "../../components/forms/InputSelect";
 import {Calendar} from "../../components/forms/Calendar";
 import {add, format, formatISO, parse, parseISO, startOfHour} from "date-fns";
 import {getLocale} from "../../lib/localization";
 import Button from "../../components/forms/Button";
-import {Save} from "../../components/icons/Save";
 import {alertSuccess} from "../../lib/events/alert";
+import {GeneratedDocuments} from "../../components/meetings/GeneratedDocuments";
 
 const Meeting: NextPage = () => {
     const {t} = useTranslation('common');
     const router = useRouter();
-    
+
     const {data: meeting, mutate: mutateMeeting} = useSWR<Meeting | null>("/meeting/" + router.query.mid, loadMeeting);
     const {data: tariffs} = useSWR<Tariff[]>('/tariffs');
-    const {data: documents} = useSWR<DocumentConfiguration[]>("/documents-configuration");
-    
+
     const {register, setValue, formState: {errors}, getValues, handleSubmit} = useForm();
-    
+
     const [patientsSuggestions, setPatientsSuggestions] = useState<Patient[]>([]);
     const [suggested, setSuggested] = useState<string>();
     const [patient, setPatient] = useState<Patient>();
     const [date, setDate] = useState<Date>(startOfHour(new Date()));
     const [duration, setDuration] = useState<number>(60);
-    const [document, setDocument] = useState<string>();
 
     const paymentOptions = [
         {value: "0", text: t("options.payments.state0")},
@@ -48,22 +46,21 @@ const Meeting: NextPage = () => {
         {value: "10", text: t("options.meetings.state10")},
         {value: "100", text: t("options.meetings.state100")}
     ]
-    
+
     useEffect(() => {
         if (!meeting) return;
-        
+
         Object.getOwnPropertyNames(meeting).forEach(p => {
             setValue(p, (meeting as any)[p]);
         });
 
         setDuration(meeting.duration ?? 60);
-        
+
         const d = parseISO(meeting.startDate ?? formatISO(new Date()));
         setDate(d);
         setValue("hour", format(d, "HH:mm"));
-        
-        if (meeting.patientId)
-        {
+
+        if (meeting.patientId) {
             setPatient({
                 id: meeting.patientId,
                 firstName: meeting.firstName,
@@ -76,16 +73,14 @@ const Meeting: NextPage = () => {
         if (meeting.typeId) {
             setValue("tariff", meeting.typeId);
         }
-        
+
     }, [meeting, tariffs]);
-    
+
     useEffect(() => {
-        if (router.asPath.startsWith("/meetings/new"))
-        {
+        if (router.asPath.startsWith("/meetings/new")) {
             let startDate = startOfHour(new Date());
 
-            if (router.query.startDate)
-            {
+            if (router.query.startDate) {
                 startDate = parseISO(router.query.startDate as string);
             }
 
@@ -94,21 +89,18 @@ const Meeting: NextPage = () => {
             setValue("hour", format(startDate, "HH:mm"));
         }
     }, [router])
-    
-    function loadMeeting(path: string): Promise<Meeting | null>
-    {
-        if (path === "/meeting/new")
-        {
+
+    function loadMeeting(path: string): Promise<Meeting | null> {
+        if (path === "/meeting/new") {
             return new Promise(() => null);
         }
-        
+
         return getData(path);
     }
-    
-    async function onSubmit(data: any)
-    {
+
+    async function onSubmit(data: any) {
         const tariff = tariffs?.find(x => x.name == data.type);
-        
+
         const updatedMeeting: Meeting = {
             id: meeting?.id ?? '',
             patientId: patient?.id ?? null,
@@ -134,14 +126,14 @@ const Meeting: NextPage = () => {
     }
 
     let searchPatientsTimeout: any;
-    function startSuggestPatients()
-    {
+
+    function startSuggestPatients() {
         if (searchPatientsTimeout) {
             clearTimeout(searchPatientsTimeout);
         }
         searchPatientsTimeout = setTimeout(() => suggestPatients(), 500);
     }
-    
+
     async function suggestPatients() {
         const lastName = getValues('lastName');
         const firstName = getValues('firstName');
@@ -161,13 +153,12 @@ const Meeting: NextPage = () => {
             birthDate: '',
             phoneNumber: ''
         });
-        
+
         setPatientsSuggestions(patients ?? []);
         setSuggested(lastName + "|" + firstName);
     }
-    
-    function selectPatient(patient: Patient)
-    {
+
+    function selectPatient(patient: Patient) {
         setPatient(patient);
         setSuggested(patient.lastName + "|" + patient.firstName);
         setValue("lastName", patient.lastName);
@@ -185,7 +176,7 @@ const Meeting: NextPage = () => {
 
         options.unshift({
             value: "",
-            text: t("popups.meeting.tariffs.empty")
+            text: t("pages.meeting.tariffs.empty")
         });
 
         return options;
@@ -228,33 +219,25 @@ const Meeting: NextPage = () => {
             setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate(), newHour.getHours(), newHour.getMinutes()));
         }
     }
-
-    async function startDownloadDocument() {
-        if (!document || document === "" || meeting?.id == null) {
-            return;
-        }
-
-        await downloadDocument(document, meeting.id);
-    }
-
+    
     return <ContentContainer>
         <Section>
             <>
-                {meeting?.id === undefined && <h1>{t("popups.meeting.titleNew")}</h1>}
-                {meeting?.id !== undefined && <h1>{t("popups.meeting.titleEditing")}</h1>}
+                {meeting?.id === undefined && <h1>{t("pages.meeting.titleNew")}</h1>}
+                {meeting?.id !== undefined && <h1>{t("pages.meeting.titleEditing")}</h1>}
             </>
             <form className={styles.content} onSubmit={handleSubmit(onSubmit)}>
                 <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName} onChange={() => startSuggestPatients()}/>
                 <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.firstName} onChange={() => startSuggestPatients()}/>
 
                 {patientsSuggestions.length !== 0 && <div className={styles.patientsSuggestions}>
-                    <h2>{t("popups.meeting.patientsSuggestions.title")}</h2>
+                    <h2>{t("pages.meeting.patientsSuggestions.title")}</h2>
                     {patientsSuggestions.map(p => <div key={p.id} className={styles.patientsSuggestion} onClick={() => selectPatient(p)}>
                         {p.lastName} {p.firstName} {p.birthDate && p.birthDate !== "" && <>({p.birthDate})</>}
                     </div>)}
                 </div>}
 
-                <InputSelect className={styles.tariffs} label={t("popups.meeting.tariffs.title")} name={"tariff"} register={register} options={getTariffsOptions()} onChange={(v) => setMeetingType(v)}/>
+                <InputSelect className={styles.tariffs} label={t("pages.meeting.tariffs.title")} name={"tariff"} register={register} options={getTariffsOptions()} onChange={(v) => setMeetingType(v)}/>
                 <InputText className={styles.type} label={t("fields.meetingType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>
                 <InputText className={styles.price} label={t("fields.price")} name={"price"} required={true} type={"text"} register={register} setValue={setValue} error={errors.price}/>
 
@@ -271,19 +254,10 @@ const Meeting: NextPage = () => {
 
                 <Button text={t("actions.back")} secondary={true} className={styles.cancel} onClick={() => router.back()}/>
 
-                <div className={styles.documents}>
-                    <select onChange={(e) => setDocument(e.target.value)}>
-                        <option value={""}>{t("popups.meeting.generateDocument")}</option>
-                        {documents?.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
-                    </select>
-                    <div onClick={() => startDownloadDocument()} className={styles.documentsSave}>
-                        <Save />
-                    </div>
-                </div>
-
                 <Button text={t("actions.save")} className={styles.save} onClick={handleSubmit(onSubmit)}/>
             </form>
         </Section>
+        <>{meeting && <GeneratedDocuments meeting={meeting}/>}</>
     </ContentContainer>
 }
 

@@ -21,7 +21,7 @@ export async function getData<TResult>(route: string): Promise<TResult | null> {
     return null;
 }
 
-export async function downloadDocument<TResult>(documentId: string, meetingId: string): Promise<void> {
+export async function generateDocument<TResult>(documentId: string, meetingId: string): Promise<void> {
     const bearer = await getAuthorization();
 
     const body = {
@@ -29,7 +29,7 @@ export async function downloadDocument<TResult>(documentId: string, meetingId: s
         meetingId
     };
 
-    const response = await fetch("/api/downloads", {
+    const response = await fetch("/api/document/generate", {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
@@ -38,11 +38,6 @@ export async function downloadDocument<TResult>(documentId: string, meetingId: s
             'Authorization': bearer
         },
     });
-
-    if (response.status === 200) {
-        const data = await response.json();
-        window.open("/api/downloads/" + data.key, "_blank");
-    }
 }
 
 function globalTrim(obj: any) {

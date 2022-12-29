@@ -43,8 +43,8 @@ public class DownloadController : Controller
     }
 
     [HttpPost]
-    [Route("api/downloads")]
-    public async Task<ActionResult<DownloadKey>> Start([FromBody]GenerateDocument request)
+    [Route("api/document/generate")]
+    public async Task Generate([FromBody]GenerateDocument request)
     {
         var downloadKey = Identifier.GenerateString();
         var pdfBytes = await _mediator.Send(request);
@@ -53,8 +53,6 @@ public class DownloadController : Controller
         {
             AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
         });
-
-        return Ok(new DownloadKey(downloadKey));
     }
 
     private static string GenerateDownloadKey(string downloadKey)

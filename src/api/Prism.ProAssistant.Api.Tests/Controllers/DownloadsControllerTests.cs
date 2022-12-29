@@ -71,9 +71,9 @@ public class DownloadsControllerTests
 
         // Act
         var controller = new DownloadController(receiptGenerator.Object, cache.Object);
-        var result = await controller.Start(new GenerateDocument(documentId, meetingId));
+        await controller.Generate(new GenerateDocument(documentId, meetingId));
 
         // Assert
-        result.Should().BeAssignableTo<ActionResult<DownloadKey>>();
+        receiptGenerator.Verify(x => x.Send(It.IsAny<GenerateDocument>(), CancellationToken.None), Times.Once);
     }
 }
