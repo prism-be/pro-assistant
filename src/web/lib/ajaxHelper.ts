@@ -28,8 +28,7 @@ export async function generateDocument<TResult>(documentId: string, meetingId: s
         documentId,
         meetingId
     };
-
-    const response = await fetch("/api/document/generate", {
+    await fetch("/api/document/generate", {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
