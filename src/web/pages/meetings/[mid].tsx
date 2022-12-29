@@ -6,7 +6,7 @@ import useTranslation from "next-translate/useTranslation";
 import {useRouter} from "next/router";
 import useSWR from "swr";
 import {useForm} from "react-hook-form";
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import InputText from "../../components/forms/InputText";
 import {Meeting, Patient, Tariff} from "../../lib/contracts";
 import {getData, postData} from "../../lib/ajaxHelper";
@@ -159,13 +159,13 @@ const Meeting: NextPage = () => {
         setSuggested(lastName + "|" + firstName);
     }
 
-    function selectPatient(patient: Patient) {
+    const selectPatient = useCallback((patient: Patient) => {
         setPatient(patient);
         setSuggested(patient.lastName + "|" + patient.firstName);
         setValue("lastName", patient.lastName);
         setValue("firstName", patient.firstName);
         setPatientsSuggestions([]);
-    }
+    }, []);
 
     function getTariffsOptions() {
         let options = tariffs?.map(x => {

@@ -5,7 +5,7 @@ import Section from "../design/Section";
 import {downloadDocument, generateDocument} from "../../lib/ajaxHelper";
 import {Save} from "../icons/Save";
 import useSWR, {mutate} from "swr";
-import {useState} from "react";
+import {useCallback, useState} from "react";
 import useTranslation from "next-translate/useTranslation";
 import {format, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
@@ -20,18 +20,19 @@ export const GeneratedDocuments = ({meeting}: Props) => {
     const [document, setDocument] = useState<string>();
     const {t} = useTranslation('common');
 
-    async function startGenerateDocument() {
+    const startGenerateDocument = useCallback(async () => {
         if (!document || document === "" || meeting?.id == null) {
             return;
         }
 
         await generateDocument(document, meeting.id);
         await mutate("/meeting/" + meeting.id);
-    }
+    }, [document]);
+    
 
-    async function startDownloadDocument(documentId:string) {
+    const startDownloadDocument = useCallback(async (documentId:string) => {
         await downloadDocument(documentId);
-    }
+    }, []);
 
     return <Section>
         <h2>{t("pages.meeting.documents.title")}</h2>
