@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 
@@ -19,6 +20,8 @@ public interface IOrganizationContext
     IMongoCollection<T> GetCollection<T>();
 
     void SelectOrganization(string organizationId);
+    
+    IGridFSBucket GetGridFsBucket();
 }
 
 public class OrganizationContext : IOrganizationContext
@@ -56,6 +59,11 @@ public class OrganizationContext : IOrganizationContext
     {
         OrganizationId = organizationId;
         Database = _client.GetDatabase(organizationId);
+    }
+
+    public IGridFSBucket GetGridFsBucket()
+    {
+        return new GridFSBucket(this.Database);
     }
 
     private static string? GetCollectionName<T>()

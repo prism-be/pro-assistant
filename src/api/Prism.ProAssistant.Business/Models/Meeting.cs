@@ -60,6 +60,9 @@ public class Meeting : IDataModel
 
     [JsonPropertyName("backgroundColor")]
     public string? BackgroundColor { get; set; }
+
+    [JsonPropertyName("documents")]
+    public List<BinaryDocument> Documents { get; set; } = new();
 }
 
 public enum MeetingState

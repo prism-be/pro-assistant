@@ -1,17 +1,21 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "ReceiptGenerator.cs" company = "Prism">
+//  <copyright file = "GenerateDocument.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json.Nodes;
 using DotLiquid;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
 using Prism.ProAssistant.Business.Exceptions;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
+using Prism.ProAssistant.Business.Security;
+using Prism.ProAssistant.Business.Storage;
 using Prism.ProAssistant.Documents.Locales;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -28,12 +32,14 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
     private readonly ILocalizator _localizator;
     private readonly ILogger<GenerateDocumentHandler> _logger;
     private readonly IMediator _mediator;
+    private readonly IOrganizationContext _organizationContext;
 
-    public GenerateDocumentHandler(IMediator mediator, ILogger<GenerateDocumentHandler> logger, ILocalizator localizator)
+    public GenerateDocumentHandler(IMediator mediator, ILogger<GenerateDocumentHandler> logger, ILocalizator localizator, IOrganizationContext organizationContext)
     {
         _mediator = mediator;
         _logger = logger;
         _localizator = localizator;
+        _organizationContext = organizationContext;
     }
 
     public async Task<byte[]> Handle(GenerateDocument request, CancellationToken cancellationToken)
@@ -50,7 +56,42 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture(_localizator.Locale);
         Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture(_localizator.Locale);
 
-        var document = Document.Create(container =>
+        var document = CreateDocument(data, title, content);
+        var bytes = document.GeneratePdf();
+
+        await SaveDocument(data.Value.meeting, title, bytes);
+
+        return bytes;
+    }
+
+    private async Task SaveDocument(Meeting meeting, string title, byte[] bytes)
+    {
+        var collection = _organizationContext.GetCollection<Meeting>();
+        var existings = await collection.FindAsync(Builders<Meeting>.Filter.Eq(x => x.Id, meeting.Id));
+        var existing = await existings.FirstAsync();
+
+        string fileName = Identifier.GenerateString() + ".pdf";
+        var bucket = _organizationContext.GetGridFsBucket();
+        var fileId = await bucket.UploadFromBytesAsync(fileName, bytes);
+
+        var document = new BinaryDocument
+        {
+            Id = fileId.ToString(),
+            Title = title,
+            Date = DateTime.UtcNow,
+            FileName = fileName,
+        };
+        
+        existing.Documents.Insert(0,document);
+        
+        await collection.UpdateOneAsync(Builders<Meeting>.Filter.Eq(x => x.Id, meeting.Id), Builders<Meeting>.Update.Set(x => x.Documents, existing.Documents));
+        
+        _logger.LogInformation("Document {DocumentId} was saved for meeting {MeetingId}", document.Id, meeting.Id);
+    }
+
+    private Document CreateDocument([DisallowNull] (Meeting meeting, Patient patient, Setting setting, JsonNode headers)? data, string title, string content)
+    {
+        return Document.Create(container =>
         {
             container.Page(page =>
             {
@@ -77,7 +118,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
                     table.Cell().Row(1).Column(2).ColumnSpan(2).PaddingLeft(0.5f, Unit.Centimetre).Column(c =>
                     {
-                        c.Item().Text(data.Value.headers["name"]).FontSize(10);
+                        c.Item().Text(data.Value.headers["name"]?.ToString()).FontSize(10);
 
                         foreach (var line in data.Value.headers["address"]?.ToString().Split('\n') ?? Array.Empty<string>())
                         {
@@ -113,14 +154,12 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
                             c.Item().AlignRight().Element(e => e.Height(2, Unit.Centimetre)).Image(signatureBytes, ImageScaling.FitHeight);
                         }
 
-                        c.Item().AlignRight().Text(data.Value.headers["yourName"]);
+                        c.Item().AlignRight().Text(data.Value.headers["yourName"]?.ToString());
                         c.Item().AlignRight().Text(data.Value.headers["yourCity"] + ", " + data.Value.meeting.StartDate.ToLongDateString()).FontSize(10);
                     });
                 });
             });
         });
-
-        return document.GeneratePdf();
     }
 
     private async Task<(Meeting meeting, Patient patient, Setting setting, JsonNode headers)?> GetData(string meetingId)
@@ -168,7 +207,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
     private async Task<(string title, string content)> GetTitleContent(string documentId)
     {
-        var document = await _mediator.Send(new FindOne<Business.Models.DocumentConfiguration>(documentId));
+        var document = await _mediator.Send(new FindOne<DocumentConfiguration>(documentId));
 
         if (document == null)
         {
