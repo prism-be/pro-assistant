@@ -21,15 +21,32 @@ export async function getData<TResult>(route: string): Promise<TResult | null> {
     return null;
 }
 
-export async function downloadDocument<TResult>(documentId: string, meetingId: string): Promise<void> {
+export async function generateDocument<TResult>(documentId: string, meetingId: string): Promise<void> {
     const bearer = await getAuthorization();
 
     const body = {
         documentId,
         meetingId
     };
+    await fetch("/api/document/generate", {
+        method: "POST",
+        body: JSON.stringify(body),
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+    });
+}
 
-    const response = await fetch("/api/downloads", {
+export async function downloadDocument<TResult>(documentId: string): Promise<void> {
+    const bearer = await getAuthorization();
+
+    const body = {
+        documentId
+    };
+
+    const response = await fetch("/api/downloads/start", {
         method: "POST",
         body: JSON.stringify(body),
         headers: {

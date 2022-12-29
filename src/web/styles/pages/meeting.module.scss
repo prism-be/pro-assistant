@@ -144,9 +144,7 @@
 }
 
 .documents {
-  grid-row: 13;
-  grid-column: 1 / span 4;
-  
+  padding: 1rem 0;
   display: grid;
   grid-template-columns: 1fr 32px;
   grid-gap: 0.25rem;
@@ -201,5 +199,59 @@
   @media (min-width: $breakpointMD) {
     grid-row: 9;
     grid-column: 4;
+  }
+}
+
+.noDocuments
+{
+  padding: 1rem;
+  text-align: center;
+  font-style: italic;
+}
+
+.document
+{
+  padding: 1rem 0;
+  border-bottom: 1px $light dashed;
+
+  display: grid;
+
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 1fr 32px;
+
+  grid-template-areas: 
+	'title icons'
+	'help icons';
+
+  gap: 0;
+  height: 100%;
+}
+
+.documentTitle
+{
+  grid-area: title;
+}
+
+.documentDate
+{
+  font-style: italic;
+  grid-area: help;
+}
+
+.documentAction
+{
+  grid-area: icons;
+  text-align: right;
+}
+
+.documentSave
+{
+  cursor: pointer;
+  
+  svg
+  {
+    color: $light;
+    height: 24px;
+    width: 24px;
   }
 }

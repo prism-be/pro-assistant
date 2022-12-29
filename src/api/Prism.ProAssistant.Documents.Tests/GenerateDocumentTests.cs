@@ -4,18 +4,18 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 using FluentAssertions;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using MongoDB.Driver.GridFS;
 using Moq;
 using Prism.ProAssistant.Business.Exceptions;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
+using Prism.ProAssistant.Business.Storage;
 using Prism.ProAssistant.Documents.Locales;
+using Prism.ProAssistant.UnitTesting;
 using Xunit;
 
 namespace Prism.ProAssistant.Documents.Tests;
@@ -57,8 +57,11 @@ public class GenerateDocumentTests
         var localizer = new Mock<ILocalizator>();
         localizer.Setup(x => x.Locale).Returns("fr");
 
+        var organizationContext = new Mock<IOrganizationContext>();
+        organizationContext.SetupCollection<Meeting>();
+
         // Act and assert
-        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object);
+        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
         await Assert.ThrowsAsync<NotFoundException>(async () => await generator.Handle(new GenerateDocument(documentId, id), CancellationToken.None));
     }
 
@@ -89,8 +92,11 @@ public class GenerateDocumentTests
         var localizer = new Mock<ILocalizator>();
         localizer.Setup(x => x.Locale).Returns("fr");
 
+        var organizationContext = new Mock<IOrganizationContext>();
+        organizationContext.SetupCollection<Meeting>();
+
         // Act and assert
-        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object);
+        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
         await Assert.ThrowsAsync<NotSupportedException>(async () => await generator.Handle(new GenerateDocument(documentId, id), CancellationToken.None));
     }
 
@@ -121,8 +127,11 @@ public class GenerateDocumentTests
         var localizer = new Mock<ILocalizator>();
         localizer.Setup(x => x.Locale).Returns("fr");
 
+        var organizationContext = new Mock<IOrganizationContext>();
+        organizationContext.SetupCollection<Meeting>();
+
         // Act and assert
-        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object);
+        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
         await Assert.ThrowsAsync<NotSupportedException>(async () => await generator.Handle(new GenerateDocument(documentId, id), CancellationToken.None));
     }
 
@@ -151,8 +160,11 @@ public class GenerateDocumentTests
         var localizer = new Mock<ILocalizator>();
         localizer.Setup(x => x.Locale).Returns("fr");
 
+        var organizationContext = new Mock<IOrganizationContext>();
+        organizationContext.SetupCollection<Meeting>();
+
         // Act and assert
-        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object);
+        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
         await Assert.ThrowsAsync<NotSupportedException>(async () => await generator.Handle(new GenerateDocument(documentId, id), CancellationToken.None));
     }
 
@@ -166,8 +178,11 @@ public class GenerateDocumentTests
         var mediator = new Mock<IMediator>();
         var localizer = new Mock<ILocalizator>();
 
+        var organizationContext = new Mock<IOrganizationContext>();
+        organizationContext.SetupCollection<Meeting>();
+
         // Act and assert
-        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object);
+        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
         await Assert.ThrowsAsync<NotSupportedException>(async () => await generator.Handle(new GenerateDocument(documentId, id), CancellationToken.None));
     }
 
@@ -214,11 +229,21 @@ public class GenerateDocumentTests
         var localizer = new Mock<ILocalizator>();
         localizer.Setup(x => x.Locale).Returns("fr");
 
+        var organizationContext = new Mock<IOrganizationContext>();
+
+        organizationContext.SetupCollection(new Meeting
+        {
+            Id = id,
+            Documents = new List<BinaryDocument>()
+        });
+        var bucket = organizationContext.SetupBucket();
+
         // Act
-        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object);
+        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
         var receipt = await generator.Handle(new GenerateDocument(documentId, id), CancellationToken.None);
 
         // Assert
         receipt.Should().NotBeNull();
+        bucket.Verify(x => x.UploadFromBytesAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<GridFSUploadOptions>(), It.IsAny<CancellationToken>()), Times.Once);
     }
 }

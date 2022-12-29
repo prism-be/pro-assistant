@@ -5,30 +5,46 @@
 // -----------------------------------------------------------------------
 
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 using Moq;
+using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.UnitTesting;
-/*
+
 public static class MongoTestsExtensions
 {
-    public static Mock<IMongoCollection<T>> SetupCollection<T>(this Mock<IMongoDatabase> database, params T[] samples) where T : new()
+    public static Mock<IGridFSBucket> SetupBucket(this Mock<IOrganizationContext> organizationContext, params GridFSFileInfo[] files)
     {
-        var collection = CreateCollection(samples);
+        var bucket = new Mock<IGridFSBucket>();
 
-        database.Setup(x => x.GetCollection<T>(typeof(T).Name.ToLowerInvariant(), null)).Returns(collection.Object);
-
-        return collection;
+        organizationContext.Setup(x => x.GetGridFsBucket())
+            .Returns(bucket.Object);
+        
+        var items = new List<GridFSFileInfo>();
+        items.AddRange(files);
+        var cursor = new Mock<IAsyncCursor<GridFSFileInfo>>();
+        cursor.Setup(_ => _.Current).Returns(items);
+        cursor
+            .SetupSequence(_ => _.MoveNext(It.IsAny<CancellationToken>()))
+            .Returns(true)
+            .Returns(false);
+        cursor
+            .SetupSequence(_ => _.MoveNextAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true)
+            .ReturnsAsync(false);
+        
+        bucket.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<GridFSFileInfo>>(), null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(cursor.Object);
+        
+        return bucket;
     }
 
-    public static Mock<IMongoCollection<T>> SetupCollectionAndReplace<T>(this Mock<IMongoDatabase> database, T replacement, params T[] samples) where T : new()
+    public static void SetupCollection<T>(this Mock<IOrganizationContext> organizationContext, params T[] samples) where T : new()
     {
         var collection = CreateCollection(samples);
-        collection.Setup(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<T>>(), It.IsAny<T>(), It.IsAny<FindOneAndReplaceOptions<T, T>>(), CancellationToken.None))
-            .ReturnsAsync(replacement);
 
-        database.Setup(x => x.GetCollection<T>(typeof(T).Name.ToLowerInvariant(), null)).Returns(collection.Object);
-
-        return collection;
+        organizationContext.Setup(x => x.GetCollection<T>())
+            .Returns(collection.Object);
     }
 
     private static Mock<IMongoCollection<T>> CreateCollection<T>(IReadOnlyCollection<T> samples) where T : new()
@@ -56,4 +72,4 @@ public static class MongoTestsExtensions
         collection.Setup(x => x.DeleteOneAsync(It.IsAny<FilterDefinition<T>>(), CancellationToken.None)).ReturnsAsync(new DeleteResult.Acknowledged(1));
         return collection;
     }
-}*/
+}
