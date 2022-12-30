@@ -32,7 +32,7 @@ public class SearchPatientsHandler : IRequestHandler<SearchPatients, List<Patien
 
     public async Task<List<Patient>> Handle(SearchPatients request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("GDRP : {userId} is searching patients (query : {lastName}, {firstName}, {phoneNumber}, {birthDate}) and read summary",
+        _logger.LogInformation("GDPR : {userId} is searching patients (query : {lastName}, {firstName}, {phoneNumber}, {birthDate}) and read summary",
             _userContextAccessor.UserId,
             request.LastName,
             request.FirstName,
