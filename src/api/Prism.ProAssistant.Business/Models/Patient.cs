@@ -50,4 +50,7 @@ public class Patient : IDataModel
 
     [JsonPropertyName("zipCode")]
     public string? ZipCode { get; set; }
+
+    [JsonPropertyName("title")]
+    public string? Title { get; set; }
 }
