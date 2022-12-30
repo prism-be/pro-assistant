@@ -44,6 +44,8 @@ public class SearchMeetingsHandler : IRequestHandler<SearchMeetings, List<Meetin
         var collection = _organizationContext.GetCollection<Meeting>();
         var results = await collection.FindAsync(Builders<Meeting>.Filter.And(filters), cancellationToken: cancellationToken);
 
-        return await results.ToListAsync(cancellationToken: cancellationToken);
+        var items = await results.ToListAsync(cancellationToken: cancellationToken);
+
+        return items.OrderBy(x => x.StartDate).ToList();
     }
 }
