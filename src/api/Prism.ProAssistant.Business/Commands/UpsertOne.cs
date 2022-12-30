@@ -50,7 +50,7 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
             return new UpsertResult(request.Item.Id, _organizationContext.OrganizationId);
         }
 
-        _logger.LogInformation("Updating an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
+        _logger.LogInformation("Updating an existing item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
 
         await history.InsertOneAsync(new History(_userContextAccessor.UserId, request.Item), cancellationToken: cancellationToken);
         var updated = await collection.FindOneAndReplaceAsync(Builders<T>.Filter.Eq("Id", request.Item.Id), request.Item, new FindOneAndReplaceOptions<T>
@@ -58,7 +58,7 @@ public class UpsertOneHandler<T> : IRequestHandler<UpsertOne<T>, UpsertResult>
             IsUpsert = true
         }, cancellationToken);
 
-        _logger.LogInformation("Updated an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
+        _logger.LogInformation("Updated an existing item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Item.Id, _userContextAccessor.UserId);
 
         return new UpsertResult(updated.Id, _organizationContext.OrganizationId);
     }
