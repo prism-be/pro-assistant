@@ -27,6 +27,13 @@ public class DownloadController : Controller
         _cache = cache;
     }
 
+    [HttpDelete]
+    [Route("api/document")]
+    public async Task Delete([FromBody] DeleteDocument request)
+    {
+        await _mediator.Send(request);
+    }
+
     [AllowAnonymous]
     [HttpGet]
     [Route("api/downloads/{downloadKey}")]
@@ -40,7 +47,7 @@ public class DownloadController : Controller
         }
 
         var document = JsonSerializer.Deserialize<DownloadDocumentResponse>(pdfBytes);
-        
+
         if (document == null)
         {
             return NotFound();
@@ -54,6 +61,19 @@ public class DownloadController : Controller
         }
 
         return content;
+    }
+
+    [HttpPost]
+    [Route("api/document/generate")]
+    public async Task Generate([FromBody] GenerateDocument request)
+    {
+        var downloadKey = Identifier.GenerateString();
+        var pdfBytes = await _mediator.Send(request);
+
+        await _cache.SetAsync(GenerateDownloadKey(downloadKey), pdfBytes, new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
+        });
     }
 
     [HttpPost]
@@ -75,19 +95,6 @@ public class DownloadController : Controller
         });
 
         return new DownloadKey(downloadKey);
-    }
-
-    [HttpPost]
-    [Route("api/document/generate")]
-    public async Task Generate([FromBody] GenerateDocument request)
-    {
-        var downloadKey = Identifier.GenerateString();
-        var pdfBytes = await _mediator.Send(request);
-
-        await _cache.SetAsync(GenerateDownloadKey(downloadKey), pdfBytes, new DistributedCacheEntryOptions
-        {
-            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
-        });
     }
 
     private static string GenerateDownloadKey(string downloadKey)

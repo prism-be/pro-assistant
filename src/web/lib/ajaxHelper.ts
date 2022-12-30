@@ -103,6 +103,21 @@ export async function deleteData<TResult>(route: string): Promise<void> {
     });
 }
 
+export async function deleteDataWithBody<TResult>(route: string, body: any): Promise<void> {
+
+    const bearer = await getAuthorization();
+
+    await fetch("/api" + route, {
+        body: JSON.stringify(body),
+        method: "DELETE",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+    });
+}
+
 export const getAuthorization = async (): Promise<string> => {
     const accessTokenRequest = {
         scopes: ["https://" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".onmicrosoft.com/" + process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID + "/records.manage"],
