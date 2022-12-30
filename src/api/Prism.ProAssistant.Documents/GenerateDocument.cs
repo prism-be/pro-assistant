@@ -60,7 +60,8 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         var document = CreateDocument(data, title, content);
         var bytes = document.GeneratePdf();
 
-        await SaveDocument(data.Value.meeting, title, bytes);
+        var computedTitle = ReplaceContent(title, data.Value.meeting, data.Value.patient, data.Value.headers);
+        await SaveDocument(data.Value.meeting, computedTitle, bytes);
 
         return bytes;
     }
