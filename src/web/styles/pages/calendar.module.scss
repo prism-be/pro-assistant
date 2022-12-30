@@ -72,7 +72,7 @@
   background-color: $greyLight;
 }
 
-@for $i from 1 to 10 {
+@for $i from 1 to 48 {
   .duration#{($i * 30)} {
     grid-row-end: span $i;
   }
