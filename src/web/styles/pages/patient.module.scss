@@ -19,12 +19,12 @@
 
 .contact {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(8, 1fr);
   grid-gap: 1rem;
   padding-top: 1rem;
 }
 
-.contactFieldSmall {
+.contactFieldExtraSmall {
   grid-column: auto / span 1;
 
   @media (max-width: $breakpointSM) {
@@ -32,7 +32,7 @@
   }
 }
 
-.contactField {
+.contactFieldSmall {
   grid-column: auto / span 2;
 
   @media (max-width: $breakpointSM) {
@@ -40,16 +40,32 @@
   }
 }
 
-.contactFieldWide {
+.contactFieldAverageSmall {
   grid-column: auto / span 3;
 
   @media (max-width: $breakpointSM) {
-    grid-column: auto / span 4;
+    grid-column: auto / span 8;
+  }
+}
+
+.contactField {
+  grid-column: auto / span 4;
+
+  @media (max-width: $breakpointSM) {
+    grid-column: auto / span 8;
+  }
+}
+
+.contactFieldWide {
+  grid-column: auto / span 6;
+
+  @media (max-width: $breakpointSM) {
+    grid-column: auto / span 8;
   }
 }
 
 .saveButton {
-  grid-column: 4;
+  grid-column: 7 / span 2;
   text-align: right;
 
   & > button {
@@ -57,7 +73,7 @@
   }
 
   @media (max-width: $breakpointSM) {
-    grid-column: auto / span 4;
+    grid-column: auto / span 8;
   }
 }
 

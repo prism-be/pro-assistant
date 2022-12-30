@@ -83,10 +83,13 @@ const Patient: NextPage = () => {
             </div>
             <h2>{t("pages.patients.details.contact")}</h2>
             <form className={styles.contact} onSubmit={handleSubmit(onSavePatientSubmit)}>
-                <div className={styles.contactField}>
+                <div className={styles.contactFieldExtraSmall}>
+                    <InputText name="title" label={t("fields.title")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
+                </div>
+                <div className={styles.contactFieldAverageSmall}>
                     <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                 </div>
-                <div className={styles.contactField}>
+                <div className={styles.contactFieldAverageSmall}>
                     <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} setValue={setValue} error={errors.firstName} autoCapitalize={true}/>
                 </div>
                 <div className={styles.contactField}>

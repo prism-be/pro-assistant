@@ -242,7 +242,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         var data = new
         {
             name = headers["yourName"]?.ToString(),
-            patientName = patient.LastName + " " + patient.FirstName,
+            patientName = (patient.Title + " " + patient.LastName + " " + patient.FirstName).Trim(),
             price = meeting.Price.ToString("F2") + "€",
             meetingType = meeting.Type,
             meetingDate = meeting.StartDate.ToLongDateString(),

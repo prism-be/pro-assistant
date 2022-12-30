@@ -28,6 +28,7 @@
     "nex": "Suiv."
   },
   "fields": {
+    "title": "Titre",
     "firstName": "Prénom",
     "lastName": "Nom",
     "phoneNumber": "N° Téléphone",

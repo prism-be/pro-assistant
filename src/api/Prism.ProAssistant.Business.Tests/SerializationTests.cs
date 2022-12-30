@@ -113,7 +113,11 @@ public class SerializationTests
             Street = Identifier.GenerateString(),
             FirstName = Identifier.GenerateString(),
             LastName = Identifier.GenerateString(),
-            ZipCode = Identifier.GenerateString()
+            ZipCode = Identifier.GenerateString(),
+            Title = Identifier.GenerateString(),
+            Email = Identifier.GenerateString(),
+            MobileNumber = Identifier.GenerateString(),
+            PhoneNumber = Identifier.GenerateString()
         };
 
         // Act and Assert
