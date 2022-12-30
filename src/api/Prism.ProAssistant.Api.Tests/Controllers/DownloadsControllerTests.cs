@@ -21,6 +21,23 @@ namespace Prism.ProAssistant.Api.Tests.Controllers;
 
 public class DownloadsControllerTests
 {
+    [Fact]
+    public async Task Delete()
+    {
+        // Arrange
+        var documentId = Identifier.GenerateString();
+        var meetingId = Identifier.GenerateString();
+        var cache = new Mock<IDistributedCache>();
+        var mediator = new Mock<IMediator>();
+
+        // Act
+        var controller = new DownloadController(mediator.Object, cache.Object);
+        await controller.Delete(new DeleteDocument(documentId, meetingId));
+
+        // Assert
+        mediator.Verify(x => x.Send(It.IsAny<DeleteDocument>(), CancellationToken.None), Times.Once);
+    }
+
     [Theory]
     [InlineData(true)]
     [InlineData(false)]

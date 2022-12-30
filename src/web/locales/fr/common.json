@@ -27,6 +27,9 @@
     "prev": "Préc.",
     "nex": "Suiv."
   },
+  "confirmations": {
+    "deleteDocument": "Etes-vous sûr de vouloir supprimer ce document ?"
+  },
   "fields": {
     "title": "Titre",
     "firstName": "Prénom",

@@ -2,13 +2,14 @@
 
 import {DocumentConfiguration, Meeting} from "../../lib/contracts"
 import Section from "../design/Section";
-import {downloadDocument, generateDocument} from "../../lib/ajaxHelper";
+import {deleteDataWithBody, downloadDocument, generateDocument} from "../../lib/ajaxHelper";
 import {Save} from "../icons/Save";
 import useSWR, {mutate} from "swr";
 import {useCallback, useState} from "react";
 import useTranslation from "next-translate/useTranslation";
 import {format, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
+import {Delete} from "../icons/Icons";
 
 interface Props {
     meeting: Meeting;
@@ -28,11 +29,18 @@ export const GeneratedDocuments = ({meeting}: Props) => {
         await generateDocument(document, meeting.id);
         await mutate("/meeting/" + meeting.id);
     }, [document]);
-    
 
-    const startDownloadDocument = useCallback(async (documentId:string) => {
+
+    const startDownloadDocument = useCallback(async (documentId: string) => {
         await downloadDocument(documentId);
     }, []);
+
+    const startDeleteDocument = useCallback(async (documentId: string) => {
+        if (confirm(t("confirmations.deleteDocument"))) {
+            await deleteDataWithBody("/document", {id: documentId, meetingId: meeting.id});
+            await mutate("/meeting/" + meeting.id);
+        }
+    }, [meeting]);
 
     return <Section>
         <h2>{t("pages.meeting.documents.title")}</h2>
@@ -53,6 +61,10 @@ export const GeneratedDocuments = ({meeting}: Props) => {
                 <div className={styles.documentAction}>
                     <div onClick={() => startDownloadDocument(d.id)} className={styles.documentSave}>
                         <Save/>
+                    </div>
+
+                    <div onClick={() => startDeleteDocument(d.id)} className={styles.documentSave}>
+                        <Delete/>
                     </div>
                 </div>
             </div>)}
