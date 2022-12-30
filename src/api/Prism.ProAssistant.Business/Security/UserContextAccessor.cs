@@ -73,12 +73,12 @@ public class UserContextAccessor : IUserContextAccessor
     {
         get
         {
-            if (_httpContextAccessor.HttpContext.User.Identity?.IsAuthenticated == false)
+            if (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == false)
             {
                 return string.Empty;
             }
 
-            var objectid = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
+            var objectid = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier);
 
             if (objectid == null)
             {

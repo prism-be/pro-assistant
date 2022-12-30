@@ -12,6 +12,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
+using Prism.ProAssistant.Api.Insights;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Behaviors;
 using Prism.ProAssistant.Business.Commands;
@@ -114,7 +115,9 @@ namespace Prism.ProAssistant.Api.Extensions
         public static void AddBusinessServices(this IServiceCollection services)
         {
             services.AddHttpContextAccessor();
-            services.AddScoped<IUserContextAccessor, UserContextAccessor>();
+            services.AddTransient<IUserContextAccessor, UserContextAccessor>();
+            
+            services.AddTransient<OrganizationContextEnricher>();
             
             // Add documents services
             services.AddScoped<ILocalizator, Localizator>();
