@@ -1,4 +1,4 @@
-﻿import {FieldValues, UseFormGetValues} from "react-hook-form";
+﻿import {FieldValues} from "react-hook-form";
 import {UseFormSetValue} from "react-hook-form/dist/types/form";
 import styles from "../../styles/components/forms/input.color.module.scss";
 import {useState} from "react";
@@ -8,15 +8,15 @@ interface Props {
     label: string;
     name: string;
     setValue: UseFormSetValue<FieldValues>;
-    getValues: UseFormGetValues<FieldValues>;
     error?: any;
     className?: string;
     onChange?: (value: string) => void;
+    initialColor?: string;
 }
 
-const InputColor = ({label, name, error, className, setValue, onChange, getValues}: Props) => {
+const InputColor = ({label, name, error, className, setValue, onChange, initialColor}: Props) => {
 
-    const [color, setColor] = useState<string>(getValues()[name] ?? "#000000");
+    const [color, setColor] = useState<string>(initialColor ?? "#000000");
     const [displayPicker, setDisplayPicker] = useState<boolean>(false);
     let foreColor = "#FFFFFF";
 

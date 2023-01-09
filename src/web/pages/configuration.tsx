@@ -76,7 +76,7 @@ const Tariffs = () => {
                             <InputText label={t("tariffs.defaultDuration")} name={"defaultDuration"} type={"number"} required={true} register={register} setValue={setValue} error={errors.defaultDuration}/>
                         </div>
                         <div className={styles.tariffEditionGridField}>
-                            <InputColor label={t("tariffs.color")} name={"backgroundColor"} setValue={setValue} error={errors.backgroundColor} getValues={getValues}/>
+                            <InputColor label={t("tariffs.color")} name={"backgroundColor"} setValue={setValue} error={errors.backgroundColor} initialColor={getValues()["backgroundColor"]}/>
                         </div>
                         <Button className={styles.tariffEditionGridButtonCancel} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
                         <Button className={styles.tariffEditionGridButtonSave} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
@@ -130,6 +130,7 @@ const Documents = () => {
             setValue('yourName', headers.yourName)
             setValue('yourCity', headers.yourCity)
             setValue('signature', headers.signature)
+            setValue('accentuateColor', headers.accentuateColor)
             setLogo(headers.logo);
             setSignature(headers.signature);
         }
@@ -159,6 +160,7 @@ const Documents = () => {
                 <InputImage label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
                 <InputText label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
                 <InputText label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
+                <InputColor label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue}  initialColor={getValues()["accentuateColor"]} />
             </div>
         </>
     </Section>

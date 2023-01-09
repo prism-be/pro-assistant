@@ -16,6 +16,7 @@
       "yourName": "Nom pour la signature",
       "yourCity": "Ville pour la signature",
       "signature": "Signature",
+      "accentuateColor": "Couleur d'accentuation",
       "saveSuccess": "L'entête et pied des pages des documents ont bien été enregistrés."
     }
   }
