@@ -54,7 +54,7 @@ public static class TableDescriptorExtensions
             }
         });
 
-        table.Cell().Row(2).Column(1).ColumnSpan(3).PaddingTop(0.5f, Unit.Centimetre).Element(e => e.Height(0.25f, Unit.Centimetre)).LineHorizontal(1);
+        table.Cell().Row(2).Column(1).ColumnSpan(3).PaddingTop(0.5f, Unit.Centimetre).Element(e => e.Height(0.25f, Unit.Centimetre)).LineHorizontal(0.5f);
     }
 
     public static void WriteSignature(this TableDescriptor table, JsonNode headers)
