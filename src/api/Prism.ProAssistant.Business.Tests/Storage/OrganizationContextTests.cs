@@ -38,7 +38,7 @@ namespace Prism.ProAssistant.Business.Tests.Storage
 
             // Act
             var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), userContextAccessor.Object);
-            var collection = context.GetCollection<Patient>();
+            var collection = context.GetCollection<Contact>();
 
             // Assert
             collection.Should().NotBeNull();
@@ -54,7 +54,7 @@ namespace Prism.ProAssistant.Business.Tests.Storage
 
             // Act
             var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), userContextAccessor.Object);
-            var collection = context.GetCollection<Patient>();
+            var collection = context.GetCollection<Contact>();
 
             // Assert
             collection.Should().NotBeNull();

@@ -8,7 +8,7 @@ import useSWR from "swr";
 import {useForm} from "react-hook-form";
 import {useCallback, useEffect, useState} from "react";
 import InputText from "../../components/forms/InputText";
-import {Appointment, Patient, Tariff} from "../../lib/contracts";
+import {Appointment, Contact, Tariff} from "../../lib/contracts";
 import {getData, postData} from "../../lib/ajaxHelper";
 import InputSelect from "../../components/forms/InputSelect";
 import {Calendar} from "../../components/forms/Calendar";
@@ -27,9 +27,9 @@ const Appointments: NextPage = () => {
 
     const {register, setValue, formState: {errors}, getValues, handleSubmit} = useForm();
 
-    const [patientsSuggestions, setPatientsSuggestions] = useState<Patient[]>([]);
+    const [contactsSuggestions, setContactsSuggestions] = useState<Contact[]>([]);
     const [suggested, setSuggested] = useState<string>();
-    const [patient, setPatient] = useState<Patient>();
+    const [contact, setContact] = useState<Contact>();
     const [date, setDate] = useState<Date>(startOfHour(new Date()));
     const [duration, setDuration] = useState<number>(60);
 
@@ -60,9 +60,9 @@ const Appointments: NextPage = () => {
         setDate(d);
         setValue("hour", format(d, "HH:mm"));
 
-        if (appointment.patientId) {
-            setPatient({
-                id: appointment.patientId,
+        if (appointment.contactId) {
+            setContact({
+                id: appointment.contactId,
                 firstName: appointment.firstName,
                 lastName: appointment.lastName,
                 birthDate: "",
@@ -103,7 +103,7 @@ const Appointments: NextPage = () => {
 
         const updatedAppointment: Appointment = {
             id: appointment?.id ?? '',
-            patientId: patient?.id ?? null,
+            contactId: contact?.id ?? null,
             title: data.lastName + " " + data.firstName + (data.type ? " (" + data.type + ")" : ""),
             price: parseFloat(data.price),
             duration: duration,
@@ -126,21 +126,21 @@ const Appointments: NextPage = () => {
         alertSuccess(t("alerts.saveSuccess"));
     }
 
-    let searchPatientsTimeout: any;
+    let searchContactsTimeout: any;
 
-    function startSuggestPatients() {
-        if (searchPatientsTimeout) {
-            clearTimeout(searchPatientsTimeout);
+    function startSuggestContacts() {
+        if (searchContactsTimeout) {
+            clearTimeout(searchContactsTimeout);
         }
-        searchPatientsTimeout = setTimeout(() => suggestPatients(), 500);
+        searchContactsTimeout = setTimeout(() => suggestContacts(), 500);
     }
 
-    async function suggestPatients() {
+    async function suggestContacts() {
         const lastName = getValues('lastName');
         const firstName = getValues('firstName');
 
         if (lastName === "" && firstName === "") {
-            setPatientsSuggestions([]);
+            setContactsSuggestions([]);
             return;
         }
 
@@ -148,23 +148,23 @@ const Appointments: NextPage = () => {
             return;
         }
 
-        const patients = await postData<Patient[]>("/patients", {
+        const contacts = await postData<Contact[]>("/contacts", {
             lastName,
             firstName,
             birthDate: '',
             phoneNumber: ''
         });
 
-        setPatientsSuggestions(patients ?? []);
+        setContactsSuggestions(contacts ?? []);
         setSuggested(lastName + "|" + firstName);
     }
 
-    const selectPatient = useCallback((patient: Patient) => {
-        setPatient(patient);
-        setSuggested(patient.lastName + "|" + patient.firstName);
-        setValue("lastName", patient.lastName);
-        setValue("firstName", patient.firstName);
-        setPatientsSuggestions([]);
+    const selectContact = useCallback((contact: Contact) => {
+        setContact(contact);
+        setSuggested(contact.lastName + "|" + contact.firstName);
+        setValue("lastName", contact.lastName);
+        setValue("firstName", contact.firstName);
+        setContactsSuggestions([]);
     }, []);
 
     function getTariffsOptions() {
@@ -228,12 +228,12 @@ const Appointments: NextPage = () => {
                 {appointment?.id !== undefined && <h1>{t("pages.appointment.titleEditing")}</h1>}
             </>
             <form className={styles.content} onSubmit={handleSubmit(onSubmit)}>
-                <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName} onChange={() => startSuggestPatients()}/>
-                <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.firstName} onChange={() => startSuggestPatients()}/>
+                <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName} onChange={() => startSuggestContacts()}/>
+                <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.firstName} onChange={() => startSuggestContacts()}/>
 
-                {patientsSuggestions.length !== 0 && <div className={styles.patientsSuggestions}>
-                    <h2>{t("pages.appointment.patientsSuggestions.title")}</h2>
-                    {patientsSuggestions.map(p => <div key={p.id} className={styles.patientsSuggestion} onClick={() => selectPatient(p)}>
+                {contactsSuggestions.length !== 0 && <div className={styles.contactsSuggestions}>
+                    <h2>{t("pages.appointment.contactsSuggestions.title")}</h2>
+                    {contactsSuggestions.map(p => <div key={p.id} className={styles.contactsSuggestion} onClick={() => selectContact(p)}>
                         {p.lastName} {p.firstName} {p.birthDate && p.birthDate !== "" && <>({p.birthDate})</>}
                     </div>)}
                 </div>}

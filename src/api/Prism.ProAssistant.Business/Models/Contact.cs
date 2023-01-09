@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "Patient.cs" company = "Prism">
+//  <copyright file = "Contact.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -10,8 +10,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Prism.ProAssistant.Business.Models;
 
-[BsonCollection("patients")]
-public class Patient : IDataModel
+[BsonCollection("contacts")]
+public class Contact : IDataModel
 {
     [JsonPropertyName("id")]
     [BsonId]

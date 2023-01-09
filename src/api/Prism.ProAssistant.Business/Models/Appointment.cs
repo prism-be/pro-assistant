@@ -45,9 +45,9 @@ public class Appointment : IDataModel
     [JsonPropertyName("title")]
     public string Title { get; set; } = string.Empty;
 
-    [JsonPropertyName("patientId")]
+    [JsonPropertyName("contactId")]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string? PatientId { get; set; }
+    public string? ContactId { get; set; }
 
     [JsonPropertyName("type")]
     public string? Type { get; set; }

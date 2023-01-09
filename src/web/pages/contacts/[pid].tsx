@@ -1,4 +1,4 @@
-﻿import styles from '../../styles/pages/patient.module.scss'
+﻿import styles from '../../styles/pages/contact.module.scss'
 
 import {NextPage} from "next";
 import useTranslation from "next-translate/useTranslation";
@@ -14,53 +14,53 @@ import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {Back} from "../../components/icons/Back";
 import InputDate from "../../components/forms/InputDate";
 import {getData, postData} from "../../lib/ajaxHelper";
-import {Patient, UpsertResult} from "../../lib/contracts";
+import {Contact, UpsertResult} from "../../lib/contracts";
 import Section from "../../components/design/Section";
-import {PatientAppointments} from "../../components/patients/PatientAppointments";
+import {ContactAppointments} from "../../components/contacts/ContactAppointments";
 
-const Patient: NextPage = () => {
+const Contacts: NextPage = () => {
     const {t} = useTranslation('common');
     const router = useRouter();
     const {pid} = router.query;
 
-    const loadPatient = async (route: string) => {
+    const loadContact = async (route: string) => {
 
-        if (route === "/patient/000000000000000000000000") {
+        if (route === "/contact/000000000000000000000000") {
             return null;
         }
 
-        return await getData<Patient>(route);
+        return await getData<Contact>(route);
     }
 
-    const {data: patient, mutate: mutatePatient} = useSWR("/patient/" + pid, loadPatient);
+    const {data: contact, mutate: mutateContact} = useSWR("/contact/" + pid, loadContact);
     const {register, handleSubmit, formState: {errors}, setValue, getValues} = useForm();
 
     useEffect(() => {
-        if (patient) {
-            const d: any = patient;
-            Object.getOwnPropertyNames(patient).forEach(field => {
+        if (contact) {
+            const d: any = contact;
+            Object.getOwnPropertyNames(contact).forEach(field => {
                 setValue(field, d[field]);
             })
         }
-    }, [patient, setValue])
+    }, [contact, setValue])
 
 
-    const savePatientForm = async (data: any) => {
+    const saveContactForm = async (data: any) => {
         if (pid === '000000000000000000000000') {
             data.id = '';
-            const newPid = await postData<UpsertResult>("/patient", data);
+            const newPid = await postData<UpsertResult>("/contact", data);
             alertSuccess(t("details.saveSuccess"), {autoClose: true});
-            await router.push("/patients/" + newPid?.id);
+            await router.push("/contacts/" + newPid?.id);
             return;
         }
 
-        await postData("/patient", data);
-        await mutatePatient();
-        alertSuccess(t("pages.patients.details.saveSuccess"), {autoClose: true});
+        await postData("/contact", data);
+        await mutateContact();
+        alertSuccess(t("pages.contacts.details.saveSuccess"), {autoClose: true});
     }
 
-    const onSavePatientSubmit = async (data: any) => {
-        await savePatientForm(data);
+    const onSaveContactSubmit = async (data: any) => {
+        await saveContactForm(data);
     }
 
     const [isSavePressed, isSaveEvent] = useKeyboardJs("ctrl + s")
@@ -68,7 +68,7 @@ const Patient: NextPage = () => {
         if (isSavePressed) {
             isSaveEvent?.preventDefault();
             const data = getValues();
-            savePatientForm(data);
+            saveContactForm(data);
         }
     }, [isSavePressed, getValues])
 
@@ -76,13 +76,12 @@ const Patient: NextPage = () => {
     return <ContentContainer>
         <Section>
             <div className={styles.cardTitle}>
-                <a onClick={() => router.push("/patients")}>
+                <a onClick={() => router.push("/contacts")}>
                     <Back/>
                 </a>
-                <h1>{t("pages.patients.details.title")} {patient?.lastName} {patient?.firstName}</h1>
+                <h1>{t("pages.contacts.details.title")} {contact?.lastName} {contact?.firstName}</h1>
             </div>
-            <h2>{t("pages.patients.details.contact")}</h2>
-            <form className={styles.contact} onSubmit={handleSubmit(onSavePatientSubmit)}>
+            <form className={styles.contact} onSubmit={handleSubmit(onSaveContactSubmit)}>
                 <div className={styles.contactFieldExtraSmall}>
                     <InputText name="title" label={t("fields.title")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                 </div>
@@ -117,12 +116,12 @@ const Patient: NextPage = () => {
                     <InputText name="country" label={t("fields.country")} type="text" required={false} register={register} setValue={setValue} error={errors.country} autoCapitalize={true}/>
                 </div>
                 <div className={styles.saveButton}>
-                    <Button text={t("actions.save")} onClick={handleSubmit(onSavePatientSubmit)} secondary={true}/>
+                    <Button text={t("actions.save")} onClick={handleSubmit(onSaveContactSubmit)} secondary={true}/>
                 </div>
             </form>
         </Section>
-        <PatientAppointments patientId={pid as string}/>
+        <ContactAppointments contactId={pid as string}/>
     </ContentContainer>
 }
 
-export default Patient;
+export default Contacts;

@@ -21,7 +21,7 @@ export interface Appointment {
     id: string;
     lastName: string;
     title: string;
-    patientId?: string | null;
+    contactId?: string | null;
     type?: string | null;
     typeId?: string | null;
     foreColor?: string | null;
@@ -34,6 +34,22 @@ export interface BinaryDocument {
     fileName: string;
     id: string;
     title: string;
+}
+
+export interface Contact {
+    id: string;
+    birthDate?: string | null;
+    city?: string | null;
+    country?: string | null;
+    email?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    mobileNumber?: string | null;
+    number?: string | null;
+    phoneNumber?: string | null;
+    street?: string | null;
+    zipCode?: string | null;
+    title?: string | null;
 }
 
 export interface DeleteDocument {
@@ -61,29 +77,13 @@ export interface GenerateDocument {
     appointmentId: string;
 }
 
-export interface Patient {
-    id: string;
-    birthDate?: string | null;
-    city?: string | null;
-    country?: string | null;
-    email?: string | null;
-    firstName?: string | null;
-    lastName?: string | null;
-    mobileNumber?: string | null;
-    number?: string | null;
-    phoneNumber?: string | null;
-    street?: string | null;
-    zipCode?: string | null;
-    title?: string | null;
-}
-
 export interface SearchAppointments {
     startDate: string;
     endDate: string;
-    patientId?: string | null;
+    contactId?: string | null;
 }
 
-export interface SearchPatients {
+export interface SearchContacts {
     lastName: string;
     firstName: string;
     phoneNumber: string;

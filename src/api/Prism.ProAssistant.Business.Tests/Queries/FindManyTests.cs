@@ -22,11 +22,11 @@ namespace Prism.ProAssistant.Business.Tests.Queries
             // Arrange
             var organizationContext = new Mock<IOrganizationContext>();
 
-            var collection = new Mock<IMongoCollection<Patient>>();
-            organizationContext.Setup(x => x.GetCollection<Patient>())
+            var collection = new Mock<IMongoCollection<Contact>>();
+            organizationContext.Setup(x => x.GetCollection<Contact>())
                 .Returns(collection.Object);
 
-            var items = new List<Patient>
+            var items = new List<Contact>
             {
                 new()
                 {
@@ -40,7 +40,7 @@ namespace Prism.ProAssistant.Business.Tests.Queries
                 }
             };
 
-            var cursor = new Mock<IAsyncCursor<Patient>>();
+            var cursor = new Mock<IAsyncCursor<Contact>>();
             cursor.Setup(_ => _.Current).Returns(items);
             cursor
                 .SetupSequence(_ => _.MoveNext(It.IsAny<CancellationToken>()))
@@ -51,12 +51,12 @@ namespace Prism.ProAssistant.Business.Tests.Queries
                 .Returns(Task.FromResult(true))
                 .Returns(Task.FromResult(false));
 
-            collection.Setup(x => x.FindAsync<Patient>(Builders<Patient>.Filter.Empty, null, CancellationToken.None))
+            collection.Setup(x => x.FindAsync<Contact>(Builders<Contact>.Filter.Empty, null, CancellationToken.None))
                 .ReturnsAsync(cursor.Object);
 
             // Act
-            var handler = new FindManyHandler<Patient>(organizationContext.Object);
-            var result = await handler.Handle(new FindMany<Patient>(), CancellationToken.None);
+            var handler = new FindManyHandler<Contact>(organizationContext.Object);
+            var result = await handler.Handle(new FindMany<Contact>(), CancellationToken.None);
 
             // Assert
             result.Count.Should().Be(2);

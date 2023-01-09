@@ -23,13 +23,13 @@ namespace Prism.ProAssistant.Business.Tests.Queries
             // Arrange
             var organizationContext = new Mock<IOrganizationContext>();
 
-            var collection = new Mock<IMongoCollection<Patient>>();
-            organizationContext.Setup(x => x.GetCollection<Patient>())
+            var collection = new Mock<IMongoCollection<Contact>>();
+            organizationContext.Setup(x => x.GetCollection<Contact>())
                 .Returns(collection.Object);
 
             var id = Identifier.GenerateString();
 
-            var items = new List<Patient>
+            var items = new List<Contact>
             {
                 new()
                 {
@@ -37,7 +37,7 @@ namespace Prism.ProAssistant.Business.Tests.Queries
                     FirstName = "Simon"
                 }
             };
-            var cursor = new Mock<IAsyncCursor<Patient>>();
+            var cursor = new Mock<IAsyncCursor<Contact>>();
             cursor.Setup(_ => _.Current).Returns(items);
             cursor
                 .SetupSequence(_ => _.MoveNext(It.IsAny<CancellationToken>()))
@@ -48,12 +48,12 @@ namespace Prism.ProAssistant.Business.Tests.Queries
                 .Returns(Task.FromResult(true))
                 .Returns(Task.FromResult(false));
 
-            collection.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<Patient>>(), It.IsAny<FindOptions<Patient>>(), CancellationToken.None))
+            collection.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<Contact>>(), It.IsAny<FindOptions<Contact>>(), CancellationToken.None))
                 .ReturnsAsync(cursor.Object);
 
             // Act
-            var handler = new FindOneHandler<Patient>(organizationContext.Object);
-            var result = await handler.Handle(new FindOne<Patient>(id), CancellationToken.None);
+            var handler = new FindOneHandler<Contact>(organizationContext.Object);
+            var result = await handler.Handle(new FindOne<Contact>(id), CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();

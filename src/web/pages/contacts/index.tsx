@@ -1,4 +1,4 @@
-﻿import styles from '../../styles/pages/patients.module.scss';
+﻿import styles from '../../styles/pages/contacts.module.scss';
 
 import ContentContainer from "../../components/design/ContentContainer";
 import InputText from "../../components/forms/InputText";
@@ -13,24 +13,24 @@ import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {postData} from "../../lib/ajaxHelper";
-import {Patient} from "../../lib/contracts";
+import {Contact} from "../../lib/contracts";
 import Section from "../../components/design/Section";
 
-const Patients: NextPage = () => {
+const Contacts: NextPage = () => {
 
     const {t} = useTranslation('common');
     const router = useRouter();
 
-    const [patients, setPatients] = useState<Patient[] | null>(null);
+    const [contacts, setContacts] = useState<Contact[] | null>(null);
 
     const schema = yup.object({}).required();
 
     const {register, handleSubmit, formState: {errors}, setValue, setFocus, reset} = useForm({resolver: yupResolver(schema)});
 
     useEffect(() => {
-        const sessionSearchPatients = sessionStorage.getItem('patients/search-patients');
-        if (sessionSearchPatients) {
-            const data = JSON.parse(sessionSearchPatients);
+        const sessionSearchContacts = sessionStorage.getItem('contacts/search-contacts');
+        if (sessionSearchContacts) {
+            const data = JSON.parse(sessionSearchContacts);
             Object.getOwnPropertyNames(data).forEach(field => {
                 setValue(field, data[field]);
             })
@@ -40,19 +40,19 @@ const Patients: NextPage = () => {
     }, [setFocus])
 
     const onSubmit = async (data: any) => {
-        sessionStorage.setItem('patients/search-patients', JSON.stringify(data));
-        const result = await postData<Patient[]>("/patients", data);
-        setPatients(result);
+        sessionStorage.setItem('contacts/search-contacts', JSON.stringify(data));
+        const result = await postData<Contact[]>("/contacts", data);
+        setContacts(result);
     }
 
     const navigate = async (id: string) => {
-        await router.push('/patients/' + id);
+        await router.push('/contacts/' + id);
     }
 
     const resetSearch = () => {
-        sessionStorage.removeItem('patients/search-patients');
+        sessionStorage.removeItem('contacts/search-contacts');
         reset();
-        setPatients(null);
+        setContacts(null);
         setFocus('lastName');
     }
 
@@ -60,7 +60,7 @@ const Patients: NextPage = () => {
     useEffect(() => {
         if (isNewPressed) {
             isNewPressedEvent?.preventDefault();
-            router.push("/patients/000000000000000000000000");
+            router.push("/contacts/000000000000000000000000");
         }
     }, [isNewPressed, router])
 
@@ -68,7 +68,7 @@ const Patients: NextPage = () => {
         <>
             <Section>
                 <>
-                    <h1 className={styles.searchTitle}>{t("pages.patients.title")}</h1>
+                    <h1 className={styles.searchTitle}>{t("pages.contacts.title")}</h1>
                     <form className={styles.searchPanel} onSubmit={handleSubmit(onSubmit)}>
                         <div className={styles.searchField}>
                             <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
@@ -86,7 +86,7 @@ const Patients: NextPage = () => {
                             <Button text={t("actions.reset")} onClick={resetSearch} secondary={true}/>
                         </div>
                         <div className={styles.newButton}>
-                            <Button text={t("actions.new")} onClick={() => router.push("/patients/000000000000000000000000")} secondary={true}/>
+                            <Button text={t("actions.new")} onClick={() => router.push("/contacts/000000000000000000000000")} secondary={true}/>
                         </div>
                         <div className={styles.searchButton}>
                             <Button submit={true} text={t("actions.search")} onClick={handleSubmit(onSubmit)}/>
@@ -97,29 +97,29 @@ const Patients: NextPage = () => {
 
             <Section>
                 <>
-                    {patients && <>
+                    {contacts && <>
                         <h2>{t("results.title")}</h2>
-                        {patients.length !== 0 && <div className={styles.searchResultsTable}>
+                        {contacts.length !== 0 && <div className={styles.searchResultsTable}>
                             <div className={styles.searchResultsRow}>
                                 <div className={styles.searchResultsHeader}>{t("fields.lastName")}</div>
                                 <div className={styles.searchResultsHeader}>{t("fields.firstName")}</div>
                                 <div className={styles.searchResultsHeader}>{t("fields.phoneNumber")}</div>
                                 <div className={styles.searchResultsHeader}>{t("fields.birthDate")}</div>
                             </div>
-                            {patients?.map(patient =>
-                                <div className={styles.searchResultsRow + " " + styles.searchResultsRowPatient} key={patient.id} onClick={() => navigate(patient.id)}>
-                                    <div className={styles.searchResultsCell}>{patient.lastName}</div>
-                                    <div className={styles.searchResultsCell}>{patient.firstName}</div>
-                                    <div className={styles.searchResultsCell}>{patient.phoneNumber}</div>
-                                    <div className={styles.searchResultsCell}>{patient.birthDate}</div>
+                            {contacts?.map(contact =>
+                                <div className={styles.searchResultsRow + " " + styles.searchResultsRowContact} key={contact.id} onClick={() => navigate(contact.id)}>
+                                    <div className={styles.searchResultsCell}>{contact.lastName}</div>
+                                    <div className={styles.searchResultsCell}>{contact.firstName}</div>
+                                    <div className={styles.searchResultsCell}>{contact.phoneNumber}</div>
+                                    <div className={styles.searchResultsCell}>{contact.birthDate}</div>
                                 </div>
                             )}
                         </div>}
 
-                        {patients.length === 0 && <div className={styles.helpText}>{t("results.noResults")}</div>}
+                        {contacts.length === 0 && <div className={styles.helpText}>{t("results.noResults")}</div>}
                     </>}
 
-                    {!patients && <>
+                    {!contacts && <>
                         <div className={styles.helpText}>{t("results.doSearch")}</div>
                     </>}
                 </>
@@ -128,4 +128,4 @@ const Patients: NextPage = () => {
     </ContentContainer>
 }
 
-export default Patients;
+export default Contacts;

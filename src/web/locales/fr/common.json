@@ -5,7 +5,7 @@
   },
   "menu": {
     "global": "Pro Assistant",
-    "patients": "Fiches Patients",
+    "contacts": "Contacts",
     "agenda": "Agenda",
     "calendar": "Calendrier",
     "configurationTitle": "Configuration",
@@ -61,15 +61,15 @@
     "mobileWarning": "Cette fonctionnalité n'est pas prévue pour la taille d'écran actuelle. Veuillez pivoter votre mobile ou utiliser une écran avec une plus grande résolution."
   },
   "pages": {
-    "patients": {
-      "title": "Rechercher un patient",
+    "contacts": {
+      "title": "Rechercher un contact",
       "details": {
-        "title": "Fiche patient : ",
+        "title": "Fiche contact : ",
         "contact": "Coordonnées",
         "saveSuccess": "Les modifications sur la fiche ont été sauvegardées.",
         "appointments": {
           "title": "Liste des rendez-vous",
-          "noappointments": "Aucun rendez-vous planifié pour ce patient"
+          "noappointments": "Aucun rendez-vous planifié pour ce contact"
         }
       }
     },
@@ -83,8 +83,8 @@
     "appointment": {
       "titleNew": "Ajouter un rendez-vous",
       "titleEditing": "Edition d'un rendez-vous",
-      "patientsSuggestions": {
-        "title": "Suggestions de patients"
+      "contactsSuggestions": {
+        "title": "Suggestions de contacts"
       },
       "tariffs": {
         "title": "Type de séance",

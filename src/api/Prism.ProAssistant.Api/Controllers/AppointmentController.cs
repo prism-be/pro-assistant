@@ -47,17 +47,17 @@ public class AppointmentController : Controller
     [HttpPost]
     public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] Appointment appointment)
     {
-        if (string.IsNullOrWhiteSpace(appointment.PatientId))
+        if (string.IsNullOrWhiteSpace(appointment.ContactId))
         {
-            var patient = new Patient
+            var contact = new Contact
             {
                 LastName = appointment.LastName,
                 FirstName = appointment.FirstName
             };
 
-            var patientId = await _mediator.Send(new UpsertOne<Patient>(patient));
+            var contactId = await _mediator.Send(new UpsertOne<Contact>(contact));
 
-            appointment.PatientId = patientId.Id;
+            appointment.ContactId = contactId.Id;
         }
 
         var result = await _mediator.Send(new UpsertOne<Appointment>(appointment));
