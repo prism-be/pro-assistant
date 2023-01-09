@@ -16,8 +16,8 @@ public class Document
     [JsonPropertyName("data")]
     public byte[] Data { get; set; } = Array.Empty<byte>();
 
-    [JsonPropertyName("patientId")]
-    public string PatientId { get; set; } = string.Empty;
+    [JsonPropertyName("contactId")]
+    public string ContactId { get; set; } = string.Empty;
 
     [JsonPropertyName("creationDate")]
     public DateTime CreationDate { get; set; } = DateTime.Now;

@@ -28,7 +28,7 @@ public class SerializationTests
             State = (int)AppointmentState.Confirmed,
             PaymentDate = DateTime.UtcNow,
             Title = Identifier.GenerateString(),
-            PatientId = Identifier.GenerateString(),
+            ContactId = Identifier.GenerateString(),
             StartDate = DateTime.UtcNow.AddHours(-2),
             Type = Identifier.GenerateString(),
             BackgroundColor = Identifier.GenerateString(),
@@ -67,6 +67,31 @@ public class SerializationTests
     }
 
     [Fact]
+    public void Contact_Ok()
+    {
+        // Arrange
+        var contact = new Contact
+        {
+            Id = Identifier.GenerateString(),
+            BirthDate = Identifier.GenerateString(),
+            City = Identifier.GenerateString(),
+            Country = Identifier.GenerateString(),
+            Number = Identifier.GenerateString(),
+            Street = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            ZipCode = Identifier.GenerateString(),
+            Title = Identifier.GenerateString(),
+            Email = Identifier.GenerateString(),
+            MobileNumber = Identifier.GenerateString(),
+            PhoneNumber = Identifier.GenerateString()
+        };
+
+        // Act and Assert
+        CheckSerialization(contact);
+    }
+
+    [Fact]
     public void Document()
     {
         // Arrange
@@ -97,31 +122,6 @@ public class SerializationTests
 
         // Act and Assert
         CheckSerialization(source);
-    }
-
-    [Fact]
-    public void Patient_Ok()
-    {
-        // Arrange
-        var patient = new Patient
-        {
-            Id = Identifier.GenerateString(),
-            BirthDate = Identifier.GenerateString(),
-            City = Identifier.GenerateString(),
-            Country = Identifier.GenerateString(),
-            Number = Identifier.GenerateString(),
-            Street = Identifier.GenerateString(),
-            FirstName = Identifier.GenerateString(),
-            LastName = Identifier.GenerateString(),
-            ZipCode = Identifier.GenerateString(),
-            Title = Identifier.GenerateString(),
-            Email = Identifier.GenerateString(),
-            MobileNumber = Identifier.GenerateString(),
-            PhoneNumber = Identifier.GenerateString()
-        };
-
-        // Act and Assert
-        CheckSerialization(patient);
     }
 
     [Fact]

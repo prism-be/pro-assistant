@@ -1,4 +1,4 @@
-﻿import styles from '../../styles/components/patients/patient-appointments.module.scss';
+﻿import styles from '../../styles/components/contacts/contact-appointments.module.scss';
 import useSWR from "swr";
 import Section from "../design/Section";
 import {postData} from "../../lib/ajaxHelper";
@@ -9,16 +9,16 @@ import {getLocale} from "../../lib/localization";
 import {useRouter} from "next/router";
 
 export interface Props {
-    patientId: string;
+    contactId: string;
 }
 
-export const PatientAppointments = (props: Props) => {
+export const ContactAppointments = (props: Props) => {
     async function loadAppointments(): Promise<Appointment[]> {
-        const data = await postData<Appointment[]>("/appointments", {patientId: props.patientId});
+        const data = await postData<Appointment[]>("/appointments", {contactId: props.contactId});
         return data?.reverse() ?? [];
     }
 
-    const {data: appointments} = useSWR<Appointment[]>('/api/patients/' + props.patientId + '/appointments', loadAppointments);
+    const {data: appointments} = useSWR<Appointment[]>('/api/contacts/' + props.contactId + '/appointments', loadAppointments);
 
     const {t} = useTranslation('common');
     const router = useRouter();
@@ -28,7 +28,7 @@ export const PatientAppointments = (props: Props) => {
     }
 
     return <Section>
-        <h2>{t("pages.patients.details.appointments.title")}</h2>
+        <h2>{t("pages.contacts.details.appointments.title")}</h2>
         <div>
             {appointments?.map(m => <div key={m.id} className={styles.appointment} onClick={() => displayAppointment(m.id)}>
                 <div className={styles.typeColor} style={{backgroundColor: m.backgroundColor ?? ""}}></div>
@@ -54,7 +54,7 @@ export const PatientAppointments = (props: Props) => {
         </div>
         <>
             {appointments?.length === 0 && <div className={styles.noAppointments}>
-                {t("pages.patients.details.appointments.noAppointments")}
+                {t("pages.contacts.details.appointments.noAppointments")}
             </div>}
         </>
 

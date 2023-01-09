@@ -68,9 +68,9 @@ namespace Prism.ProAssistant.Api.Extensions
                 applicationAssembly
             }, config => config.AsScoped());
 
-            services.AddScoped<IRequestHandler<FindOne<Patient>, Patient?>, FindOneHandler<Patient>>();
-            services.AddScoped<IRequestHandler<FindMany<Patient>, List<Patient>>, FindManyHandler<Patient>>();
-            services.AddScoped<IRequestHandler<UpsertOne<Patient>, UpsertResult>, UpsertOneHandler<Patient>>();
+            services.AddScoped<IRequestHandler<FindOne<Contact>, Contact?>, FindOneHandler<Contact>>();
+            services.AddScoped<IRequestHandler<FindMany<Contact>, List<Contact>>, FindManyHandler<Contact>>();
+            services.AddScoped<IRequestHandler<UpsertOne<Contact>, UpsertResult>, UpsertOneHandler<Contact>>();
 
             services.AddScoped<IRequestHandler<FindOne<Appointment>, Appointment?>, FindOneHandler<Appointment>>();
             services.AddScoped<IRequestHandler<FindMany<Appointment>, List<Appointment>>, FindManyHandler<Appointment>>();

@@ -11,7 +11,7 @@ using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Business.Queries;
 
-public record SearchAppointments(DateTime StartDate, DateTime EndDate, string? PatientId) : IRequest<List<Appointment>>;
+public record SearchAppointments(DateTime StartDate, DateTime EndDate, string? ContactId) : IRequest<List<Appointment>>;
 
 public class SearchAppointmentsHandler : IRequestHandler<SearchAppointments, List<Appointment>>
 {
@@ -36,9 +36,9 @@ public class SearchAppointmentsHandler : IRequestHandler<SearchAppointments, Lis
             filters.Add(Builders<Appointment>.Filter.Lte(x => x.StartDate, request.EndDate));
         }
 
-        if (!string.IsNullOrWhiteSpace(request.PatientId))
+        if (!string.IsNullOrWhiteSpace(request.ContactId))
         {
-            filters.Add(Builders<Appointment>.Filter.Eq(x => x.PatientId, request.PatientId));
+            filters.Add(Builders<Appointment>.Filter.Eq(x => x.ContactId, request.ContactId));
         }
 
         var collection = _organizationContext.GetCollection<Appointment>();

@@ -33,7 +33,7 @@ const Menu = () => {
     return <div className={styles.container + (displayMobileMenu ? " " + styles.mobile : "")}  onClick={() => toggledMobileMenu()}>
         <ul>
             <li className={styles.title}>{t("menu.global")}</li>
-            <li className={styles.item + getActiveLinkClass('/patients')}><Link href={"/patients"}>{t("menu.patients")}</Link></li>
+            <li className={styles.item + getActiveLinkClass('/contacts')}><Link href={"/contacts"}>{t("menu.contacts")}</Link></li>
             <li className={styles.item + getActiveLinkClass('/agenda')}><Link href={"/agenda/" + format(new Date(), "yyyy-MM-dd")}>{t("menu.agenda")}</Link></li>
             <li className={styles.item + getActiveLinkClass('/calendar')}><Link href={"/calendar"}>{t("menu.calendar")}</Link></li>
             <li className={styles.item + getActiveLinkClass('/appointments')}><Link href={"/appointments"}>{t("menu.appointments")}</Link></li>

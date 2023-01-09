@@ -16,7 +16,7 @@
       "title": "Balises de contenu automatique",
       "help": "Dans le titre et le contenu des documents, vous pouvez utiliser les balises suivantes qui seront automatiquement remplacées:",
       "name": "Votre nom",
-      "patientName": "Nom du patient",
+      "contactName": "Nom du contact",
       "price": "Prix de la séance",
       "appointmentType": "Type de rendez-vous",
       "appointmentDate": "Date du rendez-vous",

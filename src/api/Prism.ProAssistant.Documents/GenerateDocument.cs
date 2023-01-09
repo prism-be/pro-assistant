@@ -60,7 +60,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         var document = CreateDocument(data, title, content);
         var bytes = document.GeneratePdf();
 
-        var computedTitle = ReplaceContent(title, data.Value.appointment, data.Value.patient, data.Value.headers);
+        var computedTitle = ReplaceContent(title, data.Value.appointment, data.Value.contact, data.Value.headers);
         await SaveDocument(data.Value.appointment, computedTitle, bytes);
 
         return bytes;
@@ -93,7 +93,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         _logger.LogInformation("Document {DocumentId} was saved for Appointment {AppointmentId}", document.Id, appointment.Id);
     }
 
-    private Document CreateDocument([DisallowNull] (Appointment appointment, Patient patient, Setting setting, JsonNode headers)? data, string title, string content)
+    private Document CreateDocument([DisallowNull] (Appointment appointment, Contact contact, Setting setting, JsonNode headers)? data, string title, string content)
     {
         return Document.Create(container =>
         {
@@ -137,16 +137,16 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
                     table.Cell().Row(4).Column(3).PaddingTop(1, Unit.Centimetre).Element(e => e.Height(5, Unit.Centimetre)).Column(c =>
                     {
-                        c.Item().Text(data.Value.patient.LastName + " " + data.Value.patient.FirstName);
-                        c.Item().Text(data.Value.patient.Street + " " + data.Value.patient.Number);
-                        c.Item().Text(data.Value.patient.ZipCode + " " + data.Value.patient.City);
-                        c.Item().Text(data.Value.patient.Country);
+                        c.Item().Text(data.Value.contact.LastName + " " + data.Value.contact.FirstName);
+                        c.Item().Text(data.Value.contact.Street + " " + data.Value.contact.Number);
+                        c.Item().Text(data.Value.contact.ZipCode + " " + data.Value.contact.City);
+                        c.Item().Text(data.Value.contact.Country);
                     });
 
                     table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(13, Unit.Centimetre)).Column(c =>
                     {
-                        c.Item().Text(ReplaceContent(title, data.Value.appointment, data.Value.patient, data.Value.headers)).Bold();
-                        c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.appointment, data.Value.patient, data.Value.headers));
+                        c.Item().Text(ReplaceContent(title, data.Value.appointment, data.Value.contact, data.Value.headers)).Bold();
+                        c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.appointment, data.Value.contact, data.Value.headers));
                     });
 
                     table.Cell().Row(6).Column(3).PaddingTop(1, Unit.Centimetre).Column(c =>
@@ -181,7 +181,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         return image.ToByteArray();
     }
 
-    private async Task<(Appointment appointment, Patient patient, Setting setting, JsonNode headers)?> GetData(string appointmentId)
+    private async Task<(Appointment appointment, Contact contact, Setting setting, JsonNode headers)?> GetData(string appointmentId)
     {
         var appointment = await _mediator.Send(new FindOne<Appointment>(appointmentId));
 
@@ -191,17 +191,17 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
             return null;
         }
 
-        if (string.IsNullOrWhiteSpace(appointment.PatientId))
+        if (string.IsNullOrWhiteSpace(appointment.ContactId))
         {
-            _logger.LogWarning("Cannot find patient for Appointment {AppointmentId}", appointmentId);
+            _logger.LogWarning("Cannot find contact for Appointment {AppointmentId}", appointmentId);
             return null;
         }
 
-        var patient = await _mediator.Send(new FindOne<Patient>(appointment.PatientId));
+        var contact = await _mediator.Send(new FindOne<Contact>(appointment.ContactId));
 
-        if (patient == null)
+        if (contact == null)
         {
-            _logger.LogWarning("Cannot find patient {patientId}", appointment.PatientId);
+            _logger.LogWarning("Cannot find contact {contactId}", appointment.ContactId);
             return null;
         }
 
@@ -221,7 +221,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
             return null;
         }
 
-        return (appointment, patient, setting, headers);
+        return (appointment, contact, setting, headers);
     }
 
     private async Task<(string title, string content)> GetTitleContent(string documentId)
@@ -236,14 +236,14 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         return (document.Title ?? string.Empty, document.Body ?? string.Empty);
     }
 
-    private string ReplaceContent(string templateContent, Appointment appointment, Patient patient, JsonNode headers)
+    private string ReplaceContent(string templateContent, Appointment appointment, Contact contact, JsonNode headers)
     {
         var template = Template.Parse(templateContent);
 
         var data = new
         {
             name = headers["yourName"]?.ToString(),
-            patientName = (patient.Title + " " + patient.LastName + " " + patient.FirstName).Trim(),
+            contactName = (contact.Title + " " + contact.LastName + " " + contact.FirstName).Trim(),
             price = appointment.Price.ToString("F2") + "€",
             appointmentType = appointment.Type,
             appointmentDate = appointment.StartDate.ToLongDateString(),

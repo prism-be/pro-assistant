@@ -90,21 +90,21 @@ public class AppointmentControllerTests
         await CrudTests.UpsertOne<AppointmentController, Appointment>(c => c.UpsertOne(new Appointment
         {
             Id = Identifier.GenerateString(),
-            PatientId = Identifier.GenerateString()
+            ContactId = Identifier.GenerateString()
         }));
     }
 
     [Fact]
-    public async Task UpsertOne_NoPatient()
+    public async Task UpsertOne_NoContact()
     {
         await CrudTests.UpsertOne<AppointmentController, Appointment>(c => c.UpsertOne(new Appointment
             {
                 Id = Identifier.GenerateString(),
-                PatientId = string.Empty
+                ContactId = string.Empty
             }),
             m =>
             {
-                m.Setup(x => x.Send(It.IsAny<UpsertOne<Patient>>(), CancellationToken.None)).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
+                m.Setup(x => x.Send(It.IsAny<UpsertOne<Contact>>(), CancellationToken.None)).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
             });
     }
 }

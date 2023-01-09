@@ -92,7 +92,7 @@ const Documents: NextPage = () => {
                         <div>{t("edit.help.help")}</div>
                         <ul>
                             <li><b>{"{{name}}"}</b> : {t("edit.help.name")}</li>
-                            <li><b>{"{{patientName}}"}</b> : {t("edit.help.patientName")}</li>
+                            <li><b>{"{{contactName}}"}</b> : {t("edit.help.contactName")}</li>
                             <li><b>{"{{price}}"}</b> : {t("edit.help.price")}</li>
                             <li><b>{"{{appointmentType}}"}</b> : {t("edit.help.appointmentType")}</li>
                             <li><b>{"{{appointmentDate}}"}</b> : {t("edit.help.appointmentDate")}</li>
