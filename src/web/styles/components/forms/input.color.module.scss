@@ -43,3 +43,27 @@
 .input:focus, .input:active {
   border: 1px $light solid;
 }
+
+.colorPicker {
+  background-color: white;
+  box-shadow: $shadow;
+  border: 1px $grey solid;
+  margin: 0.5rem 0;
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  grid-gap: 0.5rem;
+  padding: 0.5rem;
+
+  @media (min-width: $breakpointLG) {
+    position: absolute;
+  }
+}
+
+.colorPickerChoice {
+  width: 2rem;
+  height: 2rem;
+  border: 1px $grey solid;
+  grid-row: auto;
+  grid-column: auto;
+  cursor: pointer;
+}
