@@ -43,22 +43,22 @@ public class SearchContactsHandler : IRequestHandler<SearchContacts, List<Contac
 
         if (!string.IsNullOrWhiteSpace(request.LastName))
         {
-            filters.Add(Builders<Contact>.Filter.Regex(x => x.LastName, BsonRegularExpression.Create(new Regex($"^{request.LastName}", RegexOptions.IgnoreCase))));
+            filters.Add(Builders<Contact>.Filter.Regex(x => x.LastName, BsonRegularExpression.Create(new Regex($"^{request.LastName}", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100)))));
         }
 
         if (!string.IsNullOrWhiteSpace(request.FirstName))
         {
-            filters.Add(Builders<Contact>.Filter.Regex(x => x.FirstName, BsonRegularExpression.Create(new Regex($"^{request.FirstName}", RegexOptions.IgnoreCase))));
+            filters.Add(Builders<Contact>.Filter.Regex(x => x.FirstName, BsonRegularExpression.Create(new Regex($"^{request.FirstName}", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100)))));
         }
 
         if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
         {
-            filters.Add(Builders<Contact>.Filter.Regex(x => x.PhoneNumber, BsonRegularExpression.Create(new Regex($"^{request.PhoneNumber}", RegexOptions.IgnoreCase))));
+            filters.Add(Builders<Contact>.Filter.Regex(x => x.PhoneNumber, BsonRegularExpression.Create(new Regex($"^{request.PhoneNumber}", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100)))));
         }
 
         if (!string.IsNullOrWhiteSpace(request.BirthDate))
         {
-            filters.Add(Builders<Contact>.Filter.Regex(x => x.BirthDate, BsonRegularExpression.Create(new Regex($"^{request.BirthDate}", RegexOptions.IgnoreCase))));
+            filters.Add(Builders<Contact>.Filter.Regex(x => x.BirthDate, BsonRegularExpression.Create(new Regex($"^{request.BirthDate}", RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100)))));
         }
 
         var filter = filters.Count == 0
