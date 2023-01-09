@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "MeetingControllerTests.cs" company = "Prism">
+//  <copyright file = "AppointmentControllerTests.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -17,13 +17,13 @@ using Xunit;
 
 namespace Prism.ProAssistant.Api.Tests.Controllers;
 
-public class MeetingControllerTests
+public class AppointmentControllerTests
 {
 
     [Fact]
     public async Task FindOne()
     {
-        await CrudTests.FindOne<MeetingController, Meeting>(c => c.FindOne(Identifier.GenerateString()));
+        await CrudTests.FindOne<AppointmentController, Appointment>(c => c.FindOne(Identifier.GenerateString()));
     }
 
     [Fact]
@@ -31,16 +31,16 @@ public class MeetingControllerTests
     {
         // Arrange
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None))
-            .ReturnsAsync(new List<Meeting>());
+        mediator.Setup(x => x.Send(It.IsAny<SearchAppointments>(), CancellationToken.None))
+            .ReturnsAsync(new List<Appointment>());
 
         // Act
-        var controller = new MeetingController(mediator.Object);
-        var result = await controller.Search(new SearchMeetings(DateTime.Today, DateTime.Today.AddDays(-7), null));
+        var controller = new AppointmentController(mediator.Object);
+        var result = await controller.Search(new SearchAppointments(DateTime.Today, DateTime.Today.AddDays(-7), null));
 
         // Assert
         result.Result.Should().BeAssignableTo<OkObjectResult>();
-        mediator.Verify(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None), Times.Once);
+        mediator.Verify(x => x.Send(It.IsAny<SearchAppointments>(), CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -48,46 +48,46 @@ public class MeetingControllerTests
     {
         // Arrange
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None))
-            .ReturnsAsync(new List<Meeting>
+        mediator.Setup(x => x.Send(It.IsAny<SearchAppointments>(), CancellationToken.None))
+            .ReturnsAsync(new List<Appointment>
             {
                 new()
                 {
                     Id = Identifier.GenerateString(),
-                    State = (int)MeetingState.Created
+                    State = (int)AppointmentState.Created
                 },
                 new()
                 {
                     Id = Identifier.GenerateString(),
-                    State = (int)MeetingState.Confirmed
+                    State = (int)AppointmentState.Confirmed
                 },
                 new()
                 {
                     Id = Identifier.GenerateString(),
-                    State = (int)MeetingState.Done
+                    State = (int)AppointmentState.Done
                 },
                 new()
                 {
                     Id = Identifier.GenerateString(),
-                    State = (int)MeetingState.Canceled
+                    State = (int)AppointmentState.Canceled
                 }
             });
 
         // Act
-        var controller = new MeetingController(mediator.Object);
-        var result = await controller.Search(new SearchMeetings(DateTime.Today, DateTime.Today.AddDays(-7), null));
+        var controller = new AppointmentController(mediator.Object);
+        var result = await controller.Search(new SearchAppointments(DateTime.Today, DateTime.Today.AddDays(-7), null));
 
         // Assert
         result.Result.Should().BeAssignableTo<OkObjectResult>();
-        mediator.Verify(x => x.Send(It.IsAny<SearchMeetings>(), CancellationToken.None), Times.Once);
-        var items = ((OkObjectResult)result.Result!).Value as List<Meeting>;
+        mediator.Verify(x => x.Send(It.IsAny<SearchAppointments>(), CancellationToken.None), Times.Once);
+        var items = ((OkObjectResult)result.Result!).Value as List<Appointment>;
         items!.Count.Should().Be(3);
     }
 
     [Fact]
     public async Task UpsertOne()
     {
-        await CrudTests.UpsertOne<MeetingController, Meeting>(c => c.UpsertOne(new Meeting
+        await CrudTests.UpsertOne<AppointmentController, Appointment>(c => c.UpsertOne(new Appointment
         {
             Id = Identifier.GenerateString(),
             PatientId = Identifier.GenerateString()
@@ -97,7 +97,7 @@ public class MeetingControllerTests
     [Fact]
     public async Task UpsertOne_NoPatient()
     {
-        await CrudTests.UpsertOne<MeetingController, Meeting>(c => c.UpsertOne(new Meeting
+        await CrudTests.UpsertOne<AppointmentController, Appointment>(c => c.UpsertOne(new Appointment
             {
                 Id = Identifier.GenerateString(),
                 PatientId = string.Empty

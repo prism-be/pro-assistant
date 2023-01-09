@@ -27,6 +27,6 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IPublisher, Publisher>();
 
-        services.AddHostedService<UpdateMeetingColorWorker>();
+        services.AddHostedService<UpdateAppointmentColorWorker>();
     }
 }

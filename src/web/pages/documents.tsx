@@ -94,9 +94,9 @@ const Documents: NextPage = () => {
                             <li><b>{"{{name}}"}</b> : {t("edit.help.name")}</li>
                             <li><b>{"{{patientName}}"}</b> : {t("edit.help.patientName")}</li>
                             <li><b>{"{{price}}"}</b> : {t("edit.help.price")}</li>
-                            <li><b>{"{{meetingType}}"}</b> : {t("edit.help.meetingType")}</li>
-                            <li><b>{"{{meetingDate}}"}</b> : {t("edit.help.meetingDate")}</li>
-                            <li><b>{"{{meetingHour}}"}</b> : {t("edit.help.meetingHour")}</li>
+                            <li><b>{"{{appointmentType}}"}</b> : {t("edit.help.appointmentType")}</li>
+                            <li><b>{"{{appointmentDate}}"}</b> : {t("edit.help.appointmentDate")}</li>
+                            <li><b>{"{{appointmentHour}}"}</b> : {t("edit.help.appointmentHour")}</li>
                             <li><b>{"{{paymentDate}}"}</b> : {t("edit.help.paymentDate")}</li>
                             <li><b>{"{{paymentMode}}"}</b> : {t("edit.help.paymentMode")}</li>
                         </ul>

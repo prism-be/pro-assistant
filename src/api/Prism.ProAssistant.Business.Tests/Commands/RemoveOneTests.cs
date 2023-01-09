@@ -20,20 +20,20 @@ public class RemoveOneTests
     public async Task RemoveOneHandler_Ok()
     {
         // Arrange
-        var logger = new Mock<ILogger<RemoveOneHandler<Meeting>>>();
+        var logger = new Mock<ILogger<RemoveOneHandler<Appointment>>>();
         var organizationContext = new Mock<IOrganizationContext>();
         var userContextAccessor = new Mock<IUserContextAccessor>();
 
-        var collection = new Mock<IMongoCollection<Meeting>>();
-        organizationContext.Setup(x => x.GetCollection<Meeting>())
+        var collection = new Mock<IMongoCollection<Appointment>>();
+        organizationContext.Setup(x => x.GetCollection<Appointment>())
             .Returns(collection.Object);
 
         // Act
-        var request = new RemoveOne<Meeting>(Identifier.GenerateString());
-        var handler = new RemoveOneHandler<Meeting>(logger.Object, organizationContext.Object, userContextAccessor.Object);
+        var request = new RemoveOne<Appointment>(Identifier.GenerateString());
+        var handler = new RemoveOneHandler<Appointment>(logger.Object, organizationContext.Object, userContextAccessor.Object);
         await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        collection.Verify(x => x.DeleteOneAsync(It.IsAny<FilterDefinition<Meeting>>(), CancellationToken.None));
+        collection.Verify(x => x.DeleteOneAsync(It.IsAny<FilterDefinition<Appointment>>(), CancellationToken.None));
     }
 }

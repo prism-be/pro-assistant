@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "Meeting.cs" company = "Prism">
+//  <copyright file = "Appointment.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -10,8 +10,8 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace Prism.ProAssistant.Business.Models;
 
-[BsonCollection("meetings")]
-public class Meeting : IDataModel
+[BsonCollection("appointments")]
+public class Appointment : IDataModel
 {
     [JsonPropertyName("startDate")]
     public DateTime StartDate { get; set; }
@@ -65,7 +65,7 @@ public class Meeting : IDataModel
     public List<BinaryDocument> Documents { get; set; } = new();
 }
 
-public enum MeetingState
+public enum AppointmentState
 {
     Created = 0,
     Confirmed = 1,

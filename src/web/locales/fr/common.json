@@ -11,7 +11,7 @@
     "configurationTitle": "Configuration",
     "configuration": "Général",
     "documents": "Types de documents",
-    "meetings": "Rendez-vous"
+    "appointments": "Rendez-vous"
   },
   "actions": {
     "back": "Retour",
@@ -42,14 +42,14 @@
     "zipCode": "Code Postal",
     "city": "Ville",
     "country": "Pays",
-    "meetingType": "Type de séance",
+    "appointmentType": "Type de séance",
     "price": "Prix",
     "hour": "Heure",
     "duration": "Durée",
     "fromHour": "à",
     "toHour": "jusque",
     "payment": "Mode de paiement",
-    "meetingState": "Etat du rendez-vous"
+    "appointmentState": "Etat du rendez-vous"
   },
   "results": {
     "doSearch": "Veuillez faire une recherche pour avoir des résultats",
@@ -67,9 +67,9 @@
         "title": "Fiche patient : ",
         "contact": "Coordonnées",
         "saveSuccess": "Les modifications sur la fiche ont été sauvegardées.",
-        "meetings": {
+        "appointments": {
           "title": "Liste des rendez-vous",
-          "noMeetings": "Aucun rendez-vous planifié pour ce patient"
+          "noappointments": "Aucun rendez-vous planifié pour ce patient"
         }
       }
     },
@@ -78,9 +78,9 @@
     },
     "agenda": {
       "title": "Agenda du",
-      "noMeeting": "Vous n'avez pas de rendez-vous ce jour."
+      "noAppointment": "Vous n'avez pas de rendez-vous ce jour."
     },
-    "meeting": {
+    "appointment": {
       "titleNew": "Ajouter un rendez-vous",
       "titleEditing": "Edition d'un rendez-vous",
       "patientsSuggestions": {
@@ -117,7 +117,7 @@
       "state2": "Par virement",
       "state3": "Par carte"
     },
-    "meetings": {
+    "appointments": {
       "state0": "Créé",
       "state1": "Confirmé",
       "state10": "Terminé",

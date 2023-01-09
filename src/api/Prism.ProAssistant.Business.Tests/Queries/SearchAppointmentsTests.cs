@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "SearchMeetingsTests.cs" company = "Prism">
+//  <copyright file = "SearchAppointmentsTests.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -14,7 +14,7 @@ using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Business.Tests.Queries
 {
-    public class SearchMeetingsTests
+    public class SearchAppointmentsTests
     {
         [Fact]
         public async Task Handle_Ok()
@@ -22,13 +22,13 @@ namespace Prism.ProAssistant.Business.Tests.Queries
             // Arrange
             var organizationContext = new Mock<IOrganizationContext>();
 
-            var collection = new Mock<IMongoCollection<Meeting>>();
-            organizationContext.Setup(x => x.GetCollection<Meeting>())
+            var collection = new Mock<IMongoCollection<Appointment>>();
+            organizationContext.Setup(x => x.GetCollection<Appointment>())
                 .Returns(collection.Object);
 
             var id = Identifier.GenerateString();
 
-            var items = new List<Meeting>
+            var items = new List<Appointment>
             {
                 new()
                 {
@@ -36,7 +36,7 @@ namespace Prism.ProAssistant.Business.Tests.Queries
                     FirstName = "Simon"
                 }
             };
-            var cursor = new Mock<IAsyncCursor<Meeting>>();
+            var cursor = new Mock<IAsyncCursor<Appointment>>();
             cursor.Setup(_ => _.Current).Returns(items);
             cursor
                 .SetupSequence(_ => _.MoveNext(It.IsAny<CancellationToken>()))
@@ -47,12 +47,12 @@ namespace Prism.ProAssistant.Business.Tests.Queries
                 .Returns(Task.FromResult(true))
                 .Returns(Task.FromResult(false));
 
-            collection.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<Meeting>>(), It.IsAny<FindOptions<Meeting>>(), CancellationToken.None))
+            collection.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<Appointment>>(), It.IsAny<FindOptions<Appointment>>(), CancellationToken.None))
                 .ReturnsAsync(cursor.Object);
 
             // Act
-            var handler = new SearchMeetingsHandler(organizationContext.Object);
-            var result = await handler.Handle(new SearchMeetings(DateTime.Now, DateTime.Now.AddDays(7), null), CancellationToken.None);
+            var handler = new SearchAppointmentsHandler(organizationContext.Object);
+            var result = await handler.Handle(new SearchAppointments(DateTime.Now, DateTime.Now.AddDays(7), null), CancellationToken.None);
 
             // Assert
             result.Should().NotBeNull();

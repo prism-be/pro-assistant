@@ -26,13 +26,13 @@ public class DownloadsControllerTests
     {
         // Arrange
         var documentId = Identifier.GenerateString();
-        var meetingId = Identifier.GenerateString();
+        var appointmentId = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
         var mediator = new Mock<IMediator>();
 
         // Act
         var controller = new DownloadController(mediator.Object, cache.Object);
-        await controller.Delete(new DeleteDocument(documentId, meetingId));
+        await controller.Delete(new DeleteDocument(documentId, appointmentId));
 
         // Assert
         mediator.Verify(x => x.Send(It.IsAny<DeleteDocument>(), CancellationToken.None), Times.Once);
@@ -44,15 +44,15 @@ public class DownloadsControllerTests
     public async Task Download_Ok(bool download)
     {
         // Arrange
-        var meetingId = Identifier.GenerateString();
-        var meetingKey = Identifier.GenerateString();
+        var appointmentId = Identifier.GenerateString();
+        var appointmentKey = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
         cache.Setup(x => x.GetAsync(It.IsAny<string>(), CancellationToken.None))
-            .ReturnsAsync(Encoding.Default.GetBytes(JsonSerializer.Serialize(new DownloadDocumentResponse(meetingId, Encoding.Default.GetBytes(meetingId)))));
+            .ReturnsAsync(Encoding.Default.GetBytes(JsonSerializer.Serialize(new DownloadDocumentResponse(appointmentId, Encoding.Default.GetBytes(appointmentId)))));
 
         // Act
         var controller = new DownloadController(Mock.Of<IMediator>(), cache.Object);
-        var result = await controller.Download(meetingKey, download);
+        var result = await controller.Download(appointmentKey, download);
 
         // Assert
         result.Should().BeAssignableTo<FileContentResult>();
@@ -63,7 +63,7 @@ public class DownloadsControllerTests
     {
         // Arrange
         var documentId = Identifier.GenerateString();
-        var meetingId = Identifier.GenerateString();
+        var appointmentId = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
         var receiptGenerator = new Mock<IMediator>();
         receiptGenerator.Setup(x => x.Send(It.IsAny<GenerateDocument>(), CancellationToken.None))
@@ -71,7 +71,7 @@ public class DownloadsControllerTests
 
         // Act
         var controller = new DownloadController(receiptGenerator.Object, cache.Object);
-        await controller.Generate(new GenerateDocument(documentId, meetingId));
+        await controller.Generate(new GenerateDocument(documentId, appointmentId));
 
         // Assert
         receiptGenerator.Verify(x => x.Send(It.IsAny<GenerateDocument>(), CancellationToken.None), Times.Once);
@@ -81,13 +81,13 @@ public class DownloadsControllerTests
     public async Task Receipt_NotFound()
     {
         // Arrange
-        var meetingKey = Identifier.GenerateString();
+        var appointmentKey = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
         cache.Setup(x => x.GetAsync(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((byte[])null!);
 
         // Act
         var controller = new DownloadController(Mock.Of<IMediator>(), cache.Object);
-        var result = await controller.Download(meetingKey, false);
+        var result = await controller.Download(appointmentKey, false);
 
         // Assert
         result.Should().BeAssignableTo<NotFoundResult>();

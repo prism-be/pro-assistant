@@ -3,7 +3,7 @@ import {filter} from "rxjs/operators";
 
 export interface dataUpdated
 {
-    type: 'meeting';
+    type: 'appointment';
 }
 
 const dataUpdatedSubject = new Subject();

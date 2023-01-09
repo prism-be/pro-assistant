@@ -7,7 +7,7 @@ import {getLocale} from "../../lib/localization";
 import React from 'react';
 import {ArrowLeft, ArrowRight} from "../../components/icons/Icons";
 import {useKeyPressEvent} from "react-use";
-import {Meeting} from "../../lib/contracts";
+import {Appointment} from "../../lib/contracts";
 import {postData} from "../../lib/ajaxHelper";
 import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
@@ -20,7 +20,7 @@ const Calendar: NextPage = () => {
     const router = useRouter();
     const monday = startOfWeek(parse(router.query.date as string, "yyyy-MM-dd", new Date()), { weekStartsOn: 1 });
 
-    const {data: meetings} = useSWR(router.asPath, loadMeetings);
+    const {data: appointments} = useSWR(router.asPath, loadAppointments);
     
     const {t} = useTranslation("common");
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
@@ -44,8 +44,8 @@ const Calendar: NextPage = () => {
         goNextWeek();
     })
 
-    async function loadMeetings() {
-        return await postData<Meeting[]>("/meetings", {
+    async function loadAppointments() {
+        return await postData<Appointment[]>("/appointments", {
             startDate: formatISO(monday),
             endDate: formatISO(add(monday, {days: 8}))
         });
@@ -72,9 +72,9 @@ const Calendar: NextPage = () => {
         return styles["duration" + d];
     }
 
-    const addMeeting = (d: number, h: number, m: number) => {
+    const addAppointment = (d: number, h: number, m: number) => {
         const startDate = add(new Date(monday.getFullYear(), monday.getMonth(), monday.getDate()), {days: d - 1, hours: h, minutes: m});
-        router.push("/meetings/new?startDate=" + encodeURIComponent(formatISO(startDate)));
+        router.push("/appointments/new?startDate=" + encodeURIComponent(formatISO(startDate)));
     }
 
     const swipeHandlers = useSwipeable({
@@ -109,14 +109,14 @@ const Calendar: NextPage = () => {
 
                             {days.map(d => <React.Fragment key={d}>
                                 {hours.map(h => <React.Fragment key={h}>
-                                    <div className={styles.dayAction + " " + styles.dayHourFirst + " " + getHourClassName(h, 0) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 0)}></div>
-                                    <div className={styles.dayAction + " " + styles.dayHourSecond + " " + getHourEndClassName(h) + " " + getDayClassName(d)} onClick={() => addMeeting(d, h, 30)}></div>
+                                    <div className={styles.dayAction + " " + styles.dayHourFirst + " " + getHourClassName(h, 0) + " " + getDayClassName(d)} onClick={() => addAppointment(d, h, 0)}></div>
+                                    <div className={styles.dayAction + " " + styles.dayHourSecond + " " + getHourEndClassName(h) + " " + getDayClassName(d)} onClick={() => addAppointment(d, h, 30)}></div>
                                 </React.Fragment>)}
                             </React.Fragment>)}
 
-                            {meetings?.map(m =>
+                            {appointments?.map(m =>
                                 <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours(), parseISO(m.startDate).getMinutes()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
-                                     onClick={() => router.push("/meetings/" + m.id)}
+                                     onClick={() => router.push("/appointments/" + m.id)}
                                      style={{backgroundColor: m.backgroundColor ?? ""}}>
                                     <div>{m.title?.slice(0, 30)}</div>
                                 </div>)}

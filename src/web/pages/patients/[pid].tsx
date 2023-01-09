@@ -16,7 +16,7 @@ import InputDate from "../../components/forms/InputDate";
 import {getData, postData} from "../../lib/ajaxHelper";
 import {Patient, UpsertResult} from "../../lib/contracts";
 import Section from "../../components/design/Section";
-import {PatientMeetings} from "../../components/patients/PatientMeetings";
+import {PatientAppointments} from "../../components/patients/PatientAppointments";
 
 const Patient: NextPage = () => {
     const {t} = useTranslation('common');
@@ -121,7 +121,7 @@ const Patient: NextPage = () => {
                 </div>
             </form>
         </Section>
-        <PatientMeetings patientId={pid as string}/>
+        <PatientAppointments patientId={pid as string}/>
     </ContentContainer>
 }
 

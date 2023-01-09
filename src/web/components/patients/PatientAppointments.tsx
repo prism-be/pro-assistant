@@ -1,8 +1,8 @@
-﻿import styles from '../../styles/components/patients/patient-meetings.module.scss';
+﻿import styles from '../../styles/components/patients/patient-appointments.module.scss';
 import useSWR from "swr";
 import Section from "../design/Section";
 import {postData} from "../../lib/ajaxHelper";
-import {Meeting} from "../../lib/contracts";
+import {Appointment} from "../../lib/contracts";
 import useTranslation from "next-translate/useTranslation";
 import {add, format, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
@@ -12,30 +12,30 @@ export interface Props {
     patientId: string;
 }
 
-export const PatientMeetings = (props: Props) => {
-    async function loadMeetings(): Promise<Meeting[]> {
-        const data = await postData<Meeting[]>("/meetings", {patientId: props.patientId});
+export const PatientAppointments = (props: Props) => {
+    async function loadAppointments(): Promise<Appointment[]> {
+        const data = await postData<Appointment[]>("/appointments", {patientId: props.patientId});
         return data?.reverse() ?? [];
     }
 
-    const {data: meetings} = useSWR<Meeting[]>('/api/patients/' + props.patientId + '/meetings', loadMeetings);
+    const {data: appointments} = useSWR<Appointment[]>('/api/patients/' + props.patientId + '/appointments', loadAppointments);
 
     const {t} = useTranslation('common');
     const router = useRouter();
 
-    async function displayMeeting(id: string | null) {
-        await router.push("/meetings/" + id);
+    async function displayAppointment(id: string | null) {
+        await router.push("/appointments/" + id);
     }
 
     return <Section>
-        <h2>{t("pages.patients.details.meetings.title")}</h2>
+        <h2>{t("pages.patients.details.appointments.title")}</h2>
         <div>
-            {meetings?.map(m => <div key={m.id} className={styles.meeting} onClick={() => displayMeeting(m.id)}>
+            {appointments?.map(m => <div key={m.id} className={styles.appointment} onClick={() => displayAppointment(m.id)}>
                 <div className={styles.typeColor} style={{backgroundColor: m.backgroundColor ?? ""}}></div>
                 <div className={styles.title}>
                     {m.title}
                     <span className={styles.badge}>
-                        {t("options.meetings.state" + m.state)}
+                        {t("options.appointments.state" + m.state)}
                     </span>
                     <span className={styles.badge}>
                         {t("options.payments.state" + m.payment)}
@@ -53,8 +53,8 @@ export const PatientMeetings = (props: Props) => {
             </div>)}
         </div>
         <>
-            {meetings?.length === 0 && <div className={styles.noMeetings}>
-                {t("pages.patients.details.meetings.noMeetings")}
+            {appointments?.length === 0 && <div className={styles.noAppointments}>
+                {t("pages.patients.details.appointments.noAppointments")}
             </div>}
         </>
 

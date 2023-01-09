@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "MeetingController.cs" company = "Prism">
+//  <copyright file = "AppointmentController.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -15,52 +15,52 @@ using Prism.ProAssistant.Business.Queries;
 namespace Prism.ProAssistant.Api.Controllers;
 
 [Authorize]
-public class MeetingController : Controller
+public class AppointmentController : Controller
 {
     private readonly IMediator _mediator;
 
-    public MeetingController(IMediator mediator)
+    public AppointmentController(IMediator mediator)
     {
         _mediator = mediator;
     }
 
-    [Route("api/meetings")]
+    [Route("api/appointments")]
     [HttpPost]
-    public async Task<ActionResult<List<Meeting>>> Search([FromBody]SearchMeetings search)
+    public async Task<ActionResult<List<Appointment>>> Search([FromBody]SearchAppointments search)
     {
         var result = await _mediator.Send(search);
         return result
-            .Where(x => x.State != (int)MeetingState.Canceled)
+            .Where(x => x.State != (int)AppointmentState.Canceled)
             .ToList()
             .ToActionResult();
     }
 
-    [Route("api/meeting/{meetingId}")]
+    [Route("api/appointment/{appointmentId}")]
     [HttpGet]
-    public async Task<ActionResult<Meeting>> FindOne(string meetingId)
+    public async Task<ActionResult<Appointment>> FindOne(string appointmentId)
     {
-        var result = await _mediator.Send(new FindOne<Meeting>(meetingId));
+        var result = await _mediator.Send(new FindOne<Appointment>(appointmentId));
         return result.ToActionResult();
     }
     
-    [Route("api/meeting")]
+    [Route("api/appointment")]
     [HttpPost]
-    public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] Meeting meeting)
+    public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] Appointment appointment)
     {
-        if (string.IsNullOrWhiteSpace(meeting.PatientId))
+        if (string.IsNullOrWhiteSpace(appointment.PatientId))
         {
             var patient = new Patient
             {
-                LastName = meeting.LastName,
-                FirstName = meeting.FirstName
+                LastName = appointment.LastName,
+                FirstName = appointment.FirstName
             };
 
             var patientId = await _mediator.Send(new UpsertOne<Patient>(patient));
 
-            meeting.PatientId = patientId.Id;
+            appointment.PatientId = patientId.Id;
         }
 
-        var result = await _mediator.Send(new UpsertOne<Meeting>(meeting));
+        var result = await _mediator.Send(new UpsertOne<Appointment>(appointment));
         return result.ToActionResult();
     }
 }

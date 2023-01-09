@@ -16,6 +16,43 @@ public class SerializationTests
     private readonly Random _dice = new();
 
     [Fact]
+    public void Appointment_Ok()
+    {
+        // Arrange
+        var appointment = new Appointment
+        {
+            Id = Identifier.GenerateString(),
+            Duration = _dice.Next(0, 42),
+            Payment = (int)PaymentTypes.Wire,
+            Price = _dice.Next(0, 42),
+            State = (int)AppointmentState.Confirmed,
+            PaymentDate = DateTime.UtcNow,
+            Title = Identifier.GenerateString(),
+            PatientId = Identifier.GenerateString(),
+            StartDate = DateTime.UtcNow.AddHours(-2),
+            Type = Identifier.GenerateString(),
+            BackgroundColor = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            ForeColor = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            TypeId = Identifier.GenerateString(),
+            Documents = new List<BinaryDocument>
+            {
+                new()
+                {
+                    Id = Identifier.GenerateString(),
+                    Title = Identifier.GenerateString(),
+                    Date = DateTime.UtcNow,
+                    FileName = Identifier.GenerateString()
+                }
+            }
+        };
+
+        // Act and Assert
+        CheckSerialization(appointment);
+    }
+
+    [Fact]
     public void Configuration_Ok()
     {
         // Arrange
@@ -60,43 +97,6 @@ public class SerializationTests
 
         // Act and Assert
         CheckSerialization(source);
-    }
-
-    [Fact]
-    public void Meeting_Ok()
-    {
-        // Arrange
-        var meeting = new Meeting
-        {
-            Id = Identifier.GenerateString(),
-            Duration = _dice.Next(0, 42),
-            Payment = (int)PaymentTypes.Wire,
-            Price = _dice.Next(0, 42),
-            State = (int)MeetingState.Confirmed,
-            PaymentDate = DateTime.UtcNow,
-            Title = Identifier.GenerateString(),
-            PatientId = Identifier.GenerateString(),
-            StartDate = DateTime.UtcNow.AddHours(-2),
-            Type = Identifier.GenerateString(),
-            BackgroundColor = Identifier.GenerateString(),
-            FirstName = Identifier.GenerateString(),
-            ForeColor = Identifier.GenerateString(),
-            LastName = Identifier.GenerateString(),
-            TypeId = Identifier.GenerateString(),
-            Documents = new List<BinaryDocument>
-            {
-                new()
-                {
-                    Id = Identifier.GenerateString(),
-                    Title = Identifier.GenerateString(),
-                    Date = DateTime.UtcNow,
-                    FileName = Identifier.GenerateString()
-                }
-            }
-        };
-
-        // Act and Assert
-        CheckSerialization(meeting);
     }
 
     [Fact]
