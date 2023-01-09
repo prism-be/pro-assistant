@@ -42,7 +42,7 @@
     "zipCode": "Code Postal",
     "city": "Ville",
     "country": "Pays",
-    "appointmentType": "Type de séance",
+    "appointmentType": "Type de rendez-vous",
     "price": "Prix",
     "hour": "Heure",
     "duration": "Durée",
@@ -87,8 +87,8 @@
         "title": "Suggestions de contacts"
       },
       "tariffs": {
-        "title": "Type de séance",
-        "empty": "Veuillez choisir un type de séance"
+        "title": "Type de rendez-vous",
+        "empty": "Veuillez choisir un type de rendez-vous"
       },
       "documents": {
         "title": "Gestion des documents du rendez-vous",
