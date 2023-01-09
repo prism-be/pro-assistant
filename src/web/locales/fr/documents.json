@@ -17,7 +17,7 @@
       "help": "Dans le titre et le contenu des documents, vous pouvez utiliser les balises suivantes qui seront automatiquement remplacées:",
       "name": "Votre nom",
       "contactName": "Nom du contact",
-      "price": "Prix de la séance",
+      "price": "Prix du rendez-vous",
       "appointmentType": "Type de rendez-vous",
       "appointmentDate": "Date du rendez-vous",
       "appointmentHour": "Heure du rendez-vous",
