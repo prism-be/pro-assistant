@@ -18,7 +18,7 @@ import {Contact, UpsertResult} from "../../lib/contracts";
 import Section from "../../components/design/Section";
 import {ContactAppointments} from "../../components/contacts/ContactAppointments";
 
-const Contact: NextPage = () => {
+const Contacts: NextPage = () => {
     const {t} = useTranslation('common');
     const router = useRouter();
     const {pid} = router.query;
@@ -124,4 +124,4 @@ const Contact: NextPage = () => {
     </ContentContainer>
 }
 
-export default Contact;
+export default Contacts;
