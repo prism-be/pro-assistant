@@ -23,13 +23,13 @@ public class DeleteDocumentHandlerTests
     {
         // Arrange
         var id = ObjectId.GenerateNewId().ToString();
-        var meetingId = ObjectId.GenerateNewId().ToString();
+        var appointmentId = ObjectId.GenerateNewId().ToString();
 
         var organization = new Mock<IOrganizationContext>();
         var bucket = organization.SetupBucket();
-        organization.SetupCollection(new Meeting
+        organization.SetupCollection(new Appointment
         {
-            Id = meetingId,
+            Id = appointmentId,
             Documents = new List<BinaryDocument>()
         });
 
@@ -37,7 +37,7 @@ public class DeleteDocumentHandlerTests
 
         // Act
         var handler = new DeleteDocumentHandler(logger.Object, organization.Object);
-        var result = await handler.Handle(new DeleteDocument(id, meetingId), default);
+        var result = await handler.Handle(new DeleteDocument(id, appointmentId), default);
 
         // Assert
         result.Should().NotBeNull();
@@ -50,13 +50,13 @@ public class DeleteDocumentHandlerTests
     {
         // Arrange
         var id = ObjectId.GenerateNewId().ToString();
-        var meetingId = ObjectId.GenerateNewId().ToString();
+        var appointmentId = ObjectId.GenerateNewId().ToString();
 
         var organization = new Mock<IOrganizationContext>();
         var bucket = organization.SetupBucket();
-        organization.SetupCollection(new Meeting
+        organization.SetupCollection(new Appointment
         {
-            Id = meetingId,
+            Id = appointmentId,
             Documents = new List<BinaryDocument>
             {
                 new()
@@ -70,7 +70,7 @@ public class DeleteDocumentHandlerTests
 
         // Act
         var handler = new DeleteDocumentHandler(logger.Object, organization.Object);
-        var result = await handler.Handle(new DeleteDocument(id, meetingId), default);
+        var result = await handler.Handle(new DeleteDocument(id, appointmentId), default);
 
         // Assert
         result.Should().NotBeNull();

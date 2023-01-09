@@ -22,33 +22,33 @@ public class UpsertOneTests
     {
         // Arrange
         var id = Identifier.GenerateString();
-        var meeting = new Meeting
+        var appointment = new Appointment
         {
             Id = id
         };
         
-        var logger = new Mock<ILogger<UpsertOneHandler<Meeting>>>();
+        var logger = new Mock<ILogger<UpsertOneHandler<Appointment>>>();
         var organizationContext = new Mock<IOrganizationContext>();
         var userContextAccessor = new Mock<IUserContextAccessor>();
 
-        var collection = new Mock<IMongoCollection<Meeting>>();
-        organizationContext.Setup(x => x.GetCollection<Meeting>())
+        var collection = new Mock<IMongoCollection<Appointment>>();
+        organizationContext.Setup(x => x.GetCollection<Appointment>())
             .Returns(collection.Object);
 
-        collection.Setup(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Meeting>>(), It.IsAny<Meeting>(), It.IsAny<FindOneAndReplaceOptions<Meeting>>(), CancellationToken.None))
-            .ReturnsAsync(meeting);
+        collection.Setup(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Appointment>>(), It.IsAny<Appointment>(), It.IsAny<FindOneAndReplaceOptions<Appointment>>(), CancellationToken.None))
+            .ReturnsAsync(appointment);
         
         var collectionHistory = new Mock<IMongoCollection<History>>();
         organizationContext.Setup(x => x.GetCollection<History>())
             .Returns(collectionHistory.Object);
 
         // Act
-        var request = new UpsertOne<Meeting>(meeting);
-        var handler = new UpsertOneHandler<Meeting>(logger.Object, organizationContext.Object, userContextAccessor.Object);
+        var request = new UpsertOne<Appointment>(appointment);
+        var handler = new UpsertOneHandler<Appointment>(logger.Object, organizationContext.Object, userContextAccessor.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        collection.Verify(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Meeting>>(), meeting, It.IsAny<FindOneAndReplaceOptions<Meeting>>(), CancellationToken.None));
+        collection.Verify(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Appointment>>(), appointment, It.IsAny<FindOneAndReplaceOptions<Appointment>>(), CancellationToken.None));
         collectionHistory.Verify(x => x.InsertOneAsync(It.IsAny<History>(), null, CancellationToken.None));
         result.Id.Should().Be(id);
     }
@@ -58,29 +58,29 @@ public class UpsertOneTests
     {
         // Arrange
         var id = Identifier.GenerateString();
-        var meeting = new Meeting();
+        var appointment = new Appointment();
         
-        var logger = new Mock<ILogger<UpsertOneHandler<Meeting>>>();
+        var logger = new Mock<ILogger<UpsertOneHandler<Appointment>>>();
         var organizationContext = new Mock<IOrganizationContext>();
         var userContextAccessor = new Mock<IUserContextAccessor>();
 
-        var collection = new Mock<IMongoCollection<Meeting>>();
-        organizationContext.Setup(x => x.GetCollection<Meeting>())
+        var collection = new Mock<IMongoCollection<Appointment>>();
+        organizationContext.Setup(x => x.GetCollection<Appointment>())
             .Returns(collection.Object);
-        collection.Setup(x => x.InsertOneAsync(It.IsAny<Meeting>(), null, CancellationToken.None))
-            .Callback(() => meeting.Id = id);
+        collection.Setup(x => x.InsertOneAsync(It.IsAny<Appointment>(), null, CancellationToken.None))
+            .Callback(() => appointment.Id = id);
 
         var collectionHistory = new Mock<IMongoCollection<History>>();
         organizationContext.Setup(x => x.GetCollection<History>())
             .Returns(collectionHistory.Object);
 
         // Act
-        var request = new UpsertOne<Meeting>(meeting);
-        var handler = new UpsertOneHandler<Meeting>(logger.Object, organizationContext.Object, userContextAccessor.Object);
+        var request = new UpsertOne<Appointment>(appointment);
+        var handler = new UpsertOneHandler<Appointment>(logger.Object, organizationContext.Object, userContextAccessor.Object);
         var result = await handler.Handle(request, CancellationToken.None);
 
         // Assert
-        collection.Verify(x => x.InsertOneAsync(meeting, null, CancellationToken.None));
+        collection.Verify(x => x.InsertOneAsync(appointment, null, CancellationToken.None));
         collectionHistory.Verify(x => x.InsertOneAsync(It.IsAny<History>(), null, CancellationToken.None));
         result.Id.Should().Be(id);
     }

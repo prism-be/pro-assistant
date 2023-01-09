@@ -18,9 +18,9 @@
       "name": "Votre nom",
       "patientName": "Nom du patient",
       "price": "Prix de la séance",
-      "meetingType": "Type de séance",
-      "meetingDate": "Date de la séance",
-      "meetingHour": "Heure de la séance",
+      "appointmentType": "Type de rendez-vous",
+      "appointmentDate": "Date du rendez-vous",
+      "appointmentHour": "Heure du rendez-vous",
       "paymentDate": "Date de paiement",
       "paymentMode": "Mode de paiement"
     }

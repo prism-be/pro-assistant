@@ -1,4 +1,4 @@
-﻿import styles from '../../styles/pages/meeting.module.scss';
+﻿import styles from '../../styles/pages/appointment.module.scss';
 import {NextPage} from "next";
 import ContentContainer from "../../components/design/ContentContainer";
 import Section from "../../components/design/Section";
@@ -8,7 +8,7 @@ import useSWR from "swr";
 import {useForm} from "react-hook-form";
 import {useCallback, useEffect, useState} from "react";
 import InputText from "../../components/forms/InputText";
-import {Meeting, Patient, Tariff} from "../../lib/contracts";
+import {Appointment, Patient, Tariff} from "../../lib/contracts";
 import {getData, postData} from "../../lib/ajaxHelper";
 import InputSelect from "../../components/forms/InputSelect";
 import {Calendar} from "../../components/forms/Calendar";
@@ -16,13 +16,13 @@ import {add, format, formatISO, parse, parseISO, startOfHour} from "date-fns";
 import {getLocale} from "../../lib/localization";
 import Button from "../../components/forms/Button";
 import {alertSuccess} from "../../lib/events/alert";
-import {GeneratedDocuments} from "../../components/meetings/GeneratedDocuments";
+import {GeneratedDocuments} from "../../components/appointments/GeneratedDocuments";
 
-const Meeting: NextPage = () => {
+const Appointments: NextPage = () => {
     const {t} = useTranslation('common');
     const router = useRouter();
 
-    const {data: meeting, mutate: mutateMeeting} = useSWR<Meeting | null>("/meeting/" + router.query.mid, loadMeeting);
+    const {data: appointment, mutate: mutateAppointment} = useSWR<Appointment | null>("/appointment/" + router.query.mid, loadAppointment);
     const {data: tariffs} = useSWR<Tariff[]>('/tariffs');
 
     const {register, setValue, formState: {errors}, getValues, handleSubmit} = useForm();
@@ -41,43 +41,43 @@ const Meeting: NextPage = () => {
     ]
 
     const stateOptions = [
-        {value: "0", text: t("options.meetings.state0")},
-        {value: "1", text: t("options.meetings.state1")},
-        {value: "10", text: t("options.meetings.state10")},
-        {value: "100", text: t("options.meetings.state100")}
+        {value: "0", text: t("options.appointments.state0")},
+        {value: "1", text: t("options.appointments.state1")},
+        {value: "10", text: t("options.appointments.state10")},
+        {value: "100", text: t("options.appointments.state100")}
     ]
 
     useEffect(() => {
-        if (!meeting) return;
+        if (!appointment) return;
 
-        Object.getOwnPropertyNames(meeting).forEach(p => {
-            setValue(p, (meeting as any)[p]);
+        Object.getOwnPropertyNames(appointment).forEach(p => {
+            setValue(p, (appointment as any)[p]);
         });
 
-        setDuration(meeting.duration ?? 60);
+        setDuration(appointment.duration ?? 60);
 
-        const d = parseISO(meeting.startDate ?? formatISO(new Date()));
+        const d = parseISO(appointment.startDate ?? formatISO(new Date()));
         setDate(d);
         setValue("hour", format(d, "HH:mm"));
 
-        if (meeting.patientId) {
+        if (appointment.patientId) {
             setPatient({
-                id: meeting.patientId,
-                firstName: meeting.firstName,
-                lastName: meeting.lastName,
+                id: appointment.patientId,
+                firstName: appointment.firstName,
+                lastName: appointment.lastName,
                 birthDate: "",
                 phoneNumber: ""
             });
         }
 
-        if (meeting.typeId) {
-            setValue("tariff", meeting.typeId);
+        if (appointment.typeId) {
+            setValue("tariff", appointment.typeId);
         }
 
-    }, [meeting, tariffs]);
+    }, [appointment, tariffs]);
 
     useEffect(() => {
-        if (router.asPath.startsWith("/meetings/new")) {
+        if (router.asPath.startsWith("/appointments/new")) {
             let startDate = startOfHour(new Date());
 
             if (router.query.startDate) {
@@ -90,8 +90,8 @@ const Meeting: NextPage = () => {
         }
     }, [router])
 
-    function loadMeeting(path: string): Promise<Meeting | null> {
-        if (path === "/meeting/new") {
+    function loadAppointment(path: string): Promise<Appointment | null> {
+        if (path === "/appointment/new") {
             return new Promise(() => null);
         }
 
@@ -101,8 +101,8 @@ const Meeting: NextPage = () => {
     async function onSubmit(data: any) {
         const tariff = tariffs?.find(x => x.name == data.type);
 
-        const updatedMeeting: Meeting = {
-            id: meeting?.id ?? '',
+        const updatedAppointment: Appointment = {
+            id: appointment?.id ?? '',
             patientId: patient?.id ?? null,
             title: data.lastName + " " + data.firstName + (data.type ? " (" + data.type + ")" : ""),
             price: parseFloat(data.price),
@@ -120,9 +120,9 @@ const Meeting: NextPage = () => {
             documents: []
         }
 
-        await postData("/meeting", updatedMeeting);
+        await postData("/appointment", updatedAppointment);
         await router.back();
-        await mutateMeeting();
+        await mutateAppointment();
         alertSuccess(t("alerts.saveSuccess"));
     }
 
@@ -177,13 +177,13 @@ const Meeting: NextPage = () => {
 
         options.unshift({
             value: "",
-            text: t("pages.meeting.tariffs.empty")
+            text: t("pages.appointment.tariffs.empty")
         });
 
         return options;
     }
 
-    function setMeetingType(type: string) {
+    function setAppointmentType(type: string) {
         const tariff = tariffs?.find(x => x.id == type);
 
         if (tariff) {
@@ -224,22 +224,22 @@ const Meeting: NextPage = () => {
     return <ContentContainer>
         <Section>
             <>
-                {meeting?.id === undefined && <h1>{t("pages.meeting.titleNew")}</h1>}
-                {meeting?.id !== undefined && <h1>{t("pages.meeting.titleEditing")}</h1>}
+                {appointment?.id === undefined && <h1>{t("pages.appointment.titleNew")}</h1>}
+                {appointment?.id !== undefined && <h1>{t("pages.appointment.titleEditing")}</h1>}
             </>
             <form className={styles.content} onSubmit={handleSubmit(onSubmit)}>
                 <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName} onChange={() => startSuggestPatients()}/>
                 <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.firstName} onChange={() => startSuggestPatients()}/>
 
                 {patientsSuggestions.length !== 0 && <div className={styles.patientsSuggestions}>
-                    <h2>{t("pages.meeting.patientsSuggestions.title")}</h2>
+                    <h2>{t("pages.appointment.patientsSuggestions.title")}</h2>
                     {patientsSuggestions.map(p => <div key={p.id} className={styles.patientsSuggestion} onClick={() => selectPatient(p)}>
                         {p.lastName} {p.firstName} {p.birthDate && p.birthDate !== "" && <>({p.birthDate})</>}
                     </div>)}
                 </div>}
 
-                <InputSelect className={styles.tariffs} label={t("pages.meeting.tariffs.title")} name={"tariff"} register={register} options={getTariffsOptions()} onChange={(v) => setMeetingType(v)}/>
-                <InputText className={styles.type} label={t("fields.meetingType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>
+                <InputSelect className={styles.tariffs} label={t("pages.appointment.tariffs.title")} name={"tariff"} register={register} options={getTariffsOptions()} onChange={(v) => setAppointmentType(v)}/>
+                <InputText className={styles.type} label={t("fields.appointmentType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>
                 <InputText className={styles.price} label={t("fields.price")} name={"price"} required={true} type={"text"} register={register} setValue={setValue} error={errors.price}/>
 
                 <Calendar className={styles.date} value={date} onChange={(d) => selectDate(d)}/>
@@ -251,15 +251,15 @@ const Meeting: NextPage = () => {
                 </div>
 
                 <InputSelect className={styles.payment} label={t("fields.payment")} name={"payment"} required={false} register={register} error={errors.payment} options={paymentOptions}/>
-                <InputSelect className={styles.state} label={t("fields.meetingState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions}/>
+                <InputSelect className={styles.state} label={t("fields.appointmentState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions}/>
 
                 <Button text={t("actions.back")} secondary={true} className={styles.cancel} onClick={() => router.back()}/>
 
                 <Button text={t("actions.save")} className={styles.save} onClick={handleSubmit(onSubmit)}/>
             </form>
         </Section>
-        <>{meeting && <GeneratedDocuments meeting={meeting}/>}</>
+        <>{appointment && <GeneratedDocuments appointment={appointment}/>}</>
     </ContentContainer>
 }
 
-export default Meeting;
+export default Appointments;

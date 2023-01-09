@@ -10,26 +10,7 @@
 
 
 
-export interface BinaryDocument {
-    date: string;
-    fileName: string;
-    id: string;
-    title: string;
-}
-
-export interface DocumentConfiguration {
-    body?: string | null;
-    name?: string | null;
-    title?: string | null;
-    id: string;
-}
-
-export interface GenerateDocument {
-    documentId: string;
-    meetingId: string;
-}
-
-export interface Meeting {
+export interface Appointment {
     startDate: string;
     paymentDate?: string | null;
     price: number;
@@ -48,6 +29,38 @@ export interface Meeting {
     documents: BinaryDocument[];
 }
 
+export interface BinaryDocument {
+    date: string;
+    fileName: string;
+    id: string;
+    title: string;
+}
+
+export interface DeleteDocument {
+    id: string;
+    appointmentId: string;
+}
+
+export interface DocumentConfiguration {
+    body?: string | null;
+    name?: string | null;
+    title?: string | null;
+    id: string;
+}
+
+export interface DownloadDocument {
+    documentId: string;
+}
+
+export interface DownloadKey {
+    key: string;
+}
+
+export interface GenerateDocument {
+    documentId: string;
+    appointmentId: string;
+}
+
 export interface Patient {
     id: string;
     birthDate?: string | null;
@@ -61,9 +74,10 @@ export interface Patient {
     phoneNumber?: string | null;
     street?: string | null;
     zipCode?: string | null;
+    title?: string | null;
 }
 
-export interface SearchMeetings {
+export interface SearchAppointments {
     startDate: string;
     endDate: string;
     patientId?: string | null;

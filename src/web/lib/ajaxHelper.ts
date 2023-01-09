@@ -21,12 +21,12 @@ export async function getData<TResult>(route: string): Promise<TResult | null> {
     return null;
 }
 
-export async function generateDocument<TResult>(documentId: string, meetingId: string): Promise<void> {
+export async function generateDocument<TResult>(documentId: string, appointmentId: string): Promise<void> {
     const bearer = await getAuthorization();
 
     const body = {
         documentId,
-        meetingId
+        appointmentId: appointmentId
     };
     await fetch("/api/document/generate", {
         method: "POST",

@@ -2,15 +2,15 @@ import type {NextPage} from 'next'
 import {useRouter} from "next/router";
 import {useEffect} from "react";
 
-const Meeting: NextPage = () => {
+const Appointment: NextPage = () => {
 
     const router = useRouter();
 
     useEffect(() => {
-        router.push('/meetings/new/');
+        router.push('/appointments/new/');
     }, [router]);
 
     return <></>
 }
 
-export default Meeting
+export default Appointment

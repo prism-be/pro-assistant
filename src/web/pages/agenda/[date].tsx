@@ -8,7 +8,7 @@ import {add, format, formatISO, parse, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
 import Button from "../../components/forms/Button";
 import {postData} from "../../lib/ajaxHelper";
-import {Meeting} from "../../lib/contracts";
+import {Appointment} from "../../lib/contracts";
 import React from 'react';
 import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
@@ -20,12 +20,12 @@ const Agenda: NextPage = () => {
     const day = parse(router.query.date as string, "yyyy-MM-dd", new Date());
     const {t} = useTranslation("common");
 
-    const {data: meetings} = useSWR(router.asPath, loadMeetings);
+    const {data: appointments} = useSWR(router.asPath, loadAppointments);
 
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
 
-    async function loadMeetings() {
-        return await postData<Meeting[]>("/meetings", {
+    async function loadAppointments() {
+        return await postData<Appointment[]>("/appointments", {
             startDate: formatISO(day),
             endDate: formatISO(add(day, {days: 1}))
         });
@@ -58,9 +58,9 @@ const Agenda: NextPage = () => {
         return styles["duration" + d];
     }
 
-    function addMeeting(h: number, m: number) {
+    function addAppointment(h: number, m: number) {
         const startDate = add(new Date(day.getFullYear(), day.getMonth(), day.getDate()), {hours: h, minutes: m});
-        router.push("/meetings/new?startDate=" + encodeURIComponent(formatISO(startDate)));
+        router.push("/appointments/new?startDate=" + encodeURIComponent(formatISO(startDate)));
     }
     
     function previousDay() {
@@ -90,19 +90,19 @@ const Agenda: NextPage = () => {
                         </h1>
                     </Mobile>
 
-                    {meetings?.length === 0 && <div className={styles.noMeeting}>{t("pages.agenda.noMeeting")}</div>}
+                    {appointments?.length === 0 && <div className={styles.noAppointment}>{t("pages.agenda.noAppointment")}</div>}
 
                     <div className={styles.gap}/>
 
                     {hours.map(h => <React.Fragment key={h}>
                         <div className={styles.hour + " " + getHourRowClassName(h, 0)}>{h}H</div>
-                        <div className={styles.halfHour + " " + getHourRowClassName(h, 0)} onClick={() => addMeeting(h, 0)}></div>
-                        <div className={styles.halfHourEnd + " " + getHourRowEndClassName(h)} onClick={() => addMeeting(h, 30)}></div>
+                        <div className={styles.halfHour + " " + getHourRowClassName(h, 0)} onClick={() => addAppointment(h, 0)}></div>
+                        <div className={styles.halfHourEnd + " " + getHourRowEndClassName(h)} onClick={() => addAppointment(h, 30)}></div>
                     </React.Fragment>)}
 
-                    {meetings?.map(m =>
+                    {appointments?.map(m =>
                         <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours(), parseISO(m.startDate).getMinutes()) + " " + getDurationClassName(m.duration)} key={m.id}
-                             onClick={() => router.push("/meetings/" + m.id)}
+                             onClick={() => router.push("/appointments/" + m.id)}
                              style={{backgroundColor: m.backgroundColor ?? ""}}>
                             <div>{m.title?.slice(0, 40)}</div>
                         </div>)}

@@ -1,6 +1,6 @@
 ﻿@import "../../vars";
 
-.meeting {
+.appointment {
   display: grid;
 
   grid-template-rows: 3rem 3rem;
@@ -58,6 +58,6 @@
   margin-right: 1.5rem;
 }
 
-.noMeetings {
+.noAppointments {
   font-style: italic;
 }

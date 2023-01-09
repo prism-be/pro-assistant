@@ -26,7 +26,7 @@ using Unit = QuestPDF.Infrastructure.Unit;
 
 namespace Prism.ProAssistant.Documents;
 
-public record GenerateDocument(string DocumentId, string MeetingId) : IRequest<byte[]>;
+public record GenerateDocument(string DocumentId, string AppointmentId) : IRequest<byte[]>;
 
 public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 {
@@ -45,7 +45,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
     public async Task<byte[]> Handle(GenerateDocument request, CancellationToken cancellationToken)
     {
-        var data = await GetData(request.MeetingId);
+        var data = await GetData(request.AppointmentId);
 
         if (data == null)
         {
@@ -60,19 +60,19 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         var document = CreateDocument(data, title, content);
         var bytes = document.GeneratePdf();
 
-        var computedTitle = ReplaceContent(title, data.Value.meeting, data.Value.patient, data.Value.headers);
-        await SaveDocument(data.Value.meeting, computedTitle, bytes);
+        var computedTitle = ReplaceContent(title, data.Value.appointment, data.Value.patient, data.Value.headers);
+        await SaveDocument(data.Value.appointment, computedTitle, bytes);
 
         return bytes;
     }
 
-    private async Task SaveDocument(Meeting meeting, string title, byte[] bytes)
+    private async Task SaveDocument(Appointment appointment, string title, byte[] bytes)
     {
-        var collection = _organizationContext.GetCollection<Meeting>();
-        var existings = await collection.FindAsync(Builders<Meeting>.Filter.Eq(x => x.Id, meeting.Id));
+        var collection = _organizationContext.GetCollection<Appointment>();
+        var existings = await collection.FindAsync(Builders<Appointment>.Filter.Eq(x => x.Id, appointment.Id));
         var existing = await existings.FirstAsync();
 
-        var documentTitle = $"{meeting.StartDate:yyyy-MM-dd HH:mm} - {meeting.LastName} {meeting.FirstName} - {title}";
+        var documentTitle = $"{appointment.StartDate:yyyy-MM-dd HH:mm} - {appointment.LastName} {appointment.FirstName} - {title}";
         string fileName = documentTitle.ReplaceSpecialChars(true) + ".pdf";
         
         var bucket = _organizationContext.GetGridFsBucket();
@@ -88,12 +88,12 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         
         existing.Documents.Insert(0,document);
         
-        await collection.UpdateOneAsync(Builders<Meeting>.Filter.Eq(x => x.Id, meeting.Id), Builders<Meeting>.Update.Set(x => x.Documents, existing.Documents));
+        await collection.UpdateOneAsync(Builders<Appointment>.Filter.Eq(x => x.Id, appointment.Id), Builders<Appointment>.Update.Set(x => x.Documents, existing.Documents));
         
-        _logger.LogInformation("Document {DocumentId} was saved for meeting {MeetingId}", document.Id, meeting.Id);
+        _logger.LogInformation("Document {DocumentId} was saved for Appointment {AppointmentId}", document.Id, appointment.Id);
     }
 
-    private Document CreateDocument([DisallowNull] (Meeting meeting, Patient patient, Setting setting, JsonNode headers)? data, string title, string content)
+    private Document CreateDocument([DisallowNull] (Appointment appointment, Patient patient, Setting setting, JsonNode headers)? data, string title, string content)
     {
         return Document.Create(container =>
         {
@@ -145,8 +145,8 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
                     table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(13, Unit.Centimetre)).Column(c =>
                     {
-                        c.Item().Text(ReplaceContent(title, data.Value.meeting, data.Value.patient, data.Value.headers)).Bold();
-                        c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.meeting, data.Value.patient, data.Value.headers));
+                        c.Item().Text(ReplaceContent(title, data.Value.appointment, data.Value.patient, data.Value.headers)).Bold();
+                        c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.appointment, data.Value.patient, data.Value.headers));
                     });
 
                     table.Cell().Row(6).Column(3).PaddingTop(1, Unit.Centimetre).Column(c =>
@@ -181,27 +181,27 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         return image.ToByteArray();
     }
 
-    private async Task<(Meeting meeting, Patient patient, Setting setting, JsonNode headers)?> GetData(string meetingId)
+    private async Task<(Appointment appointment, Patient patient, Setting setting, JsonNode headers)?> GetData(string appointmentId)
     {
-        var meeting = await _mediator.Send(new FindOne<Meeting>(meetingId));
+        var appointment = await _mediator.Send(new FindOne<Appointment>(appointmentId));
 
-        if (meeting == null)
+        if (appointment == null)
         {
-            _logger.LogWarning("Cannot find meeting {meetingId}", meetingId);
+            _logger.LogWarning("Cannot find Appointment {AppointmentId}", appointmentId);
             return null;
         }
 
-        if (string.IsNullOrWhiteSpace(meeting.PatientId))
+        if (string.IsNullOrWhiteSpace(appointment.PatientId))
         {
-            _logger.LogWarning("Cannot find patient for meeting {meetingId}", meetingId);
+            _logger.LogWarning("Cannot find patient for Appointment {AppointmentId}", appointmentId);
             return null;
         }
 
-        var patient = await _mediator.Send(new FindOne<Patient>(meeting.PatientId));
+        var patient = await _mediator.Send(new FindOne<Patient>(appointment.PatientId));
 
         if (patient == null)
         {
-            _logger.LogWarning("Cannot find patient {patientId}", meeting.PatientId);
+            _logger.LogWarning("Cannot find patient {patientId}", appointment.PatientId);
             return null;
         }
 
@@ -221,7 +221,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
             return null;
         }
 
-        return (meeting, patient, setting, headers);
+        return (appointment, patient, setting, headers);
     }
 
     private async Task<(string title, string content)> GetTitleContent(string documentId)
@@ -236,7 +236,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         return (document.Title ?? string.Empty, document.Body ?? string.Empty);
     }
 
-    private string ReplaceContent(string templateContent, Meeting meeting, Patient patient, JsonNode headers)
+    private string ReplaceContent(string templateContent, Appointment appointment, Patient patient, JsonNode headers)
     {
         var template = Template.Parse(templateContent);
 
@@ -244,12 +244,12 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         {
             name = headers["yourName"]?.ToString(),
             patientName = (patient.Title + " " + patient.LastName + " " + patient.FirstName).Trim(),
-            price = meeting.Price.ToString("F2") + "€",
-            meetingType = meeting.Type,
-            meetingDate = meeting.StartDate.ToLongDateString(),
-            meetingHour = meeting.StartDate.ToShortTimeString(),
-            paymentDate = (meeting.PaymentDate ?? meeting.StartDate).ToString("dd/MM/yyyy"),
-            paymentMode = _localizator.GetTranslation("documents", "payment" + meeting.Payment)
+            price = appointment.Price.ToString("F2") + "€",
+            appointmentType = appointment.Type,
+            appointmentDate = appointment.StartDate.ToLongDateString(),
+            appointmentHour = appointment.StartDate.ToShortTimeString(),
+            paymentDate = (appointment.PaymentDate ?? appointment.StartDate).ToString("dd/MM/yyyy"),
+            paymentMode = _localizator.GetTranslation("documents", "payment" + appointment.Payment)
         };
 
         return template.Render(Hash.FromAnonymousObject(data));

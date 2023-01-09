@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "UpdateMeetingsColorTests.cs" company = "Prism">
+//  <copyright file = "UpdateAppointmentsColorTests.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -15,15 +15,15 @@ using Prism.ProAssistant.UnitTesting.Extensions;
 
 namespace Prism.ProAssistant.Business.Tests.Commands;
 
-public class UpdateMeetingsColorTests
+public class UpdateAppointmentsColorTests
 {
     [Fact]
     public async Task Handle_No_Tariff()
     {
         // Arrange
-        var logger = new Mock<ILogger<UpdateMeetingsColorHandler>>();
+        var logger = new Mock<ILogger<UpdateAppointmentsColorHandler>>();
         var organizationContext = new Mock<IOrganizationContext>();
-        var request = new UpdateMeetingsColor(Identifier.GenerateString(), Identifier.GenerateString());
+        var request = new UpdateAppointmentsColor(Identifier.GenerateString(), Identifier.GenerateString());
 
         var tariffCollection = new Mock<IMongoCollection<Tariff>>();
         tariffCollection.SetupCollectionFindEmpty();
@@ -32,7 +32,7 @@ public class UpdateMeetingsColorTests
             .Returns(tariffCollection.Object);
         
         // Act
-        var handler = new UpdateMeetingsColorHandler(logger.Object, organizationContext.Object);
+        var handler = new UpdateAppointmentsColorHandler(logger.Object, organizationContext.Object);
         await handler.Handle(request, CancellationToken.None);
 
         // Assert
@@ -43,9 +43,9 @@ public class UpdateMeetingsColorTests
     public async Task Handle_Ok()
     {
         // Arrange
-        var logger = new Mock<ILogger<UpdateMeetingsColorHandler>>();
+        var logger = new Mock<ILogger<UpdateAppointmentsColorHandler>>();
         var organizationContext = new Mock<IOrganizationContext>();
-        var request = new UpdateMeetingsColor(Identifier.GenerateString(), Identifier.GenerateString());
+        var request = new UpdateAppointmentsColor(Identifier.GenerateString(), Identifier.GenerateString());
 
         var tariffCollection = new Mock<IMongoCollection<Tariff>>();
         tariffCollection.SetupCollection(new Tariff() { Id = Identifier.GenerateString() });
@@ -53,14 +53,14 @@ public class UpdateMeetingsColorTests
         organizationContext.Setup(x => x.GetCollection<Tariff>())
             .Returns(tariffCollection.Object);
         
-        var meetingCollection = new Mock<IMongoCollection<Meeting>>();
-        meetingCollection.SetupCollection(new Meeting() { Id = Identifier.GenerateString() });
+        var appointmentCollection = new Mock<IMongoCollection<Appointment>>();
+        appointmentCollection.SetupCollection(new Appointment() { Id = Identifier.GenerateString() });
         
-        organizationContext.Setup(x => x.GetCollection<Meeting>())
-            .Returns(meetingCollection.Object);
+        organizationContext.Setup(x => x.GetCollection<Appointment>())
+            .Returns(appointmentCollection.Object);
         
         // Act
-        var handler = new UpdateMeetingsColorHandler(logger.Object, organizationContext.Object);
+        var handler = new UpdateAppointmentsColorHandler(logger.Object, organizationContext.Object);
         await handler.Handle(request, CancellationToken.None);
 
         // Assert

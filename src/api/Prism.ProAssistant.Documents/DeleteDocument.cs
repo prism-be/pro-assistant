@@ -13,7 +13,7 @@ using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Documents;
 
-public record DeleteDocument(string Id, string MeetingId) : IRequest;
+public record DeleteDocument(string Id, string AppointmentId) : IRequest;
 
 public class DeleteDocumentHandler : IRequestHandler<DeleteDocument>
 {
@@ -28,25 +28,25 @@ public class DeleteDocumentHandler : IRequestHandler<DeleteDocument>
 
     public async Task<Unit> Handle(DeleteDocument request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Delete Document {DocumentId} for Meeting {MeetingId}", request.Id, request.MeetingId);
-        var meetings = _organizationContext.GetCollection<Meeting>();
-        var meeting =
-            await (await meetings.FindAsync(Builders<Meeting>.Filter.Eq(x => x.Id, request.MeetingId), cancellationToken: cancellationToken)).SingleAsync(
+        _logger.LogInformation("Delete Document {DocumentId} for Appointment {AppointmentId}", request.Id, request.AppointmentId);
+        var appointments = _organizationContext.GetCollection<Appointment>();
+        var appointment =
+            await (await appointments.FindAsync(Builders<Appointment>.Filter.Eq(x => x.Id, request.AppointmentId), cancellationToken: cancellationToken)).SingleAsync(
                 cancellationToken: cancellationToken);
 
-        var deletedDocument = meeting.Documents.SingleOrDefault(x => x.Id == request.Id);
+        var deletedDocument = appointment.Documents.SingleOrDefault(x => x.Id == request.Id);
 
         if (deletedDocument == null)
         {
-            _logger.LogWarning("Document {DocumentId} not found for Meeting {MeetingId}", request.Id, request.MeetingId);
+            _logger.LogWarning("Document {DocumentId} not found for Appointment {AppointmentId}", request.Id, request.AppointmentId);
             return Unit.Value;
         }
 
         var bucket = _organizationContext.GetGridFsBucket();
         await bucket.DeleteAsync(ObjectId.Parse(request.Id), cancellationToken);
 
-        meeting.Documents.Remove(deletedDocument);
-        await meetings.UpdateOneAsync(Builders<Meeting>.Filter.Eq(x => x.Id, request.MeetingId), Builders<Meeting>.Update.Set(x => x.Documents, meeting.Documents),
+        appointment.Documents.Remove(deletedDocument);
+        await appointments.UpdateOneAsync(Builders<Appointment>.Filter.Eq(x => x.Id, request.AppointmentId), Builders<Appointment>.Update.Set(x => x.Documents, appointment.Documents),
             cancellationToken: cancellationToken);
 
         return Unit.Value;

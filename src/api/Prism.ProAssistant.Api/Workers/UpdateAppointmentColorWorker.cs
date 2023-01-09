@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "UpdateMeetingColorWorker.cs" company = "Prism">
+//  <copyright file = "UpdateAppointmentColorWorker.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -11,18 +11,18 @@ using RabbitMQ.Client;
 
 namespace Prism.ProAssistant.Api.Workers;
 
-public class UpdateMeetingColorWorker : BaseServiceBusWorker<UpsertResult>
+public class UpdateAppointmentColorWorker : BaseServiceBusWorker<UpsertResult>
 {
-    public UpdateMeetingColorWorker(ILogger<UpdateMeetingColorWorker> logger, IServiceProvider serviceProvider, IConnection connection)
+    public UpdateAppointmentColorWorker(ILogger<UpdateAppointmentColorWorker> logger, IServiceProvider serviceProvider, IConnection connection)
         : base(logger, serviceProvider, connection)
     {
     }
 
     public override string Queue => Topics.Tariffs.Updated;
-    public override string WorkerName => nameof(UpdateMeetingColorWorker);
+    public override string WorkerName => nameof(UpdateAppointmentColorWorker);
 
     public override async Task ProcessMessageAsync(IMediator mediator, UpsertResult payload)
     {
-        await mediator.Send(new UpdateMeetingsColor(payload.Id, payload.Organization));
+        await mediator.Send(new UpdateAppointmentsColor(payload.Id, payload.Organization));
     }
 }

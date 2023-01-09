@@ -1,6 +1,6 @@
-﻿import styles from "../../styles/pages/meeting.module.scss";
+﻿import styles from "../../styles/pages/appointment.module.scss";
 
-import {DocumentConfiguration, Meeting} from "../../lib/contracts"
+import {DocumentConfiguration, Appointment} from "../../lib/contracts"
 import Section from "../design/Section";
 import {deleteDataWithBody, downloadDocument, generateDocument} from "../../lib/ajaxHelper";
 import {Save} from "../icons/Save";
@@ -12,22 +12,22 @@ import {getLocale} from "../../lib/localization";
 import {Delete} from "../icons/Icons";
 
 interface Props {
-    meeting: Meeting;
+    appointment: Appointment;
 }
 
-export const GeneratedDocuments = ({meeting}: Props) => {
+export const GeneratedDocuments = ({appointment}: Props) => {
 
     const {data: documents} = useSWR<DocumentConfiguration[]>("/documents-configuration");
     const [document, setDocument] = useState<string>();
     const {t} = useTranslation('common');
 
     const startGenerateDocument = useCallback(async () => {
-        if (!document || document === "" || meeting?.id == null) {
+        if (!document || document === "" || appointment?.id == null) {
             return;
         }
 
-        await generateDocument(document, meeting.id);
-        await mutate("/meeting/" + meeting.id);
+        await generateDocument(document, appointment.id);
+        await mutate("/appointment/" + appointment.id);
     }, [document]);
 
 
@@ -37,24 +37,24 @@ export const GeneratedDocuments = ({meeting}: Props) => {
 
     const startDeleteDocument = useCallback(async (documentId: string) => {
         if (confirm(t("confirmations.deleteDocument"))) {
-            await deleteDataWithBody("/document", {id: documentId, meetingId: meeting.id});
-            await mutate("/meeting/" + meeting.id);
+            await deleteDataWithBody("/document", {id: documentId, appointmentId: appointment.id});
+            await mutate("/appointment/" + appointment.id);
         }
-    }, [meeting]);
+    }, [appointment]);
 
     return <Section>
-        <h2>{t("pages.meeting.documents.title")}</h2>
+        <h2>{t("pages.appointment.documents.title")}</h2>
 
-        <>{meeting.documents.length === 0 && <div className={styles.noDocuments}>
-            {t("pages.meeting.documents.no-documents")}
+        <>{appointment.documents.length === 0 && <div className={styles.noDocuments}>
+            {t("pages.appointment.documents.no-documents")}
         </div>}</>
 
         <>
-            {meeting.documents.map(d => <div key={d.id} className={styles.document}>
+            {appointment.documents.map(d => <div key={d.id} className={styles.document}>
                 <div className={styles.documentTitle}>{d.title}</div>
                 <div className={styles.documentDate}>
                     (
-                    {t("pages.meeting.documents.generated")}
+                    {t("pages.appointment.documents.generated")}
                     {format(parseISO(d.date), "dd/MM/yy HH:mm", {locale: getLocale()})}
                     )
                 </div>
@@ -72,7 +72,7 @@ export const GeneratedDocuments = ({meeting}: Props) => {
 
         <div className={styles.documents}>
             <select onChange={(e) => setDocument(e.target.value)}>
-                <option value={""}>{t("pages.meeting.documents.generate")}</option>
+                <option value={""}>{t("pages.appointment.documents.generate")}</option>
                 {documents?.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
             <div onClick={() => startGenerateDocument()} className={styles.documentsSave}>

@@ -30,15 +30,15 @@ public class GenerateDocumentTests
         var id = Identifier.GenerateString();
         var documentId = Identifier.GenerateString();
 
-        var meeting = new Meeting
+        var appointment = new Appointment
         {
             Id = id,
             PatientId = Identifier.GenerateString()
         };
 
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<FindOne<Meeting>>(), CancellationToken.None))
-            .ReturnsAsync(meeting);
+        mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
+            .ReturnsAsync(appointment);
 
         mediator.Setup(x => x.Send(It.Is<FindOne<Setting>>(s => s.Id == "documents-headers"), CancellationToken.None))
             .ReturnsAsync(new Setting
@@ -51,14 +51,14 @@ public class GenerateDocumentTests
         mediator.Setup(x => x.Send(It.IsAny<FindOne<Patient>>(), CancellationToken.None))
             .ReturnsAsync(new Patient
             {
-                Id = meeting.PatientId
+                Id = appointment.PatientId
             });
 
         var localizer = new Mock<ILocalizator>();
         localizer.Setup(x => x.Locale).Returns("fr");
 
         var organizationContext = new Mock<IOrganizationContext>();
-        organizationContext.SetupCollection<Meeting>();
+        organizationContext.SetupCollection<Appointment>();
 
         // Act and assert
         var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
@@ -71,15 +71,15 @@ public class GenerateDocumentTests
         // Arrange
         var id = Identifier.GenerateString();
         var documentId = Identifier.GenerateString();
-        var meeting = new Meeting
+        var appointment = new Appointment
         {
             Id = id,
             PatientId = Identifier.GenerateString()
         };
 
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<FindOne<Meeting>>(), CancellationToken.None))
-            .ReturnsAsync(meeting);
+        mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
+            .ReturnsAsync(appointment);
 
         mediator.Setup(x => x.Send(It.Is<FindOne<Setting>>(s => s.Id == "documents-headers"), CancellationToken.None))
             .ReturnsAsync(new Setting
@@ -93,7 +93,7 @@ public class GenerateDocumentTests
         localizer.Setup(x => x.Locale).Returns("fr");
 
         var organizationContext = new Mock<IOrganizationContext>();
-        organizationContext.SetupCollection<Meeting>();
+        organizationContext.SetupCollection<Appointment>();
 
         // Act and assert
         var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
@@ -107,14 +107,14 @@ public class GenerateDocumentTests
         var id = Identifier.GenerateString();
         var documentId = Identifier.GenerateString();
 
-        var meeting = new Meeting
+        var appointment = new Appointment
         {
             Id = id
         };
 
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<FindOne<Meeting>>(), CancellationToken.None))
-            .ReturnsAsync(meeting);
+        mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
+            .ReturnsAsync(appointment);
 
         mediator.Setup(x => x.Send(It.Is<FindOne<Setting>>(s => s.Id == "documents-headers"), CancellationToken.None))
             .ReturnsAsync(new Setting
@@ -128,7 +128,7 @@ public class GenerateDocumentTests
         localizer.Setup(x => x.Locale).Returns("fr");
 
         var organizationContext = new Mock<IOrganizationContext>();
-        organizationContext.SetupCollection<Meeting>();
+        organizationContext.SetupCollection<Appointment>();
 
         // Act and assert
         var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
@@ -141,27 +141,27 @@ public class GenerateDocumentTests
         // Arrange
         var id = Identifier.GenerateString();
         var documentId = Identifier.GenerateString();
-        var meeting = new Meeting
+        var appointment = new Appointment
         {
             Id = id,
             PatientId = Identifier.GenerateString()
         };
 
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<FindOne<Meeting>>(), CancellationToken.None))
-            .ReturnsAsync(meeting);
+        mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
+            .ReturnsAsync(appointment);
 
         mediator.Setup(x => x.Send(It.IsAny<FindOne<Patient>>(), CancellationToken.None))
             .ReturnsAsync(new Patient
             {
-                Id = meeting.PatientId
+                Id = appointment.PatientId
             });
 
         var localizer = new Mock<ILocalizator>();
         localizer.Setup(x => x.Locale).Returns("fr");
 
         var organizationContext = new Mock<IOrganizationContext>();
-        organizationContext.SetupCollection<Meeting>();
+        organizationContext.SetupCollection<Appointment>();
 
         // Act and assert
         var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
@@ -179,7 +179,7 @@ public class GenerateDocumentTests
         var localizer = new Mock<ILocalizator>();
 
         var organizationContext = new Mock<IOrganizationContext>();
-        organizationContext.SetupCollection<Meeting>();
+        organizationContext.SetupCollection<Appointment>();
 
         // Act and assert
         var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
@@ -193,15 +193,15 @@ public class GenerateDocumentTests
         var id = Identifier.GenerateString();
         var documentId = Identifier.GenerateString();
 
-        var meeting = new Meeting
+        var appointment = new Appointment
         {
             Id = id,
             PatientId = Identifier.GenerateString()
         };
 
         var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<FindOne<Meeting>>(), CancellationToken.None))
-            .ReturnsAsync(meeting);
+        mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
+            .ReturnsAsync(appointment);
 
         mediator.Setup(x => x.Send(It.Is<FindOne<Setting>>(s => s.Id == "documents-headers"), CancellationToken.None))
             .ReturnsAsync(new Setting
@@ -214,7 +214,7 @@ public class GenerateDocumentTests
         mediator.Setup(x => x.Send(It.IsAny<FindOne<Patient>>(), CancellationToken.None))
             .ReturnsAsync(new Patient
             {
-                Id = meeting.PatientId
+                Id = appointment.PatientId
             });
 
         mediator.Setup(x => x.Send(It.Is<FindOne<DocumentConfiguration>>(d => d.Id == documentId), CancellationToken.None))
@@ -231,7 +231,7 @@ public class GenerateDocumentTests
 
         var organizationContext = new Mock<IOrganizationContext>();
 
-        organizationContext.SetupCollection(new Meeting
+        organizationContext.SetupCollection(new Appointment
         {
             Id = id,
             Documents = new List<BinaryDocument>()

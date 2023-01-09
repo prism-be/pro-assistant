@@ -36,7 +36,7 @@ const Menu = () => {
             <li className={styles.item + getActiveLinkClass('/patients')}><Link href={"/patients"}>{t("menu.patients")}</Link></li>
             <li className={styles.item + getActiveLinkClass('/agenda')}><Link href={"/agenda/" + format(new Date(), "yyyy-MM-dd")}>{t("menu.agenda")}</Link></li>
             <li className={styles.item + getActiveLinkClass('/calendar')}><Link href={"/calendar"}>{t("menu.calendar")}</Link></li>
-            <li className={styles.item + getActiveLinkClass('/meetings')}><Link href={"/meetings"}>{t("menu.meetings")}</Link></li>
+            <li className={styles.item + getActiveLinkClass('/appointments')}><Link href={"/appointments"}>{t("menu.appointments")}</Link></li>
             
             <Mobile breakpoint={"MD"}>
                 <li className={styles.title}>{t("menu.configurationTitle")}</li>
