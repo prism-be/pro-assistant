@@ -9,7 +9,6 @@ using System.Globalization;
 using System.Text.Json.Nodes;
 using Acme.Core.Extensions;
 using DotLiquid;
-using ImageMagick;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
@@ -17,10 +16,10 @@ using Prism.ProAssistant.Business.Exceptions;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Storage;
+using Prism.ProAssistant.Documents.Extensions;
 using Prism.ProAssistant.Documents.Locales;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
 using Document = QuestPDF.Fluent.Document;
 using Unit = QuestPDF.Infrastructure.Unit;
 
@@ -66,33 +65,6 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         return bytes;
     }
 
-    private async Task SaveDocument(Appointment appointment, string title, byte[] bytes)
-    {
-        var collection = _organizationContext.GetCollection<Appointment>();
-        var existings = await collection.FindAsync(Builders<Appointment>.Filter.Eq(x => x.Id, appointment.Id));
-        var existing = await existings.FirstAsync();
-
-        var documentTitle = $"{appointment.StartDate:yyyy-MM-dd HH:mm} - {appointment.LastName} {appointment.FirstName} - {title}";
-        string fileName = documentTitle.ReplaceSpecialChars(true) + ".pdf";
-        
-        var bucket = _organizationContext.GetGridFsBucket();
-        var fileId = await bucket.UploadFromBytesAsync(fileName, bytes);
-
-        var document = new BinaryDocument
-        {
-            Id = fileId.ToString(),
-            Title = documentTitle,
-            Date = DateTime.UtcNow,
-            FileName = fileName,
-        };
-        
-        existing.Documents.Insert(0,document);
-        
-        await collection.UpdateOneAsync(Builders<Appointment>.Filter.Eq(x => x.Id, appointment.Id), Builders<Appointment>.Update.Set(x => x.Documents, existing.Documents));
-        
-        _logger.LogInformation("Document {DocumentId} was saved for Appointment {AppointmentId}", document.Id, appointment.Id);
-    }
-
     private Document CreateDocument([DisallowNull] (Appointment appointment, Contact contact, Setting setting, JsonNode headers)? data, string title, string content)
     {
         return Document.Create(container =>
@@ -105,43 +77,8 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
                 page.Content().Table(table =>
                 {
-                    table.ColumnsDefinition(columns =>
-                    {
-                        columns.ConstantColumn(2, Unit.Centimetre);
-                        columns.ConstantColumn(8, Unit.Centimetre);
-                        columns.RelativeColumn();
-                    });
-
-                    var logo = data.Value.headers["logo"]?.ToString().Split(',').LastOrDefault();
-
-                    if (logo != null)
-                    {
-                        var logoBytes = Convert.FromBase64String(logo);
-                        logoBytes = ResizeImage(logoBytes, 250, 250);
-                        table.Cell().Row(1).Column(1).Element(e => e.Height(2, Unit.Centimetre)).Image(logoBytes);
-                    }
-
-                    table.Cell().Row(1).Column(2).ColumnSpan(2).PaddingLeft(0.5f, Unit.Centimetre).Column(c =>
-                    {
-                        c.Item().Text(data.Value.headers["name"]?.ToString()).FontSize(10);
-
-                        foreach (var line in data.Value.headers["address"]?.ToString().Split('\n') ?? Array.Empty<string>())
-                        {
-                            c.Item().Text(line).FontSize(10);
-                        }
-                    });
-
-                    table.Cell().Row(2).Column(1).ColumnSpan(3).PaddingTop(0.5f, Unit.Centimetre).Element(e => e.Height(0.25f, Unit.Centimetre)).LineHorizontal(1);
-
-                    table.Cell().Row(3).Column(1).ColumnSpan(3).AlignRight().Text(DateTime.Today.ToLongDateString()).FontSize(10).LineHeight(0.75f);
-
-                    table.Cell().Row(4).Column(3).PaddingTop(1, Unit.Centimetre).Element(e => e.Height(5, Unit.Centimetre)).Column(c =>
-                    {
-                        c.Item().Text(data.Value.contact.LastName + " " + data.Value.contact.FirstName);
-                        c.Item().Text(data.Value.contact.Street + " " + data.Value.contact.Number);
-                        c.Item().Text(data.Value.contact.ZipCode + " " + data.Value.contact.City);
-                        c.Item().Text(data.Value.contact.Country);
-                    });
+                    table.WriteHeader(data.Value.headers);
+                    table.WriteContactAddress(data.Value.contact);
 
                     table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(13, Unit.Centimetre)).Column(c =>
                     {
@@ -149,36 +86,10 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
                         c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.appointment, data.Value.contact, data.Value.headers));
                     });
 
-                    table.Cell().Row(6).Column(3).PaddingTop(1, Unit.Centimetre).Column(c =>
-                    {
-                        var signature = data.Value.headers["signature"]?.ToString().Split(',').LastOrDefault();
-
-                        if (signature != null)
-                        {
-                            var signatureBytes = Convert.FromBase64String(signature);
-                            signatureBytes = ResizeImage(signatureBytes, 400, 200);
-                            c.Item().AlignRight().Element(e => e.Height(2, Unit.Centimetre)).Image(signatureBytes, ImageScaling.FitHeight);
-                        }
-
-                        c.Item().AlignRight().Text(data.Value.headers["yourName"]?.ToString());
-                        c.Item().AlignRight().Text(data.Value.headers["yourCity"] + ", " + DateTime.Today.ToLongDateString()).FontSize(10);
-                    });
+                    table.WriteSignature(data.Value.headers);
                 });
             });
         });
-    }
-
-    private byte[] ResizeImage(byte[] data,int width, int height)
-    {
-        var image = new MagickImage(data);
-        
-        if (image.Height < height && image.Width < width)
-        {
-            return data;
-        }
-        
-        image.Resize(width, height);
-        return image.ToByteArray();
     }
 
     private async Task<(Appointment appointment, Contact contact, Setting setting, JsonNode headers)?> GetData(string appointmentId)
@@ -253,5 +164,32 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         };
 
         return template.Render(Hash.FromAnonymousObject(data));
+    }
+
+    private async Task SaveDocument(Appointment appointment, string title, byte[] bytes)
+    {
+        var collection = _organizationContext.GetCollection<Appointment>();
+        var existings = await collection.FindAsync(Builders<Appointment>.Filter.Eq(x => x.Id, appointment.Id));
+        var existing = await existings.FirstAsync();
+
+        var documentTitle = $"{appointment.StartDate:yyyy-MM-dd HH:mm} - {appointment.LastName} {appointment.FirstName} - {title}";
+        var fileName = documentTitle.ReplaceSpecialChars(true) + ".pdf";
+
+        var bucket = _organizationContext.GetGridFsBucket();
+        var fileId = await bucket.UploadFromBytesAsync(fileName, bytes);
+
+        var document = new BinaryDocument
+        {
+            Id = fileId.ToString(),
+            Title = documentTitle,
+            Date = DateTime.UtcNow,
+            FileName = fileName
+        };
+
+        existing.Documents.Insert(0, document);
+
+        await collection.UpdateOneAsync(Builders<Appointment>.Filter.Eq(x => x.Id, appointment.Id), Builders<Appointment>.Update.Set(x => x.Documents, existing.Documents));
+
+        _logger.LogInformation("Document {DocumentId} was saved for Appointment {AppointmentId}", document.Id, appointment.Id);
     }
 }
