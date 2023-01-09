@@ -15,18 +15,18 @@ namespace Prism.ProAssistant.Api.Tests.Controllers
     public class SettingControllerTests
     {
         [Fact]
-        public async Task FindOne()
+        public async Task FindMany()
         {
-            await CrudTests.FindOne<SettingController, Setting>(c => c.FindOne(Identifier.GenerateString()));
+            await CrudTests.FindMany<SettingController, Setting>(c => c.FindMany());
         }
 
         [Fact]
-        public async Task UpsertOne()
+        public async Task UpsertMany()
         {
-            await CrudTests.UpsertOne<SettingController, Setting>(c => c.UpsertOne(new Setting
+            await CrudTests.UpsertMany<SettingController, Setting>(c => c.UpsertMany(new [] {new Setting
             {
                 Id = Identifier.GenerateString()
-            }));
+            }}));
         }
     }
 }

@@ -22,19 +22,21 @@ public class SettingController : Controller
         _mediator = mediator;
     }
 
-    [Route("api/setting/{settingId}")]
+    [Route("api/settings")]
     [HttpGet]
-    public async Task<ActionResult<Setting>> FindOne(string settingId)
+    public async Task<ActionResult<List<Setting>>> FindMany()
     {
-        var result = await _mediator.Send(new FindOne<Setting>(settingId));
+        var result = await _mediator.Send(new FindMany<Setting>());
         return result.ToActionResult();
     }
 
-    [Route("api/setting")]
+    [Route("api/settings")]
     [HttpPost]
-    public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] Setting setting)
+    public async Task UpsertMany([FromBody] Setting[] settings)
     {
-        var result = await _mediator.Send(new UpsertOne<Setting>(setting));
-        return result.ToActionResult();
+        foreach (var setting in settings)
+        {
+            await _mediator.Send(new UpsertOne<Setting>(setting));
+        }
     }
 }
