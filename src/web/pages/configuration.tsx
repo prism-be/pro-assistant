@@ -15,7 +15,7 @@ import {Pencil} from "../components/icons/Icons";
 import TextArea from "../components/forms/TextArea";
 import InputImage from "../components/forms/InputImage";
 import {Setting, Tariff} from "../lib/contracts";
-import {getData, postData, putData} from "../lib/ajaxHelper";
+import {postData, putData} from "../lib/ajaxHelper";
 import Section from "../components/design/Section";
 import InputColor from "../components/forms/InputColor";
 
