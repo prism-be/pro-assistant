@@ -3,6 +3,7 @@ import {UseFormSetValue} from "react-hook-form/dist/types/form";
 import styles from "../../styles/components/forms/input.color.module.scss";
 import {useEffect, useState} from "react";
 import {Pencil} from "../icons/Icons";
+import useTranslation from "next-translate/useTranslation";
 
 interface Props {
     label: string;
@@ -16,6 +17,7 @@ interface Props {
 
 const InputColor = ({label, name, error, className, setValue, onChange, initialColor}: Props) => {
 
+    const {t} = useTranslation("common");
     const [color, setColor] = useState<string>(initialColor ?? "#000000");
     const [displayPicker, setDisplayPicker] = useState<boolean>(false);
     let foreColor = "#FFFFFF";
@@ -24,13 +26,12 @@ const InputColor = ({label, name, error, className, setValue, onChange, initialC
         setColor(initialColor ?? "#000000");
     }, [initialColor]);
 
-    function generateColor() {
-        let newColor = "#";
-        for (let i = 0; i < 6; i++) {
-            newColor += Math.floor(Math.random() * 16).toString(16);
-        }
+    function setCustomColor() {
+        const newColor = prompt(t("alerts.customColor"), color);
 
-        changeColor(newColor);
+        if (newColor && newColor !== "") {
+            changeColor(newColor);
+        }
     }
 
     function changeColor(color: string) {
@@ -75,7 +76,7 @@ const InputColor = ({label, name, error, className, setValue, onChange, initialC
             <div className={styles.refresh} onClick={() => setDisplayPicker(!displayPicker)}>
                 <Pencil/>
             </div>
-            <div>
+            <div  className={styles.colorName} onClick={() => setCustomColor()}>
                 {color}
             </div>
         </div>

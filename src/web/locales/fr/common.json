@@ -58,7 +58,8 @@
   },
   "alerts": {
     "saveSuccess": "Les modifications ont été enregistrées.",
-    "mobileWarning": "Cette fonctionnalité n'est pas prévue pour la taille d'écran actuelle. Veuillez pivoter votre mobile ou utiliser une écran avec une plus grande résolution."
+    "mobileWarning": "Cette fonctionnalité n'est pas prévue pour la taille d'écran actuelle. Veuillez pivoter votre mobile ou utiliser une écran avec une plus grande résolution.",
+    "customColor": "Veuillez entrer la valeur personnalisée pour la couleur"
   },
   "pages": {
     "contacts": {
