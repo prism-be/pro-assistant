@@ -44,6 +44,10 @@
   border: 1px $light solid;
 }
 
+.colorName {
+  cursor: pointer;
+}
+
 .colorPicker {
   background-color: white;
   box-shadow: $shadow;
