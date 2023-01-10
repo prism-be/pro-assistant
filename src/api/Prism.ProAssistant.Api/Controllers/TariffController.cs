@@ -49,7 +49,7 @@ public class TariffController : Controller
     [HttpDelete]
     public async Task RemoveOne(string tariffId)
     {
-        await _mediator.Send(new RemoveOne<Tariff>(tariffId));
+        await _mediator.Send(new RemoveOne(tariffId));
     }
 
     [Route("api/tariff")]

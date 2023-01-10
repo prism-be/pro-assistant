@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using Moq;
 using Prism.ProAssistant.Business.Models;
+using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 using Prism.ProAssistant.UnitTesting;
 using Prism.ProAssistant.UnitTesting.Extensions;
@@ -34,9 +35,11 @@ public class DeleteDocumentHandlerTests
         });
 
         var logger = new Mock<ILogger<DeleteDocumentHandler>>();
+        
+        var userContextAccessor = new Mock<IUserContextAccessor>();
 
         // Act
-        var handler = new DeleteDocumentHandler(logger.Object, organization.Object);
+        var handler = new DeleteDocumentHandler(logger.Object, organization.Object, userContextAccessor.Object);
         var result = await handler.Handle(new DeleteDocument(id, appointmentId), default);
 
         // Assert
@@ -67,14 +70,16 @@ public class DeleteDocumentHandlerTests
         });
 
         var logger = new Mock<ILogger<DeleteDocumentHandler>>();
+        
+        var userContextAccessor = new Mock<IUserContextAccessor>();
 
         // Act
-        var handler = new DeleteDocumentHandler(logger.Object, organization.Object);
+        var handler = new DeleteDocumentHandler(logger.Object, organization.Object, userContextAccessor.Object);
         var result = await handler.Handle(new DeleteDocument(id, appointmentId), default);
 
         // Assert
         result.Should().NotBeNull();
         bucket.Verify(x => x.DeleteAsync(It.IsAny<ObjectId>(), CancellationToken.None), Times.Once);
-        logger.VerifyLog(LogLevel.Information);
+        logger.VerifyLog(LogLevel.Information, Times.AtLeastOnce());
     }
 }

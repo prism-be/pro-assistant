@@ -35,10 +35,6 @@ public class SaveSettingsTests
             Id = existingId
         });
 
-        var collectionHistory = new Mock<IMongoCollection<History>>();
-        organizationContext.Setup(x => x.GetCollection<History>())
-            .Returns(collectionHistory.Object);
-
         var request = new SaveSettings(new List<Setting>
         {
             new()
@@ -55,10 +51,9 @@ public class SaveSettingsTests
 
         // Act
         var handler = new SaveSettingsHandler(logger.Object, organizationContext.Object, userContextAccessor.Object);
-        var result = await handler.Handle(request, CancellationToken.None);
+        await handler.Handle(request, CancellationToken.None);
 
         // Assert
         collection.Verify(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Setting>>(), It.IsAny<Setting>(), It.IsAny<FindOneAndReplaceOptions<Setting>>(), CancellationToken.None));
-        collectionHistory.Verify(x => x.InsertOneAsync(It.IsAny<History>(), null, CancellationToken.None));
     }
 }

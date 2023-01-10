@@ -62,7 +62,7 @@ public static class CrudTests
         await action(controller);
 
         // Assert
-        mediator.Verify(x => x.Send(It.IsAny<RemoveOne<TModel>>(), CancellationToken.None), Times.Once);
+        mediator.Verify(x => x.Send(It.IsAny<RemoveOne>(), CancellationToken.None), Times.Once);
     }
 
     public static async Task UpsertMany<TController, TModel>(Func<TController, Task> action, Action<Mock<IMediator>>? setup = null)

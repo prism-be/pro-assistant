@@ -35,13 +35,13 @@ public class DownloadDocumentHandler : IRequestHandler<DownloadDocument, Downloa
 
         if (file == null)
         {
-            _logger.LogWarning("File with id {DocumentId} not found", request.DocumentId);
+            _logger.LogWarning("File with id {itemId} not found", request.DocumentId);
             return null;
         }
 
         var bytes = await bucket.DownloadAsBytesByNameAsync(file.Filename, cancellationToken: cancellationToken);
         
-        _logger.LogInformation("Start downloading file with id {DocumentId}", request.DocumentId);
+        _logger.LogInformation("Start downloading file with id {itemId}", request.DocumentId);
 
         return new DownloadDocumentResponse(file.Filename, bytes);
     }

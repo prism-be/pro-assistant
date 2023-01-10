@@ -7,6 +7,7 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Prism.ProAssistant.Business.Extensions;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
@@ -31,7 +32,6 @@ public class SaveSettingsHandler : IRequestHandler<SaveSettings>
 
     public async Task<Unit> Handle(SaveSettings request, CancellationToken cancellationToken)
     {
-        var history = _organizationContext.GetCollection<History>();
         var collection = _organizationContext.GetCollection<Setting>();
 
         foreach (var setting in request.Settings)
@@ -41,25 +41,24 @@ public class SaveSettingsHandler : IRequestHandler<SaveSettings>
 
             if (existingSettings == null)
             {
-                _logger.LogInformation("Inserting an new setting with id {SettingId}", setting.Id);
-
-                await collection.InsertOneAsync(setting, cancellationToken: cancellationToken);
-                await history.InsertOneAsync(new History(_userContextAccessor.UserId, setting), cancellationToken: cancellationToken);
-
-                _logger.LogInformation("Inserted an new setting with id {SettingId}", setting.Id);
+                await _logger.LogDataInsert(_userContextAccessor, setting, async () =>
+                {
+                    await collection.InsertOneAsync(setting, cancellationToken: cancellationToken);
+                    return new UpsertResult(setting.Id, _userContextAccessor.UserId);
+                });
 
                 return Unit.Value;
             }
 
-            _logger.LogInformation("Updating an existing setting with id {SettingId}", setting.Id);
-
-            await history.InsertOneAsync(new History(_userContextAccessor.UserId, setting), cancellationToken: cancellationToken);
-            await collection.FindOneAndReplaceAsync(Builders<Setting>.Filter.Eq("Id", setting.Id), setting, new FindOneAndReplaceOptions<Setting>
+            await _logger.LogDataUpdate(_userContextAccessor, setting, async () =>
             {
-                IsUpsert = true
-            }, cancellationToken);
+                await collection.FindOneAndReplaceAsync(Builders<Setting>.Filter.Eq("Id", setting.Id), setting, new FindOneAndReplaceOptions<Setting>
+                {
+                    IsUpsert = true
+                }, cancellationToken);
 
-            _logger.LogInformation("Updated an existing setting with id {SettingId}", setting.Id);
+                return new UpsertResult(setting.Id, _userContextAccessor.UserId);
+            });
         }
 
         return Unit.Value;

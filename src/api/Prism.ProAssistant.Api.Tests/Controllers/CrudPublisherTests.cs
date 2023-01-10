@@ -73,7 +73,7 @@ namespace Prism.ProAssistant.Api.Tests.Controllers
             await action(controller);
 
             // Assert
-            mediator.Verify(x => x.Send(It.IsAny<RemoveOne<TModel>>(), CancellationToken.None), Times.Once);
+            mediator.Verify(x => x.Send(It.IsAny<RemoveOne>(), CancellationToken.None), Times.Once);
         }
 
         public static async Task UpsertOne<TController, TModel>(Func<TController, Task<ActionResult<UpsertResult>>> action, Action<Mock<IMediator>>? setup = null)

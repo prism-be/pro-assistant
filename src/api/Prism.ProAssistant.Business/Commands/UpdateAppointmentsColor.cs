@@ -35,7 +35,7 @@ public class UpdateAppointmentsColorHandler : IRequestHandler<UpdateAppointments
 
         if (tariff == null)
         {
-            _logger.LogWarning("Cannot update the appointments color. The tariff with id {TariffId} does not exist.", request.TariffId);
+            _logger.LogWarning("Cannot update the appointments color. The tariff with id {itemId} does not exist.", request.TariffId);
             return Unit.Value;
         }
 
@@ -47,7 +47,7 @@ public class UpdateAppointmentsColorHandler : IRequestHandler<UpdateAppointments
             appointment.ForeColor = tariff.ForeColor;
             appointment.BackgroundColor = tariff.BackgroundColor;
             await collection.ReplaceOneAsync(Builders<Appointment>.Filter.Eq(nameof(Appointment.Id), appointment.Id), appointment, cancellationToken: cancellationToken);
-            _logger.LogInformation("Replaced the appointment with id {AppointmentId} with the new color {color}.", appointment.Id, appointment.BackgroundColor);
+            _logger.LogInformation("Replaced the appointment with id {itemId} with the new color {color}.", appointment.Id, appointment.BackgroundColor);
         }
 
         return Unit.Value;

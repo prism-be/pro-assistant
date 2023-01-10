@@ -6,7 +6,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Text.Json.Nodes;
 using Acme.Core.Extensions;
 using DotLiquid;
 using MediatR;
@@ -98,13 +97,13 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
         if (appointment == null)
         {
-            _logger.LogWarning("Cannot find Appointment {AppointmentId}", appointmentId);
+            _logger.LogWarning("Cannot find Appointment {itemId}", appointmentId);
             return null;
         }
 
         if (string.IsNullOrWhiteSpace(appointment.ContactId))
         {
-            _logger.LogWarning("Cannot find contact for Appointment {AppointmentId}", appointmentId);
+            _logger.LogWarning("Cannot find contact for Appointment {itemId}", appointmentId);
             return null;
         }
 
@@ -112,7 +111,7 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
         if (contact == null)
         {
-            _logger.LogWarning("Cannot find contact {contactId}", appointment.ContactId);
+            _logger.LogWarning("Cannot find contact {itemId}", appointment.ContactId);
             return null;
         }
 
@@ -176,6 +175,6 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
         await collection.UpdateOneAsync(Builders<Appointment>.Filter.Eq(x => x.Id, appointment.Id), Builders<Appointment>.Update.Set(x => x.Documents, existing.Documents));
 
-        _logger.LogInformation("Document {DocumentId} was saved for Appointment {AppointmentId}", document.Id, appointment.Id);
+        _logger.LogInformation("Document {itemId} was saved for Appointment {appointmentId}", document.Id, appointment.Id);
     }
 }
