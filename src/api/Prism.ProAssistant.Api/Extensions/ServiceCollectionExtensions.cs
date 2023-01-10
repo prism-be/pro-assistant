@@ -102,12 +102,12 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRequestHandler<FindOne<Tariff>, Tariff?>, FindOneHandler<Tariff>>();
         services.AddScoped<IRequestHandler<FindMany<Tariff>, List<Tariff>>, FindManyHandler<Tariff>>();
         services.AddScoped<IRequestHandler<UpsertOne<Tariff>, UpsertResult>, UpsertOneHandler<Tariff>>();
-        services.AddScoped<IRequestHandler<RemoveOne<Tariff>>, RemoveOneHandler<Tariff>>();
+        services.AddScoped<IRequestHandler<RemoveOne>, RemoveOneHandler<Tariff>>();
 
         services.AddScoped<IRequestHandler<FindOne<DocumentConfiguration>, DocumentConfiguration?>, FindOneHandler<DocumentConfiguration>>();
         services.AddScoped<IRequestHandler<FindMany<DocumentConfiguration>, List<DocumentConfiguration>>, FindManyHandler<DocumentConfiguration>>();
         services.AddScoped<IRequestHandler<UpsertOne<DocumentConfiguration>, UpsertResult>, UpsertOneHandler<DocumentConfiguration>>();
-        services.AddScoped<IRequestHandler<RemoveOne<DocumentConfiguration>, Unit>, RemoveOneHandler<DocumentConfiguration>>();
+        services.AddScoped<IRequestHandler<RemoveOne, Unit>, RemoveOneHandler<DocumentConfiguration>>();
 
         services.AddScoped<IRequestHandler<FindOne<Setting>, Setting?>, FindOneHandler<Setting>>();
         services.AddScoped<IRequestHandler<FindMany<Setting>, List<Setting>>, FindManyHandler<Setting>>();

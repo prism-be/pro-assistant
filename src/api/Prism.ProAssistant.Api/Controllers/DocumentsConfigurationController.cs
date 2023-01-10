@@ -45,7 +45,7 @@ public class DocumentsConfigurationController : Controller
     [HttpDelete]
     public async Task RemoveOne(string documentId)
     {
-        await _mediator.Send(new RemoveOne<DocumentConfiguration>(documentId));
+        await _mediator.Send(new RemoveOne(documentId));
     }
 
     [Route("api/documents-configuration")]

@@ -75,7 +75,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
             try
             {
-                _logger.LogInformation("Processing message {id} on queue {queue}", args.DeliveryTag, Queue);
+                _logger.LogInformation("Processing message {messageId} on queue {queue}", args.DeliveryTag, Queue);
 
                 var body = args.Body.ToArray();
                 var json = Encoding.Default.GetString(body);
@@ -91,7 +91,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
             }
             catch (Exception ex)
             {
-                _logger.LogCritical(ex, "Cannot process message {id} on queue {queue}", args.DeliveryTag, Queue);
+                _logger.LogCritical(ex, "Cannot process message {messageId} on queue {queue}", args.DeliveryTag, Queue);
             }
         };
 

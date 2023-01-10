@@ -29,7 +29,7 @@ public class RemoveOneTests
             .Returns(collection.Object);
 
         // Act
-        var request = new RemoveOne<Appointment>(Identifier.GenerateString());
+        var request = new RemoveOne(Identifier.GenerateString());
         var handler = new RemoveOneHandler<Appointment>(logger.Object, organizationContext.Object, userContextAccessor.Object);
         await handler.Handle(request, CancellationToken.None);
 

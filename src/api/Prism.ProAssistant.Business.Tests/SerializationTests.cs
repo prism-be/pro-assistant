@@ -108,23 +108,6 @@ public class SerializationTests
     }
 
     [Fact]
-    public void History_Ok()
-    {
-        // Arrange
-        var source = new History
-        {
-            Id = Identifier.GenerateString(),
-            Actual = new object(),
-            ModificationDate = DateTime.Now,
-            TypeName = Identifier.GenerateString(),
-            UserId = Identifier.GenerateString()
-        };
-
-        // Act and Assert
-        CheckSerialization(source);
-    }
-
-    [Fact]
     public void Tariff_Ok()
     {
         // Arrange

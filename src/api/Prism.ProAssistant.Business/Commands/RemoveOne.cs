@@ -7,16 +7,16 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
+using Prism.ProAssistant.Business.Extensions;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Business.Commands;
 
-public record RemoveOne<T>(string Id) : IRequest
-    where T : IDataModel;
+public record RemoveOne(string Id) : IRequest;
 
-public class RemoveOneHandler<T> : IRequestHandler<RemoveOne<T>>
+public class RemoveOneHandler<T> : IRequestHandler<RemoveOne>
     where T : IDataModel
 {
 
@@ -32,15 +32,13 @@ public class RemoveOneHandler<T> : IRequestHandler<RemoveOne<T>>
         _userContextAccessor = userContextAccessor;
     }
 
-    public async Task<Unit> Handle(RemoveOne<T> request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(RemoveOne request, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("Removing an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Id, _userContextAccessor.UserId);
-
-        var collection = _organizationContext.GetCollection<T>();
-        await collection.DeleteOneAsync(Builders<T>.Filter.Eq("Id", request.Id), cancellationToken);
-
-        _logger.LogInformation("Removed an new item of type {itemType} with id {itemId} by user {userId}", typeof(T).FullName, request.Id, _userContextAccessor.UserId);
-
+        await _logger.LogDataDelete(_userContextAccessor, request.Id, async () =>
+        {
+            var collection = _organizationContext.GetCollection<T>();
+            await collection.DeleteOneAsync(Builders<T>.Filter.Eq("Id", request.Id), cancellationToken);
+        });
         return Unit.Value;
     }
 }
