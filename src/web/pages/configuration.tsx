@@ -14,8 +14,8 @@ import {alertSuccess} from "../lib/events/alert";
 import {Pencil} from "../components/icons/Icons";
 import TextArea from "../components/forms/TextArea";
 import InputImage from "../components/forms/InputImage";
-import {Tariff} from "../lib/contracts";
-import {getData, postData} from "../lib/ajaxHelper";
+import {Setting, Tariff} from "../lib/contracts";
+import {postData, putData} from "../lib/ajaxHelper";
 import Section from "../components/design/Section";
 import InputColor from "../components/forms/InputColor";
 
@@ -76,7 +76,7 @@ const Tariffs = () => {
                             <InputText label={t("tariffs.defaultDuration")} name={"defaultDuration"} type={"number"} required={true} register={register} setValue={setValue} error={errors.defaultDuration}/>
                         </div>
                         <div className={styles.tariffEditionGridField}>
-                            <InputColor label={t("tariffs.color")} name={"backgroundColor"} setValue={setValue} error={errors.backgroundColor} getValues={getValues}/>
+                            <InputColor label={t("tariffs.color")} name={"backgroundColor"} setValue={setValue} error={errors.backgroundColor} initialColor={getValues()["backgroundColor"]}/>
                         </div>
                         <Button className={styles.tariffEditionGridButtonCancel} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
                         <Button className={styles.tariffEditionGridButtonSave} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
@@ -105,45 +105,50 @@ const Tariffs = () => {
     </Section>
 }
 
-const getSetting = async (route: string) => {
-    const result = await getData<any>(route);
-
-    if (result == null) {
-        return null;
-    }
-
-    return JSON.parse(result.value);
-}
-
 const Documents = () => {
     const {t} = useTranslation("configuration");
     const {register, setValue, getValues} = useForm();
-    const {data: headers, mutate: mutateHeaders} = useSWR("/setting/documents-headers", getSetting) as any;
+    const {data: settings, mutate: mutateSettings} = useSWR<Setting[]>("/settings");
     const [logo, setLogo] = useState<string>();
     const [signature, setSignature] = useState<string>();
+    const [accentuateColor, setAccentuateColor] = useState<string>();
 
     useEffect(() => {
-        if (headers) {
-            setValue('name', headers.name)
-            setValue('address', headers.address)
-            setValue('logo', headers.logo)
-            setValue('yourName', headers.yourName)
-            setValue('yourCity', headers.yourCity)
-            setValue('signature', headers.signature)
-            setLogo(headers.logo);
-            setSignature(headers.signature);
+        if (settings) {
+            setValue('name', findSetting("document-header-name")?.value);
+            setValue('address', findSetting("document-header-address")?.value);
+            setValue('logo', findSetting("document-header-logo")?.value);
+            setValue('yourName', findSetting("document-header-your-name")?.value);
+            setValue('yourCity', findSetting("document-header-your-city")?.value);
+            setValue('signature', findSetting("document-header-signature")?.value);
+            setValue('accentuateColor', findSetting("document-header-accentuate-color")?.value);
+            setAccentuateColor(findSetting("document-header-accentuate-color")?.value);
+            setLogo(findSetting("document-header-logo")?.value);
+            setSignature(findSetting("document-header-signature")?.value);
         }
-    }, [headers, setValue]);
+    }, [settings, setValue]);
+    
+    function findSetting(id: string) {
+        return settings?.find(s => s.id === id);
+    }
 
     const saveDocumentHeaders = async () => {
         const data = getValues();
-        const setting = {
-            value: JSON.stringify(data),
-            id: "documents-headers"
-        }
-        await postData("/setting", setting);
+        
+        let settings : Setting[] = [];
+        settings.push({id: "document-header-name", value: data.name});
+        settings.push({id: "document-header-address", value: data.address});
+        settings.push({id: "document-header-logo", value: data.logo});
+        settings.push({id: "document-header-your-name", value: data.yourName});
+        settings.push({id: "document-header-your-city", value: data.yourCity});
+        settings.push({id: "document-header-signature", value: data.signature});
+        settings.push({id: "document-header-accentuate-color", value: data.accentuateColor});
+        settings.push({id: "document-header-logo", value: data.logo});
+        settings.push({id: "document-header-signature", value: data.signature});
+        
+        await putData("/settings", settings);
         alertSuccess(t("documents.header.saveSuccess"));
-        await mutateHeaders();
+        await mutateSettings();
     }
 
     return <Section>
@@ -159,6 +164,7 @@ const Documents = () => {
                 <InputImage label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
                 <InputText label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
                 <InputText label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
+                <InputColor label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue} initialColor={accentuateColor} />
             </div>
         </>
     </Section>

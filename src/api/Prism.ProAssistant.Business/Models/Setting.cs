@@ -15,5 +15,5 @@ public class Setting : IDataModel
     public string Id { get; set; } = string.Empty;
 
     [JsonPropertyName("value")]
-    public string? Value { get; set; }
+    public string Value { get; set; } = string.Empty;
 }

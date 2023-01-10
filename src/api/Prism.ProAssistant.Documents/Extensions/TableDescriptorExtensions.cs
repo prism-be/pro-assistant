@@ -4,7 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Text.Json.Nodes;
+using System.Drawing;
 using Prism.ProAssistant.Business.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
@@ -25,8 +25,8 @@ public static class TableDescriptorExtensions
             c.Item().Text(contact.Country);
         });
     }
-    
-    public static void WriteHeader(this TableDescriptor table, JsonNode headers)
+
+    public static void WriteHeader(this TableDescriptor table, Dictionary<string, Setting> settings)
     {
         table.ColumnsDefinition(columns =>
         {
@@ -35,7 +35,7 @@ public static class TableDescriptorExtensions
             columns.RelativeColumn();
         });
 
-        var logo = headers["logo"]?.ToString().Split(',').LastOrDefault();
+        var logo = settings["document-header-logo"].Value.Split(',').LastOrDefault();
 
         if (logo != null)
         {
@@ -46,22 +46,25 @@ public static class TableDescriptorExtensions
 
         table.Cell().Row(1).Column(2).ColumnSpan(2).PaddingLeft(0.5f, Unit.Centimetre).Column(c =>
         {
-            c.Item().Text(headers["name"]?.ToString()).FontSize(10);
+            c.Item().Text(settings["document-header-name"].Value).FontSize(10);
 
-            foreach (var line in headers["address"]?.ToString().Split('\n') ?? Array.Empty<string>())
+            foreach (var line in settings["document-header-address"].Value.Split('\n'))
             {
                 c.Item().Text(line).FontSize(10);
             }
         });
 
-        table.Cell().Row(2).Column(1).ColumnSpan(3).PaddingTop(0.5f, Unit.Centimetre).Element(e => e.Height(0.25f, Unit.Centimetre)).LineHorizontal(0.5f);
+        table.Cell().Row(2).Column(1).ColumnSpan(3).PaddingTop(0.5f, Unit.Centimetre)
+            .Element(e => e.Height(0.25f, Unit.Centimetre))
+            .LineHorizontal(0.5f)
+            .LineColor(settings["document-header-accentuate-color"].Value);
     }
 
-    public static void WriteSignature(this TableDescriptor table, JsonNode headers)
+    public static void WriteSignature(this TableDescriptor table, Dictionary<string, Setting> settings)
     {
         table.Cell().Row(6).Column(3).PaddingTop(1, Unit.Centimetre).Column(c =>
         {
-            var signature = headers["signature"]?.ToString().Split(',').LastOrDefault();
+            var signature = settings["document-header-signature"].Value.Split(',').LastOrDefault();
 
             if (signature != null)
             {
@@ -70,8 +73,8 @@ public static class TableDescriptorExtensions
                 c.Item().AlignRight().Element(e => e.Height(2, Unit.Centimetre)).Image(signatureBytes, ImageScaling.FitHeight);
             }
 
-            c.Item().AlignRight().Text(headers["yourName"]?.ToString());
-            c.Item().AlignRight().Text(headers["yourCity"] + ", " + DateTime.Today.ToLongDateString()).FontSize(10);
+            c.Item().AlignRight().Text(settings["document-header-your-name"].Value);
+            c.Item().AlignRight().Text(settings["document-header-your-city"].Value + ", " + DateTime.Today.ToLongDateString()).FontSize(10);
         });
     }
 }

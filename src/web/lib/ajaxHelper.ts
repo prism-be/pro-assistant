@@ -89,6 +89,23 @@ export async function postData<TResult>(route: string, body: any): Promise<TResu
     return null;
 }
 
+export async function putData(route: string, body: any): Promise<void> {
+
+    globalTrim(body);
+
+    const bearer = await getAuthorization();
+
+    await fetch("/api" + route, {
+        body: JSON.stringify(body),
+        method: "POST",
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+            'Authorization': bearer
+        },
+    });
+}
+
 export async function deleteData<TResult>(route: string): Promise<void> {
 
     const bearer = await getAuthorization();

@@ -11,7 +11,6 @@ using MongoDB.ApplicationInsights.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
-using MongoDB.Driver;
 using Prism.ProAssistant.Api.Insights;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Behaviors;
@@ -24,103 +23,104 @@ using Prism.ProAssistant.Business.Storage.Migrations;
 using Prism.ProAssistant.Documents;
 using Prism.ProAssistant.Documents.Locales;
 
-namespace Prism.ProAssistant.Api.Extensions
+namespace Prism.ProAssistant.Api.Extensions;
+
+public static class ServiceCollectionExtensions
 {
-    public static class ServiceCollectionExtensions
+    public static void AddBearer(this IServiceCollection services)
     {
-        public static void AddBearer(this IServiceCollection services)
-        {
-            services.AddAuthentication(options =>
-                {
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                })
-                .AddJwtBearer(jwtOptions =>
-                {
-                    jwtOptions.Authority = "https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/";
-                    jwtOptions.Audience = EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_AD_CLIENT_ID");
-                    jwtOptions.Events = new JwtBearerEvents
-                    {
-                        OnAuthenticationFailed = AuthenticationFailed
-                    };
-                });
-
-            Task AuthenticationFailed(AuthenticationFailedContext arg)
+        services.AddAuthentication(options =>
             {
-                // TODO : LOG
-                return Task.FromResult(0);
-            }
-        }
-        
-        public static void AddCache(this IServiceCollection services)
-        {
-            services.AddStackExchangeRedisCache(options =>
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(jwtOptions =>
             {
-                options.Configuration = EnvironmentConfiguration.GetMandatoryConfiguration("REDIS_CONNECTION_STRING");
-                options.InstanceName = EnvironmentConfiguration.GetMandatoryConfiguration("ENVIRONMENT");
+                jwtOptions.Authority = "https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/";
+                jwtOptions.Audience = EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_AD_CLIENT_ID");
+                jwtOptions.Events = new JwtBearerEvents
+                {
+                    OnAuthenticationFailed = AuthenticationFailed
+                };
             });
-        }
-        
-        public static void AddQueriesCommands(this IServiceCollection services)
+
+        Task AuthenticationFailed(AuthenticationFailedContext arg)
         {
-            var applicationAssembly = typeof(EntryPoint).Assembly;
-            services.AddMediatR(new[]
-            {
-                applicationAssembly
-            }, config => config.AsScoped());
-
-            services.AddScoped<IRequestHandler<FindOne<Contact>, Contact?>, FindOneHandler<Contact>>();
-            services.AddScoped<IRequestHandler<FindMany<Contact>, List<Contact>>, FindManyHandler<Contact>>();
-            services.AddScoped<IRequestHandler<UpsertOne<Contact>, UpsertResult>, UpsertOneHandler<Contact>>();
-
-            services.AddScoped<IRequestHandler<FindOne<Appointment>, Appointment?>, FindOneHandler<Appointment>>();
-            services.AddScoped<IRequestHandler<FindMany<Appointment>, List<Appointment>>, FindManyHandler<Appointment>>();
-            services.AddScoped<IRequestHandler<UpsertOne<Appointment>, UpsertResult>, UpsertOneHandler<Appointment>>();
-
-            services.AddScoped<IRequestHandler<FindOne<Tariff>, Tariff?>, FindOneHandler<Tariff>>();
-            services.AddScoped<IRequestHandler<FindMany<Tariff>, List<Tariff>>, FindManyHandler<Tariff>>();
-            services.AddScoped<IRequestHandler<UpsertOne<Tariff>, UpsertResult>, UpsertOneHandler<Tariff>>();
-            services.AddScoped<IRequestHandler<RemoveOne<Tariff>>, RemoveOneHandler<Tariff>>();
-            
-            services.AddScoped<IRequestHandler<FindOne<DocumentConfiguration>, DocumentConfiguration?>, FindOneHandler<DocumentConfiguration>>();
-            services.AddScoped<IRequestHandler<FindMany<DocumentConfiguration>, List<DocumentConfiguration>>, FindManyHandler<DocumentConfiguration>>();
-            services.AddScoped<IRequestHandler<UpsertOne<DocumentConfiguration>, UpsertResult>, UpsertOneHandler<DocumentConfiguration>>();
-            services.AddScoped<IRequestHandler<RemoveOne<DocumentConfiguration>, Unit>, RemoveOneHandler<DocumentConfiguration>>();
-
-            services.AddScoped<IRequestHandler<FindOne<Setting>, Setting?>, FindOneHandler<Setting>>();
-            services.AddScoped<IRequestHandler<UpsertOne<Setting>, UpsertResult>, UpsertOneHandler<Setting>>();
-            
-            services.AddScoped<IRequestHandler<GenerateDocument, byte[]>, GenerateDocumentHandler>();
-            services.AddScoped<IRequestHandler<DownloadDocument, DownloadDocumentResponse?>, DownloadDocumentHandler>();
-            services.AddScoped<IRequestHandler<DeleteDocument, Unit>, DeleteDocumentHandler>();
-
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
-
-            services.AddValidatorsFromAssembly(applicationAssembly);
+            // TODO : LOG
+            return Task.FromResult(0);
         }
+    }
 
-        public static void AddDatabase(this IServiceCollection services)
+    public static void AddBusinessServices(this IServiceCollection services)
+    {
+        services.AddHttpContextAccessor();
+        services.AddTransient<IUserContextAccessor, UserContextAccessor>();
+
+        services.AddTransient<OrganizationContextEnricher>();
+
+        // Add documents services
+        services.AddScoped<ILocalizator, Localizator>();
+    }
+
+    public static void AddCache(this IServiceCollection services)
+    {
+        services.AddStackExchangeRedisCache(options =>
         {
-            var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");
+            options.Configuration = EnvironmentConfiguration.GetMandatoryConfiguration("REDIS_CONNECTION_STRING");
+            options.InstanceName = EnvironmentConfiguration.GetMandatoryConfiguration("ENVIRONMENT");
+        });
+    }
 
-            BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
-            services.AddMongoClient(mongoDbConnectionString);
-            services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
+    public static void AddDatabase(this IServiceCollection services)
+    {
+        var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");
 
-            services.AddScoped<IOrganizationContext, OrganizationContext>();
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
+        services.AddMongoClient(mongoDbConnectionString);
+        services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
 
-            services.AddScoped<IMigrateDocumentConfiguration, MigrateDocumentConfiguration>();
-        }
+        services.AddScoped<IOrganizationContext, OrganizationContext>();
 
-        public static void AddBusinessServices(this IServiceCollection services)
+        services.AddScoped<IMigrateDocumentConfiguration, MigrateDocumentConfiguration>();
+    }
+
+    public static void AddQueriesCommands(this IServiceCollection services)
+    {
+        var applicationAssembly = typeof(EntryPoint).Assembly;
+        services.AddMediatR(new[]
         {
-            services.AddHttpContextAccessor();
-            services.AddTransient<IUserContextAccessor, UserContextAccessor>();
-            
-            services.AddTransient<OrganizationContextEnricher>();
-            
-            // Add documents services
-            services.AddScoped<ILocalizator, Localizator>();
-        }
+            applicationAssembly
+        }, config => config.AsScoped());
+
+        services.AddScoped<IRequestHandler<FindOne<Contact>, Contact?>, FindOneHandler<Contact>>();
+        services.AddScoped<IRequestHandler<FindMany<Contact>, List<Contact>>, FindManyHandler<Contact>>();
+        services.AddScoped<IRequestHandler<UpsertOne<Contact>, UpsertResult>, UpsertOneHandler<Contact>>();
+
+        services.AddScoped<IRequestHandler<FindOne<Appointment>, Appointment?>, FindOneHandler<Appointment>>();
+        services.AddScoped<IRequestHandler<FindMany<Appointment>, List<Appointment>>, FindManyHandler<Appointment>>();
+        services.AddScoped<IRequestHandler<UpsertOne<Appointment>, UpsertResult>, UpsertOneHandler<Appointment>>();
+
+        services.AddScoped<IRequestHandler<FindOne<Tariff>, Tariff?>, FindOneHandler<Tariff>>();
+        services.AddScoped<IRequestHandler<FindMany<Tariff>, List<Tariff>>, FindManyHandler<Tariff>>();
+        services.AddScoped<IRequestHandler<UpsertOne<Tariff>, UpsertResult>, UpsertOneHandler<Tariff>>();
+        services.AddScoped<IRequestHandler<RemoveOne<Tariff>>, RemoveOneHandler<Tariff>>();
+
+        services.AddScoped<IRequestHandler<FindOne<DocumentConfiguration>, DocumentConfiguration?>, FindOneHandler<DocumentConfiguration>>();
+        services.AddScoped<IRequestHandler<FindMany<DocumentConfiguration>, List<DocumentConfiguration>>, FindManyHandler<DocumentConfiguration>>();
+        services.AddScoped<IRequestHandler<UpsertOne<DocumentConfiguration>, UpsertResult>, UpsertOneHandler<DocumentConfiguration>>();
+        services.AddScoped<IRequestHandler<RemoveOne<DocumentConfiguration>, Unit>, RemoveOneHandler<DocumentConfiguration>>();
+
+        services.AddScoped<IRequestHandler<FindOne<Setting>, Setting?>, FindOneHandler<Setting>>();
+        services.AddScoped<IRequestHandler<FindMany<Setting>, List<Setting>>, FindManyHandler<Setting>>();
+        services.AddScoped<IRequestHandler<UpsertOne<Setting>, UpsertResult>, UpsertOneHandler<Setting>>();
+        services.AddScoped<IRequestHandler<SaveSettings, Unit>, SaveSettingsHandler>();
+
+        services.AddScoped<IRequestHandler<GenerateDocument, byte[]>, GenerateDocumentHandler>();
+        services.AddScoped<IRequestHandler<DownloadDocument, DownloadDocumentResponse?>, DownloadDocumentHandler>();
+        services.AddScoped<IRequestHandler<DeleteDocument, Unit>, DeleteDocumentHandler>();
+
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
+        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
+
+        services.AddValidatorsFromAssembly(applicationAssembly);
     }
 }

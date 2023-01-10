@@ -24,48 +24,6 @@ public class GenerateDocumentTests
 {
 
     [Fact]
-    public async Task Generate_NoDocument()
-    {
-        // Arrange
-        var id = Identifier.GenerateString();
-        var documentId = Identifier.GenerateString();
-
-        var appointment = new Appointment
-        {
-            Id = id,
-            ContactId = Identifier.GenerateString()
-        };
-
-        var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
-            .ReturnsAsync(appointment);
-
-        mediator.Setup(x => x.Send(It.Is<FindOne<Setting>>(s => s.Id == "documents-headers"), CancellationToken.None))
-            .ReturnsAsync(new Setting
-            {
-                Id = "documents-headers",
-                Value =
-                    "{\"name\":\"Baudart Simon - PRISM\",\"address\":\"Vieux Chemin de Lille 25B\\n7501 Orcq\\nTVA : BE692.946.818\",\"logo\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC\",\"yourName\":\"Simon Baudart\",\"yourCity\":\"Orcq\",\"signature\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC\"}"
-            });
-
-        mediator.Setup(x => x.Send(It.IsAny<FindOne<Contact>>(), CancellationToken.None))
-            .ReturnsAsync(new Contact
-            {
-                Id = appointment.ContactId
-            });
-
-        var localizer = new Mock<ILocalizator>();
-        localizer.Setup(x => x.Locale).Returns("fr");
-
-        var organizationContext = new Mock<IOrganizationContext>();
-        organizationContext.SetupCollection<Appointment>();
-
-        // Act and assert
-        var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
-        await Assert.ThrowsAsync<NotFoundException>(async () => await generator.Handle(new GenerateDocument(documentId, id), CancellationToken.None));
-    }
-
-    [Fact]
     public async Task Generate_NoContact()
     {
         // Arrange
@@ -81,13 +39,7 @@ public class GenerateDocumentTests
         mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
             .ReturnsAsync(appointment);
 
-        mediator.Setup(x => x.Send(It.Is<FindOne<Setting>>(s => s.Id == "documents-headers"), CancellationToken.None))
-            .ReturnsAsync(new Setting
-            {
-                Id = "documents-headers",
-                Value =
-                    "{\"name\":\"Baudart Simon - PRISM\",\"address\":\"Vieux Chemin de Lille 25B\\n7501 Orcq\\nTVA : BE692.946.818\",\"logo\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC\",\"yourName\":\"Simon Baudart\",\"yourCity\":\"Orcq\",\"signature\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC\"}"
-            });
+        SetupSettings(mediator);
 
         var localizer = new Mock<ILocalizator>();
         localizer.Setup(x => x.Locale).Returns("fr");
@@ -116,13 +68,7 @@ public class GenerateDocumentTests
         mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
             .ReturnsAsync(appointment);
 
-        mediator.Setup(x => x.Send(It.Is<FindOne<Setting>>(s => s.Id == "documents-headers"), CancellationToken.None))
-            .ReturnsAsync(new Setting
-            {
-                Id = "documents-headers",
-                Value =
-                    "{\"name\":\"Baudart Simon - PRISM\",\"address\":\"Vieux Chemin de Lille 25B\\n7501 Orcq\\nTVA : BE692.946.818\",\"logo\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC\",\"yourName\":\"Simon Baudart\",\"yourCity\":\"Orcq\",\"signature\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC\"}"
-            });
+        SetupSettings(mediator);
 
         var localizer = new Mock<ILocalizator>();
         localizer.Setup(x => x.Locale).Returns("fr");
@@ -136,11 +82,12 @@ public class GenerateDocumentTests
     }
 
     [Fact]
-    public async Task Generate_NoSettings()
+    public async Task Generate_NoDocument()
     {
         // Arrange
         var id = Identifier.GenerateString();
         var documentId = Identifier.GenerateString();
+
         var appointment = new Appointment
         {
             Id = id,
@@ -150,6 +97,8 @@ public class GenerateDocumentTests
         var mediator = new Mock<IMediator>();
         mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
             .ReturnsAsync(appointment);
+
+        SetupSettings(mediator);
 
         mediator.Setup(x => x.Send(It.IsAny<FindOne<Contact>>(), CancellationToken.None))
             .ReturnsAsync(new Contact
@@ -165,7 +114,7 @@ public class GenerateDocumentTests
 
         // Act and assert
         var generator = new GenerateDocumentHandler(mediator.Object, Mock.Of<ILogger<GenerateDocumentHandler>>(), localizer.Object, organizationContext.Object);
-        await Assert.ThrowsAsync<NotSupportedException>(async () => await generator.Handle(new GenerateDocument(documentId, id), CancellationToken.None));
+        await Assert.ThrowsAsync<NotFoundException>(async () => await generator.Handle(new GenerateDocument(documentId, id), CancellationToken.None));
     }
 
     [Fact]
@@ -203,13 +152,7 @@ public class GenerateDocumentTests
         mediator.Setup(x => x.Send(It.IsAny<FindOne<Appointment>>(), CancellationToken.None))
             .ReturnsAsync(appointment);
 
-        mediator.Setup(x => x.Send(It.Is<FindOne<Setting>>(s => s.Id == "documents-headers"), CancellationToken.None))
-            .ReturnsAsync(new Setting
-            {
-                Id = "documents-headers",
-                Value =
-                    "{\"name\":\"Baudart Simon - PRISM\",\"address\":\"Vieux Chemin de Lille 25B\\n7501 Orcq\\nTVA : BE692.946.818\",\"logo\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC\",\"yourName\":\"Simon Baudart\",\"yourCity\":\"Orcq\",\"signature\":\"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC\"}"
-            });
+        SetupSettings(mediator);
 
         mediator.Setup(x => x.Send(It.IsAny<FindOne<Contact>>(), CancellationToken.None))
             .ReturnsAsync(new Contact
@@ -245,5 +188,50 @@ public class GenerateDocumentTests
         // Assert
         receipt.Should().NotBeNull();
         bucket.Verify(x => x.UploadFromBytesAsync(It.IsAny<string>(), It.IsAny<byte[]>(), It.IsAny<GridFSUploadOptions>(), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    private static void SetupSettings(Mock<IMediator> mediator)
+    {
+        mediator.Setup(x => x.Send(It.IsAny<FindMany<Setting>>(), CancellationToken.None))
+            .ReturnsAsync(new List<Setting>
+            {
+                new()
+                {
+                    Id = "document-header-name",
+                    Value = "Simon Baudart"
+                },
+                new()
+                {
+                    Id = "document-header-address",
+                    Value = "Vieux Chemin de Lille 25B\\n7501 Orcq\\nTVA : BE692.946.818"
+                },
+                new()
+                {
+                    Id = "document-header-logo",
+                    Value =
+                        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC"
+                },
+                new()
+                {
+                    Id = "document-header-signature",
+                    Value =
+                        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAAAlCAIAAABqEOipAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAABDSURBVGhD7c8BDQAgDMAw7F0nF4qOkSY10HNnP6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplemV6ZXplem1zX7ANq7txGhH62zAAAAAElFTkSuQmCC"
+                },
+                new()
+                {
+                    Id = "document-header-your-name",
+                    Value = "Simon Baudart"
+                },
+                new()
+                {
+                    Id = "document-header-your-city",
+                    Value = "Orcq"
+                },
+                new()
+                {
+                    Id = "document-header-accentuate-color",
+                    Value = "#123456"
+                }
+            });
     }
 }

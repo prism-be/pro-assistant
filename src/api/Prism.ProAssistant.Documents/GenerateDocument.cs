@@ -59,13 +59,13 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         var document = CreateDocument(data, title, content);
         var bytes = document.GeneratePdf();
 
-        var computedTitle = ReplaceContent(title, data.Value.appointment, data.Value.contact, data.Value.headers);
+        var computedTitle = ReplaceContent(title, data.Value.appointment, data.Value.contact, data.Value.settings);
         await SaveDocument(data.Value.appointment, computedTitle, bytes);
 
         return bytes;
     }
 
-    private Document CreateDocument([DisallowNull] (Appointment appointment, Contact contact, Setting setting, JsonNode headers)? data, string title, string content)
+    private Document CreateDocument([DisallowNull] (Appointment appointment, Contact contact, Dictionary<string, Setting> settings)? data, string title, string content)
     {
         return Document.Create(container =>
         {
@@ -77,22 +77,22 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
 
                 page.Content().Table(table =>
                 {
-                    table.WriteHeader(data.Value.headers);
+                    table.WriteHeader(data.Value.settings);
                     table.WriteContactAddress(data.Value.contact);
 
                     table.Cell().Row(5).Column(1).ColumnSpan(3).Element(e => e.Height(13, Unit.Centimetre)).Column(c =>
                     {
-                        c.Item().Text(ReplaceContent(title, data.Value.appointment, data.Value.contact, data.Value.headers)).Bold();
-                        c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.appointment, data.Value.contact, data.Value.headers));
+                        c.Item().Text(ReplaceContent(title, data.Value.appointment, data.Value.contact, data.Value.settings)).Bold();
+                        c.Item().PaddingTop(0.5f, Unit.Centimetre).Text(ReplaceContent(content, data.Value.appointment, data.Value.contact, data.Value.settings));
                     });
 
-                    table.WriteSignature(data.Value.headers);
+                    table.WriteSignature(data.Value.settings);
                 });
             });
         });
     }
 
-    private async Task<(Appointment appointment, Contact contact, Setting setting, JsonNode headers)?> GetData(string appointmentId)
+    private async Task<(Appointment appointment, Contact contact, Dictionary<string, Setting> settings)?> GetData(string appointmentId)
     {
         var appointment = await _mediator.Send(new FindOne<Appointment>(appointmentId));
 
@@ -116,23 +116,9 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
             return null;
         }
 
-        var setting = await _mediator.Send(new FindOne<Setting>("documents-headers"));
+        var settings = await _mediator.Send(new FindMany<Setting>());
 
-        if (setting == null || setting.Value == null)
-        {
-            _logger.LogWarning("Cannot find setting {settingId}", "documents-headers");
-            return null;
-        }
-
-        var headers = JsonNode.Parse(setting.Value);
-
-        if (headers == null)
-        {
-            _logger.LogWarning("Setting value is not a valid JSON");
-            return null;
-        }
-
-        return (appointment, contact, setting, headers);
+        return (appointment, contact, settings.ToDictionary(x => x.Id));
     }
 
     private async Task<(string title, string content)> GetTitleContent(string documentId)
@@ -147,13 +133,13 @@ public class GenerateDocumentHandler : IRequestHandler<GenerateDocument, byte[]>
         return (document.Title ?? string.Empty, document.Body ?? string.Empty);
     }
 
-    private string ReplaceContent(string templateContent, Appointment appointment, Contact contact, JsonNode headers)
+    private string ReplaceContent(string templateContent, Appointment appointment, Contact contact, Dictionary<string, Setting> settings)
     {
         var template = Template.Parse(templateContent);
 
         var data = new
         {
-            name = headers["yourName"]?.ToString(),
+            name = settings["document-header-your-name"].Value,
             contactName = (contact.Title + " " + contact.LastName + " " + contact.FirstName).Trim(),
             price = appointment.Price.ToString("F2") + "€",
             appointmentType = appointment.Type,

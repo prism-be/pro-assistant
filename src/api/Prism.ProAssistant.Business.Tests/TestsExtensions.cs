@@ -52,6 +52,7 @@ public static class TestsExtensions
                 It.IsAny<FindOptions<T, T>>(), 
                 CancellationToken.None))
             .ReturnsAsync(cursor.Object);
+        
         collection.Object.InsertMany(items);
         collection.Setup(x => x.CountDocumentsAsync(FilterDefinition<T>.Empty, null, CancellationToken.None)).ReturnsAsync(samples.Length);
     }
