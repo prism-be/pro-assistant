@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Drawing;
 using Prism.ProAssistant.Business.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
@@ -53,7 +54,10 @@ public static class TableDescriptorExtensions
             }
         });
 
-        table.Cell().Row(2).Column(1).ColumnSpan(3).PaddingTop(0.5f, Unit.Centimetre).Element(e => e.Height(0.25f, Unit.Centimetre)).LineHorizontal(0.5f);
+        table.Cell().Row(2).Column(1).ColumnSpan(3).PaddingTop(0.5f, Unit.Centimetre)
+            .Element(e => e.Height(0.25f, Unit.Centimetre))
+            .LineHorizontal(0.5f)
+            .LineColor(settings["document-header-accentuate-color"].Value);
     }
 
     public static void WriteSignature(this TableDescriptor table, Dictionary<string, Setting> settings)

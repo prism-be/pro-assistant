@@ -226,6 +226,11 @@ public class GenerateDocumentTests
                 {
                     Id = "document-header-your-city",
                     Value = "Orcq"
+                },
+                new()
+                {
+                    Id = "document-header-accentuate-color",
+                    Value = "#123456"
                 }
             });
     }
