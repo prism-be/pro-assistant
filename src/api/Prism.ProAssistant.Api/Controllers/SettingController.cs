@@ -32,11 +32,8 @@ public class SettingController : Controller
 
     [Route("api/settings")]
     [HttpPost]
-    public async Task UpsertMany([FromBody] Setting[] settings)
+    public async Task SaveSettings([FromBody] List<Setting> settings)
     {
-        foreach (var setting in settings)
-        {
-            await _mediator.Send(new UpsertOne<Setting>(setting));
-        }
+        await _mediator.Send(new SaveSettings(settings));
     }
 }

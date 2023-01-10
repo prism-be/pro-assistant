@@ -92,7 +92,7 @@ export interface SearchContacts {
 
 export interface Setting {
     id: string;
-    value?: string | null;
+    value: string;
 }
 
 export interface Tariff {
