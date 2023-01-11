@@ -27,9 +27,9 @@ public class AuthenticationController : Controller
     {
         if (_userContextAccessor.IsAuthenticated)
         {
-            return Ok(new UserInformation(_userContextAccessor.Name, true));
+            return Ok(new UserInformation(_userContextAccessor.Name, _userContextAccessor.OrganizationId, true));
         }
 
-        return Ok(new UserInformation(null, false));
+        return Ok(new UserInformation(null, null, false));
     }
 }

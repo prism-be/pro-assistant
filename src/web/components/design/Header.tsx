@@ -10,6 +10,7 @@ import {useMsal} from "@azure/msal-react";
 import {getData} from "../../lib/ajaxHelper";
 import {toggledMobileMenu} from "../../lib/events/mobileMenu";
 import {UserInformation} from "../../lib/contracts";
+import Head from "next/head";
 
 const Header = () => {
 
@@ -23,6 +24,9 @@ const Header = () => {
     const {data} = useSWR('/authentication/user', (apiURL: string) => getData<UserInformation>(apiURL))
 
     return <>
+        <Head>
+            <title>Pro Assistant - {data?.organization}</title>
+        </Head>
         <div className={styles.bar}>
             <div className={styles.logo} onClick={() => toggledMobileMenu()}>
                 <div>

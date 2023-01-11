@@ -6,4 +6,4 @@
 
 namespace Prism.ProAssistant.Api.Models;
 
-public record UserInformation(string? Name, bool Authenticated);
+public record UserInformation(string? Name, string? Organization, bool Authenticated);
