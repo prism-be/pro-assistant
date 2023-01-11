@@ -1,4 +1,5 @@
-﻿import styles from "../../styles/pages/appointment.module.scss";
+﻿import componentStyles from "../../styles/pages/appointment.module.scss";
+import styles from "../../styles/styles.module.scss";
 
 import {DocumentConfiguration, Appointment} from "../../lib/contracts"
 import Section from "../design/Section";
@@ -44,37 +45,37 @@ export const GeneratedDocuments = ({appointment}: Props) => {
     return <Section>
         <h2>{t("pages.appointment.documents.title")}</h2>
 
-        <>{appointment.documents.length === 0 && <div className={styles.noDocuments}>
+        <>{appointment.documents.length === 0 && <div className={componentStyles.noDocuments}>
             {t("pages.appointment.documents.no-documents")}
         </div>}</>
 
-        <>
-            {appointment.documents.map(d => <div key={d.id} className={styles.document}>
-                <div className={styles.documentTitle}>{d.title}</div>
-                <div className={styles.documentDate}>
+        <div className={styles.list}>
+            {appointment.documents.map(d => <div key={d.id} className={componentStyles.document}>
+                <div className={componentStyles.documentTitle}>{d.title}</div>
+                <div className={componentStyles.documentDate}>
                     (
                     {t("pages.appointment.documents.generated")}
                     {format(parseISO(d.date), "dd/MM/yy HH:mm", {locale: getLocale()})}
                     )
                 </div>
-                <div className={styles.documentAction}>
-                    <div onClick={() => startDownloadDocument(d.id)} className={styles.documentSave}>
+                <div className={componentStyles.documentAction}>
+                    <div onClick={() => startDownloadDocument(d.id)} className={componentStyles.documentSave}>
                         <ArrowDownTrayIcon/>
                     </div>
 
-                    <div onClick={() => startDeleteDocument(d.id)} className={styles.documentSave}>
+                    <div onClick={() => startDeleteDocument(d.id)} className={componentStyles.documentSave}>
                         <TrashIcon/>
                     </div>
                 </div>
             </div>)}
-        </>
+        </div>
 
-        <div className={styles.documents}>
+        <div className={componentStyles.documents}>
             <select onChange={(e) => setDocument(e.target.value)}>
                 <option value={""}>{t("pages.appointment.documents.generate")}</option>
                 {documents?.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
-            <div onClick={() => startGenerateDocument()} className={styles.documentsSave}>
+            <div onClick={() => startGenerateDocument()} className={componentStyles.documentsSave}>
                 <CheckIcon/>
             </div>
         </div>

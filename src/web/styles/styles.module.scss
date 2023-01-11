@@ -34,3 +34,22 @@
     height: 20rem;
   }
 }
+
+.badge {
+  border: 1px $primaryColor solid;
+  border-radius: 0.25rem;
+  margin: 0.25rem;
+  color: $primaryColor;
+  padding: 0.25rem;
+  font-size: 0.75rem;
+}
+
+.list {
+  > div {
+    border-bottom: 1px $light dashed;
+  }
+  
+  > div:last-child {
+    border-bottom: 1px transparent dashed;
+  }
+}

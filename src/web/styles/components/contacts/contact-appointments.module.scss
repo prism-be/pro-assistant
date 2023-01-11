@@ -10,7 +10,6 @@
 	'typeColor title title title'
 	'typeColor date date hour';
 
-  border-bottom: 1px $light dashed;
   cursor: pointer;
 
   @media (min-width: $breakpointMD) {
@@ -20,15 +19,6 @@
     grid-template-areas: 
 	'typeColor title date hour';
   }
-}
-
-.badge {
-  border: 1px $primaryColor solid;
-  border-radius: 0.25rem;
-  margin: 0.25rem;
-  color: $primaryColor;
-  padding: 0.25rem;
-  font-size: 0.75rem;
 }
 
 .typeColor {
