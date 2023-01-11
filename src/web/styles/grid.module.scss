@@ -26,10 +26,20 @@
   
   @media (min-width: $breakpointMD) {
     grid-column: auto / span 6;
+
+    &.last
+    {
+      grid-column-start: 7;
+    }
   }
 
   @media (min-width: $breakpointLG) {
     grid-column: auto / span 4;
+
+    &.last
+    {
+      grid-column-start: 9;
+    }
   }
 
   grid-row: auto;
