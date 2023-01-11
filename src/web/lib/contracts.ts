@@ -103,6 +103,7 @@ export interface Tariff {
     foreColor?: string | null;
     backgroundColor?: string | null;
 }
+
 export interface UpsertResult {
     id: string;
     organization: string;
@@ -110,5 +111,6 @@ export interface UpsertResult {
 
 export interface UserInformation {
     name?: string | null;
+    organization?: string | null;
     authenticated: boolean;
 }
