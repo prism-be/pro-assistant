@@ -1,4 +1,5 @@
 ﻿import grid from '../../styles/grid.module.scss';
+import table from '../../styles/table.module.scss';
 import styles from '../../styles/styles.module.scss';
 
 import {NextPage} from "next";
@@ -12,12 +13,12 @@ import {useEffect} from "react";
 import Button from "../../components/forms/Button";
 import {alertSuccess} from "../../lib/events/alert";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
-import {Back} from "../../components/icons/Back";
 import InputDate from "../../components/forms/InputDate";
 import {getData, postData} from "../../lib/ajaxHelper";
 import {Contact, UpsertResult} from "../../lib/contracts";
 import Section from "../../components/design/Section";
 import {ContactAppointments} from "../../components/contacts/ContactAppointments";
+import { ArrowSmallLeftIcon } from '@heroicons/react/24/outline';
 
 const Contacts: NextPage = () => {
     const {t} = useTranslation('common');
@@ -76,11 +77,11 @@ const Contacts: NextPage = () => {
 
     return <ContentContainer>
         <Section>
-            <div className={styles.cardTitle}>
-                <a className={styles.iconButton} onClick={() => router.push("/contacts")}>
-                    <Back/>
+            <div className={table.rowAction1}>
+                <a className={styles.iconButton + " " + table.rowAction} onClick={() => router.push("/contacts")}>
+                    <ArrowSmallLeftIcon/>
                 </a>
-                <h1>{t("pages.contacts.details.title")} {contact?.lastName} {contact?.firstName}</h1>
+                <h1 className={table.table11}>{t("pages.contacts.details.title")} {contact?.lastName} {contact?.firstName}</h1>
             </div>
             <form className={grid.container} onSubmit={handleSubmit(onSaveContactSubmit)}>
                 <div className={grid.dot}>

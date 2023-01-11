@@ -2,8 +2,8 @@
 import {UseFormSetValue} from "react-hook-form/dist/types/form";
 import styles from "../../styles/components/forms/input.color.module.scss";
 import {useEffect, useState} from "react";
-import {Pencil} from "../icons/Icons";
 import useTranslation from "next-translate/useTranslation";
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
 interface Props {
     label: string;
@@ -74,7 +74,7 @@ const InputColor = ({label, name, error, className, setValue, onChange, initialC
         <label className={styles.label}>{label}</label>
         <div className={styles.pill} style={{backgroundColor: color, color: foreColor}}>
             <div className={styles.refresh} onClick={() => setDisplayPicker(!displayPicker)}>
-                <Pencil/>
+                <PencilSquareIcon/>
             </div>
             <div  className={styles.colorName} onClick={() => setCustomColor()}>
                 {color}

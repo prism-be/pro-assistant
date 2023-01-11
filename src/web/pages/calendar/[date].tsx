@@ -5,7 +5,6 @@ import {add, format, formatISO, parse, parseISO, startOfWeek} from "date-fns";
 import useTranslation from "next-translate/useTranslation";
 import {getLocale} from "../../lib/localization";
 import React from 'react';
-import {ArrowLeft, ArrowRight} from "../../components/icons/Icons";
 import {useKeyPressEvent} from "react-use";
 import {Appointment} from "../../lib/contracts";
 import {postData} from "../../lib/ajaxHelper";
@@ -14,6 +13,7 @@ import {useSwipeable} from "react-swipeable";
 import Section from "../../components/design/Section";
 import {useRouter} from "next/router";
 import useSWR from "swr";
+import { ArrowSmallLeftIcon, ArrowSmallRightIcon } from '@heroicons/react/24/solid';
 
 const Calendar: NextPage = () => {
 
@@ -95,8 +95,8 @@ const Calendar: NextPage = () => {
 
 
                         <div className={styles.navigationHeader}>
-                            <div className={styles.navigationLeft} onClick={goPreviousWeek}><ArrowLeft/></div>
-                            <div className={styles.navigationRight} onClick={goNextWeek}><ArrowRight/></div>
+                            <div className={styles.navigationLeft} onClick={goPreviousWeek}><ArrowSmallLeftIcon/></div>
+                            <div className={styles.navigationRight} onClick={goNextWeek}><ArrowSmallRightIcon/></div>
                         </div>
                         <div className={styles.calendar}>
                             <div className={styles.hour + " " + styles.hour0}></div>

@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import {AlertType, clear, onAlert} from "../lib/events/alert";
-import {Close} from "./icons/Close";
+import { XCircleIcon } from '@heroicons/react/24/outline';
 
 interface Props {
     id?: string;
@@ -96,7 +96,7 @@ export const Alert = ({id, fade}: Props) => {
             {alerts.map((alert, index) =>
                 <div key={index} className={cssClasses(alert)}>
                     <a className="close" onClick={() => removeAlert(alert)}>
-                        <Close />
+                        <XCircleIcon />
                     </a>
                     <span dangerouslySetInnerHTML={{ __html: alert.message }}></span>
                 </div>

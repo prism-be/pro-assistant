@@ -3,13 +3,12 @@
 import {DocumentConfiguration, Appointment} from "../../lib/contracts"
 import Section from "../design/Section";
 import {deleteDataWithBody, downloadDocument, generateDocument} from "../../lib/ajaxHelper";
-import {Save} from "../icons/Save";
 import useSWR, {mutate} from "swr";
 import {useCallback, useState} from "react";
 import useTranslation from "next-translate/useTranslation";
 import {format, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
-import {Delete} from "../icons/Icons";
+import {TrashIcon, CheckIcon, ArrowDownTrayIcon} from '@heroicons/react/24/outline';
 
 interface Props {
     appointment: Appointment;
@@ -60,11 +59,11 @@ export const GeneratedDocuments = ({appointment}: Props) => {
                 </div>
                 <div className={styles.documentAction}>
                     <div onClick={() => startDownloadDocument(d.id)} className={styles.documentSave}>
-                        <Save/>
+                        <ArrowDownTrayIcon/>
                     </div>
 
                     <div onClick={() => startDeleteDocument(d.id)} className={styles.documentSave}>
-                        <Delete/>
+                        <TrashIcon/>
                     </div>
                 </div>
             </div>)}
@@ -76,7 +75,7 @@ export const GeneratedDocuments = ({appointment}: Props) => {
                 {documents?.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
             <div onClick={() => startGenerateDocument()} className={styles.documentsSave}>
-                <Save/>
+                <CheckIcon/>
             </div>
         </div>
 

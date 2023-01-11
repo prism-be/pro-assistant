@@ -18,14 +18,10 @@
 
 .iconButton {
   display: block;
-  height: 32px;
-  width: 32px;
+ 
   cursor: pointer;
   margin: auto;
-  & svg {
-    height: 32px;
-    width: 32px;
-  }
+  
 }
 
 .buttonField

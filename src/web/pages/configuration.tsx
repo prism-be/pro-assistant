@@ -13,13 +13,13 @@ import Button from "../components/forms/Button";
 import {Popup} from '../components/Pops';
 import {useKeyPressEvent} from "react-use";
 import {alertSuccess} from "../lib/events/alert";
-import {Pencil} from "../components/icons/Icons";
 import TextArea from "../components/forms/TextArea";
 import InputImage from "../components/forms/InputImage";
 import {Setting, Tariff} from "../lib/contracts";
 import {postData, putData} from "../lib/ajaxHelper";
 import Section from "../components/design/Section";
 import InputColor from "../components/forms/InputColor";
+import { PencilSquareIcon } from '@heroicons/react/24/outline';
 
 const Tariffs = () => {
     const {t} = useTranslation("configuration");
@@ -91,7 +91,7 @@ const Tariffs = () => {
                     <div key={tariff.id} className={table.rowAction1}>
                         <div className={table.rowAction}>
                             <a className={styles.iconButton} onClick={() => editTariff(tariff)}>
-                                <Pencil/>
+                                <PencilSquareIcon/>
                             </a>
                         </div>
                         <div className={table.table3}>
