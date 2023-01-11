@@ -5,6 +5,7 @@
 // -----------------------------------------------------------------------
 
 using Prism.ProAssistant.Api.Extensions;
+using Prism.ProAssistant.Api.HealthChecks;
 using Prism.ProAssistant.Api.Middlewares;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Workers;
@@ -35,7 +36,10 @@ builder.Services.AddCache();
 builder.Services.AddBearer();
 
 // Add web stuff
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck<CheckServiceBus>("Service Bus")
+    .AddCheck<CheckCache>("Cache")
+    .AddCheck<CheckDatabase>("Database");
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -57,7 +61,7 @@ app.UseCors(opt =>
         );
 });
 
-app.UseHealthChecks("/health");
+app.UseHealthChecks("/api/health");
 app.MapControllers();
 
 app.UseRouting();
