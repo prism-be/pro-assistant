@@ -1,0 +1,40 @@
+﻿@import './vars';
+
+.help {
+  display: block;
+  text-align: center;
+  padding: 1rem;
+  font-style: italic;
+}
+
+.clickable
+{
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $greyLight;
+  }
+}
+
+.iconButton {
+  display: block;
+  height: 32px;
+  width: 32px;
+  cursor: pointer;
+  margin: auto;
+  & svg {
+    height: 32px;
+    width: 32px;
+  }
+}
+
+.buttonField
+{
+  padding-top: 1.5rem;
+}
+
+.text {
+  > textarea {
+    height: 20rem;
+  }
+}

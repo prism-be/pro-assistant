@@ -1,5 +1,6 @@
-﻿import styles from '../styles/pages/configuration.module.scss';
-import stylesGrid from '../styles/components/grid.module.scss';
+﻿import grid from '../styles/grid.module.scss';
+import table from '../styles/table.module.scss';
+import styles from '../styles/styles.module.scss';
 
 import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
@@ -66,39 +67,40 @@ const Tariffs = () => {
 
             {editing && <Popup>
                 <form>
-                    <div className={styles.tariffEditionGrid}>
-                        <div className={styles.tariffEditionGridField}>
+                    <div className={grid.container}>
+                        <div className={grid.extraLarge}>
                             <InputText label={t("tariffs.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
                         </div>
-                        <div className={styles.tariffEditionGridField}>
+                        <div className={grid.extraLarge}>
                             <InputText label={t("tariffs.price")} name={"price"} type={"text"} required={true} register={register} setValue={setValue} error={errors.price}/>
                         </div>
-                        <div className={styles.tariffEditionGridField}>
+                        <div className={grid.extraLarge}>
                             <InputText label={t("tariffs.defaultDuration")} name={"defaultDuration"} type={"number"} required={true} register={register} setValue={setValue} error={errors.defaultDuration}/>
                         </div>
-                        <div className={styles.tariffEditionGridField}>
+                        <div className={grid.extraLarge}>
                             <InputColor label={t("tariffs.color")} name={"backgroundColor"} setValue={setValue} error={errors.backgroundColor} initialColor={getValues()["backgroundColor"]}/>
                         </div>
-                        <Button className={styles.tariffEditionGridButtonCancel} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
-                        <Button className={styles.tariffEditionGridButtonSave} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
+                        <Button className={grid.medium + " " + grid.first} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
+                        <Button className={grid.medium + " " + grid.last} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
                     </div>
                 </form>
             </Popup>}
 
-            <div className={styles.tariffGrid}>
+            <div>
                 {tariffs?.map(tariff =>
-                    <div key={tariff.id} className={styles.tariffGridRow}>
-                        <div>
-                            {tariff.name} - {tariff.defaultDuration}m
-                        </div>
-                        <div>
-                            {tariff.price.toFixed(2)} &euro;
-                        </div>
-                        <div>
-                            <a onClick={() => editTariff(tariff)}>
+                    <div key={tariff.id} className={table.rowAction1}>
+                        <div className={table.rowAction}>
+                            <a className={styles.iconButton} onClick={() => editTariff(tariff)}>
                                 <Pencil/>
                             </a>
                         </div>
+                        <div className={table.table3}>
+                            {tariff.name} - {tariff.defaultDuration}m
+                        </div>
+                        <div className={table.table1}>
+                            {tariff.price.toFixed(2)} &euro;
+                        </div>
+                        
                     </div>)}
 
             </div>
@@ -158,14 +160,14 @@ const Documents = () => {
                 <h2>{t("documents.header.title")}</h2>
                 <Button text={t("common:actions.save")} onClick={() => saveDocumentHeaders()} secondary={true}></Button>
             </header>
-            <div className={styles.keyValueForm + " " + stylesGrid.grid}>
-                <InputText className={stylesGrid.large} label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
-                <TextArea className={stylesGrid.large} label={t("documents.header.address")} name={"address"} register={register}/>
-                <InputImage className={stylesGrid.large} label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>
-                <InputImage className={stylesGrid.large} label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
-                <InputText className={stylesGrid.large} label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
-                <InputText className={stylesGrid.large} label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
-                <InputColor className={stylesGrid.wide} label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue} initialColor={accentuateColor} />
+            <div className={grid.container}>
+                <InputText className={grid.large} label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
+                <TextArea className={grid.large} label={t("documents.header.address")} name={"address"} register={register}/>
+                <InputImage className={grid.large} label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>
+                <InputImage className={grid.large} label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
+                <InputText className={grid.large} label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
+                <InputText className={grid.large} label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
+                <InputColor className={grid.large} label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue} initialColor={accentuateColor} />
             </div>
         </>
     </Section>

@@ -1,12 +1,12 @@
-﻿@import "../vars";
+﻿@import "./vars";
 
-.grid {
+.container {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   grid-gap: 1rem;
 }
 
-.wide {
+.extraLarge {
   grid-column: auto / span 12;
   grid-row: auto;
 }
@@ -14,7 +14,7 @@
 .large {
   grid-column: auto / span 12;
   
-  @media (min-width: $breakpointLG) {
+  @media (min-width: $breakpointMD) {
     grid-column: auto / span 6;
   }
 
@@ -26,16 +26,50 @@
   
   @media (min-width: $breakpointMD) {
     grid-column: auto / span 6;
+
+    &.last
+    {
+      grid-column-start: 7;
+    }
   }
 
   @media (min-width: $breakpointLG) {
     grid-column: auto / span 4;
+
+    &.last
+    {
+      grid-column-start: 9;
+    }
   }
 
   grid-row: auto;
 }
 
 .small {
+  grid-column: auto / span 12;
+
+  @media (min-width: $breakpointSM) {
+    grid-column: auto / span 6;
+
+    &.last
+    {
+      grid-column-start: 7;
+    }
+  }
+
+  @media (min-width: $breakpointLG) {
+    grid-column: auto / span 3;
+    
+    &.last
+    {
+      grid-column-start: 10;
+    }
+  }
+
+  grid-row: auto;
+}
+
+.extraSmall {
   grid-column: auto / span 6;
   
   @media (min-width: $breakpointMD) {
@@ -57,4 +91,9 @@
   }
   
   grid-row: auto;
+}
+
+.first
+{
+  grid-column-start: 1;
 }
