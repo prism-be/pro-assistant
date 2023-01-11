@@ -1,0 +1,60 @@
+﻿@import "../vars";
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: 1rem;
+}
+
+.wide {
+  grid-column: auto / span 12;
+  grid-row: auto;
+}
+
+.large {
+  grid-column: auto / span 12;
+  
+  @media (min-width: $breakpointLG) {
+    grid-column: auto / span 6;
+  }
+
+  grid-row: auto;
+}
+
+.medium {
+  grid-column: auto / span 12;
+  
+  @media (min-width: $breakpointMD) {
+    grid-column: auto / span 6;
+  }
+
+  @media (min-width: $breakpointLG) {
+    grid-column: auto / span 4;
+  }
+
+  grid-row: auto;
+}
+
+.small {
+  grid-column: auto / span 6;
+  
+  @media (min-width: $breakpointMD) {
+    grid-column: auto / span 4;
+  }
+
+  @media (min-width: $breakpointLG) {
+    grid-column: auto / span 2;
+  }
+  
+  grid-row: auto;
+}
+
+.dot {
+  grid-column: auto / span 2;
+  
+  @media (min-width: $breakpointMD) {
+    grid-column: auto / span 1;
+  }
+  
+  grid-row: auto;
+}

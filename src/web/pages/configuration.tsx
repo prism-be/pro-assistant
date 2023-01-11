@@ -1,4 +1,5 @@
 ﻿import styles from '../styles/pages/configuration.module.scss';
+import stylesGrid from '../styles/components/grid.module.scss';
 
 import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
@@ -157,14 +158,14 @@ const Documents = () => {
                 <h2>{t("documents.header.title")}</h2>
                 <Button text={t("common:actions.save")} onClick={() => saveDocumentHeaders()} secondary={true}></Button>
             </header>
-            <div className={styles.keyValueForm}>
-                <InputText label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
-                <TextArea label={t("documents.header.address")} name={"address"} register={register}/>
-                <InputImage label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>
-                <InputImage label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
-                <InputText label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
-                <InputText label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
-                <InputColor label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue} initialColor={accentuateColor} />
+            <div className={styles.keyValueForm + " " + stylesGrid.grid}>
+                <InputText className={stylesGrid.large} label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
+                <TextArea className={stylesGrid.large} label={t("documents.header.address")} name={"address"} register={register}/>
+                <InputImage className={stylesGrid.large} label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>
+                <InputImage className={stylesGrid.large} label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
+                <InputText className={stylesGrid.large} label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
+                <InputText className={stylesGrid.large} label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
+                <InputColor className={stylesGrid.wide} label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue} initialColor={accentuateColor} />
             </div>
         </>
     </Section>
