@@ -16,7 +16,7 @@ import {useForm} from "react-hook-form";
 import InputText from "../components/forms/InputText";
 import TextArea from "../components/forms/TextArea";
 import {deleteData, postData} from "../lib/ajaxHelper";
-import {Delete, Pencil} from "../components/icons/Icons";
+import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
 
 const Documents: NextPage = () => {
 
@@ -69,8 +69,8 @@ const Documents: NextPage = () => {
                         {documents && documents.length > 0 && <>
                             <div className={table.rowAction2}>
                                 {documents.map(d => <React.Fragment key={d.id}>
-                                    <a className={table.rowAction + " " + styles.iconButton} onClick={() => editDocument(d)}> <Pencil/> </a>
-                                    <a className={table.rowAction + " " + styles.iconButton} onClick={() => deleteDocument(d)}> <Delete/> </a>
+                                    <a className={table.rowAction + " " + styles.iconButton} onClick={() => editDocument(d)}> <PencilSquareIcon/> </a>
+                                    <a className={table.rowAction + " " + styles.iconButton} onClick={() => deleteDocument(d)}> <TrashIcon/> </a>
                                     <div className={table.table10}>{d.name}</div>
                                 </React.Fragment>)}
                             </div>

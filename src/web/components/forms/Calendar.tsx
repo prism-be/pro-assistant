@@ -1,9 +1,9 @@
 ﻿import {add, format, formatISO, startOfMonth} from 'date-fns';
 import styles from '../../styles/components/forms/calendar.module.scss'
 import {useEffect, useState} from "react";
-import {ArrowLeft, ArrowRight} from "../icons/Icons";
 import useTranslation from "next-translate/useTranslation";
 import {getLocale} from "../../lib/localization";
+import { ArrowSmallLeftIcon, ArrowSmallRightIcon } from '@heroicons/react/24/outline';
 
 interface Props {
     value: Date;
@@ -72,8 +72,8 @@ export const Calendar = ({value, onChange, className}: Props) => {
     }
     
     return <div className={styles.calendar + " " + className} title={formatISO(value)}>
-        <div className={styles.previous} onClick={() => setMonth(add(month, { months: -1 })) }><ArrowLeft /></div>
-        <div className={styles.next} onClick={() => setMonth(add(month, { months: 1 })) }><ArrowRight /></div>
+        <div className={styles.previous} onClick={() => setMonth(add(month, { months: -1 })) }><ArrowSmallLeftIcon /></div>
+        <div className={styles.next} onClick={() => setMonth(add(month, { months: 1 })) }><ArrowSmallRightIcon /></div>
         <div className={styles.month}>{format(month, "MMMM yyyy", { locale: getLocale() })}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day1}>{t("days.short.day1")}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day2}>{t("days.short.day2")}</div>
