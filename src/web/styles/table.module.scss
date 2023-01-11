@@ -1,0 +1,19 @@
+﻿@import "vars";
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-gap: 1rem;
+}
+
+.header
+{
+  font-weight: bold;
+  border-bottom: 1px $grey solid;
+}
+
+.table4
+{
+  grid-column: auto / span 3;
+  padding: 0.25rem;
+}

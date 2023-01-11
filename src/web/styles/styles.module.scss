@@ -1,0 +1,17 @@
+﻿@import './vars';
+
+.help {
+  display: block;
+  text-align: center;
+  padding: 1rem;
+  font-style: italic;
+}
+
+.clickable
+{
+  cursor: pointer;
+  
+  &:hover {
+    background-color: $greyLight;
+  }
+}
