@@ -6,7 +6,7 @@
   grid-gap: 1rem;
 }
 
-.wide {
+.extraLarge {
   grid-column: auto / span 12;
   grid-row: auto;
 }
@@ -14,7 +14,7 @@
 .large {
   grid-column: auto / span 12;
   
-  @media (min-width: $breakpointLG) {
+  @media (min-width: $breakpointMD) {
     grid-column: auto / span 6;
   }
 
@@ -81,4 +81,9 @@
   }
   
   grid-row: auto;
+}
+
+.first
+{
+  grid-column-start: 1;
 }

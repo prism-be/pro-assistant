@@ -158,7 +158,7 @@ const Documents = () => {
                 <h2>{t("documents.header.title")}</h2>
                 <Button text={t("common:actions.save")} onClick={() => saveDocumentHeaders()} secondary={true}></Button>
             </header>
-            <div className={styles.keyValueForm + " " + stylesGrid.grid}>
+            <div className={styles.keyValueForm + " " + stylesGrid.ex}>
                 <InputText className={stylesGrid.large} label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
                 <TextArea className={stylesGrid.large} label={t("documents.header.address")} name={"address"} register={register}/>
                 <InputImage className={stylesGrid.large} label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>

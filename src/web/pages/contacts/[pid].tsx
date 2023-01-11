@@ -1,4 +1,5 @@
-﻿import styles from '../../styles/pages/contact.module.scss'
+﻿import grid from '../../styles/grid.module.scss';
+import styles from '../../styles/styles.module.scss';
 
 import {NextPage} from "next";
 import useTranslation from "next-translate/useTranslation";
@@ -76,46 +77,46 @@ const Contacts: NextPage = () => {
     return <ContentContainer>
         <Section>
             <div className={styles.cardTitle}>
-                <a onClick={() => router.push("/contacts")}>
+                <a className={styles.iconButton} onClick={() => router.push("/contacts")}>
                     <Back/>
                 </a>
                 <h1>{t("pages.contacts.details.title")} {contact?.lastName} {contact?.firstName}</h1>
             </div>
-            <form className={styles.contact} onSubmit={handleSubmit(onSaveContactSubmit)}>
-                <div className={styles.contactFieldExtraSmall}>
+            <form className={grid.container} onSubmit={handleSubmit(onSaveContactSubmit)}>
+                <div className={grid.dot}>
                     <InputText name="title" label={t("fields.title")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                 </div>
-                <div className={styles.contactFieldAverageSmall}>
+                <div className={grid.medium}>
                     <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                 </div>
-                <div className={styles.contactFieldAverageSmall}>
+                <div className={grid.medium}>
                     <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} setValue={setValue} error={errors.firstName} autoCapitalize={true}/>
                 </div>
-                <div className={styles.contactField}>
-                    <InputText name="email" label={t("fields.email")} type="text" required={false} register={register} setValue={setValue} error={errors.email}/>
-                </div>
-                <div className={styles.contactFieldSmall}>
-                    <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
-                </div>
-                <div className={styles.contactFieldSmall}>
+                <div className={grid.extraSmall}>
                     <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                 </div>
-                <div className={styles.contactFieldWide}>
+                <div className={grid.large  + " " + grid.first}>
+                    <InputText name="email" label={t("fields.email")} type="text" required={false} register={register} setValue={setValue} error={errors.email}/>
+                </div>
+                <div className={grid.large}>
+                    <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
+                </div>
+                <div className={grid.large}>
                     <InputText name="street" label={t("fields.street")} type="text" required={false} register={register} setValue={setValue} error={errors.street} autoCapitalize={true}/>
                 </div>
-                <div className={styles.contactFieldSmall}>
+                <div className={grid.extraSmall}>
                     <InputText name="number" label={t("fields.number")} type="text" required={false} register={register} setValue={setValue} error={errors.number}/>
                 </div>
-                <div className={styles.contactFieldSmall}>
+                <div className={grid.small  + " " + grid.first}>
                     <InputText name="zipCode" label={t("fields.zipCode")} type="text" required={false} register={register} setValue={setValue} error={errors.zipCode}/>
                 </div>
-                <div className={styles.contactField}>
+                <div className={grid.small}>
                     <InputText name="city" label={t("fields.city")} type="text" required={false} register={register} setValue={setValue} error={errors.city} autoCapitalize={true}/>
                 </div>
-                <div className={styles.contactFieldSmall}>
+                <div className={grid.small}>
                     <InputText name="country" label={t("fields.country")} type="text" required={false} register={register} setValue={setValue} error={errors.country} autoCapitalize={true}/>
                 </div>
-                <div className={styles.saveButton}>
+                <div className={grid.small + " " + grid.last + " " + styles.buttonField}>
                     <Button text={t("actions.save")} onClick={handleSubmit(onSaveContactSubmit)} secondary={true}/>
                 </div>
             </form>
