@@ -1,4 +1,6 @@
-﻿import styles from '../../styles/components/contacts/contact-appointments.module.scss';
+﻿import styles from '../../styles/styles.module.scss';
+import componentStyles from '../../styles/components/contacts/contact-appointments.module.scss';
+
 import useSWR from "swr";
 import Section from "../design/Section";
 import {postData} from "../../lib/ajaxHelper";
@@ -29,10 +31,10 @@ export const ContactAppointments = (props: Props) => {
 
     return <Section>
         <h2>{t("pages.contacts.details.appointments.title")}</h2>
-        <div>
-            {appointments?.map(m => <div key={m.id} className={styles.appointment} onClick={() => displayAppointment(m.id)}>
-                <div className={styles.typeColor} style={{backgroundColor: m.backgroundColor ?? ""}}></div>
-                <div className={styles.title}>
+        <div className={styles.list}>
+            {appointments?.map(m => <div key={m.id} className={componentStyles.appointment} onClick={() => displayAppointment(m.id)}>
+                <div className={componentStyles.typeColor} style={{backgroundColor: m.backgroundColor ?? ""}}></div>
+                <div className={componentStyles.title}>
                     {m.title}
                     <span className={styles.badge}>
                         {t("options.appointments.state" + m.state)}
@@ -41,11 +43,11 @@ export const ContactAppointments = (props: Props) => {
                         {t("options.payments.state" + m.payment)}
                     </span>
                 </div>
-                <div className={styles.date}>
+                <div className={componentStyles.date}>
                     {format(parseISO(m.startDate), "EEEE dd MMMM yyyy", {locale: getLocale()})}
                 </div>
 
-                <div className={styles.hour}>
+                <div className={componentStyles.hour}>
                     {format(parseISO(m.startDate), "HH:mm", {locale: getLocale()})}
                     &nbsp;-&nbsp;
                     {format(add(parseISO(m.startDate), {minutes: m.duration}), "HH:mm", {locale: getLocale()})}
@@ -53,7 +55,7 @@ export const ContactAppointments = (props: Props) => {
             </div>)}
         </div>
         <>
-            {appointments?.length === 0 && <div className={styles.noAppointments}>
+            {appointments?.length === 0 && <div className={componentStyles.noAppointments}>
                 {t("pages.contacts.details.appointments.noAppointments")}
             </div>}
         </>

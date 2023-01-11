@@ -23,7 +23,7 @@ import { ArrowSmallLeftIcon } from '@heroicons/react/24/outline';
 const Contacts: NextPage = () => {
     const {t} = useTranslation('common');
     const router = useRouter();
-    const {pid} = router.query;
+    const {cid} = router.query;
 
     const loadContact = async (route: string) => {
 
@@ -34,7 +34,7 @@ const Contacts: NextPage = () => {
         return await getData<Contact>(route);
     }
 
-    const {data: contact, mutate: mutateContact} = useSWR("/contact/" + pid, loadContact);
+    const {data: contact, mutate: mutateContact} = useSWR("/contact/" + cid, loadContact);
     const {register, handleSubmit, formState: {errors}, setValue, getValues} = useForm();
 
     useEffect(() => {
@@ -48,7 +48,7 @@ const Contacts: NextPage = () => {
 
 
     const saveContactForm = async (data: any) => {
-        if (pid === '000000000000000000000000') {
+        if (cid === '000000000000000000000000') {
             data.id = '';
             const newPid = await postData<UpsertResult>("/contact", data);
             alertSuccess(t("details.saveSuccess"), {autoClose: true});
@@ -122,7 +122,7 @@ const Contacts: NextPage = () => {
                 </div>
             </form>
         </Section>
-        <ContactAppointments contactId={pid as string}/>
+        <ContactAppointments contactId={cid as string}/>
     </ContentContainer>
 }
 
