@@ -70,7 +70,7 @@
         "saveSuccess": "Les modifications sur la fiche ont été sauvegardées.",
         "appointments": {
           "title": "Liste des rendez-vous",
-          "noappointments": "Aucun rendez-vous planifié pour ce contact"
+          "noAppointments": "Aucun rendez-vous planifié pour ce contact"
         }
       }
     },
