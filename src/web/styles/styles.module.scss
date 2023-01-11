@@ -18,13 +18,23 @@
 
 .iconButton {
   display: block;
-  height: 1.5rem;
-  width: 1.5rem;
-  grid-column: 1;
+  height: 32px;
+  width: 32px;
   cursor: pointer;
+  margin: auto;
+  & svg {
+    height: 32px;
+    width: 32px;
+  }
 }
 
 .buttonField
 {
   padding-top: 1.5rem;
+}
+
+.text {
+  > textarea {
+    height: 20rem;
+  }
 }

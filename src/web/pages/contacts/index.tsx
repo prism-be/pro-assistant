@@ -103,17 +103,17 @@ const Contacts: NextPage = () => {
                         <h2>{t("results.title")}</h2>
                         {contacts.length !== 0 && <div>
                             <div className={table.row}>
-                                <div className={table.table4 + " " + table.header}>{t("fields.lastName")}</div>
-                                <div className={table.table4 + " " + table.header}>{t("fields.firstName")}</div>
-                                <div className={table.table4 + " " + table.header}>{t("fields.phoneNumber")}</div>
-                                <div className={table.table4 + " " + table.header}>{t("fields.birthDate")}</div>
+                                <div className={table.table3 + " " + table.header}>{t("fields.lastName")}</div>
+                                <div className={table.table3 + " " + table.header}>{t("fields.firstName")}</div>
+                                <div className={table.table3 + " " + table.header}>{t("fields.phoneNumber")}</div>
+                                <div className={table.table3 + " " + table.header}>{t("fields.birthDate")}</div>
                             </div>
                             {contacts?.map(contact =>
                                 <div className={table.row + " " + styles.clickable} key={contact.id} onClick={() => navigate(contact.id)}>
-                                    <div className={table.table4}>{contact.lastName}</div>
-                                    <div className={table.table4}>{contact.firstName}</div>
-                                    <div className={table.table4}>{contact.phoneNumber}</div>
-                                    <div className={table.table4}>{contact.birthDate}</div>
+                                    <div className={table.table3}>{contact.lastName}</div>
+                                    <div className={table.table3}>{contact.firstName}</div>
+                                    <div className={table.table3}>{contact.phoneNumber}</div>
+                                    <div className={table.table3}>{contact.birthDate}</div>
                                 </div>
                             )}
                         </div>}

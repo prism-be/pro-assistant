@@ -6,6 +6,31 @@
   grid-gap: 1rem;
 }
 
+.rowAction {
+  grid-column: auto / span 1;
+  text-align: center;
+}
+
+.rowAction1 {
+  display: grid;
+  grid-template-columns: repeat(1, 32px) repeat(11, 1fr);
+}
+
+.rowAction2 {
+  display: grid;
+  grid-template-columns: repeat(2, 32px) repeat(10, 1fr);
+}
+
+.rowAction3 {
+  display: grid;
+  grid-template-columns: repeat(3, 32px) repeat(9, 1fr);
+}
+
+.rowAction4 {
+  display: grid;
+  grid-template-columns: repeat(4, 32px) repeat(8, 1fr);
+}
+
 .header
 {
   font-weight: bold;

@@ -88,18 +88,19 @@ const Tariffs = () => {
 
             <div>
                 {tariffs?.map(tariff =>
-                    <div key={tariff.id} className={table.row}>
+                    <div key={tariff.id} className={table.rowAction1}>
+                        <div className={table.rowAction}>
+                            <a className={styles.iconButton} onClick={() => editTariff(tariff)}>
+                                <Pencil/>
+                            </a>
+                        </div>
                         <div className={table.table3}>
                             {tariff.name} - {tariff.defaultDuration}m
                         </div>
                         <div className={table.table1}>
                             {tariff.price.toFixed(2)} &euro;
                         </div>
-                        <div className={table.table1}>
-                            <a className={styles.iconButton} onClick={() => editTariff(tariff)}>
-                                <Pencil/>
-                            </a>
-                        </div>
+                        
                     </div>)}
 
             </div>

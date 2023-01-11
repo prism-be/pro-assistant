@@ -1,4 +1,7 @@
-﻿import styles from '../styles/pages/documents.module.scss';
+﻿import grid from '../styles/grid.module.scss';
+import table from '../styles/table.module.scss';
+import styles from '../styles/styles.module.scss';
+
 
 import React from 'react';
 import {NextPage} from "next";
@@ -64,11 +67,11 @@ const Documents: NextPage = () => {
                             <i className={styles.tip}>{t("list.NoElements")}</i>
                         </>}
                         {documents && documents.length > 0 && <>
-                            <div className={styles.edition}>
+                            <div className={table.rowAction2}>
                                 {documents.map(d => <React.Fragment key={d.id}>
-                                    <a className={styles.editionPencil} onClick={() => editDocument(d)}> <Pencil/> </a>
-                                    <a className={styles.editionTrash} onClick={() => deleteDocument(d)}> <Delete/> </a>
-                                    <div className={styles.editionName}>{d.name}</div>
+                                    <a className={table.rowAction + " " + styles.iconButton} onClick={() => editDocument(d)}> <Pencil/> </a>
+                                    <a className={table.rowAction + " " + styles.iconButton} onClick={() => deleteDocument(d)}> <Delete/> </a>
+                                    <div className={table.table10}>{d.name}</div>
                                 </React.Fragment>)}
                             </div>
                         </>}
@@ -82,24 +85,24 @@ const Documents: NextPage = () => {
                         <h1>{t("edit.title")}</h1>
                         <Button secondary={true} onClick={() => saveDocument()} text={t("common:actions.save")}/>
                     </header>
-                    <div>
-                        <InputText className={styles.input} label={t("edit.form.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
-                        <InputText className={styles.input} label={t("edit.form.title")} name={"title"} type={"text"} required={true} register={register} setValue={setValue} error={errors.title}/>
-                        <TextArea className={styles.body} label={t("edit.form.body")} name={"body"} required={true} register={register} error={errors.body}/>
-                    </div>
-                    <div className={styles.help}>
-                        <b>{t("edit.help.title")}</b>
-                        <div>{t("edit.help.help")}</div>
-                        <ul>
-                            <li><b>{"{{name}}"}</b> : {t("edit.help.name")}</li>
-                            <li><b>{"{{contactName}}"}</b> : {t("edit.help.contactName")}</li>
-                            <li><b>{"{{price}}"}</b> : {t("edit.help.price")}</li>
-                            <li><b>{"{{appointmentType}}"}</b> : {t("edit.help.appointmentType")}</li>
-                            <li><b>{"{{appointmentDate}}"}</b> : {t("edit.help.appointmentDate")}</li>
-                            <li><b>{"{{appointmentHour}}"}</b> : {t("edit.help.appointmentHour")}</li>
-                            <li><b>{"{{paymentDate}}"}</b> : {t("edit.help.paymentDate")}</li>
-                            <li><b>{"{{paymentMode}}"}</b> : {t("edit.help.paymentMode")}</li>
-                        </ul>
+                    <div className={grid.container}>
+                        <InputText className={grid.extraLarge} label={t("edit.form.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
+                        <InputText className={grid.extraLarge} label={t("edit.form.title")} name={"title"} type={"text"} required={true} register={register} setValue={setValue} error={errors.title}/>
+                        <TextArea className={grid.extraLarge + " " + styles.text} label={t("edit.form.body")} name={"body"} required={true} register={register} error={errors.body}/>
+                        <div className={grid.extraLarge}>
+                            <h3>{t("edit.help.title")}</h3>
+                            <div>{t("edit.help.help")}</div>
+                            <ul>
+                                <li><b>{"{{name}}"}</b> : {t("edit.help.name")}</li>
+                                <li><b>{"{{contactName}}"}</b> : {t("edit.help.contactName")}</li>
+                                <li><b>{"{{price}}"}</b> : {t("edit.help.price")}</li>
+                                <li><b>{"{{appointmentType}}"}</b> : {t("edit.help.appointmentType")}</li>
+                                <li><b>{"{{appointmentDate}}"}</b> : {t("edit.help.appointmentDate")}</li>
+                                <li><b>{"{{appointmentHour}}"}</b> : {t("edit.help.appointmentHour")}</li>
+                                <li><b>{"{{paymentDate}}"}</b> : {t("edit.help.paymentDate")}</li>
+                                <li><b>{"{{paymentMode}}"}</b> : {t("edit.help.paymentMode")}</li>
+                            </ul>
+                        </div>
                     </div>
                 </>
             </Section>}
