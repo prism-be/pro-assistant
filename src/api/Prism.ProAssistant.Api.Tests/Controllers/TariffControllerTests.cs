@@ -4,41 +4,40 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Threading.Tasks;
 using Prism.ProAssistant.Api.Controllers;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Xunit;
 
-namespace Prism.ProAssistant.Api.Tests.Controllers
+namespace Prism.ProAssistant.Api.Tests.Controllers;
+
+public class TariffControllerTests
 {
-    public class TariffControllerTests
+    [Fact]
+    public async Task FindMany()
     {
-        [Fact]
-        public async Task FindMany()
-        {
-            await CrudPublisherTests.FindMany<TariffController, Tariff>(c => c.FindMany());
-        }
+        await CrudPublisherTests.FindMany<TariffController, Tariff>(c => c.FindMany());
+    }
 
-        [Fact]
-        public async Task FindOne()
-        {
-            await CrudPublisherTests.FindOne<TariffController, Tariff>(c => c.FindOne(Identifier.GenerateString()));
-        }
+    [Fact]
+    public async Task FindOne()
+    {
+        await CrudPublisherTests.FindOne<TariffController, Tariff>(c => c.FindOne(Identifier.GenerateString()));
+    }
 
-        [Fact]
-        public async Task RemoveOne()
-        {
-            await CrudPublisherTests.RemoveOne<TariffController, Tariff>(c => c.RemoveOne(Identifier.GenerateString()));
-        }
+    [Fact]
+    public async Task RemoveOne()
+    {
+        await CrudPublisherTests.RemoveOne<TariffController>(c => c.RemoveOne(Identifier.GenerateString()));
+    }
 
-        [Fact]
-        public async Task UpsertOne()
+    [Fact]
+    public async Task UpsertOne()
+    {
+        await CrudPublisherTests.UpsertOne<TariffController, Tariff>(c => c.UpsertOne(new Tariff
         {
-            await CrudPublisherTests.UpsertOne<TariffController, Tariff>(c => c.UpsertOne(new Tariff
-            {
-                Id = Identifier.GenerateString()
-            }));
-        }
+            Id = Identifier.GenerateString(),
+            Name = Identifier.GenerateString()
+        }));
     }
 }

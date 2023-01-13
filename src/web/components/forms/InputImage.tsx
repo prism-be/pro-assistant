@@ -19,7 +19,7 @@ interface Props {
 
 const InputImage = ({label, name, required, register, error, setValue, className, onChange, initialPreview}: Props) => {
     const [preview, setPreview] = useState<any>(initialPreview);
-    
+
     useEffect(() => {
         setPreview(initialPreview);
     }, [initialPreview])
@@ -47,7 +47,7 @@ const InputImage = ({label, name, required, register, error, setValue, className
         <label className={styles.label}>{label} {required && " *"} </label>
         <div className={styles.containerInput}>
             {preview && <img className={styles.preview} src={preview} alt={"logo"}/>}
-            
+
             <input type={"hidden"} {...register(name, {
                 required, onChange: (e) => {
                     valueChanged(e)

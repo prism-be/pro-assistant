@@ -54,9 +54,8 @@ public class DeleteDocumentHandler : IRequestHandler<DeleteDocument>
             appointment.Documents.Remove(deletedDocument);
             await appointments.UpdateOneAsync(Builders<Appointment>.Filter.Eq(x => x.Id, request.AppointmentId), Builders<Appointment>.Update.Set(x => x.Documents, appointment.Documents),
                 cancellationToken: cancellationToken);
-
         });
-        
+
         return Unit.Value;
     }
 }

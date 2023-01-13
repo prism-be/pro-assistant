@@ -8,7 +8,7 @@ interface Props {
     required?: boolean;
     register: UseFormRegister<FieldValues>;
     error?: any;
-    className?:string;
+    className?: string;
     onChange?: (value: string) => void;
 }
 
@@ -16,17 +16,20 @@ interface Props {
 const TextArea = ({label, name, required, register, error, className, onChange}: Props) => {
 
     const valueChanged = (e: { target: { value: any; }; }) => {
-        if (onChange)
-        {
+        if (onChange) {
             onChange(e.target.value);
         }
     }
-    
+
     return <div className={styles.container + " " + className}>
         <label className={styles.label}>{label} {required && " *"} </label>
         <textarea
             className={error ? styles.errorInput : styles.input}
-            {...register(name, {required, onChange: (e) => { valueChanged(e) }})}/>
+            {...register(name, {
+                required, onChange: (e) => {
+                    valueChanged(e)
+                }
+            })}/>
         {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
     </div>
 }

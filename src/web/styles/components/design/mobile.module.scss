@@ -1,7 +1,6 @@
 ﻿@import "../../vars";
 
-.mobileDisplaySM
-{
+.mobileDisplaySM {
   display: block;
 
   @media (min-width: $breakpointSM) {
@@ -9,17 +8,15 @@
   }
 }
 
-.mobileDisplayMD
-{
+.mobileDisplayMD {
   display: block;
-  
+
   @media (min-width: $breakpointMD) {
     display: none;
   }
 }
 
-.mobileDisplayLG
-{
+.mobileDisplayLG {
   display: block;
 
   @media (min-width: $breakpointLG) {
@@ -27,8 +24,7 @@
   }
 }
 
-.mobileDisplayXL
-{
+.mobileDisplayXL {
   display: block;
 
   @media (min-width: $breakpointXL) {
@@ -36,8 +32,7 @@
   }
 }
 
-.mobileHideSM
-{
+.mobileHideSM {
   display: none;
 
   @media (min-width: $breakpointSM) {
@@ -45,8 +40,7 @@
   }
 }
 
-.mobileHideMD
-{
+.mobileHideMD {
   display: none;
 
   @media (min-width: $breakpointMD) {
@@ -54,8 +48,7 @@
   }
 }
 
-.mobileHideLG
-{
+.mobileHideLG {
   display: none;
 
   @media (min-width: $breakpointLG) {
@@ -63,8 +56,7 @@
   }
 }
 
-.mobileHideXL
-{
+.mobileHideXL {
   display: none;
 
   @media (min-width: $breakpointXL) {

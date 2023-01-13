@@ -1,5 +1,4 @@
-﻿export interface User
-{
+﻿export interface User {
     name: string;
     authenticated: boolean;
 }

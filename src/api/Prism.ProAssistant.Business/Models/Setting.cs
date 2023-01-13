@@ -11,9 +11,10 @@ namespace Prism.ProAssistant.Business.Models;
 [BsonCollection("settings")]
 public class Setting : IDataModel
 {
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = string.Empty;
 
     [JsonPropertyName("value")]
-    public string Value { get; set; } = string.Empty;
+    required public string Value { get; set; }
+
+    [JsonPropertyName("id")]
+    required public string Id { get; set; }
 }

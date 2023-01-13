@@ -16,22 +16,20 @@ interface Props {
 
 
 const InputDate = ({label, name, type, required, register, error, setValue}: Props) => {
-    
+
     let thinkTimeout: any;
-    
+
     const autoFormatContent = (e: { target: { value: any; }; }) => {
-        
-        if (thinkTimeout)
-        {
+
+        if (thinkTimeout) {
             clearTimeout(thinkTimeout);
         }
-        
-        thinkTimeout = setTimeout(() => formatDate(e.target.value), 250)        
+
+        thinkTimeout = setTimeout(() => formatDate(e.target.value), 250)
     }
-    
-    const formatDate = (data:string) => {
-        if (data.length < 5)
-        {
+
+    const formatDate = (data: string) => {
+        if (data.length < 5) {
             return;
         }
 
@@ -42,13 +40,17 @@ const InputDate = ({label, name, type, required, register, error, setValue}: Pro
             setValue(name, format(value, "dd/MM/yyyy"));
         }
     }
-    
+
     return <div className={styles.container}>
         <label className={styles.label}>{label} {required && " *"} </label>
         <input
             className={error ? styles.errorInput : styles.input}
             type={type}
-            {...register(name, {required, onChange: (e) => { autoFormatContent(e) }})}/>
+            {...register(name, {
+                required, onChange: (e) => {
+                    autoFormatContent(e)
+                }
+            })}/>
         {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
     </div>
 }

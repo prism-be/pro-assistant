@@ -7,7 +7,7 @@ interface Props {
     onClick?: MouseEventHandler<any>;
     secondary?: boolean;
     submit?: boolean;
-    className?:string;
+    className?: string;
 }
 
 const Button = ({text, onClick, secondary, className, submit}: Props) => {

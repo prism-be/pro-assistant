@@ -3,7 +3,7 @@ import styles from '../../styles/components/forms/calendar.module.scss'
 import {useEffect, useState} from "react";
 import useTranslation from "next-translate/useTranslation";
 import {getLocale} from "../../lib/localization";
-import { ArrowSmallLeftIcon, ArrowSmallRightIcon } from '@heroicons/react/24/outline';
+import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from '@heroicons/react/24/outline';
 
 interface Props {
     value: Date;
@@ -16,21 +16,20 @@ export const Calendar = ({value, onChange, className}: Props) => {
     const {t} = useTranslation('common');
     const [date, setDate] = useState<Date>(value);
     const [month, setMonth] = useState<Date>(startOfMonth(value));
-    const [dates, setDates]= useState<Date[]>([]);
+    const [dates, setDates] = useState<Date[]>([]);
 
     useEffect(() => {
         let c = month;
         let d: Date[] = [];
-        
-        while (c.getMonth() === month.getMonth())
-        {
+
+        while (c.getMonth() === month.getMonth()) {
             d.push(new Date(c));
             c = add(c, {days: 1});
         }
-        
+
         setDates(d);
     }, [month]);
-    
+
     useEffect(() => {
         setDate(value);
         setMonth(startOfMonth(value));
@@ -38,8 +37,7 @@ export const Calendar = ({value, onChange, className}: Props) => {
 
     const getClass = (d: Date) => {
         let css = "";
-        switch (d.getDay())
-        {
+        switch (d.getDay()) {
             case 0:
                 css = styles.day7;
                 break;
@@ -62,19 +60,18 @@ export const Calendar = ({value, onChange, className}: Props) => {
                 css = styles.day6;
                 break;
         }
-        
-        if (d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth() && d.getDate() === date.getDate())
-        {
+
+        if (d.getFullYear() === date.getFullYear() && d.getMonth() === date.getMonth() && d.getDate() === date.getDate()) {
             css += " " + styles.daySelected;
         }
-        
+
         return css;
     }
-    
+
     return <div className={styles.calendar + " " + className} title={formatISO(value)}>
-        <div className={styles.previous} onClick={() => setMonth(add(month, { months: -1 })) }><ArrowSmallLeftIcon /></div>
-        <div className={styles.next} onClick={() => setMonth(add(month, { months: 1 })) }><ArrowSmallRightIcon /></div>
-        <div className={styles.month}>{format(month, "MMMM yyyy", { locale: getLocale() })}</div>
+        <div className={styles.previous} onClick={() => setMonth(add(month, {months: -1}))}><ArrowSmallLeftIcon/></div>
+        <div className={styles.next} onClick={() => setMonth(add(month, {months: 1}))}><ArrowSmallRightIcon/></div>
+        <div className={styles.month}>{format(month, "MMMM yyyy", {locale: getLocale()})}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day1}>{t("days.short.day1")}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day2}>{t("days.short.day2")}</div>
         <div className={styles.dayHeader + " " + styles.day + " " + styles.day3}>{t("days.short.day3")}</div>

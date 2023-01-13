@@ -1,8 +1,7 @@
 ﻿import {Subject} from "rxjs";
 import {filter} from "rxjs/operators";
 
-export interface dataUpdated
-{
+export interface dataUpdated {
     type: 'appointment';
 }
 

@@ -6,8 +6,7 @@
   "edit": {
     "title": "Edition d'un type de document",
     "confirmDelete": "Souhaitez vous vraiment supprimer le type de document suivant : ",
-    "form":
-    {
+    "form": {
       "name": "Nom du document",
       "title": "Titre du document",
       "body": "Contenu du document"
@@ -24,6 +23,5 @@
       "paymentDate": "Date de paiement",
       "paymentMode": "Mode de paiement"
     }
-    
   }
 }

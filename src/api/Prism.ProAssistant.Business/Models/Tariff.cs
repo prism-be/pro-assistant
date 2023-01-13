@@ -20,17 +20,17 @@ public class Tariff : IDataModel
     [JsonPropertyName("defaultDuration")]
     public int DefaultDuration { get; set; } = 60;
 
-    [JsonPropertyName("id")]
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = string.Empty;
-
     [JsonPropertyName("name")]
-    public string Name { get; set; } = string.Empty;
-    
-    [JsonPropertyName("foreColor")]
-    public string? ForeColor { get; set; }
+    required public string Name { get; set; }
 
     [JsonPropertyName("backgroundColor")]
     public string? BackgroundColor { get; set; }
+
+    [JsonPropertyName("foreColor")]
+    public string? ForeColor { get; set; }
+
+    [JsonPropertyName("id")]
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    required public string Id { get; set; }
 }

@@ -3,20 +3,19 @@ import table from '../styles/table.module.scss';
 import styles from '../styles/styles.module.scss';
 
 
-import React from 'react';
+import React, {useState} from 'react';
 import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import Section from "../components/design/Section";
 import useSWR from "swr";
 import {DocumentConfiguration} from "../lib/contracts";
-import {useState} from "react";
 import Button from "../components/forms/Button";
 import {useForm} from "react-hook-form";
 import InputText from "../components/forms/InputText";
 import TextArea from "../components/forms/TextArea";
 import {deleteData, postData} from "../lib/ajaxHelper";
-import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline';
+import {PencilSquareIcon, TrashIcon} from '@heroicons/react/24/outline';
 
 const Documents: NextPage = () => {
 

@@ -41,4 +41,4 @@ export const msalConfig = {
 
 const msalInstance = new msal.PublicClientApplication(msalConfig);
 
-export { msalInstance }
+export {msalInstance}

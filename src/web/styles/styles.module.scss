@@ -7,10 +7,9 @@
   font-style: italic;
 }
 
-.clickable
-{
+.clickable {
   cursor: pointer;
-  
+
   &:hover {
     background-color: $greyLight;
   }
@@ -18,14 +17,13 @@
 
 .iconButton {
   display: block;
- 
+
   cursor: pointer;
   margin: auto;
-  
+
 }
 
-.buttonField
-{
+.buttonField {
   padding-top: 1.5rem;
 }
 
@@ -48,7 +46,7 @@
   > div {
     border-bottom: 1px $light dashed;
   }
-  
+
   > div:last-child {
     border-bottom: 1px transparent dashed;
   }

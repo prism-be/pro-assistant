@@ -19,9 +19,9 @@ public interface IOrganizationContext
 
     IMongoCollection<T> GetCollection<T>();
 
-    void SelectOrganization(string organizationId);
-    
     IGridFSBucket GetGridFsBucket();
+
+    void SelectOrganization(string organizationId);
 }
 
 public class OrganizationContext : IOrganizationContext
@@ -63,7 +63,7 @@ public class OrganizationContext : IOrganizationContext
 
     public IGridFSBucket GetGridFsBucket()
     {
-        return new GridFSBucket(this.Database);
+        return new GridFSBucket(Database);
     }
 
     private static string? GetCollectionName<T>()

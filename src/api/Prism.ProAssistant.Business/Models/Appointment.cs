@@ -31,38 +31,38 @@ public class Appointment : IDataModel
     [JsonPropertyName("state")]
     public int State { get; set; }
 
-    [JsonPropertyName("firstName")]
-    public string FirstName { get; set; } = string.Empty;
+    [JsonPropertyName("documents")]
+    public List<BinaryDocument> Documents { get; set; } = new();
 
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    [JsonPropertyName("id")]
-    public string Id { get; set; } = string.Empty;
+    [JsonPropertyName("firstName")]
+    required public string FirstName { get; set; }
 
     [JsonPropertyName("lastName")]
-    public string LastName { get; set; } = string.Empty;
+    required public string LastName { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title { get; set; } = string.Empty;
+    required public string Title { get; set; }
+
+    [JsonPropertyName("backgroundColor")]
+    public string? BackgroundColor { get; set; }
 
     [JsonPropertyName("contactId")]
     [BsonRepresentation(BsonType.ObjectId)]
     public string? ContactId { get; set; }
+
+    [JsonPropertyName("foreColor")]
+    public string? ForeColor { get; set; }
 
     [JsonPropertyName("type")]
     public string? Type { get; set; }
 
     [JsonPropertyName("typeId")]
     public string? TypeId { get; set; }
-    
-    [JsonPropertyName("foreColor")]
-    public string? ForeColor { get; set; }
 
-    [JsonPropertyName("backgroundColor")]
-    public string? BackgroundColor { get; set; }
-
-    [JsonPropertyName("documents")]
-    public List<BinaryDocument> Documents { get; set; } = new();
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    [JsonPropertyName("id")]
+    required public string Id { get; set; }
 }
 
 public enum AppointmentState

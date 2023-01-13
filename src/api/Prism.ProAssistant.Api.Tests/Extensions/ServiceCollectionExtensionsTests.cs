@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -15,77 +14,76 @@ using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 using Xunit;
 
-namespace Prism.ProAssistant.Api.Tests.Extensions
+namespace Prism.ProAssistant.Api.Tests.Extensions;
+
+public class ServiceCollectionExtensionsTests
 {
-    public class ServiceCollectionExtensionsTests
+
+    [Fact]
+    public void AddBearer()
     {
+        // Arrange
+        var services = new ServiceCollection();
 
-        [Fact]
-        public void AddBearer()
-        {
-            // Arrange
-            var services = new ServiceCollection();
+        // Act
+        services.AddBearer();
 
-            // Act
-            services.AddBearer();
+        // Assert
+        services.Should().Contain(x => x.ServiceType == typeof(JwtBearerHandler));
+    }
 
-            // Assert
-            services.Should().Contain(x => x.ServiceType == typeof(JwtBearerHandler));
-        }
+    [Fact]
+    public void AddBusinessServices()
+    {
+        // Arrange
+        var services = new ServiceCollection();
 
-        [Fact]
-        public void AddBusinessServices()
-        {
-            // Arrange
-            var services = new ServiceCollection();
+        // Act
+        services.AddBusinessServices();
 
-            // Act
-            services.AddBusinessServices();
+        // Assert
+        services.Should().Contain(x => x.ServiceType == typeof(IUserContextAccessor));
+    }
 
-            // Assert
-            services.Should().Contain(x => x.ServiceType == typeof(IUserContextAccessor));
-        }
+    [Fact]
+    public void AddCache()
+    {
+        // Arrange
+        Environment.SetEnvironmentVariable("REDIS_CONNECTION_STRING", "localhost:6379");
+        Environment.SetEnvironmentVariable("ENVIRONMENT", "UNIT TESTS");
+        var services = new ServiceCollection();
 
-        [Fact]
-        public void AddCache()
-        {
-            // Arrange
-            Environment.SetEnvironmentVariable("REDIS_CONNECTION_STRING", "localhost:6379");
-            Environment.SetEnvironmentVariable("ENVIRONMENT", "UNIT TESTS");
-            var services = new ServiceCollection();
+        // Act
+        services.AddCache();
 
-            // Act
-            services.AddCache();
+        // Assert
+        services.Should().Contain(x => x.ServiceType == typeof(IDistributedCache));
+    }
 
-            // Assert
-            services.Should().Contain(x => x.ServiceType == typeof(IDistributedCache));
-        }
+    [Fact]
+    public void AddDatabase()
+    {
+        // Arrange
+        Environment.SetEnvironmentVariable("MONGODB_CONNECTION_STRING", "mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin");
+        var services = new ServiceCollection();
 
-        [Fact]
-        public void AddDatabase()
-        {
-            // Arrange
-            Environment.SetEnvironmentVariable("MONGODB_CONNECTION_STRING", "mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin");
-            var services = new ServiceCollection();
+        // Act
+        services.AddDatabase();
 
-            // Act
-            services.AddDatabase();
+        // Assert
+        services.Should().Contain(x => x.ServiceType == typeof(IOrganizationContext));
+    }
 
-            // Assert
-            services.Should().Contain(x => x.ServiceType == typeof(IOrganizationContext));
-        }
+    [Fact]
+    public void AddQueriesCommands()
+    {
+        // Arrange
+        var services = new ServiceCollection();
 
-        [Fact]
-        public void AddQueriesCommands()
-        {
-            // Arrange
-            var services = new ServiceCollection();
+        // Act
+        services.AddQueriesCommands();
 
-            // Act
-            services.AddQueriesCommands();
-
-            // Assert
-            services.Should().Contain(x => x.ServiceType == typeof(IMediator));
-        }
+        // Assert
+        services.Should().Contain(x => x.ServiceType == typeof(IMediator));
     }
 }

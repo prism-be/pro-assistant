@@ -3,7 +3,7 @@ import {UseFormSetValue} from "react-hook-form/dist/types/form";
 import styles from "../../styles/components/forms/input.color.module.scss";
 import {useEffect, useState} from "react";
 import useTranslation from "next-translate/useTranslation";
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import {PencilSquareIcon} from '@heroicons/react/24/outline';
 
 interface Props {
     label: string;
@@ -21,7 +21,7 @@ const InputColor = ({label, name, error, className, setValue, onChange, initialC
     const [color, setColor] = useState<string>(initialColor ?? "#000000");
     const [displayPicker, setDisplayPicker] = useState<boolean>(false);
     let foreColor = "#FFFFFF";
-    
+
     useEffect(() => {
         setColor(initialColor ?? "#000000");
     }, [initialColor]);
@@ -76,7 +76,7 @@ const InputColor = ({label, name, error, className, setValue, onChange, initialC
             <div className={styles.refresh} onClick={() => setDisplayPicker(!displayPicker)}>
                 <PencilSquareIcon/>
             </div>
-            <div  className={styles.colorName} onClick={() => setCustomColor()}>
+            <div className={styles.colorName} onClick={() => setCustomColor()}>
                 {color}
             </div>
         </div>

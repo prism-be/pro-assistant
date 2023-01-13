@@ -19,8 +19,8 @@ public record DownloadDocumentResponse(string FileName, byte[] FileContent);
 
 public class DownloadDocumentHandler : IRequestHandler<DownloadDocument, DownloadDocumentResponse?>
 {
-    private readonly IOrganizationContext _organizationContext;
     private readonly ILogger<DownloadDocumentHandler> _logger;
+    private readonly IOrganizationContext _organizationContext;
 
     public DownloadDocumentHandler(IOrganizationContext organizationContext, ILogger<DownloadDocumentHandler> logger)
     {
@@ -31,7 +31,8 @@ public class DownloadDocumentHandler : IRequestHandler<DownloadDocument, Downloa
     public async Task<DownloadDocumentResponse?> Handle(DownloadDocument request, CancellationToken cancellationToken)
     {
         var bucket = _organizationContext.GetGridFsBucket();
-        var file = await bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq("_id", ObjectId.Parse(request.DocumentId)), cancellationToken: cancellationToken).Result.FirstOrDefaultAsync(cancellationToken);
+        var file = await bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq("_id", ObjectId.Parse(request.DocumentId)), cancellationToken: cancellationToken).Result
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (file == null)
         {
@@ -40,7 +41,7 @@ public class DownloadDocumentHandler : IRequestHandler<DownloadDocument, Downloa
         }
 
         var bytes = await bucket.DownloadAsBytesByNameAsync(file.Filename, cancellationToken: cancellationToken);
-        
+
         _logger.LogInformation("Start downloading file with id {itemId}", request.DocumentId);
 
         return new DownloadDocumentResponse(file.Filename, bytes);

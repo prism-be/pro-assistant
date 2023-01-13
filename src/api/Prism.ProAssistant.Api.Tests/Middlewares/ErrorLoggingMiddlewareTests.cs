@@ -4,8 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;

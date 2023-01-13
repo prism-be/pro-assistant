@@ -23,13 +23,13 @@ jobs:
 
       - name: Extract Version
         uses: damienaicheh/extract-version-from-tag-action@v1.0.0
-      
+
       - name: Cache Modules
         uses: actions/cache@v2
         with:
           path: './src/web/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('./src/web/yarn.lock') }}
-      
+
       - name: Install Packages
         working-directory: ./src/web
         run: yarn install --frozen-lockfile
@@ -37,10 +37,10 @@ jobs:
       - name: Build Project
         working-directory: ./src/web
         run: yarn build
-        
-#      - name: Run Unit Tests
-#        working-directory: ./src/web
-#        run: yarn jest
+      
+      #      - name: Run Unit Tests
+      #        working-directory: ./src/web
+      #        run: yarn jest
 
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master

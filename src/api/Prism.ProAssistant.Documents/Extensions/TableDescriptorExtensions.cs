@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Drawing;
 using Prism.ProAssistant.Business.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;

@@ -10,7 +10,7 @@ using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Business.Queries;
 
-public record FindOne<T>(string Id): IRequest<T?>;
+public record FindOne<T>(string Id) : IRequest<T?>;
 
 public class FindOneHandler<T> : IRequestHandler<FindOne<T>, T?>
 {

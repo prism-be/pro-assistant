@@ -25,9 +25,9 @@ const InputSelect = ({label, name, required, register, error, className, options
         <label className={styles.label}>{label} {required && " *"} </label>
         <select
             className={error ? styles.errorInput : styles.input}
-            {...register(name, {required, onChange: (e) => {
-                    if (onChange)
-                    {
+            {...register(name, {
+                required, onChange: (e) => {
+                    if (onChange) {
                         onChange(e.target.value);
                     }
                 }

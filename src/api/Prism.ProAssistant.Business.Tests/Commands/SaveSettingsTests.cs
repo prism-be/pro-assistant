@@ -32,7 +32,8 @@ public class SaveSettingsTests
 
         collection.SetupCollection(new Setting
         {
-            Id = existingId
+            Id = existingId,
+            Value = Identifier.GenerateString()
         });
 
         var request = new SaveSettings(new List<Setting>
