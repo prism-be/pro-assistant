@@ -56,6 +56,8 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
         base.Dispose();
     }
 
+    public abstract Task ProcessMessageAsync(IMediator mediator, T payload);
+
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
         _logger.LogInformation("Start listening on queue {queue}", Queue);
@@ -99,6 +101,4 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
         return Task.CompletedTask;
     }
-
-    public abstract Task ProcessMessageAsync(IMediator mediator, T payload);
 }

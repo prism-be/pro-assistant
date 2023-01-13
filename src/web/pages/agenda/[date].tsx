@@ -45,7 +45,7 @@ const Agenda: NextPage = () => {
         if (m < 30) {
             return styles["hour" + h];
         }
-        
+
         return styles["hourEnd" + h];
     }
 
@@ -62,12 +62,12 @@ const Agenda: NextPage = () => {
         const startDate = add(new Date(day.getFullYear(), day.getMonth(), day.getDate()), {hours: h, minutes: m});
         router.push("/appointments/new?startDate=" + encodeURIComponent(formatISO(startDate)));
     }
-    
+
     function previousDay() {
         changeDay(-1);
     }
-    
-    function nextDay() { 
+
+    function nextDay() {
         changeDay(1);
     }
 

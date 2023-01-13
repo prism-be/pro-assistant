@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "Document.cs" company = "Prism">
+//  <copyright file = "DocumentConfiguration.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -26,5 +26,5 @@ public class DocumentConfiguration : IDataModel
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     [JsonPropertyName("id")]
-    public string Id { get; set; } = string.Empty;
+    required public string Id { get; set; }
 }

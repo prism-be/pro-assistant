@@ -23,7 +23,13 @@ public class UpsertOneTests
     {
         // Arrange
         var id = Identifier.GenerateString();
-        var appointment = new Appointment();
+        var appointment = new Appointment
+        {
+            Id = string.Empty,
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
+        };
 
         var logger = new Mock<ILogger<UpsertOneHandler<Appointment>>>();
         var organizationContext = new Mock<IOrganizationContext>();
@@ -52,7 +58,10 @@ public class UpsertOneTests
         var id = Identifier.GenerateString();
         var appointment = new Appointment
         {
-            Id = id
+            Id = id,
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
         };
 
         var logger = new Mock<ILogger<UpsertOneHandler<Appointment>>>();

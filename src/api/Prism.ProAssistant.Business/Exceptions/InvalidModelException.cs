@@ -1,6 +1,6 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file="InvalidModelException.cs" company="Prism">
-//  Copyright (c) Prism. All rights reserved.
+//  <copyright file = "InvalidModelException.cs" company = "Prism">
+//  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 

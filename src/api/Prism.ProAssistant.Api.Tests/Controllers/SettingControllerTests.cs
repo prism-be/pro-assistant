@@ -36,7 +36,8 @@ public class SettingControllerTests
         {
             new()
             {
-                Id = Identifier.GenerateString()
+                Id = Identifier.GenerateString(),
+                Value = Identifier.GenerateString()
             }
         });
 

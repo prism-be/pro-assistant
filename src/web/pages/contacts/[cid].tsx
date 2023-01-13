@@ -18,7 +18,7 @@ import {getData, postData} from "../../lib/ajaxHelper";
 import {Contact, UpsertResult} from "../../lib/contracts";
 import Section from "../../components/design/Section";
 import {ContactAppointments} from "../../components/contacts/ContactAppointments";
-import { ArrowSmallLeftIcon } from '@heroicons/react/24/outline';
+import {ArrowSmallLeftIcon} from '@heroicons/react/24/outline';
 
 const Contacts: NextPage = () => {
     const {t} = useTranslation('common');
@@ -96,7 +96,7 @@ const Contacts: NextPage = () => {
                 <div className={grid.extraSmall}>
                     <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                 </div>
-                <div className={grid.large  + " " + grid.first}>
+                <div className={grid.large + " " + grid.first}>
                     <InputText name="email" label={t("fields.email")} type="text" required={false} register={register} setValue={setValue} error={errors.email}/>
                 </div>
                 <div className={grid.large}>
@@ -108,7 +108,7 @@ const Contacts: NextPage = () => {
                 <div className={grid.extraSmall}>
                     <InputText name="number" label={t("fields.number")} type="text" required={false} register={register} setValue={setValue} error={errors.number}/>
                 </div>
-                <div className={grid.small  + " " + grid.first}>
+                <div className={grid.small + " " + grid.first}>
                     <InputText name="zipCode" label={t("fields.zipCode")} type="text" required={false} register={register} setValue={setValue} error={errors.zipCode}/>
                 </div>
                 <div className={grid.small}>

@@ -32,7 +32,10 @@ public class GenerateDocumentTests
         var appointment = new Appointment
         {
             Id = id,
-            ContactId = Identifier.GenerateString()
+            ContactId = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
         };
 
         var mediator = new Mock<IMediator>();
@@ -61,7 +64,11 @@ public class GenerateDocumentTests
 
         var appointment = new Appointment
         {
-            Id = id
+            Id = id,
+            ContactId = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
         };
 
         var mediator = new Mock<IMediator>();
@@ -91,7 +98,10 @@ public class GenerateDocumentTests
         var appointment = new Appointment
         {
             Id = id,
-            ContactId = Identifier.GenerateString()
+            ContactId = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
         };
 
         var mediator = new Mock<IMediator>();
@@ -145,7 +155,10 @@ public class GenerateDocumentTests
         var appointment = new Appointment
         {
             Id = id,
-            ContactId = Identifier.GenerateString()
+            ContactId = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
         };
 
         var mediator = new Mock<IMediator>();
@@ -177,7 +190,10 @@ public class GenerateDocumentTests
         organizationContext.SetupCollection(new Appointment
         {
             Id = id,
-            Documents = new List<BinaryDocument>()
+            Documents = new List<BinaryDocument>(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
         });
         var bucket = organizationContext.SetupBucket();
 

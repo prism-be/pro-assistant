@@ -1,7 +1,6 @@
 ﻿@import "../../vars";
 
-.container
-{
+.container {
   display: block;
   padding: 2rem;
   margin: auto;
@@ -15,6 +14,7 @@
   width: 80px;
   height: 80px;
 }
+
 .loader div {
   position: absolute;
   width: 16px;
@@ -23,51 +23,61 @@
   background: $primaryColor;
   animation: loader 1.2s linear infinite;
 }
+
 .loader div:nth-child(1) {
   top: 8px;
   left: 8px;
   animation-delay: 0s;
 }
+
 .loader div:nth-child(2) {
   top: 8px;
   left: 32px;
   animation-delay: -0.4s;
 }
+
 .loader div:nth-child(3) {
   top: 8px;
   left: 56px;
   animation-delay: -0.8s;
 }
+
 .loader div:nth-child(4) {
   top: 32px;
   left: 8px;
   animation-delay: -0.4s;
 }
+
 .loader div:nth-child(5) {
   top: 32px;
   left: 32px;
   animation-delay: -0.8s;
 }
+
 .loader div:nth-child(6) {
   top: 32px;
   left: 56px;
   animation-delay: -1.2s;
 }
+
 .loader div:nth-child(7) {
   top: 56px;
   left: 8px;
   animation-delay: -0.8s;
 }
+
 .loader div:nth-child(8) {
   top: 56px;
   left: 32px;
   animation-delay: -1.2s;
 }
+
 .loader div:nth-child(9) {
   top: 56px;
   left: 56px;
   animation-delay: -1.6s;
 }
+
 @keyframes loader {
   0%, 100% {
     opacity: 1;

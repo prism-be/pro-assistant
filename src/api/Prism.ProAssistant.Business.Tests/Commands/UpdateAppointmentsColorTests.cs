@@ -27,10 +27,10 @@ public class UpdateAppointmentsColorTests
 
         var tariffCollection = new Mock<IMongoCollection<Tariff>>();
         tariffCollection.SetupCollectionFindEmpty();
-        
+
         organizationContext.Setup(x => x.GetCollection<Tariff>())
             .Returns(tariffCollection.Object);
-        
+
         // Act
         var handler = new UpdateAppointmentsColorHandler(logger.Object, organizationContext.Object);
         await handler.Handle(request, CancellationToken.None);
@@ -38,7 +38,7 @@ public class UpdateAppointmentsColorTests
         // Assert
         logger.VerifyLog(LogLevel.Warning, Times.Once());
     }
-    
+
     [Fact]
     public async Task Handle_Ok()
     {
@@ -48,17 +48,27 @@ public class UpdateAppointmentsColorTests
         var request = new UpdateAppointmentsColor(Identifier.GenerateString(), Identifier.GenerateString());
 
         var tariffCollection = new Mock<IMongoCollection<Tariff>>();
-        tariffCollection.SetupCollection(new Tariff() { Id = Identifier.GenerateString() });
-        
+        tariffCollection.SetupCollection(new Tariff
+        {
+            Id = Identifier.GenerateString(),
+            Name = Identifier.GenerateString()
+        });
+
         organizationContext.Setup(x => x.GetCollection<Tariff>())
             .Returns(tariffCollection.Object);
-        
+
         var appointmentCollection = new Mock<IMongoCollection<Appointment>>();
-        appointmentCollection.SetupCollection(new Appointment() { Id = Identifier.GenerateString() });
-        
+        appointmentCollection.SetupCollection(new Appointment
+        {
+            Id = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
+        });
+
         organizationContext.Setup(x => x.GetCollection<Appointment>())
             .Returns(appointmentCollection.Object);
-        
+
         // Act
         var handler = new UpdateAppointmentsColorHandler(logger.Object, organizationContext.Object);
         await handler.Handle(request, CancellationToken.None);

@@ -109,6 +109,32 @@ public class UserContextAccessorTests
     }
 
     [Fact]
+    public void OrganizationId_Empty()
+    {
+        // Arrange
+        var name = Identifier.GenerateString();
+
+        var httpContextAccessor = new Mock<IHttpContextAccessor>();
+        var context = new DefaultHttpContext
+        {
+            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                {
+                    new(ClaimTypes.NameIdentifier, Identifier.GenerateString()),
+                    new Claim("name", name)
+                }, "TestAuthType")
+            )
+        };
+        httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
+
+        // Act
+        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object);
+
+        // Assert
+        userContextAccessor.IsAuthenticated.Should().BeTrue();
+        Assert.Throws<AuthenticationException>(() => userContextAccessor.OrganizationId.Should().BeEmpty());
+    }
+
+    [Fact]
     public void OrganizationId_Ok()
     {
         // Arrange
@@ -137,31 +163,5 @@ public class UserContextAccessorTests
         userContextAccessor.UserId.Should().Be(id);
         userContextAccessor.Name.Should().Be(name);
         userContextAccessor.OrganizationId.Should().Be(organizationId);
-    }
-    
-    [Fact]
-    public void OrganizationId_Empty()
-    {
-        // Arrange
-        var name = Identifier.GenerateString();
-
-        var httpContextAccessor = new Mock<IHttpContextAccessor>();
-        var context = new DefaultHttpContext
-        {
-            User = new ClaimsPrincipal(new ClaimsIdentity(new[]
-                {
-                    new(ClaimTypes.NameIdentifier, Identifier.GenerateString()),
-                    new Claim("name", name)
-                }, "TestAuthType")
-            )
-        };
-        httpContextAccessor.Setup(x => x.HttpContext).Returns(context);
-
-        // Act
-        var userContextAccessor = new UserContextAccessor(httpContextAccessor.Object);
-
-        // Assert
-        userContextAccessor.IsAuthenticated.Should().BeTrue();
-        Assert.Throws<AuthenticationException>(() => userContextAccessor.OrganizationId.Should().BeEmpty());
     }
 }

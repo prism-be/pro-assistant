@@ -7,8 +7,7 @@
   box-shadow: 0 0 7px 0 #00000021;
 }
 
-.logo
-{
+.logo {
   display: flex;
 
   div {
@@ -17,19 +16,16 @@
   }
 }
 
-.upload
-{
+.upload {
   display: flex;
-  width:150px;
+  width: 150px;
 
-  @media (min-width: $breakpointSM)
-  {
-    width:300px;
+  @media (min-width: $breakpointSM) {
+    width: 300px;
   }
 
-  @media (min-width: $breakpointLG)
-  {
-    width:400px;
+  @media (min-width: $breakpointLG) {
+    width: 400px;
   }
 
   > div {
@@ -37,14 +33,12 @@
   }
 }
 
-.menu
-{
+.menu {
   display: flex;
   flex-grow: 1;
 }
 
-.hello
-{
+.hello {
   display: flex;
 
   > div {

@@ -25,12 +25,12 @@ public class SearchAppointmentsHandler : IRequestHandler<SearchAppointments, Lis
     public async Task<List<Appointment>> Handle(SearchAppointments request, CancellationToken cancellationToken)
     {
         var filters = new List<FilterDefinition<Appointment>>();
-        
+
         if (request.StartDate != DateTime.MinValue)
         {
             filters.Add(Builders<Appointment>.Filter.Gte(x => x.StartDate, request.StartDate));
         }
-        
+
         if (request.EndDate != DateTime.MinValue)
         {
             filters.Add(Builders<Appointment>.Filter.Lte(x => x.StartDate, request.EndDate));

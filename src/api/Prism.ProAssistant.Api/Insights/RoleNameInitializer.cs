@@ -10,7 +10,7 @@ using Prism.ProAssistant.Business;
 
 namespace Prism.ProAssistant.Api.Insights;
 
-public class RoleNameInitializer: ITelemetryInitializer
+public class RoleNameInitializer : ITelemetryInitializer
 {
 
     public void Initialize(ITelemetry telemetry)

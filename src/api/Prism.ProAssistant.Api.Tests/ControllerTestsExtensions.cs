@@ -4,7 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,10 +1,9 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "DocumentsControllerTests.cs" company = "Prism">
+//  <copyright file = "DocumentsConfigurationControllerTests.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using System.Threading.Tasks;
 using Prism.ProAssistant.Api.Controllers;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
@@ -30,7 +29,7 @@ public class DocumentsConfigurationControllerTests
     [Fact]
     public async Task RemoveOne()
     {
-        await CrudTests.RemoveOne<DocumentsConfigurationController, DocumentConfiguration>(c => c.RemoveOne(Identifier.GenerateString()));
+        await CrudTests.RemoveOne<DocumentsConfigurationController>(c => c.RemoveOne(Identifier.GenerateString()));
     }
 
     [Fact]

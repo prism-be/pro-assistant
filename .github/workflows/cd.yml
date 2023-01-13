@@ -29,7 +29,7 @@ jobs:
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
   
   deploy:
-    needs: [api, web]
+    needs: [ api, web ]
     runs-on: ubuntu-latest
     steps:
       - run: |

@@ -10,7 +10,7 @@ services:
     environment:
       - MONGO_INITDB_ROOT_USERNAME=proassistant
       - MONGO_INITDB_ROOT_PASSWORD=Toto123Toto123
-        
+  
   service-api:
     image: "simonbaudart/pro-assistant:api-latest"
     restart: unless-stopped

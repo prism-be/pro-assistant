@@ -19,7 +19,7 @@ import {Setting, Tariff} from "../lib/contracts";
 import {postData, putData} from "../lib/ajaxHelper";
 import Section from "../components/design/Section";
 import InputColor from "../components/forms/InputColor";
-import { PencilSquareIcon } from '@heroicons/react/24/outline';
+import {PencilSquareIcon} from '@heroicons/react/24/outline';
 
 const Tariffs = () => {
     const {t} = useTranslation("configuration");
@@ -100,7 +100,7 @@ const Tariffs = () => {
                         <div className={table.table1}>
                             {tariff.price.toFixed(2)} &euro;
                         </div>
-                        
+
                     </div>)}
 
             </div>
@@ -130,15 +130,15 @@ const Documents = () => {
             setSignature(findSetting("document-header-signature")?.value);
         }
     }, [settings, setValue]);
-    
+
     function findSetting(id: string) {
         return settings?.find(s => s.id === id);
     }
 
     const saveDocumentHeaders = async () => {
         const data = getValues();
-        
-        let settings : Setting[] = [];
+
+        let settings: Setting[] = [];
         settings.push({id: "document-header-name", value: data.name});
         settings.push({id: "document-header-address", value: data.address});
         settings.push({id: "document-header-logo", value: data.logo});
@@ -148,7 +148,7 @@ const Documents = () => {
         settings.push({id: "document-header-accentuate-color", value: data.accentuateColor});
         settings.push({id: "document-header-logo", value: data.logo});
         settings.push({id: "document-header-signature", value: data.signature});
-        
+
         await putData("/settings", settings);
         alertSuccess(t("documents.header.saveSuccess"));
         await mutateSettings();
@@ -167,7 +167,7 @@ const Documents = () => {
                 <InputImage className={grid.large} label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
                 <InputText className={grid.large} label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
                 <InputText className={grid.large} label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
-                <InputColor className={grid.large} label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue} initialColor={accentuateColor} />
+                <InputColor className={grid.large} label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue} initialColor={accentuateColor}/>
             </div>
         </>
     </Section>

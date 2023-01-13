@@ -1,4 +1,10 @@
-﻿using FluentValidation;
+﻿// -----------------------------------------------------------------------
+//  <copyright file = "ValidationBehaviorTests.cs" company = "Prism">
+//  Copyright (c) Prism.All rights reserved.
+//  </copyright>
+// -----------------------------------------------------------------------
+
+using FluentValidation;
 using MediatR;
 using Moq;
 using Prism.Picshare.Tests;
@@ -23,7 +29,8 @@ public class ValidationBehaviorTests
 
         // Act and Assert
         var loginRequest = new DummyRequest(string.Empty, Guid.NewGuid().ToString(), Guid.NewGuid().ToString());
-        var exception = await Assert.ThrowsAsync<InvalidModelException>(async () => await validationBehavior.Handle(loginRequest, Mock.Of<RequestHandlerDelegate<DummyResponse>>(), CancellationToken.None));
+        var exception = await Assert.ThrowsAsync<InvalidModelException>(async () =>
+            await validationBehavior.Handle(loginRequest, Mock.Of<RequestHandlerDelegate<DummyResponse>>(), CancellationToken.None));
 
         // Assert
         Assert.NotNull(exception);

@@ -16,13 +16,13 @@ public class BinaryDocument
     public DateTime Date { get; set; }
 
     [JsonPropertyName("fileName")]
-    public string FileName { get; set; } = string.Empty;
+    required public string FileName { get; set; }
 
     [JsonPropertyName("id")]
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = string.Empty;
+    required public string Id { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title { get; set; } = string.Empty;
+    required public string Title { get; set; }
 }

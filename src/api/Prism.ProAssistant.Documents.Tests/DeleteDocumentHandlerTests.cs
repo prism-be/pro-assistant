@@ -31,11 +31,14 @@ public class DeleteDocumentHandlerTests
         organization.SetupCollection(new Appointment
         {
             Id = appointmentId,
-            Documents = new List<BinaryDocument>()
+            Documents = new List<BinaryDocument>(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
         });
 
         var logger = new Mock<ILogger<DeleteDocumentHandler>>();
-        
+
         var userContextAccessor = new Mock<IUserContextAccessor>();
 
         // Act
@@ -60,17 +63,22 @@ public class DeleteDocumentHandlerTests
         organization.SetupCollection(new Appointment
         {
             Id = appointmentId,
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString(),
             Documents = new List<BinaryDocument>
             {
                 new()
                 {
-                    Id = id
+                    Id = id,
+                    FileName = Identifier.GenerateString(),
+                    Title = Identifier.GenerateString()
                 }
             }
         });
 
         var logger = new Mock<ILogger<DeleteDocumentHandler>>();
-        
+
         var userContextAccessor = new Mock<IUserContextAccessor>();
 
         // Act

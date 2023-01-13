@@ -18,7 +18,7 @@ namespace Prism.ProAssistant.Api.Tests.Controllers;
 public static class CrudTests
 {
     public static async Task FindMany<TController, TModel>(Func<TController, Task<ActionResult<List<TModel>>>> action)
-        where TModel : IDataModel, new()
+        where TModel : IDataModel
     {
         // Arrange
         var mediator = new Mock<IMediator>();
@@ -35,12 +35,12 @@ public static class CrudTests
     }
 
     public static async Task FindOne<TController, TModel>(Func<TController, Task<ActionResult<TModel>>> action)
-        where TModel : IDataModel, new()
+        where TModel : IDataModel
     {
         // Arrange
         var mediator = new Mock<IMediator>();
         mediator.Setup(x => x.Send(It.IsAny<FindOne<TModel>>(), CancellationToken.None))
-            .ReturnsAsync(new TModel());
+            .ReturnsAsync(Activator.CreateInstance<TModel>());
 
         // Act
         var controller = (TController)Activator.CreateInstance(typeof(TController), mediator.Object)!;
@@ -51,8 +51,7 @@ public static class CrudTests
         mediator.Verify(x => x.Send(It.IsAny<FindOne<TModel>>(), CancellationToken.None), Times.Once);
     }
 
-    public static async Task RemoveOne<TController, TModel>(Func<TController, Task> action)
-        where TModel : IDataModel, new()
+    public static async Task RemoveOne<TController>(Func<TController, Task> action)
     {
         // Arrange
         var mediator = new Mock<IMediator>();
@@ -87,7 +86,7 @@ public static class CrudTests
     }
 
     public static async Task UpsertOne<TController, TModel>(Func<TController, Task<ActionResult<UpsertResult>>> action, Action<Mock<IMediator>>? setup = null)
-        where TModel : IDataModel, new()
+        where TModel : IDataModel
     {
         // Arrange
         var mediator = new Mock<IMediator>();

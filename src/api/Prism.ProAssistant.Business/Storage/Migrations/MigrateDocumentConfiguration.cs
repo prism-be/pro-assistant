@@ -12,9 +12,9 @@ namespace Prism.ProAssistant.Business.Storage.Migrations;
 
 public class MigrateDocumentConfiguration : IMigrateDocumentConfiguration
 {
-    private readonly IOrganizationContext _organizationContext;
     private readonly ILogger<MigrateDocumentConfiguration> _logger;
-    
+    private readonly IOrganizationContext _organizationContext;
+
     public MigrateDocumentConfiguration(IOrganizationContext organizationContext, ILogger<MigrateDocumentConfiguration> logger)
     {
         _organizationContext = organizationContext;

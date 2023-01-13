@@ -13,7 +13,7 @@
 
 .large {
   grid-column: auto / span 12;
-  
+
   @media (min-width: $breakpointMD) {
     grid-column: auto / span 6;
   }
@@ -23,12 +23,11 @@
 
 .medium {
   grid-column: auto / span 12;
-  
+
   @media (min-width: $breakpointMD) {
     grid-column: auto / span 6;
 
-    &.last
-    {
+    &.last {
       grid-column-start: 7;
     }
   }
@@ -36,8 +35,7 @@
   @media (min-width: $breakpointLG) {
     grid-column: auto / span 4;
 
-    &.last
-    {
+    &.last {
       grid-column-start: 9;
     }
   }
@@ -51,17 +49,15 @@
   @media (min-width: $breakpointSM) {
     grid-column: auto / span 6;
 
-    &.last
-    {
+    &.last {
       grid-column-start: 7;
     }
   }
 
   @media (min-width: $breakpointLG) {
     grid-column: auto / span 3;
-    
-    &.last
-    {
+
+    &.last {
       grid-column-start: 10;
     }
   }
@@ -71,7 +67,7 @@
 
 .extraSmall {
   grid-column: auto / span 6;
-  
+
   @media (min-width: $breakpointMD) {
     grid-column: auto / span 4;
   }
@@ -79,21 +75,20 @@
   @media (min-width: $breakpointLG) {
     grid-column: auto / span 2;
   }
-  
+
   grid-row: auto;
 }
 
 .dot {
   grid-column: auto / span 2;
-  
+
   @media (min-width: $breakpointMD) {
     grid-column: auto / span 1;
   }
-  
+
   grid-row: auto;
 }
 
-.first
-{
+.first {
   grid-column-start: 1;
 }

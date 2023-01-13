@@ -11,6 +11,7 @@ using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
+using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
@@ -24,9 +25,17 @@ public class AppointmentController : Controller
         _mediator = mediator;
     }
 
+    [Route("api/appointment/{appointmentId}")]
+    [HttpGet]
+    public async Task<ActionResult<Appointment>> FindOne(string appointmentId)
+    {
+        var result = await _mediator.Send(new FindOne<Appointment>(appointmentId));
+        return result.ToActionResult();
+    }
+
     [Route("api/appointments")]
     [HttpPost]
-    public async Task<ActionResult<List<Appointment>>> Search([FromBody]SearchAppointments search)
+    public async Task<ActionResult<List<Appointment>>> Search([FromBody] SearchAppointments search)
     {
         var result = await _mediator.Send(search);
         return result
@@ -35,14 +44,6 @@ public class AppointmentController : Controller
             .ToActionResult();
     }
 
-    [Route("api/appointment/{appointmentId}")]
-    [HttpGet]
-    public async Task<ActionResult<Appointment>> FindOne(string appointmentId)
-    {
-        var result = await _mediator.Send(new FindOne<Appointment>(appointmentId));
-        return result.ToActionResult();
-    }
-    
     [Route("api/appointment")]
     [HttpPost]
     public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] Appointment appointment)
@@ -51,6 +52,7 @@ public class AppointmentController : Controller
         {
             var contact = new Contact
             {
+                Id = Identifier.GenerateString(),
                 LastName = appointment.LastName,
                 FirstName = appointment.FirstName
             };

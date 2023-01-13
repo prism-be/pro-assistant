@@ -24,9 +24,9 @@ public class CheckDatabase : IHealthCheck
         var database = _client.GetDatabase("mydb");
         var command = new BsonDocument("ping", 1);
         var result = database.RunCommand<BsonDocument>(command);
-        
-        return Task.FromResult(result["ok"] == 1.0 
-            ? HealthCheckResult.Healthy("MongoDB is online and available.") 
+
+        return Task.FromResult(result["ok"] == 1.0
+            ? HealthCheckResult.Healthy("MongoDB is online and available.")
             : HealthCheckResult.Unhealthy("MongoDB is offline or unavailable."));
     }
 }

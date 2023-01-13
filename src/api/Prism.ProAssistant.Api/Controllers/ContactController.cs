@@ -46,7 +46,7 @@ public class ContactController : Controller
 
     [Route("api/contacts")]
     [HttpPost]
-    public async Task<ActionResult<List<Contact>>> Search([FromBody]SearchContacts search)
+    public async Task<ActionResult<List<Contact>>> Search([FromBody] SearchContacts search)
     {
         var result = await _mediator.Send(search);
         return result

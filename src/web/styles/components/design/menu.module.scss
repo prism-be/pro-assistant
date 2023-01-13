@@ -1,7 +1,6 @@
 ﻿@import "../../vars";
 
-.container
-{
+.container {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -15,26 +14,22 @@
   }
 }
 
-.mobile
-{
+.mobile {
   display: block;
 }
 
-.item a
-{
+.item a {
   display: block;
   line-height: 2.5rem;
   padding-left: 1rem;
-  
-  &:hover
-  {
+
+  &:hover {
     text-decoration: none;
     background-color: $greyLight;
   }
 }
 
-.title
-{
+.title {
   margin-top: 1rem;
   font-weight: bold;
   display: block;
@@ -43,8 +38,7 @@
   color: $primaryColorDark;
 }
 
-.active
-{
+.active {
   border-right: 0.25rem $primaryColor solid;
   background-color: $greyLight;
 }

@@ -1,5 +1,5 @@
-﻿import { Subject } from 'rxjs';
-import { filter } from 'rxjs/operators';
+﻿import {Subject} from 'rxjs';
+import {filter} from 'rxjs/operators';
 
 export const AlertType = {
     Success: 'Success',
@@ -8,8 +8,7 @@ export const AlertType = {
     Warning: 'Warning'
 };
 
-interface Alert
-{
+interface Alert {
     id?: string;
     autoClose?: boolean;
     type: 'Success' | 'Error' | 'Info' | 'Warning';
@@ -26,19 +25,19 @@ export const onAlert = (id = defaultId) => {
 
 // convenience methods
 export const alertSuccess = (message: string, options?: any) => {
-    alert({ ...options, type: AlertType.Success, message });
+    alert({...options, type: AlertType.Success, message});
 }
 
 export const alertError = (message: string, options: any) => {
-    alert({ ...options, type: AlertType.Error, message });
+    alert({...options, type: AlertType.Error, message});
 }
 
 export const alertInfo = (message: string, options: any) => {
-    alert({ ...options, type: AlertType.Info, message });
+    alert({...options, type: AlertType.Info, message});
 }
 
 export const alertWarn = (message: string, options: any) => {
-    alert({ ...options, type: AlertType.Warning, message });
+    alert({...options, type: AlertType.Warning, message});
 }
 
 // core alert method
@@ -50,5 +49,5 @@ export const alert = (alert: Alert) => {
 
 // clear alerts
 export const clear = (id = defaultId) => {
-    alertSubject.next({ id });
+    alertSubject.next({id});
 }

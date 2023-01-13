@@ -19,7 +19,7 @@ public static class MongoTestsExtensions
 
         organizationContext.Setup(x => x.GetGridFsBucket())
             .Returns(bucket.Object);
-        
+
         var items = new List<GridFSFileInfo>();
         items.AddRange(files);
         var cursor = new Mock<IAsyncCursor<GridFSFileInfo>>();
@@ -32,14 +32,14 @@ public static class MongoTestsExtensions
             .SetupSequence(_ => _.MoveNextAsync(It.IsAny<CancellationToken>()))
             .ReturnsAsync(true)
             .ReturnsAsync(false);
-        
+
         bucket.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<GridFSFileInfo>>(), null, It.IsAny<CancellationToken>()))
             .ReturnsAsync(cursor.Object);
-        
+
         return bucket;
     }
 
-    public static void SetupCollection<T>(this Mock<IOrganizationContext> organizationContext, params T[] samples) where T : new()
+    public static void SetupCollection<T>(this Mock<IOrganizationContext> organizationContext, params T[] samples)
     {
         var collection = CreateCollection(samples);
 
@@ -47,7 +47,7 @@ public static class MongoTestsExtensions
             .Returns(collection.Object);
     }
 
-    private static Mock<IMongoCollection<T>> CreateCollection<T>(IReadOnlyCollection<T> samples) where T : new()
+    private static Mock<IMongoCollection<T>> CreateCollection<T>(IReadOnlyCollection<T> samples)
     {
         var items = new List<T>();
         items.AddRange(samples);

@@ -1,24 +1,21 @@
 ﻿@import "../../vars";
 
-.button
-{
+.button {
   border: 1px $primaryColorDark solid;
   background-color: $primaryColor;
   width: 100%;
   color: white;
   padding: 0.5rem;
   cursor: pointer;
-  
+
   transition: background-color 500ms;
-  
-  &:hover
-  {
+
+  &:hover {
     background-color: $primaryColorDark;
   }
 }
 
-.buttonSecondary
-{
+.buttonSecondary {
   border: 1px $light solid;
   background-color: white;
   width: 100%;
@@ -28,8 +25,7 @@
 
   transition: background-color 500ms;
 
-  &:hover
-  {
+  &:hover {
     background-color: $greyLight;
     text-decoration: none;
   }

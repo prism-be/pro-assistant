@@ -6,4 +6,4 @@
 
 namespace Prism.ProAssistant.Business;
 
-public record EntryPoint();
+public record EntryPoint;

@@ -13,10 +13,6 @@ namespace Prism.ProAssistant.Business.Models;
 [BsonCollection("contacts")]
 public class Contact : IDataModel
 {
-    [JsonPropertyName("id")]
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
-    public string Id { get; set; } = string.Empty;
 
     [JsonPropertyName("birthDate")]
     public string? BirthDate { get; set; }
@@ -48,9 +44,14 @@ public class Contact : IDataModel
     [JsonPropertyName("street")]
     public string? Street { get; set; }
 
+    [JsonPropertyName("title")]
+    public string? Title { get; set; }
+
     [JsonPropertyName("zipCode")]
     public string? ZipCode { get; set; }
 
-    [JsonPropertyName("title")]
-    public string? Title { get; set; }
+    [JsonPropertyName("id")]
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    required public string Id { get; set; }
 }

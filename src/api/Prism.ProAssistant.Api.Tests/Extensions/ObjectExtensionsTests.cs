@@ -9,36 +9,36 @@ using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Extensions;
 using Xunit;
 
-namespace Prism.ProAssistant.Api.Tests.Extensions
+namespace Prism.ProAssistant.Api.Tests.Extensions;
+
+public class ObjectExtensionsTests
 {
-    public class ObjectExtensionsTests
+
+    [Fact]
+    public void ToActionResult_Null()
     {
-        [Fact]
-        public void ToActionResult_Ok()
-        {
-            // Arrange
-            var o = new object();
-            
-            // Act
-            var result = o.ToActionResult();
+        // Arrange
+        var o = (object)null!;
 
-            // Assert
-            result.Should().BeAssignableTo<ActionResult<object>>();
-            result.Result.Should().BeAssignableTo<OkObjectResult>();
-        }
-        
-        [Fact]
-        public void ToActionResult_Null()
-        {
-            // Arrange
-            var o = (object)null!;
-            
-            // Act
-            var result = o.ToActionResult();
+        // Act
+        var result = o.ToActionResult();
 
-            // Assert
-            result.Should().BeAssignableTo<ActionResult<object>>();
-            result.Result.Should().BeAssignableTo<NotFoundResult>();
-        }
+        // Assert
+        result.Should().BeAssignableTo<ActionResult<object>>();
+        result.Result.Should().BeAssignableTo<NotFoundResult>();
+    }
+
+    [Fact]
+    public void ToActionResult_Ok()
+    {
+        // Arrange
+        var o = new object();
+
+        // Act
+        var result = o.ToActionResult();
+
+        // Assert
+        result.Should().BeAssignableTo<ActionResult<object>>();
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
     }
 }

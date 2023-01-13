@@ -220,7 +220,7 @@ const Appointments: NextPage = () => {
             setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate(), newHour.getHours(), newHour.getMinutes()));
         }
     }
-    
+
     return <ContentContainer>
         <Section>
             <>

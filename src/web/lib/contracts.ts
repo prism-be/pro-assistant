@@ -6,8 +6,8 @@
 
 /* tslint:disable */
 /* eslint-disable */
-// ReSharper disable InconsistentNaming
 
+// ReSharper disable InconsistentNaming
 
 
 export interface Appointment {

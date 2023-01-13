@@ -1,7 +1,7 @@
 ﻿import componentStyles from "../../styles/pages/appointment.module.scss";
 import styles from "../../styles/styles.module.scss";
 
-import {DocumentConfiguration, Appointment} from "../../lib/contracts"
+import {Appointment, DocumentConfiguration} from "../../lib/contracts"
 import Section from "../design/Section";
 import {deleteDataWithBody, downloadDocument, generateDocument} from "../../lib/ajaxHelper";
 import useSWR, {mutate} from "swr";
@@ -9,7 +9,7 @@ import {useCallback, useState} from "react";
 import useTranslation from "next-translate/useTranslation";
 import {format, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
-import {TrashIcon, CheckIcon, ArrowDownTrayIcon} from '@heroicons/react/24/outline';
+import {ArrowDownTrayIcon, CheckIcon, TrashIcon} from '@heroicons/react/24/outline';
 
 interface Props {
     appointment: Appointment;

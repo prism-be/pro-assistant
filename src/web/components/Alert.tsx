@@ -3,7 +3,7 @@
 import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import {AlertType, clear, onAlert} from "../lib/events/alert";
-import { XCircleIcon } from '@heroicons/react/24/outline';
+import {XCircleIcon} from '@heroicons/react/24/outline';
 
 interface Props {
     id?: string;
@@ -20,12 +20,9 @@ export const Alert = ({id, fade}: Props) => {
 
         const subscription = onAlert(id)
             .subscribe(alert => {
-                if (!alert.message)
-                {
+                if (!alert.message) {
                     setAlerts([]);
-                }
-                else 
-                {
+                } else {
                     // add alert to array with unique id
                     alert.itemId = Math.random();
                     setAlerts(alerts => ([...alerts, alert]));
@@ -56,7 +53,7 @@ export const Alert = ({id, fade}: Props) => {
 
         if (fade) {
             // fade out alert
-            setAlerts(alerts => alerts.map(x => x.itemId === alert.itemId ? { ...x, fade: true } : x));
+            setAlerts(alerts => alerts.map(x => x.itemId === alert.itemId ? {...x, fade: true} : x));
 
             // remove alert after faded out
             setTimeout(() => {
@@ -75,7 +72,7 @@ export const Alert = ({id, fade}: Props) => {
 
         const alertTypeClass = {
             [AlertType.Success]: styles.toasterSuccess,
-            [AlertType.Error]:  styles.toasterError,
+            [AlertType.Error]: styles.toasterError,
             [AlertType.Info]: styles.toasterInfo,
             [AlertType.Warning]: styles.toasterWarning
         }
@@ -96,9 +93,9 @@ export const Alert = ({id, fade}: Props) => {
             {alerts.map((alert, index) =>
                 <div key={index} className={cssClasses(alert)}>
                     <a className="close" onClick={() => removeAlert(alert)}>
-                        <XCircleIcon />
+                        <XCircleIcon/>
                     </a>
-                    <span dangerouslySetInnerHTML={{ __html: alert.message }}></span>
+                    <span dangerouslySetInnerHTML={{__html: alert.message}}></span>
                 </div>
             )}
         </div>

@@ -54,22 +54,34 @@ public class AppointmentControllerTests
                 new()
                 {
                     Id = Identifier.GenerateString(),
-                    State = (int)AppointmentState.Created
+                    State = (int)AppointmentState.Created,
+                    FirstName = Identifier.GenerateString(),
+                    LastName = Identifier.GenerateString(),
+                    Title = Identifier.GenerateString()
                 },
                 new()
                 {
                     Id = Identifier.GenerateString(),
-                    State = (int)AppointmentState.Confirmed
+                    State = (int)AppointmentState.Confirmed,
+                    FirstName = Identifier.GenerateString(),
+                    LastName = Identifier.GenerateString(),
+                    Title = Identifier.GenerateString()
                 },
                 new()
                 {
                     Id = Identifier.GenerateString(),
-                    State = (int)AppointmentState.Done
+                    State = (int)AppointmentState.Done,
+                    FirstName = Identifier.GenerateString(),
+                    LastName = Identifier.GenerateString(),
+                    Title = Identifier.GenerateString()
                 },
                 new()
                 {
                     Id = Identifier.GenerateString(),
-                    State = (int)AppointmentState.Canceled
+                    State = (int)AppointmentState.Canceled,
+                    FirstName = Identifier.GenerateString(),
+                    LastName = Identifier.GenerateString(),
+                    Title = Identifier.GenerateString()
                 }
             });
 
@@ -90,7 +102,10 @@ public class AppointmentControllerTests
         await CrudTests.UpsertOne<AppointmentController, Appointment>(c => c.UpsertOne(new Appointment
         {
             Id = Identifier.GenerateString(),
-            ContactId = Identifier.GenerateString()
+            ContactId = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
         }));
     }
 
@@ -100,7 +115,10 @@ public class AppointmentControllerTests
         await CrudTests.UpsertOne<AppointmentController, Appointment>(c => c.UpsertOne(new Appointment
             {
                 Id = Identifier.GenerateString(),
-                ContactId = string.Empty
+                ContactId = string.Empty,
+                FirstName = Identifier.GenerateString(),
+                LastName = Identifier.GenerateString(),
+                Title = Identifier.GenerateString()
             }),
             m =>
             {

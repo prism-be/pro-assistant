@@ -1,13 +1,11 @@
 ﻿@import "../vars";
 
-.agenda
-{
+.agenda {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
 }
 
-.previous
-{
+.previous {
   grid-column: 1 / span 2;
   grid-row: 1;
 
@@ -16,8 +14,7 @@
   }
 }
 
-.next
-{
+.next {
   grid-column: 7 / span 2;
   grid-row: 1;
 
@@ -26,12 +23,12 @@
   }
 }
 
-.title
-{
+.title {
   grid-column: 3 / span 4;
   grid-row: 1;
   padding: 0;
   text-align: center;
+
   > h1 {
     line-height: 1.5rem;
 
@@ -41,8 +38,7 @@
   }
 }
 
-.noAppointment
-{
+.noAppointment {
   padding: 1rem;
   text-align: center;
   font-style: italic;
@@ -50,15 +46,13 @@
   grid-row: 2;
 }
 
-.gap
-{
+.gap {
   grid-column: 1 / span 8;
   grid-row: 3;
   height: 1rem;
 }
 
-.hour
-{
+.hour {
   text-align: right;
   padding: 0 0.2rem 0 0;
   grid-column: 1;
@@ -69,24 +63,21 @@
   border-right: 1px $mediumGrey solid;
 }
 
-.halfHour
-{
+.halfHour {
   border-bottom: 1px $mediumGrey dashed;
   grid-column: 2 / span 7;
   height: 1.5rem;
   cursor: pointer;
 }
 
-.halfHourEnd
-{
+.halfHourEnd {
   border-bottom: 1px $mediumGrey solid;
   grid-column: 2 / span 7;
   height: 1.5rem;
   cursor: pointer;
 }
 
-.calendarItem
-{
+.calendarItem {
   grid-column: 2 / span 7;
   height: 100%;
   font-size: 0.85rem;

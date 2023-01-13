@@ -13,26 +13,24 @@ import {useSwipeable} from "react-swipeable";
 import Section from "../../components/design/Section";
 import {useRouter} from "next/router";
 import useSWR from "swr";
-import { ArrowSmallLeftIcon, ArrowSmallRightIcon } from '@heroicons/react/24/solid';
+import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from '@heroicons/react/24/solid';
 
 const Calendar: NextPage = () => {
 
     const router = useRouter();
-    const monday = startOfWeek(parse(router.query.date as string, "yyyy-MM-dd", new Date()), { weekStartsOn: 1 });
+    const monday = startOfWeek(parse(router.query.date as string, "yyyy-MM-dd", new Date()), {weekStartsOn: 1});
 
     const {data: appointments} = useSWR(router.asPath, loadAppointments);
-    
+
     const {t} = useTranslation("common");
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
     const days = [1, 2, 3, 4, 5, 6, 7];
-    
-    function goNextWeek()
-    {
+
+    function goNextWeek() {
         router.push("/calendar/" + format(add(monday, {weeks: 1}), "yyyy-MM-dd"));
     }
-    
-    function goPreviousWeek()
-    {
+
+    function goPreviousWeek() {
         router.push("/calendar/" + format(add(monday, {weeks: -1}), "yyyy-MM-dd"));
     }
 
