@@ -1,4 +1,4 @@
-﻿name: CI - Services
+name: CI - Services
 
 on:
   workflow_dispatch:
@@ -11,6 +11,9 @@ on:
     types: [ opened, synchronize, reopened ]
     paths:
       - 'src/api/**'
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build-and-analyze:
