@@ -1,0 +1,13 @@
+﻿name: Utility - Close PR
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  delete-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete branch
+        uses: SvanBoxel/delete-merged-branch@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
