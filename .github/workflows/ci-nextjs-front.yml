@@ -30,30 +30,49 @@ jobs:
         with:
           node-version: 18.x
           
-      - name: Install yarn
-        run: npm install -g yarn
+      - name: Expose yarn config as "$GITHUB_OUTPUT"
+        id: yarn-config
+        shell: bash
+        run: |
+          echo "CACHE_FOLDER=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+          
+      - name: Restore yarn cache
+        uses: actions/cache@v3
+        id: yarn-download-cache
+        with:
+          path: ${{ steps.yarn-config.outputs.CACHE_FOLDER }}
+          key: yarn-download-cache-${{ hashFiles('yarn.lock') }}
+          restore-keys: |
+            yarn-download-cache-
+          
+      # Invalidated on yarn.lock changes
+      - name: Restore yarn install state
+        id: yarn-install-state-cache
+        uses: actions/cache@v3
+        with:
+          path: .yarn/ci-cache/
+          key: ${{ runner.os }}-yarn-install-state-cache-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
+
+      - name: Install dependencies
+        shell: bash
+        working-directory: ./src/web
+        run: |
+          yarn install --immutable --inline-builds
+        env:
+          # CI optimizations. Overrides yarnrc.yml options (or their defaults) in the CI action.
+          YARN_ENABLE_GLOBAL_CACHE: 'false' # Use local cache folder to keep downloaded archives
+          YARN_NM_MODE: 'hardlinks-local' # Hardlinks-(local|global) reduces io / node_modules size
+          YARN_INSTALL_STATE_PATH: .yarn/ci-cache/install-state.gz # Very small speedup when lock does not change
+          # Other environment variables
+          HUSKY: '0' # By default do not run HUSKY install
 
       - name: Extract Version
         uses: damienaicheh/extract-version-from-tag-action@v1.1.0
-
-      - name: Cache Modules
-        uses: actions/cache@v2
-        with:
-          path: './src/web/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('./src/web/yarn.lock') }}
-
-      - name: Install Packages
-        working-directory: ./src/web
-        run: yarn install --frozen-lockfile
 
       - name: Build Project
         working-directory: ./src/web
         run: yarn build
       
-      #      - name: Run Unit Tests
-      #        working-directory: ./src/web
-      #        run: yarn jest
-
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
