@@ -14,6 +14,7 @@ import Section from "../../components/design/Section";
 import {useRouter} from "next/router";
 import useSWR from "swr";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from '@heroicons/react/24/solid';
+import {AppointmentStateIcon} from "../../components/appointments/AppointmentStateIcon";
 
 const Calendar: NextPage = () => {
 
@@ -112,11 +113,14 @@ const Calendar: NextPage = () => {
                                 </React.Fragment>)}
                             </React.Fragment>)}
 
-                            {appointments?.map(m =>
-                                <div className={styles.calendarItem + " " + getHourClassName(parseISO(m.startDate).getHours(), parseISO(m.startDate).getMinutes()) + " " + getDayClassName(parseISO(m.startDate).getDay()) + " " + getDurationClassName(m.duration)} key={m.id}
-                                     onClick={() => router.push("/appointments/" + m.id)}
-                                     style={{backgroundColor: m.backgroundColor ?? ""}}>
-                                    <div>{m.title?.slice(0, 30)}</div>
+                            {appointments?.map(a =>
+                                <div className={styles.calendarItem + " " + getHourClassName(parseISO(a.startDate).getHours(), parseISO(a.startDate).getMinutes()) + " " + getDayClassName(parseISO(a.startDate).getDay()) + " " + getDurationClassName(a.duration)} key={a.id}
+                                     onClick={() => router.push("/appointments/" + a.id)}
+                                     style={{backgroundColor: a.backgroundColor ?? ""}}>
+                                    <div>
+                                        {a.title?.slice(0, 30)}
+                                        <AppointmentStateIcon  payment={a.payment} state={a.state} backgroundColor={a.backgroundColor ?? ""}/>
+                                    </div>
                                 </div>)}
                         </div>
                     </div>

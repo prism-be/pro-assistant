@@ -1,4 +1,4 @@
-name: CI - Front
+﻿name: CI - Front
 
 on:
   workflow_dispatch:
@@ -24,28 +24,56 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      
+      - name: Set Node.js 18.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          
+      - name: Install and Expose yarn config as "$GITHUB_OUTPUT"
+        id: yarn-config
+        working-directory: ./src/web
+        shell: bash
+        run: |
+          corepack enable
+          corepack prepare yarn@stable --activate
+          echo "CACHE_FOLDER=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+          
+      - name: Restore yarn cache
+        id: yarn-download-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.yarn-config.outputs.CACHE_FOLDER }}
+          key: yarn-download-cache-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            yarn-download-cache-
+          
+      - name: Restore yarn install state
+        id: yarn-install-state-cache
+        uses: actions/cache@v3
+        with:
+          path: ./src/web/.yarn/ci-cache/
+          key: ${{ runner.os }}-yarn-install-state-cache-${{ hashFiles('**/yarn.lock', '**/.yarnrc.yml') }}
+
+      - name: Install dependencies
+        shell: bash
+        working-directory: ./src/web
+        run: |
+          yarn install --immutable --inline-builds
+        env:
+          # CI optimizations. Overrides yarnrc.yml options (or their defaults) in the CI action.
+          YARN_ENABLE_GLOBAL_CACHE: 'false' # Use local cache folder to keep downloaded archives
+          YARN_NM_MODE: 'hardlinks-local' # Hardlinks-(local|global) reduces io / node_modules size
+          YARN_INSTALL_STATE_PATH: .yarn/ci-cache/install-state.gz # Very small speedup when lock does not change
+          HUSKY: '0' # By default do not run HUSKY install
 
       - name: Extract Version
-        uses: damienaicheh/extract-version-from-tag-action@v1.0.0
-
-      - name: Cache Modules
-        uses: actions/cache@v2
-        with:
-          path: './src/web/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('./src/web/yarn.lock') }}
-
-      - name: Install Packages
-        working-directory: ./src/web
-        run: yarn install --frozen-lockfile
+        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
 
       - name: Build Project
         working-directory: ./src/web
         run: yarn build
       
-      #      - name: Run Unit Tests
-      #        working-directory: ./src/web
-      #        run: yarn jest
-
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:

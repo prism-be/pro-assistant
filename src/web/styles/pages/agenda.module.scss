@@ -87,6 +87,11 @@
   color: white;
   white-space: nowrap;
   cursor: pointer;
+  
+  > div
+  {
+    position: relative;
+  }
 }
 
 @for $i from 1 to 48 {

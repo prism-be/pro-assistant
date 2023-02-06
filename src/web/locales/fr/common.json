@@ -121,7 +121,7 @@
     "appointments": {
       "state0": "Créé",
       "state1": "Confirmé",
-      "state10": "Terminé",
+      "state10": "Validé",
       "state100": "Annulé"
     }
   }

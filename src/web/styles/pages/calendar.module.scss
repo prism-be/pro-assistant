@@ -102,6 +102,7 @@
   color: white;
   white-space: nowrap;
   cursor: pointer;
+  position: relative;
 
   @media (max-width: $breakpointLG) {
     font-size: 0.7rem;
