@@ -104,7 +104,7 @@ const Appointments: NextPage = () => {
         const updatedAppointment: Appointment = {
             id: appointment?.id ?? '',
             contactId: contact?.id ?? null,
-            title: data.lastName + " " + data.firstName + (data.type ? " (" + data.type + ")" : ""),
+            title: data.lastName + " " + data.firstName,
             price: parseFloat(data.price),
             duration: duration,
             startDate: formatISO(date),
@@ -220,6 +220,14 @@ const Appointments: NextPage = () => {
             setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate(), newHour.getHours(), newHour.getMinutes()));
         }
     }
+    
+    function updateState()
+    {
+        if (getValues()["payment"] > 0)
+        {
+            setValue("state", "10");
+        }
+    }
 
     return <ContentContainer>
         <Section>
@@ -250,7 +258,7 @@ const Appointments: NextPage = () => {
                     <div>{format(date, "EEEE dd MMMM", {locale: getLocale()})} {t("fields.fromHour")} {format(date, "HH:mm", {locale: getLocale()})} {t("fields.toHour")} {format(add(date, {minutes: duration}), "HH:mm")}</div>
                 </div>
 
-                <InputSelect className={styles.payment} label={t("fields.payment")} name={"payment"} required={false} register={register} error={errors.payment} options={paymentOptions}/>
+                <InputSelect className={styles.payment} label={t("fields.payment")} name={"payment"} required={false} register={register} error={errors.payment} options={paymentOptions} onChange={() => updateState()}/>
                 <InputSelect className={styles.state} label={t("fields.appointmentState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions}/>
 
                 <Button text={t("actions.back")} secondary={true} className={styles.cancel} onClick={() => router.back()}/>

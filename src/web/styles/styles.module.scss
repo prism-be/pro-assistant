@@ -23,6 +23,18 @@
 
 }
 
+.iconSmall {
+  & svg {
+    width: 1.50rem;
+    height: 1.20rem;
+  }
+  display: inline;
+  line-height: 1.5rem;
+  position: absolute;
+  top: 0.15rem;
+  right: 0;
+}
+
 .buttonField {
   padding-top: 1.5rem;
 }
@@ -51,3 +63,4 @@
     border-bottom: 1px transparent dashed;
   }
 }
+

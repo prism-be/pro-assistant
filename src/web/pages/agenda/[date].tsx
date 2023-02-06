@@ -14,6 +14,7 @@ import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
 import {useRouter} from "next/router";
 import useSWR from "swr";
+import {AppointmentStateIcon} from "../../components/appointments/AppointmentStateIcon";
 
 const Agenda: NextPage = () => {
     const router = useRouter();
@@ -100,11 +101,17 @@ const Agenda: NextPage = () => {
                         <div className={styles.halfHourEnd + " " + getHourRowEndClassName(h)} onClick={() => addAppointment(h, 30)}></div>
                     </React.Fragment>)}
 
-                    {appointments?.map(m =>
-                        <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(m.startDate).getHours(), parseISO(m.startDate).getMinutes()) + " " + getDurationClassName(m.duration)} key={m.id}
-                             onClick={() => router.push("/appointments/" + m.id)}
-                             style={{backgroundColor: m.backgroundColor ?? ""}}>
-                            <div>{m.title?.slice(0, 40)}</div>
+                    {appointments?.map(a =>
+                        <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(a.startDate).getHours(), parseISO(a.startDate).getMinutes()) + " " + getDurationClassName(a.duration)} key={a.id}
+                             onClick={() => router.push("/appointments/" + a.id)}
+                             style={{backgroundColor: a.backgroundColor ?? ""}}>
+                            <div>
+                                {a.title?.slice(0, 40)}
+                                <AppointmentStateIcon  payment={a.payment} state={a.state} backgroundColor={a.backgroundColor ?? ""}/>
+                            </div>
+                            
+                            
+                            
                         </div>)}
 
                 </div>
