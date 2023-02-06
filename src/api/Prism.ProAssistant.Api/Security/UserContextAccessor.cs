@@ -6,9 +6,8 @@
 
 using System.Security.Authentication;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Http;
 
-namespace Prism.ProAssistant.Business.Security;
+namespace Prism.ProAssistant.Api.Security;
 
 public interface IUserContextAccessor
 {
@@ -38,7 +37,7 @@ public class UserContextAccessor : IUserContextAccessor
                 return string.Empty;
             }
 
-            var organization = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "extension_Organization")?.Value;
+            var organization = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "extension_Organization")?.Value;
 
             if (string.IsNullOrWhiteSpace(organization))
             {
@@ -58,7 +57,7 @@ public class UserContextAccessor : IUserContextAccessor
                 return string.Empty;
             }
 
-            var name = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "name");
+            var name = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "name");
 
             if (name == null)
             {

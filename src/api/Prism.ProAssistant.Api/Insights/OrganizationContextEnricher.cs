@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 using Serilog.Core;
 using Serilog.Events;

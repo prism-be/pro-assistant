@@ -7,7 +7,6 @@
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
 using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Business.Storage;
 
@@ -28,14 +27,10 @@ public class OrganizationContext : IOrganizationContext
 {
     private readonly IMongoClient _client;
 
-    public OrganizationContext(IMongoClient client, IUserContextAccessor userContextAccessor)
+    public OrganizationContext(IMongoClient client)
     {
         _client = client;
-
-        OrganizationId = string.IsNullOrWhiteSpace(userContextAccessor.OrganizationId)
-            ? "unknown"
-            : userContextAccessor.OrganizationId;
-
+        OrganizationId = "unknown";
         Database = client.GetDatabase(OrganizationId);
     }
 

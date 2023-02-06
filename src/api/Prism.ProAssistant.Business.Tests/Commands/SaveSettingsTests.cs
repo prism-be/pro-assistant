@@ -7,6 +7,7 @@
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
+using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;

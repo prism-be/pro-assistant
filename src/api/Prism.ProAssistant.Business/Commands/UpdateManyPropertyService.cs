@@ -12,39 +12,37 @@ using Prism.ProAssistant.Business.Storage;
 
 namespace Prism.ProAssistant.Business.Commands;
 
-public record UpdateManyProperty(string OrganizationId, string UserId, string FilterProperty, string FilterValue, string Property, object Value);
-
-public interface IUpdateManyPropertyHandler
+public interface IUpdateManyPropertyService
 {
-    Task UpdateMany<T>(UpdateManyProperty request)
+    Task UpdateMany<T>(string organizationId, string userId, string filterProperty, string filterValue, string property, object? value)
         where T : IDataModel;
 }
 
-public class UpdateManyPropertyHandler : IUpdateManyPropertyHandler
+public class UpdateManyPropertyService : IUpdateManyPropertyService
 {
-    private readonly ILogger<UpdateManyPropertyHandler> _logger;
+    private readonly ILogger<UpdateManyPropertyService> _logger;
     private readonly IOrganizationContext _organizationContext;
 
-    public UpdateManyPropertyHandler(ILogger<UpdateManyPropertyHandler> logger, IOrganizationContext organizationContext)
+    public UpdateManyPropertyService(ILogger<UpdateManyPropertyService> logger, IOrganizationContext organizationContext)
     {
         _logger = logger;
         _organizationContext = organizationContext;
     }
 
-    public async Task UpdateMany<T>(UpdateManyProperty request)
+    public async Task UpdateMany<T>(string organizationId, string userId, string filterProperty, string filterValue, string property, object? value)
         where T : IDataModel
     {
-        if (string.IsNullOrEmpty(request.FilterProperty))
+        if (string.IsNullOrEmpty(filterProperty))
         {
             _logger.LogWarning("Cannot update the property for type {itemType} and empty id", typeof(T).Name);
             return;
         }
 
-        _organizationContext.SelectOrganization(request.OrganizationId);
+        _organizationContext.SelectOrganization(organizationId);
         var collection = _organizationContext.GetCollection<T>();
-        await _logger.LogPropertyManyUpdate<T>(request.UserId, request.Property, request.FilterProperty, async () =>
+        await _logger.LogPropertyManyUpdate<T>(userId, property, filterProperty, async () =>
         {
-            var result = await collection.UpdateManyAsync(Builders<T>.Filter.Eq(request.FilterProperty, request.FilterValue), Builders<T>.Update.Set(request.Property, request.Value));
+            var result = await collection.UpdateManyAsync(Builders<T>.Filter.Eq(filterProperty, filterValue), Builders<T>.Update.Set(property, value));
 
             return result.ModifiedCount;
         });

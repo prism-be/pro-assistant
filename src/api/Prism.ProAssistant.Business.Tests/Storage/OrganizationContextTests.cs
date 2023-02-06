@@ -7,6 +7,7 @@
 using FluentAssertions;
 using MongoDB.Driver;
 using Moq;
+using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;

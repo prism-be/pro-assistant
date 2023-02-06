@@ -14,9 +14,9 @@ namespace Prism.ProAssistant.Api.Workers;
 
 public class PropertyUpdatedWorker : BaseServiceBusWorker<PropertyUpdated>
 {
-    private readonly IUpdateManyPropertyHandler _upddater;
+    private readonly IUpdateManyPropertyService _upddater;
 
-    public PropertyUpdatedWorker(ILogger<PropertyUpdatedWorker> logger, IServiceProvider serviceProvider, IConnection? connection, IUpdateManyPropertyHandler upddater)
+    public PropertyUpdatedWorker(ILogger<PropertyUpdatedWorker> logger, IServiceProvider serviceProvider, IConnection? connection, IUpdateManyPropertyService upddater)
         : base(logger, serviceProvider, connection)
     {
         _upddater = upddater;

@@ -7,6 +7,7 @@
 using FluentAssertions;
 using Moq;
 using Prism.ProAssistant.Api.Insights;
+using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 using Serilog.Core;
 using Serilog.Events;

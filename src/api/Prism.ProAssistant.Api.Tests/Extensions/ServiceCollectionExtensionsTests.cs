@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.ProAssistant.Api.Extensions;
+using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 using Xunit;

@@ -7,6 +7,7 @@
 using FluentAssertions;
 using Moq;
 using Prism.ProAssistant.Api.Controllers;
+using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 using Xunit;
 

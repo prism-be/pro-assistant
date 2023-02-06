@@ -5,54 +5,55 @@
 // -----------------------------------------------------------------------
 
 using Microsoft.Extensions.Logging;
-using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Business.Extensions;
 
 public static class LoggerExtensions
 {
 
-    public static async Task LogDataDelete(this ILogger logger, IUserContextAccessor userContextAccessor, string itemId, Func<Task> action)
+    public static async Task LogDataDelete(this ILogger logger, string organizationId, string userId, string itemId, Func<Task> action)
     {
-        logger.LogInformation("Deleting an existing item by user {userId} with id {itemId}", userContextAccessor.UserId, itemId);
+        logger.LogInformation("Deleting an existing item by user {userId}({organizationId}) with id {itemId}", userId, organizationId, itemId);
         await action();
-        logger.LogInformation("Deleted an existing item by user {userId} with id {itemId}", userContextAccessor.UserId, itemId);
+        logger.LogInformation("Deleted an existing item by user {userId}({organizationId}) with id {itemId}", userId, organizationId, itemId);
     }
 
-    public static async Task<UpsertResult> LogDataInsert(this ILogger logger, IUserContextAccessor userContextAccessor, IDataModel data, Func<Task<UpsertResult>> action)
+    public static async Task<string> LogDataInsert(this ILogger logger, string organizationId, string userId, IDataModel data, Func<Task<string>> action)
     {
-        logger.LogInformation("Inserting an new item of type {itemType} by user {userId} with id {itemId}", data.GetType().Name, userContextAccessor.UserId, data.Id);
+        logger.LogInformation("Inserting an new item of type {itemType} by user {userId}({organizationId}) with id {itemId}", data.GetType().Name, userId, organizationId, data.Id);
         var result = await action();
-        logger.LogInformation("Inserted an new item of type {itemType} by user {userId} with id {itemId}", data.GetType().Name, userContextAccessor.UserId, result.Id);
+        logger.LogInformation("Inserted an new item of type {itemType} by user {userId}({organizationId}) with id {itemId}", data.GetType().Name, userId, organizationId, result);
         return result;
     }
 
-    public static async Task<UpsertResult> LogDataUpdate(this ILogger logger, IUserContextAccessor userContextAccessor, IDataModel data, Func<Task<UpsertResult>> action)
+    public static async Task<string> LogDataUpdate(this ILogger logger, string organizationId, string userId, IDataModel data, Func<Task<string>> action)
     {
-        logger.LogInformation("Updating an existing item of type {itemType} by user {userId} with id {itemId}", data.GetType().Name, userContextAccessor.UserId, data.Id);
+        logger.LogInformation("Updating an existing item of type {itemType} by user {userId}({organizationId}) with id {itemId}", data.GetType().Name, userId, organizationId, data.Id);
         var result = await action();
-        logger.LogInformation("Updated an existing item of type {itemType} by user {userId} with id {itemId}", data.GetType().Name, userContextAccessor.UserId, result.Id);
+        logger.LogInformation("Updated an existing item of type {itemType} by user {userId}({organizationId}) with id {itemId}", data.GetType().Name, userId, organizationId, result);
         return result;
     }
 
-    public static async Task LogPropertyManyUpdate<T>(this ILogger logger, string userId, string propertyName, string filterProperty,
+    public static async Task LogPropertyManyUpdate<T>(this ILogger logger, string organizationId, string userId, string propertyName, string filterProperty,
         Func<Task<long>> action)
     {
-        logger.LogInformation("Updating many property {propertyName} of type {itemType} by user {userId} with filter on property {filterProperty}", propertyName, typeof(T).Name,
-            userId, filterProperty);
+        logger.LogInformation("Updating many property {propertyName} of type {itemType} by user {userId}({organizationId}) with filter on property {filterProperty}", propertyName,
+            typeof(T).Name,
+            userId, organizationId, filterProperty);
         var count = await action();
-        logger.LogInformation("Updated many property {propertyName} of type {itemType} by user {userId} with filter on property {filterProperty} - {matches} updates done.",
-            propertyName, typeof(T).Name, userId, filterProperty, count);
+        logger.LogInformation("Updated many property {propertyName} of type {itemType} by user {userId}({organizationId}) with filter on property {filterProperty} - {matches} updates done.",
+            propertyName, typeof(T).Name, userId, organizationId, filterProperty, count);
     }
 
-    public static async Task<UpsertResult> LogPropertyUpdate<T>(this ILogger logger, IUserContextAccessor userContextAccessor, string propertyName, string id,
-        Func<Task<UpsertResult>> action)
+    public static async Task<string> LogPropertyUpdate<T>(this ILogger logger, string organizationId, string userId, string propertyName, string id,
+        Func<Task<string>> action)
     {
-        logger.LogInformation("Updating property {propertyName} of type {itemType} by user {userId} with id {itemId}", propertyName, typeof(T).Name, userContextAccessor.UserId, id);
+        logger.LogInformation("Updating property {propertyName} of type {itemType} by user {userId}({organizationId}) with id {itemId}", propertyName, typeof(T).Name, userId, organizationId,
+            id);
         var result = await action();
-        logger.LogInformation("Updated property {propertyName} of type {itemType} by user {userId} with id {itemId}", propertyName, typeof(T).Name, userContextAccessor.UserId, result.Id);
+        logger.LogInformation("Updated property {propertyName} of type {itemType} by user {userId}({organizationId}) with id {itemId}", propertyName, typeof(T).Name, userId, organizationId,
+            result);
         return result;
     }
 }

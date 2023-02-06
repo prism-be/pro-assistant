@@ -9,6 +9,7 @@ using System.Security.Claims;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Moq;
+using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Business.Tests.Security;

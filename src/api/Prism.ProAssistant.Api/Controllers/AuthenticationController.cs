@@ -7,6 +7,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Models;
+using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Api.Controllers;
