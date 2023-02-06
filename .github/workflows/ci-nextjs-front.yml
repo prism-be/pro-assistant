@@ -32,6 +32,7 @@ jobs:
           
       - name: Expose yarn config as "$GITHUB_OUTPUT"
         id: yarn-config
+        working-directory: ./src/web
         shell: bash
         run: |
           corepack enable
@@ -39,8 +40,9 @@ jobs:
           echo "CACHE_FOLDER=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
           
       - name: Restore yarn cache
-        uses: actions/cache@v3
         id: yarn-download-cache
+        uses: actions/cache@v3
+        working-directory: ./src/web
         with:
           path: ${{ steps.yarn-config.outputs.CACHE_FOLDER }}
           key: yarn-download-cache-${{ hashFiles('yarn.lock') }}
@@ -51,6 +53,7 @@ jobs:
       - name: Restore yarn install state
         id: yarn-install-state-cache
         uses: actions/cache@v3
+        working-directory: ./src/web
         with:
           path: .yarn/ci-cache/
           key: ${{ runner.os }}-yarn-install-state-cache-${{ hashFiles('yarn.lock', '.yarnrc.yml') }}
