@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using MediatR;
 using Prism.ProAssistant.Business;
+using Prism.ProAssistant.Business.Events;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -56,7 +57,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
         base.Dispose();
     }
 
-    public abstract Task ProcessMessageAsync(IMediator mediator, T payload);
+    public abstract Task ProcessMessageAsync(IMediator mediator, Event<T> e);
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -81,7 +82,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
                 var body = args.Body.ToArray();
                 var json = Encoding.Default.GetString(body);
-                var payload = JsonSerializer.Deserialize<T>(json);
+                var payload = JsonSerializer.Deserialize<Event<T>>(json);
 
                 if (payload != null)
                 {

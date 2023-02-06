@@ -6,8 +6,8 @@
 
 /* tslint:disable */
 /* eslint-disable */
-
 // ReSharper disable InconsistentNaming
+
 
 
 export interface Appointment {
@@ -17,16 +17,18 @@ export interface Appointment {
     duration: number;
     payment: number;
     state: number;
+    documents: BinaryDocument[];
     firstName: string;
-    id: string;
     lastName: string;
+    birthDate?: string | null;
+    phoneNumber?: string | null;
     title: string;
+    backgroundColor?: string | null;
     contactId?: string | null;
+    foreColor?: string | null;
     type?: string | null;
     typeId?: string | null;
-    foreColor?: string | null;
-    backgroundColor?: string | null;
-    documents: BinaryDocument[];
+    id: string;
 }
 
 export interface BinaryDocument {
@@ -37,7 +39,6 @@ export interface BinaryDocument {
 }
 
 export interface Contact {
-    id: string;
     birthDate?: string | null;
     city?: string | null;
     country?: string | null;
@@ -48,8 +49,9 @@ export interface Contact {
     number?: string | null;
     phoneNumber?: string | null;
     street?: string | null;
-    zipCode?: string | null;
     title?: string | null;
+    zipCode?: string | null;
+    id: string;
 }
 
 export interface DeleteDocument {
@@ -91,17 +93,17 @@ export interface SearchContacts {
 }
 
 export interface Setting {
-    id: string;
     value: string;
+    id: string;
 }
 
 export interface Tariff {
     price: number;
     defaultDuration: number;
-    id: string;
     name: string;
-    foreColor?: string | null;
     backgroundColor?: string | null;
+    foreColor?: string | null;
+    id: string;
 }
 
 export interface UpsertResult {

@@ -21,8 +21,8 @@ public class UpdateAppointmentColorWorker : BaseServiceBusWorker<UpsertResult>
     public override string Queue => Topics.Tariffs.Updated;
     public override string WorkerName => nameof(UpdateAppointmentColorWorker);
 
-    public override async Task ProcessMessageAsync(IMediator mediator, UpsertResult payload)
+    public override async Task ProcessMessageAsync(IMediator mediator, Event<UpsertResult> e)
     {
-        await mediator.Send(new UpdateAppointmentsColor(payload.Id, payload.Organization));
+        await mediator.Send(new UpdateAppointmentsColor(e.Payload.Id, e.OrganizationId));
     }
 }

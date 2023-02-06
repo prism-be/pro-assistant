@@ -8,6 +8,8 @@ namespace Prism.ProAssistant.Business.Events;
 
 public static class Topics
 {
+    public const string PropertyUpdated = "general/property/updated";
+
     public static class Tariffs
     {
         public const string Updated = "tariffs/updated";

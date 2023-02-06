@@ -45,7 +45,9 @@ public class SerializationTests
                     Date = DateTime.UtcNow,
                     FileName = Identifier.GenerateString()
                 }
-            }
+            },
+            BirthDate = Identifier.GenerateString(),
+            PhoneNumber = Identifier.GenerateString()
         };
 
         // Act and Assert

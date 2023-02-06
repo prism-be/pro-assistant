@@ -39,6 +39,12 @@ public class Appointment : IDataModel
 
     [JsonPropertyName("lastName")]
     required public string LastName { get; set; }
+    
+    [JsonPropertyName("birthDate")]
+    public string? BirthDate { get; set; }
+
+    [JsonPropertyName("phoneNumber")]
+    public string? PhoneNumber { get; set; }
 
     [JsonPropertyName("title")]
     required public string Title { get; set; }

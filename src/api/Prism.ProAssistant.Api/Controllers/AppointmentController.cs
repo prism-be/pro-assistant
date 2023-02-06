@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using DotLiquid.Util;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +64,17 @@ public class AppointmentController : Controller
         }
 
         var result = await _mediator.Send(new UpsertOne<Appointment>(appointment));
+
+        if (!string.IsNullOrWhiteSpace(appointment.BirthDate))
+        {
+            await _mediator.Send(new UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.BirthDate), appointment.BirthDate));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(appointment.PhoneNumber))
+        {
+            await _mediator.Send(new UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.PhoneNumber), appointment.PhoneNumber));
+        }
+        
         return result.ToActionResult();
     }
 }
