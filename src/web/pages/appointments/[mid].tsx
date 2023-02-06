@@ -32,6 +32,7 @@ const Appointments: NextPage = () => {
     const [contact, setContact] = useState<Contact>();
     const [date, setDate] = useState<Date>(startOfHour(new Date()));
     const [duration, setDuration] = useState<number>(60);
+    const [customTitle, setCustomTitle] = useState<boolean>(false);
 
     const paymentOptions = [
         {value: "0", text: t("options.payments.state0")},
@@ -72,6 +73,9 @@ const Appointments: NextPage = () => {
 
         if (appointment.typeId) {
             setValue("tariff", appointment.typeId);
+        } else if (appointment.type !== "") {
+            setValue("tariff","-2");
+            setCustomTitle(true);
         }
 
     }, [appointment, tariffs]);
@@ -176,14 +180,34 @@ const Appointments: NextPage = () => {
         }) ?? [];
 
         options.unshift({
-            value: "",
+            value: "-1",
             text: t("pages.appointment.tariffs.empty")
+        });
+
+        options.push({
+            value: "-2",
+            text: t("pages.appointment.tariffs.other")
         });
 
         return options;
     }
 
     function setAppointmentType(type: string) {
+
+        if (type === "-1") {
+            setCustomTitle(false);
+            setValue("type", "");
+            return;
+        }
+
+        if (type === "-2") {
+            setCustomTitle(true);
+            setValue("type", "");
+            computeDate();
+            return;
+        }
+
+        setCustomTitle(false);
         const tariff = tariffs?.find(x => x.id == type);
 
         if (tariff) {
@@ -220,11 +244,9 @@ const Appointments: NextPage = () => {
             setDate(new Date(date.getFullYear(), date.getMonth(), date.getDate(), newHour.getHours(), newHour.getMinutes()));
         }
     }
-    
-    function updateState()
-    {
-        if (getValues()["payment"] > 0)
-        {
+
+    function updateState() {
+        if (getValues()["payment"] > 0) {
             setValue("state", "10");
         }
     }
@@ -247,8 +269,9 @@ const Appointments: NextPage = () => {
                 </div>}
 
                 <InputSelect className={styles.tariffs} label={t("pages.appointment.tariffs.title")} name={"tariff"} register={register} options={getTariffsOptions()} onChange={(v) => setAppointmentType(v)}/>
-                <InputText className={styles.type} label={t("fields.appointmentType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>
                 <InputText className={styles.price} label={t("fields.price")} name={"price"} required={true} type={"text"} register={register} setValue={setValue} error={errors.price}/>
+
+                {customTitle && <InputText className={styles.type} label={t("fields.appointmentType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>}
 
                 <Calendar className={styles.date} value={date} onChange={(d) => selectDate(d)}/>
 

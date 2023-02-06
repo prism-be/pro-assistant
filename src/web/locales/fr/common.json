@@ -89,7 +89,8 @@
       },
       "tariffs": {
         "title": "Type de rendez-vous",
-        "empty": "Veuillez choisir un type de rendez-vous"
+        "empty": "Veuillez choisir un type de rendez-vous",
+        "other": "Autre"
       },
       "documents": {
         "title": "Gestion des documents du rendez-vous",
