@@ -30,7 +30,7 @@ jobs:
         with:
           node-version: 18.x
           
-      - name: Expose yarn config as "$GITHUB_OUTPUT"
+      - name: Install and Expose yarn config as "$GITHUB_OUTPUT"
         id: yarn-config
         working-directory: ./src/web
         shell: bash
@@ -48,7 +48,6 @@ jobs:
           restore-keys: |
             yarn-download-cache-
           
-      # Invalidated on yarn.lock changes
       - name: Restore yarn install state
         id: yarn-install-state-cache
         uses: actions/cache@v3
@@ -66,7 +65,6 @@ jobs:
           YARN_ENABLE_GLOBAL_CACHE: 'false' # Use local cache folder to keep downloaded archives
           YARN_NM_MODE: 'hardlinks-local' # Hardlinks-(local|global) reduces io / node_modules size
           YARN_INSTALL_STATE_PATH: .yarn/ci-cache/install-state.gz # Very small speedup when lock does not change
-          # Other environment variables
           HUSKY: '0' # By default do not run HUSKY install
 
       - name: Extract Version
