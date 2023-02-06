@@ -28,7 +28,7 @@
         <PackageReference Include="Serilog.Enrichers.ClientInfo" Version="1.2.0"/>
         <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1"/>
         <PackageReference Include="Serilog.Extensions.Logging.ApplicationInsights" Version="1.1.0"/>
-        <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1"/>
+        <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="9.0.0"/>
         <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3"/>
         <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3"/>
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
