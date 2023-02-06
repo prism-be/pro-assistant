@@ -6,7 +6,7 @@ interface Props
 {
     payment: number;
     state: number;
-    backgroundColor?: string | undefined;
+    backgroundColor?: string;
 }
 
 export const AppointmentStateIcon = ({payment, state, backgroundColor}: Props) => {
