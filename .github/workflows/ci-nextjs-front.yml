@@ -29,6 +29,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18.x
+          
+      - name: Install yarn
+        run: npm install -g yarn
 
       - name: Extract Version
         uses: damienaicheh/extract-version-from-tag-action@v1.1.0
