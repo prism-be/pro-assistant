@@ -13,6 +13,7 @@ using Prism.ProAssistant.Api.Insights;
 using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Commands;
+using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 using Prism.ProAssistant.Business.Storage.Migrations;
 using Prism.ProAssistant.Documents.Locales;
@@ -47,12 +48,15 @@ public static class ServiceCollectionExtensions
     public static void AddBusinessServices(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
-        services.AddTransient<IUserContextAccessor, UserContextAccessor>();
+        services.AddScoped<User>();
 
         services.AddTransient<OrganizationContextEnricher>();
 
         // Add documents services
         services.AddScoped<ILocalizator, Localizator>();
+        
+        services.AddScoped<IUpdateManyPropertyService, UpdateManyPropertyService>();
+        services.AddScoped<IRemoveOneService, RemoveOneService>();
     }
 
     public static void AddCache(this IServiceCollection services)
@@ -75,11 +79,5 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IOrganizationContext, OrganizationContext>();
 
         services.AddScoped<IMigrateDocumentConfiguration, MigrateDocumentConfiguration>();
-    }
-
-    public static void AddQueriesCommands(this IServiceCollection services)
-    {
-        services.AddScoped<IUpdateManyPropertyService, UpdateManyPropertyService>();
-        services.AddScoped<IRemoveOneService, RemoveOneService>();
     }
 }

@@ -17,9 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddApplicationInsights();
 builder.AddSerilog();
 
-// Add Mediatr
-builder.Services.AddQueriesCommands();
-
 // Add Mongo
 builder.Services.AddDatabase();
 
