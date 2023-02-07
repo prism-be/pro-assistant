@@ -39,12 +39,14 @@ public static class MongoTestsExtensions
         return bucket;
     }
 
-    public static void SetupCollection<T>(this Mock<IOrganizationContext> organizationContext, params T[] samples)
+    public static Mock<IMongoCollection<T>> SetupCollection<T>(this Mock<IOrganizationContext> organizationContext, params T[] samples)
     {
         var collection = CreateCollection(samples);
 
         organizationContext.Setup(x => x.GetCollection<T>())
             .Returns(collection.Object);
+        
+        return collection;
     }
 
     private static Mock<IMongoCollection<T>> CreateCollection<T>(IReadOnlyCollection<T> samples)

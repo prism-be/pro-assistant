@@ -9,7 +9,6 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.ProAssistant.Api.Workers;
-using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Events;
 using Prism.ProAssistant.Business.Security;
 using RabbitMQ.Client;

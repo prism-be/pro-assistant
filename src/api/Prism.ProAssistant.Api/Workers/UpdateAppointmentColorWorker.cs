@@ -5,7 +5,6 @@
 // -----------------------------------------------------------------------
 
 using MediatR;
-using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Events;
 using RabbitMQ.Client;
 

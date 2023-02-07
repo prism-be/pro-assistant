@@ -7,7 +7,6 @@
 using FluentAssertions;
 using MongoDB.Driver;
 using Moq;
-using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
@@ -21,10 +20,10 @@ public class OrganizationContextTests
     {
         // Arrange
         var configuration = new MongoDbConfiguration("mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin");
-        var userContextAccessor = new Mock<IUserContextAccessor>();
+        var user = new Mock<User>();
 
         // Act
-        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), userContextAccessor.Object);
+        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), user.Object);
 
         // Assert
         Assert.Throws<NotSupportedException>(() => context.GetCollection<object>());
@@ -35,10 +34,10 @@ public class OrganizationContextTests
     {
         // Arrange
         var configuration = new MongoDbConfiguration("mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin");
-        var userContextAccessor = new Mock<IUserContextAccessor>();
+        var user = new Mock<User>();
 
         // Act
-        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), userContextAccessor.Object);
+        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), user.Object);
         var collection = context.GetCollection<Contact>();
 
         // Assert
@@ -50,11 +49,11 @@ public class OrganizationContextTests
     {
         // Arrange
         var configuration = new MongoDbConfiguration("mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin");
-        var userContextAccessor = new Mock<IUserContextAccessor>();
-        userContextAccessor.Setup(x => x.OrganizationId).Returns(Identifier.GenerateString);
+        var user = new Mock<User>();
+        user.Setup(x => x.Organization).Returns(Identifier.GenerateString);
 
         // Act
-        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), userContextAccessor.Object);
+        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), user.Object);
         var collection = context.GetCollection<Contact>();
 
         // Assert

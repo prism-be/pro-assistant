@@ -9,7 +9,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.ProAssistant.Api.Controllers;
-using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;

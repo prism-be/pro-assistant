@@ -10,12 +10,11 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Prism.ProAssistant.Api.Insights;
-using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business;
-using Prism.ProAssistant.Business.Commands;
+using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
+using Prism.ProAssistant.Business.Services;
 using Prism.ProAssistant.Business.Storage;
-using Prism.ProAssistant.Business.Storage.Migrations;
 using Prism.ProAssistant.Documents.Locales;
 
 namespace Prism.ProAssistant.Api.Extensions;
@@ -55,8 +54,15 @@ public static class ServiceCollectionExtensions
         // Add documents services
         services.AddScoped<ILocalizator, Localizator>();
         
-        services.AddScoped<IUpdateManyPropertyService, UpdateManyPropertyService>();
+        services.AddScoped<IFindManyService, FindManyService>();
+        services.AddScoped<IFindOneService, FindOneService>();
         services.AddScoped<IRemoveOneService, RemoveOneService>();
+        services.AddScoped<ISearchAppointmentsService, SearchAppointmentsService>();
+        services.AddScoped<ISearchContactsService, SearchContactsService>();
+        services.AddScoped<IUpdateManyPropertyService, UpdateManyPropertyService>();
+        services.AddScoped<IUpsertManyService, UpsertManyService>();
+        services.AddScoped<IUpdatePropertyService, UpdatePropertyService>();
+        services.AddScoped<IUpsertOneService, UpsertOneService>();
     }
 
     public static void AddCache(this IServiceCollection services)
@@ -77,7 +83,5 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
 
         services.AddScoped<IOrganizationContext, OrganizationContext>();
-
-        services.AddScoped<IMigrateDocumentConfiguration, MigrateDocumentConfiguration>();
     }
 }

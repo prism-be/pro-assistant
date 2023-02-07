@@ -29,4 +29,10 @@
         <ProjectReference Include="..\Prism.ProAssistant.UnitTesting\Prism.ProAssistant.UnitTesting.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Commands" />
+      <Folder Include="Queries" />
+      <Folder Include="Security" />
+    </ItemGroup>
+
 </Project>

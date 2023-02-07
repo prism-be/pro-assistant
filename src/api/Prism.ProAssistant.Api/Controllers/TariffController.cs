@@ -8,7 +8,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Api.Security;
-using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Events;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;

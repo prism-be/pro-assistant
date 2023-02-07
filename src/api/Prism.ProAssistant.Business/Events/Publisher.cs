@@ -6,31 +6,34 @@
 
 using System.Text;
 using System.Text.Json;
+using Prism.ProAssistant.Business.Security;
 using RabbitMQ.Client;
 
 namespace Prism.ProAssistant.Business.Events;
 
 public interface IPublisher
 {
-    void Publish<T>(string organizationId, string userId, string exchange, T message);
+    void Publish<T>(string exchange, T message);
 }
 
 public record PropertyUpdated(string ItemType, string Id, string Property, object Value);
 
-public record Event<T>(string OrganizationId, string UserId, T Payload);
+public record Event<T>(User User, T Payload);
 
 public class Publisher : IPublisher
 {
     private readonly IModel _channel;
+    private readonly User _user;
 
-    public Publisher(IModel channel)
+    public Publisher(IModel channel, User user)
     {
         _channel = channel;
+        _user = user;
     }
 
-    public void Publish<T>(string organizationId, string userId, string exchange, T message)
+    public void Publish<T>(string exchange, T message)
     {
-        var e = new Event<T>(organizationId, userId, message);
+        var e = new Event<T>(_user, message);
         var json = JsonSerializer.Serialize(e);
         var payload = Encoding.Default.GetBytes(json);
         _channel.BasicPublish(exchange, typeof(T).FullName, null, payload);
