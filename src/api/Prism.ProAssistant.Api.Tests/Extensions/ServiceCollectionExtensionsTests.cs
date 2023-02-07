@@ -5,12 +5,10 @@
 // -----------------------------------------------------------------------
 
 using FluentAssertions;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;
 using Prism.ProAssistant.Api.Extensions;
-using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Storage;
 using Xunit;
@@ -43,7 +41,7 @@ public class ServiceCollectionExtensionsTests
         services.AddBusinessServices();
 
         // Assert
-        services.Should().Contain(x => x.ServiceType == typeof(IUserContextAccessor));
+        services.Should().Contain(x => x.ServiceType == typeof(User));
     }
 
     [Fact]
@@ -73,18 +71,5 @@ public class ServiceCollectionExtensionsTests
 
         // Assert
         services.Should().Contain(x => x.ServiceType == typeof(IOrganizationContext));
-    }
-
-    [Fact]
-    public void AddQueriesCommands()
-    {
-        // Arrange
-        var services = new ServiceCollection();
-
-        // Act
-        services.AddQueriesCommands();
-
-        // Assert
-        services.Should().Contain(x => x.ServiceType == typeof(IMediator));
     }
 }

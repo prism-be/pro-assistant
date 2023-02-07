@@ -12,24 +12,25 @@ using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
+using Prism.ProAssistant.Business.Services;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
 [Authorize]
 public class AppointmentController : Controller
 {
-    private readonly IMediator _mediator;
+    private readonly ICrudService _crudService;
 
-    public AppointmentController(IMediator mediator)
+    public AppointmentController(ICrudService crudService)
     {
-        _mediator = mediator;
+        _crudService = crudService;
     }
 
     [Route("api/appointment/{appointmentId}")]
     [HttpGet]
     public async Task<ActionResult<Appointment>> FindOne(string appointmentId)
     {
-        var result = await _mediator.Send(new FindOne<Appointment>(appointmentId));
+        var result = await _crudService.FindOne<Appointment>(appointmentId);
         return result.ToActionResult();
     }
 

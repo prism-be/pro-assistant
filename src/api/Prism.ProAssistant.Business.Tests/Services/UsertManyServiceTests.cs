@@ -41,7 +41,7 @@ public class UsertManyServiceTests
         });
 
         var service = new UpsertManyService(upsertOne.Object);
-        await service.Update(items);
+        await service.Upsert(items);
 
         // Assert
         upsertOne.Verify(x => x.Upsert(It.IsAny<Contact>()), Times.Exactly(4));

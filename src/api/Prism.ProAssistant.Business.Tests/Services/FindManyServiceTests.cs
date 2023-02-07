@@ -56,7 +56,7 @@ public class FindManyServiceTests
 
         // Act
         var handler = new FindManyService(organizationContext.Object);
-        var result = await handler.FindMany<Contact>();
+        var result = await handler.Find<Contact>();
 
         // Assert
         result.Count.Should().Be(2);

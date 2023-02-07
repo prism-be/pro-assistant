@@ -29,7 +29,7 @@ public class UpdateManyPropertyServiceTests
 
         // Act
         var service = new UpdateManyPropertyService(logger.Object, organizationContext.Object, user.Object);
-        await service.UpdateMany<Appointment>(string.Empty, Identifier.GenerateString(), "BirtDate", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+        await service.Update<Appointment>(string.Empty, Identifier.GenerateString(), "BirtDate", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
         // Assert
         collection.Verify(x => x.UpdateManyAsync(It.IsAny<FilterDefinition<Appointment>>(), It.IsAny<UpdateDefinition<Appointment>>(), null, CancellationToken.None), Times.Never);
@@ -46,7 +46,7 @@ public class UpdateManyPropertyServiceTests
 
         // Act
         var service = new UpdateManyPropertyService(logger.Object, organizationContext.Object, user.Object);
-        await service.UpdateMany<Appointment>("ContactId", Identifier.GenerateString(), "BirtDate", DateTime.Now.ToString(CultureInfo.InvariantCulture));
+        await service.Update<Appointment>("ContactId", Identifier.GenerateString(), "BirtDate", DateTime.Now.ToString(CultureInfo.InvariantCulture));
 
         // Assert
         collection.Verify(x => x.UpdateManyAsync(It.IsAny<FilterDefinition<Appointment>>(), It.IsAny<UpdateDefinition<Appointment>>(), null, CancellationToken.None), Times.Once);

@@ -10,7 +10,7 @@ namespace Prism.ProAssistant.Business.Services;
 
 public interface IUpsertManyService
 {
-    Task Update<T>(List<T> items)
+    Task Upsert<T>(List<T> items)
         where T : IDataModel;
 }
 
@@ -23,7 +23,7 @@ public class UpsertManyService : IUpsertManyService
         _upsertOneService = upsertOneService;
     }
 
-    public async Task Update<T>(List<T> items)
+    public async Task Upsert<T>(List<T> items)
         where T : IDataModel
     {
         foreach (var item in items)

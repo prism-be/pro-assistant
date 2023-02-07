@@ -98,7 +98,7 @@ public class GenerateDocumentService : IGenerateDocumentService
 
     private async Task<(Appointment appointment, Contact contact, Dictionary<string, Setting> settings)?> GetData(string appointmentId)
     {
-        var appointment = await _findOneService.FindOne<Appointment>(appointmentId);
+        var appointment = await _findOneService.Find<Appointment>(appointmentId);
 
         if (appointment == null)
         {
@@ -112,7 +112,7 @@ public class GenerateDocumentService : IGenerateDocumentService
             return null;
         }
 
-        var contact = await _findOneService.FindOne<Contact>(appointment.ContactId);
+        var contact = await _findOneService.Find<Contact>(appointment.ContactId);
 
         if (contact == null)
         {
@@ -120,14 +120,14 @@ public class GenerateDocumentService : IGenerateDocumentService
             return null;
         }
 
-        var settings = await _findManyService.FindMany<Setting>();
+        var settings = await _findManyService.Find<Setting>();
 
         return (appointment, contact, settings.ToDictionary(x => x.Id));
     }
 
     private async Task<(string title, string content)> GetTitleContent(string documentId)
     {
-        var document = await _findOneService.FindOne<DocumentConfiguration>(documentId);
+        var document = await _findOneService.Find<DocumentConfiguration>(documentId);
 
         if (document == null)
         {

@@ -11,7 +11,7 @@ namespace Prism.ProAssistant.Business.Services;
 
 public interface IFindManyService
 {
-    Task<List<T>> FindMany<T>();
+    Task<List<T>> Find<T>();
 }
 
 public class FindManyService : IFindManyService
@@ -23,7 +23,7 @@ public class FindManyService : IFindManyService
         _organizationContext = organizationContext;
     }
 
-    public async Task<List<T>> FindMany<T>()
+    public async Task<List<T>> Find<T>()
     {
         var collection = _organizationContext.GetCollection<T>();
         var results = await collection.FindAsync<T>(Builders<T>.Filter.Empty);

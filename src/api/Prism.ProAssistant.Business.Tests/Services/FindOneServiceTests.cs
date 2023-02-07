@@ -52,7 +52,7 @@ public class FindOneServiceTests
 
         // Act
         var handler = new FindOneService(organizationContext.Object);
-        var result = await handler.FindOne<Contact>(id);
+        var result = await handler.Find<Contact>(id);
 
         // Assert
         result.Should().NotBeNull();

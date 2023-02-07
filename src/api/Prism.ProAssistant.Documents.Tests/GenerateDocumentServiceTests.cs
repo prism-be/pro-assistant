@@ -38,7 +38,7 @@ public class GenerateDocumentServiceTests
         };
 
         var findOneService = new Mock<FindOneService>();
-        findOneService.Setup(x => x.FindOne<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
+        findOneService.Setup(x => x.Find<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
 
         var findManyService = SetupSettings();
 
@@ -70,7 +70,7 @@ public class GenerateDocumentServiceTests
         };
 
         var findOneService = new Mock<FindOneService>();
-        findOneService.Setup(x => x.FindOne<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
+        findOneService.Setup(x => x.Find<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
 
         var findManyService = SetupSettings();
 
@@ -102,8 +102,8 @@ public class GenerateDocumentServiceTests
         };
 
         var findOneService = new Mock<FindOneService>();
-        findOneService.Setup(x => x.FindOne<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
-        findOneService.Setup(x => x.FindOne<Contact>(It.IsAny<string>())).ReturnsAsync(new Contact
+        findOneService.Setup(x => x.Find<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
+        findOneService.Setup(x => x.Find<Contact>(It.IsAny<string>())).ReturnsAsync(new Contact
         {
             Id = appointment.ContactId
         });
@@ -157,12 +157,12 @@ public class GenerateDocumentServiceTests
         };
 
         var findOneService = new Mock<FindOneService>();
-        findOneService.Setup(x => x.FindOne<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
-        findOneService.Setup(x => x.FindOne<Contact>(It.IsAny<string>())).ReturnsAsync(new Contact
+        findOneService.Setup(x => x.Find<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
+        findOneService.Setup(x => x.Find<Contact>(It.IsAny<string>())).ReturnsAsync(new Contact
         {
             Id = appointment.ContactId
         });
-        findOneService.Setup(x => x.FindOne<DocumentConfiguration>(It.IsAny<string>())).ReturnsAsync(new DocumentConfiguration
+        findOneService.Setup(x => x.Find<DocumentConfiguration>(It.IsAny<string>())).ReturnsAsync(new DocumentConfiguration
         {
             Id = documentId,
             Body = Identifier.GenerateString(),
@@ -199,7 +199,7 @@ public class GenerateDocumentServiceTests
     private static Mock<IFindManyService> SetupSettings()
     {
         var findMany = new Mock<IFindManyService>();
-        findMany.Setup(x => x.FindMany<Setting>())
+        findMany.Setup(x => x.Find<Setting>())
             .ReturnsAsync(new List<Setting>
             {
                 new()

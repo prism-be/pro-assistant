@@ -15,7 +15,7 @@ namespace Prism.ProAssistant.Business.Services;
 
 public interface IUpdateManyPropertyService
 {
-    Task UpdateMany<T>(string filterProperty, string filterValue, string property, object? value)
+    Task Update<T>(string filterProperty, string filterValue, string property, object? value)
         where T : IDataModel;
 }
 
@@ -32,7 +32,7 @@ public class UpdateManyPropertyService : IUpdateManyPropertyService
         _user = user;
     }
 
-    public async Task UpdateMany<T>(string filterProperty, string filterValue, string property, object? value)
+    public async Task Update<T>(string filterProperty, string filterValue, string property, object? value)
         where T : IDataModel
     {
         if (string.IsNullOrEmpty(filterProperty))

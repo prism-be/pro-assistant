@@ -7,7 +7,6 @@
 using FluentAssertions;
 using Moq;
 using Prism.ProAssistant.Api.Insights;
-using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 using Serilog.Core;
 using Serilog.Events;
@@ -22,9 +21,9 @@ public class OrganizationContextEnricherTests
     public void Enrigh_Ok()
     {
         // Arrange
-        var userContextAccessor = new Mock<IUserContextAccessor>();
-        userContextAccessor.Setup(x => x.UserId).Returns(Identifier.GenerateString);
-        userContextAccessor.Setup(x => x.OrganizationId).Returns(Identifier.GenerateString);
+        var user = new Mock<User>();
+        user.Setup(x => x.Id).Returns(Identifier.GenerateString);
+        user.Setup(x => x.Organization).Returns(Identifier.GenerateString);
 
         var logEventFactory = new Mock<ILogEventPropertyFactory>();
         logEventFactory.Setup(x => x.CreateProperty("UserId", It.IsAny<object?>(), false)).Returns(new LogEventProperty("UserId", new ScalarValue("UserId")));
@@ -32,7 +31,7 @@ public class OrganizationContextEnricherTests
 
         // Act
         var logEvent = new LogEvent(DateTimeOffset.Now, LogEventLevel.Debug, null, new MessageTemplate("test", new List<MessageTemplateToken>()), new List<LogEventProperty>());
-        var enricher = new OrganizationContextEnricher(userContextAccessor.Object);
+        var enricher = new OrganizationContextEnricher(user.Object);
         enricher.Enrich(logEvent, logEventFactory.Object);
 
         // Assert

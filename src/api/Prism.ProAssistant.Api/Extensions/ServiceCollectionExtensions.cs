@@ -63,6 +63,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUpsertManyService, UpsertManyService>();
         services.AddScoped<IUpdatePropertyService, UpdatePropertyService>();
         services.AddScoped<IUpsertOneService, UpsertOneService>();
+        
+        services.AddScoped<ICrudService, CrudService>();
     }
 
     public static void AddCache(this IServiceCollection services)

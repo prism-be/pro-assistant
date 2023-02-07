@@ -11,7 +11,7 @@ namespace Prism.ProAssistant.Business.Services;
 
 public interface IFindOneService
 {
-    Task<T?> FindOne<T>(string id);
+    Task<T?> Find<T>(string id);
 }
 
 public class FindOneService : IFindOneService
@@ -23,7 +23,7 @@ public class FindOneService : IFindOneService
         _organizationContext = organizationContext;
     }
 
-    public async Task<T?> FindOne<T>(string id)
+    public async Task<T?> Find<T>(string id)
     {
         var collection = _organizationContext.GetCollection<T>();
         var query = await collection.FindAsync<T>(Builders<T>.Filter.Eq("Id", id));

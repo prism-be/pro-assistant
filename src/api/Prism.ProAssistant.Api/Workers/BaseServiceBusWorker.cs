@@ -6,7 +6,6 @@
 
 using System.Text;
 using System.Text.Json;
-using MediatR;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Events;
 using RabbitMQ.Client;
@@ -57,7 +56,7 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
         base.Dispose();
     }
 
-    public abstract Task ProcessMessageAsync(IMediator mediator, Event<T> e);
+    public abstract Task ProcessMessageAsync(IServiceProvider provider, Event<T> e);
 
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -74,8 +73,6 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
         var consumer = new EventingBasicConsumer(_channel);
         consumer.Received += async (_, args) =>
         {
-            using var scope = _serviceProvider.CreateScope();
-
             try
             {
                 _logger.LogInformation("Processing message {messageId} on queue {queue}", args.DeliveryTag, Queue);
@@ -84,10 +81,11 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
                 var json = Encoding.Default.GetString(body);
                 var payload = JsonSerializer.Deserialize<Event<T>>(json);
 
+                using var scope = _serviceProvider.CreateScope();
+
                 if (payload != null)
                 {
-                    var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
-                    await ProcessMessageAsync(mediator, payload);
+                    await ProcessMessageAsync(scope.ServiceProvider, payload);
                 }
 
                 _channel.BasicAck(args.DeliveryTag, false);
