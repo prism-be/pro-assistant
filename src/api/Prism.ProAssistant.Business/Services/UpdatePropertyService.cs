@@ -25,9 +25,9 @@ public class UpdatePropertyService : IUpdatePropertyService
     private readonly ILogger<UpdatePropertyService> _logger;
     private readonly IOrganizationContext _organizationContext;
     private readonly IPublisher _publisher;
-    private readonly User _user;
+    private readonly IUser _user;
 
-    public UpdatePropertyService(ILogger<UpdatePropertyService> logger, IOrganizationContext organizationContext, IPublisher publisher, User user)
+    public UpdatePropertyService(ILogger<UpdatePropertyService> logger, IOrganizationContext organizationContext, IPublisher publisher, IUser user)
     {
         _logger = logger;
         _organizationContext = organizationContext;

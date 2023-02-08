@@ -6,7 +6,15 @@
 
 namespace Prism.ProAssistant.Business.Security;
 
-public class User
+public interface IUser
+{
+    string? Id { get; set; }
+    string? Organization { get; set; }
+    string? Name { get; set; }
+    bool IsAuthenticated { get; set; }
+}
+
+public class User : IUser
 {
     public string? Id { get; set; }
     

@@ -40,7 +40,7 @@ public static class HostBuilderExtensions
                 .Enrich.WithCorrelationId()
                 .Enrich.WithClientIp()
                 .Enrich.WithClientAgent()
-                .Enrich.With(services.GetService<OrganizationContextEnricher>()!)
+                //.Enrich.With(services.GetService<OrganizationContextEnricher>()!)
                 .Enrich.WithProperty("environment", Environment.GetEnvironmentVariable("ENVIRONMENT") ?? "proassistant");
 
             var elkUri = Environment.GetEnvironmentVariable("ELK_URI");

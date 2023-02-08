@@ -23,9 +23,9 @@ public class SearchContactsService : ISearchContactsService
 {
     private readonly ILogger<SearchContactsService> _logger;
     private readonly IOrganizationContext _organizationContext;
-    private readonly User _user;
+    private readonly IUser _user;
 
-    public SearchContactsService(IOrganizationContext organizationContext, ILogger<SearchContactsService> logger, User user)
+    public SearchContactsService(IOrganizationContext organizationContext, ILogger<SearchContactsService> logger, IUser user)
     {
         _organizationContext = organizationContext;
         _logger = logger;

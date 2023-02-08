@@ -24,9 +24,9 @@ public class RemoveOneService : IRemoveOneService
     private readonly ILogger<RemoveOneService> _logger;
 
     private readonly IOrganizationContext _organizationContext;
-    private readonly User _user;
+    private readonly IUser _user;
 
-    public RemoveOneService(ILogger<RemoveOneService> logger, IOrganizationContext organizationContext, User user)
+    public RemoveOneService(ILogger<RemoveOneService> logger, IOrganizationContext organizationContext, IUser user)
     {
         _logger = logger;
         _organizationContext = organizationContext;

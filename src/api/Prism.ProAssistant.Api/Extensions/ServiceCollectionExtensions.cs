@@ -47,9 +47,9 @@ public static class ServiceCollectionExtensions
     public static void AddBusinessServices(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
-        services.AddScoped<User>();
+        services.AddScoped<IUser, User>();
 
-        services.AddTransient<OrganizationContextEnricher>();
+        services.AddScoped<OrganizationContextEnricher>();
 
         // Add documents services
         services.AddScoped<ILocalizator, Localizator>();

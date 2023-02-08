@@ -14,9 +14,9 @@ public class UserInformationMiddleware
     
     private readonly RequestDelegate _next;
     private readonly ILogger<UserInformationMiddleware> _logger;
-    private readonly User _user;
+    private readonly IUser _user;
 
-    public UserInformationMiddleware(RequestDelegate next, ILogger<UserInformationMiddleware> logger, User user)
+    public UserInformationMiddleware(RequestDelegate next, ILogger<UserInformationMiddleware> logger, IUser user)
     {
         _next = next;
         _logger = logger;

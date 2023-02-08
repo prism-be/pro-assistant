@@ -24,9 +24,9 @@ public class UpsertOneService : IUpsertOneService
     private readonly ILogger<UpsertOneService> _logger;
 
     private readonly IOrganizationContext _organizationContext;
-    private readonly User _user;
+    private readonly IUser _user;
 
-    public UpsertOneService(ILogger<UpsertOneService> logger, IOrganizationContext organizationContext, User user)
+    public UpsertOneService(ILogger<UpsertOneService> logger, IOrganizationContext organizationContext, IUser user)
     {
         _organizationContext = organizationContext;
         _user = user;
