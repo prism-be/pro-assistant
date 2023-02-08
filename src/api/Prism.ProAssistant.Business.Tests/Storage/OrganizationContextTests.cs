@@ -34,10 +34,13 @@ public class OrganizationContextTests
     {
         // Arrange
         var configuration = new MongoDbConfiguration("mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin");
-        var user = new Mock<User>();
+        var user = new User
+        {
+            Organization = Identifier.GenerateString()
+        };
 
         // Act
-        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), user.Object);
+        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), user);
         var collection = context.GetCollection<Contact>();
 
         // Assert
@@ -49,11 +52,14 @@ public class OrganizationContextTests
     {
         // Arrange
         var configuration = new MongoDbConfiguration("mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin");
-        var user = new Mock<User>();
-        user.Setup(x => x.Organization).Returns(Identifier.GenerateString);
+        var user = new User
+        {
+            Id = Identifier.GenerateString(),
+            Organization = Identifier.GenerateString()
+        };
 
         // Act
-        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), user.Object);
+        var context = new OrganizationContext(new MongoClient(configuration.ConnectionString), user);
         var collection = context.GetCollection<Contact>();
 
         // Assert
