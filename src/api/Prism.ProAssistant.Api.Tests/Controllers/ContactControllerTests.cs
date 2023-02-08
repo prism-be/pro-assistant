@@ -21,13 +21,50 @@ public class ContactControllerTests
     [Fact]
     public async Task FindMany()
     {
-        await CrudTests.FindMany<ContactController, Contact>(c => c.FindMany());
+        // Arrange
+        var crudService = new Mock<ICrudService>();
+        crudService.Setup(x => x.FindMany<Contact>()).ReturnsAsync(new List<Contact>
+        {
+            new()
+            {
+                FirstName = Identifier.GenerateString(),
+                LastName = Identifier.GenerateString(),
+                Title = Identifier.GenerateString(),
+                Id = Identifier.GenerateString()
+            }
+        });
+        var searchService = new Mock<ISearchContactsService>();
+
+        // Act
+        var controller = new ContactController(crudService.Object, searchService.Object);
+        var result = await controller.FindMany();
+
+        // Assert
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
+        crudService.Verify(x => x.FindMany<Contact>(), Times.Once);
     }
 
     [Fact]
     public async Task FindOne()
     {
-        await CrudTests.FindOne<ContactController, Contact>(c => c.FindOne(Identifier.GenerateString()));
+        // Arrange
+        var crudService = new Mock<ICrudService>();
+        crudService.Setup(x => x.FindOne<Contact>(It.IsAny<string>())).ReturnsAsync(new Contact
+        {
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString(),
+            Id = Identifier.GenerateString()
+        });
+        var searchService = new Mock<ISearchContactsService>();
+
+        // Act
+        var controller = new ContactController(crudService.Object, searchService.Object);
+        var result = await controller.FindOne(Identifier.GenerateString());
+
+        // Assert
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
+        crudService.Verify(x => x.FindOne<Contact>(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -51,9 +88,20 @@ public class ContactControllerTests
     [Fact]
     public async Task UpsertOne()
     {
-        await CrudTests.UpsertOne<ContactController, Contact>(c => c.UpsertOne(new Contact
+        // Arrange
+        var crudService = new Mock<ICrudService>();
+        crudService.Setup(x => x.UpsertOne(It.IsAny<Contact>())).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
+        var searchService = new Mock<ISearchContactsService>();
+
+        // Act
+        var controller = new ContactController(crudService.Object, searchService.Object);
+        var result = await controller.UpsertOne(new Contact
         {
             Id = Identifier.GenerateString()
-        }));
+        });
+
+        // Assert
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
+        crudService.Verify(x => x.UpsertOne(It.IsAny<Contact>()), Times.Once);
     }
 }
