@@ -37,7 +37,7 @@ public class GenerateDocumentServiceTests
             Title = Identifier.GenerateString()
         };
 
-        var findOneService = new Mock<FindOneService>();
+        var findOneService = new Mock<IFindOneService>();
         findOneService.Setup(x => x.Find<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
 
         var findManyService = SetupSettings();
@@ -69,7 +69,7 @@ public class GenerateDocumentServiceTests
             Title = Identifier.GenerateString()
         };
 
-        var findOneService = new Mock<FindOneService>();
+        var findOneService = new Mock<IFindOneService>();
         findOneService.Setup(x => x.Find<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
 
         var findManyService = SetupSettings();
@@ -101,7 +101,7 @@ public class GenerateDocumentServiceTests
             Title = Identifier.GenerateString()
         };
 
-        var findOneService = new Mock<FindOneService>();
+        var findOneService = new Mock<IFindOneService>();
         findOneService.Setup(x => x.Find<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
         findOneService.Setup(x => x.Find<Contact>(It.IsAny<string>())).ReturnsAsync(new Contact
         {
@@ -128,8 +128,8 @@ public class GenerateDocumentServiceTests
         var id = Identifier.GenerateString();
         var documentId = Identifier.GenerateString();
 
-        var findOneService = new Mock<FindOneService>();
-        var findManyService = new Mock<FindManyService>();
+        var findOneService = new Mock<IFindOneService>();
+        var findManyService = new Mock<IFindManyService>();
         var localizer = new Mock<ILocalizator>();
 
         var organizationContext = new Mock<IOrganizationContext>();
@@ -156,7 +156,7 @@ public class GenerateDocumentServiceTests
             Title = Identifier.GenerateString()
         };
 
-        var findOneService = new Mock<FindOneService>();
+        var findOneService = new Mock<IFindOneService>();
         findOneService.Setup(x => x.Find<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
         findOneService.Setup(x => x.Find<Contact>(It.IsAny<string>())).ReturnsAsync(new Contact
         {
