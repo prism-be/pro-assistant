@@ -47,7 +47,7 @@ public class UpsertOneServiceTests
 
         // Assert
         collection.Verify(x => x.InsertOneAsync(appointment, null, CancellationToken.None));
-        result.Should().Be(id);
+        result.Id.Should().Be(id);
     }
 
     [Fact]
@@ -81,6 +81,6 @@ public class UpsertOneServiceTests
 
         // Assert
         collection.Verify(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Appointment>>(), appointment, It.IsAny<FindOneAndReplaceOptions<Appointment>>(), CancellationToken.None));
-        result.Should().Be(id);
+        result.Id.Should().Be(id);
     }
 }
