@@ -68,8 +68,11 @@ public static class CrudTests
     {
         // Arrange
         var service = new Mock<ICrudService>();
-        service.Setup(x => x.UpsertOne(It.IsAny<TModel>()))
-            .ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
+        service.Setup(x => x.UpsertMany(It.IsAny<List<TModel>>()))
+            .ReturnsAsync(new List<UpsertResult>
+            {
+                new(Identifier.GenerateString(), Identifier.GenerateString())
+            });
 
         if (setup != null)
         {
@@ -81,7 +84,7 @@ public static class CrudTests
         await action(controller);
 
         // Assert
-        service.Verify(x => x.UpsertOne(It.IsAny<TModel>()), Times.AtLeastOnce);
+        service.Verify(x => x.UpsertMany(It.IsAny<List<TModel>>()), Times.AtLeastOnce);
     }
 
     public static async Task UpsertOne<TController, TModel>(Func<TController, Task<ActionResult<UpsertResult>>> action, Action<Mock<ICrudService>>? setup = null)

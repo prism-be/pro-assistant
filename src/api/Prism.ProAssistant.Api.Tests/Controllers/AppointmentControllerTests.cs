@@ -23,7 +23,24 @@ public class AppointmentControllerTests
     [Fact]
     public async Task FindOne()
     {
-        await CrudTests.FindOne<AppointmentController, Appointment>(c => c.FindOne(Identifier.GenerateString()));
+        // Arrange
+        var crudService = new Mock<ICrudService>();
+        crudService.Setup(x => x.FindOne<Appointment>(It.IsAny<string>())).ReturnsAsync(new Appointment
+        {
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString(),
+            Id = Identifier.GenerateString()
+        });
+        var searchService = new Mock<ISearchAppointmentsService>();
+
+        // Act
+        var controller = new AppointmentController(crudService.Object, searchService.Object);
+        var result = await controller.FindOne(Identifier.GenerateString());
+
+        // Assert
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
+        crudService.Verify(x => x.FindOne<Appointment>(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -101,30 +118,49 @@ public class AppointmentControllerTests
     [Fact]
     public async Task UpsertOne()
     {
-        await CrudTests.UpsertOne<AppointmentController, Appointment>(c => c.UpsertOne(new Appointment
+        // Arrange
+        var crudService = new Mock<ICrudService>();
+        crudService.Setup(x => x.UpsertOne(It.IsAny<Appointment>())).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
+        var searchService = new Mock<ISearchAppointmentsService>();
+
+        // Act
+        var controller = new AppointmentController(crudService.Object, searchService.Object);
+        var result = await controller.UpsertOne(new Appointment
         {
             Id = Identifier.GenerateString(),
             ContactId = Identifier.GenerateString(),
             FirstName = Identifier.GenerateString(),
             LastName = Identifier.GenerateString(),
             Title = Identifier.GenerateString()
-        }));
+        });
+
+        // Assert
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
+        crudService.Verify(x => x.UpsertOne(It.IsAny<Appointment>()), Times.Once);
     }
 
     [Fact]
     public async Task UpsertOne_NoContact()
     {
-        await CrudTests.UpsertOne<AppointmentController, Appointment>(c => c.UpsertOne(new Appointment
-            {
-                Id = Identifier.GenerateString(),
-                ContactId = string.Empty,
-                FirstName = Identifier.GenerateString(),
-                LastName = Identifier.GenerateString(),
-                Title = Identifier.GenerateString()
-            }),
-            m =>
-            {
-                m.Setup(x => x.UpsertOne(It.IsAny<Contact>())).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
-            });
+        // Arrange
+        var crudService = new Mock<ICrudService>();
+        crudService.Setup(x => x.UpsertOne(It.IsAny<Appointment>())).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
+        crudService.Setup(x => x.UpsertOne(It.IsAny<Contact>())).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
+        var searchService = new Mock<ISearchAppointmentsService>();
+
+        // Act
+        var controller = new AppointmentController(crudService.Object, searchService.Object);
+        var result = await controller.UpsertOne(new Appointment
+        {
+            Id = Identifier.GenerateString(),
+            ContactId = string.Empty,
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
+        });
+
+        // Assert
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
+        crudService.Verify(x => x.UpsertOne(It.IsAny<Appointment>()), Times.Once);
     }
 }

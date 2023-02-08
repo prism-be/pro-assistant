@@ -134,8 +134,6 @@ public class DownloadsControllerTests
         var deleteDocumentService = new Mock<IDeleteDocumentService>();
         var downloadDocumentService = new Mock<IDownloadDocumentService>();
         var generateDocumentService = new Mock<IGenerateDocumentService>();
-        downloadDocumentService.Setup(x => x.Download(It.IsAny<string>()))
-            .ReturnsAsync(new DownloadDocumentResponse(documentId, Encoding.Default.GetBytes(documentId)));
 
         // Act
         var controller = new DownloadController(cache.Object, deleteDocumentService.Object, generateDocumentService.Object, downloadDocumentService.Object);

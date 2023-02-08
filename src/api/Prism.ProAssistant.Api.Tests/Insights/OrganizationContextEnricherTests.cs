@@ -21,9 +21,11 @@ public class OrganizationContextEnricherTests
     public void Enrigh_Ok()
     {
         // Arrange
-        var user = new Mock<User>();
-        user.Setup(x => x.Id).Returns(Identifier.GenerateString);
-        user.Setup(x => x.Organization).Returns(Identifier.GenerateString);
+        var user = new User
+        {
+            Id = Identifier.GenerateString(),
+            Organization = Identifier.GenerateString()
+        };
 
         var logEventFactory = new Mock<ILogEventPropertyFactory>();
         logEventFactory.Setup(x => x.CreateProperty("UserId", It.IsAny<object?>(), false)).Returns(new LogEventProperty("UserId", new ScalarValue("UserId")));
@@ -31,7 +33,7 @@ public class OrganizationContextEnricherTests
 
         // Act
         var logEvent = new LogEvent(DateTimeOffset.Now, LogEventLevel.Debug, null, new MessageTemplate("test", new List<MessageTemplateToken>()), new List<LogEventProperty>());
-        var enricher = new OrganizationContextEnricher(user.Object);
+        var enricher = new OrganizationContextEnricher(user);
         enricher.Enrich(logEvent, logEventFactory.Object);
 
         // Assert

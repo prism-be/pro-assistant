@@ -25,6 +25,6 @@ public class AuthenticationController : Controller
     [Authorize]
     public ActionResult<UserInformation> GetUser()
     {
-        return Ok(new UserInformation(_user.Name, _user.Organization, true));
+        return Ok(new UserInformation(_user.Name, _user.Organization, _user.IsAuthenticated));
     }
 }
