@@ -20,7 +20,7 @@ public static class LoggerExtensions
         logger.LogInformation("Deleted an existing item by user {userId}({organizationId}) with id {itemId}", user.Id, user.Organization, itemId);
     }
 
-    public static async Task<string> LogDataInsert(this ILogger logger, User user, IDataModel data, Func<Task<string>> action)
+    public static async Task<UpsertResult> LogDataInsert(this ILogger logger, User user, IDataModel data, Func<Task<UpsertResult>> action)
     {
         logger.LogInformation("Inserting an new item of type {itemType} by user {userId}({organizationId}) with id {itemId}", data.GetType().Name, user.Id, user.Organization, data.Id);
         var result = await action();
@@ -28,7 +28,7 @@ public static class LoggerExtensions
         return result;
     }
 
-    public static async Task<string> LogDataUpdate(this ILogger logger, User user, IDataModel data, Func<Task<string>> action)
+    public static async Task<UpsertResult> LogDataUpdate(this ILogger logger, User user, IDataModel data, Func<Task<UpsertResult>> action)
     {
         logger.LogInformation("Updating an existing item of type {itemType} by user {userId}({organizationId}) with id {itemId}", data.GetType().Name, user.Id, user.Organization, data.Id);
         var result = await action();

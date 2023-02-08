@@ -15,7 +15,7 @@ namespace Prism.ProAssistant.Business.Services;
 
 public interface IUpsertOneService
 {
-    Task<string> Upsert<T>(T item)
+    Task<UpsertResult> Upsert<T>(T item)
         where T : IDataModel;
 }
 
@@ -33,7 +33,7 @@ public class UpsertOneService : IUpsertOneService
         _logger = logger;
     }
 
-    public async Task<string> Upsert<T>(T item)
+    public async Task<UpsertResult> Upsert<T>(T item)
         where T : IDataModel
     {
         var collection = _organizationContext.GetCollection<T>();
@@ -43,7 +43,7 @@ public class UpsertOneService : IUpsertOneService
             return await _logger.LogDataInsert(_user, item, async () =>
             {
                 await collection.InsertOneAsync(item);
-                return item.Id;
+                return new UpsertResult(item.Id, _user.Organization);
             });
         }
 
@@ -54,7 +54,7 @@ public class UpsertOneService : IUpsertOneService
                 IsUpsert = true
             });
 
-            return updated.Id;
+            return new UpsertResult(updated.Id, _user.Organization);
         });
     }
 }

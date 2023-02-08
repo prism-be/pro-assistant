@@ -7,7 +7,6 @@
 using FluentAssertions;
 using Moq;
 using Prism.ProAssistant.Api.Controllers;
-using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 using Xunit;
 
@@ -20,12 +19,12 @@ public class AuthenticationControllerTests
     public void GetUser_Anonymous()
     {
         // Arrange
-        var userContextAccessor = new Mock<IUserContextAccessor>();
-        userContextAccessor.Setup(x => x.Name).Returns(string.Empty);
-        userContextAccessor.Setup(x => x.IsAuthenticated).Returns(false);
+        var user = new Mock<User>();
+        user.Setup(x => x.Name).Returns(string.Empty);
+        user.Setup(x => x.IsAuthenticated).Returns(false);
 
         // Act
-        var controller = new AuthenticationController(userContextAccessor.Object);
+        var controller = new AuthenticationController(user.Object);
         var result = controller.GetUser();
 
         // Assert
@@ -42,12 +41,12 @@ public class AuthenticationControllerTests
         // Arrange
         var name = Identifier.GenerateString();
 
-        var userContextAccessor = new Mock<IUserContextAccessor>();
-        userContextAccessor.Setup(x => x.Name).Returns(name);
-        userContextAccessor.Setup(x => x.IsAuthenticated).Returns(true);
+        var user = new Mock<User>();
+        user.Setup(x => x.Name).Returns(name);
+        user.Setup(x => x.IsAuthenticated).Returns(true);
 
         // Act
-        var controller = new AuthenticationController(userContextAccessor.Object);
+        var controller = new AuthenticationController(user.Object);
         var result = controller.GetUser();
 
         // Assert

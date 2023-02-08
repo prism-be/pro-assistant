@@ -7,7 +7,6 @@
 using System.Text;
 using System.Text.Json;
 using FluentAssertions;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Moq;
@@ -28,14 +27,16 @@ public class DownloadsControllerTests
         var documentId = Identifier.GenerateString();
         var appointmentId = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
-        var mediator = new Mock<IMediator>();
+        var deleteDocumentService = new Mock<IDeleteDocumentService>();
+        var downloadDocumentService = new Mock<IDownloadDocumentService>();
+        var generateDocumentService = new Mock<IGenerateDocumentService>();
 
         // Act
-        var controller = new DownloadController(mediator.Object, cache.Object);
+        var controller = new DownloadController(cache.Object, deleteDocumentService.Object, generateDocumentService.Object, downloadDocumentService.Object);
         await controller.Delete(new DeleteDocument(documentId, appointmentId));
 
         // Assert
-        mediator.Verify(x => x.Send(It.IsAny<DeleteDocument>(), CancellationToken.None), Times.Once);
+        deleteDocumentService.Verify(x => x.Delete(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     [Theory]
@@ -49,9 +50,12 @@ public class DownloadsControllerTests
         var cache = new Mock<IDistributedCache>();
         cache.Setup(x => x.GetAsync(It.IsAny<string>(), CancellationToken.None))
             .ReturnsAsync(Encoding.Default.GetBytes(JsonSerializer.Serialize(new DownloadDocumentResponse(appointmentId, Encoding.Default.GetBytes(appointmentId)))));
+        var deleteDocumentService = new Mock<IDeleteDocumentService>();
+        var downloadDocumentService = new Mock<IDownloadDocumentService>();
+        var generateDocumentService = new Mock<IGenerateDocumentService>();
 
         // Act
-        var controller = new DownloadController(Mock.Of<IMediator>(), cache.Object);
+        var controller = new DownloadController(cache.Object, deleteDocumentService.Object, generateDocumentService.Object, downloadDocumentService.Object);
         var result = await controller.Download(appointmentKey, download);
 
         // Assert
@@ -65,16 +69,19 @@ public class DownloadsControllerTests
         var documentId = Identifier.GenerateString();
         var appointmentId = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
-        var receiptGenerator = new Mock<IMediator>();
-        receiptGenerator.Setup(x => x.Send(It.IsAny<GenerateDocument>(), CancellationToken.None))
+        var generateDocumentService = new Mock<IGenerateDocumentService>();
+        generateDocumentService.Setup(x => x.Generate(It.IsAny<string>(), It.IsAny<string>()))
             .ReturnsAsync(Guid.NewGuid().ToByteArray);
 
+        var deleteDocumentService = new Mock<IDeleteDocumentService>();
+        var downloadDocumentService = new Mock<IDownloadDocumentService>();
+
         // Act
-        var controller = new DownloadController(receiptGenerator.Object, cache.Object);
+        var controller = new DownloadController(cache.Object, deleteDocumentService.Object, generateDocumentService.Object, downloadDocumentService.Object);
         await controller.Generate(new GenerateDocument(documentId, appointmentId));
 
         // Assert
-        receiptGenerator.Verify(x => x.Send(It.IsAny<GenerateDocument>(), CancellationToken.None), Times.Once);
+        generateDocumentService.Verify(x => x.Generate(It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -84,9 +91,12 @@ public class DownloadsControllerTests
         var appointmentKey = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
         cache.Setup(x => x.GetAsync(It.IsAny<string>(), CancellationToken.None)).ReturnsAsync((byte[])null!);
+        var deleteDocumentService = new Mock<IDeleteDocumentService>();
+        var downloadDocumentService = new Mock<IDownloadDocumentService>();
+        var generateDocumentService = new Mock<IGenerateDocumentService>();
 
         // Act
-        var controller = new DownloadController(Mock.Of<IMediator>(), cache.Object);
+        var controller = new DownloadController(cache.Object, deleteDocumentService.Object, generateDocumentService.Object, downloadDocumentService.Object);
         var result = await controller.Download(appointmentKey, false);
 
         // Assert
@@ -99,16 +109,19 @@ public class DownloadsControllerTests
         // Arrange
         var documentId = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
-        var receiptGenerator = new Mock<IMediator>();
-        receiptGenerator.Setup(x => x.Send(It.IsAny<DownloadDocument>(), CancellationToken.None))
+
+        var deleteDocumentService = new Mock<IDeleteDocumentService>();
+        var downloadDocumentService = new Mock<IDownloadDocumentService>();
+        var generateDocumentService = new Mock<IGenerateDocumentService>();
+        downloadDocumentService.Setup(x => x.Download(It.IsAny<string>()))
             .ReturnsAsync(new DownloadDocumentResponse(documentId, Encoding.Default.GetBytes(documentId)));
 
         // Act
-        var controller = new DownloadController(receiptGenerator.Object, cache.Object);
+        var controller = new DownloadController(cache.Object, deleteDocumentService.Object, generateDocumentService.Object, downloadDocumentService.Object);
         var result = await controller.Start(new DownloadDocument(documentId));
 
         // Assert
-        receiptGenerator.Verify(x => x.Send(It.IsAny<DownloadDocument>(), CancellationToken.None), Times.Once);
+        downloadDocumentService.Verify(x => x.Download(It.IsAny<string>()), Times.Once);
         result.Should().BeAssignableTo<ActionResult<DownloadKey>>();
     }
 
@@ -118,14 +131,19 @@ public class DownloadsControllerTests
         // Arrange
         var documentId = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
-        var receiptGenerator = new Mock<IMediator>();
+        var deleteDocumentService = new Mock<IDeleteDocumentService>();
+        var downloadDocumentService = new Mock<IDownloadDocumentService>();
+        var generateDocumentService = new Mock<IGenerateDocumentService>();
+        downloadDocumentService.Setup(x => x.Download(It.IsAny<string>()))
+            .ReturnsAsync(new DownloadDocumentResponse(documentId, Encoding.Default.GetBytes(documentId)));
 
         // Act
-        var controller = new DownloadController(receiptGenerator.Object, cache.Object);
+        var controller = new DownloadController(cache.Object, deleteDocumentService.Object, generateDocumentService.Object, downloadDocumentService.Object);
+
         var result = await controller.Start(new DownloadDocument(documentId));
 
         // Assert
-        receiptGenerator.Verify(x => x.Send(It.IsAny<DownloadDocument>(), CancellationToken.None), Times.Once);
+        downloadDocumentService.Verify(x => x.Download(It.IsAny<string>()), Times.Once);
         result.Should().BeAssignableTo<ActionResult<DownloadKey>>();
         result.Result.Should().BeAssignableTo<NotFoundResult>();
     }

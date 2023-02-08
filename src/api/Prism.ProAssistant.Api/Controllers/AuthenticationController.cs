@@ -7,18 +7,17 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Models;
-using Prism.ProAssistant.Api.Security;
 using Prism.ProAssistant.Business.Security;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
 public class AuthenticationController : Controller
 {
-    private readonly IUserContextAccessor _userContextAccessor;
+    private readonly User _user;
 
-    public AuthenticationController(IUserContextAccessor userContextAccessor)
+    public AuthenticationController(User user)
     {
-        _userContextAccessor = userContextAccessor;
+        _user = user;
     }
 
     [HttpGet]
@@ -26,11 +25,6 @@ public class AuthenticationController : Controller
     [Authorize]
     public ActionResult<UserInformation> GetUser()
     {
-        if (_userContextAccessor.IsAuthenticated)
-        {
-            return Ok(new UserInformation(_userContextAccessor.Name, _userContextAccessor.OrganizationId, true));
-        }
-
-        return Ok(new UserInformation(null, null, false));
+        return Ok(new UserInformation(_user.Name, _user.Organization, true));
     }
 }

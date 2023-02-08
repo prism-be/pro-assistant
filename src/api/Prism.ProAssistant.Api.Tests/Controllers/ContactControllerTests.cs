@@ -5,13 +5,13 @@
 // -----------------------------------------------------------------------
 
 using FluentAssertions;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.ProAssistant.Api.Controllers;
+using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
+using Prism.ProAssistant.Business.Services;
 using Xunit;
 
 namespace Prism.ProAssistant.Api.Tests.Controllers;
@@ -34,17 +34,18 @@ public class ContactControllerTests
     public async Task Search()
     {
         // Arrange
-        var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<SearchContacts>(), CancellationToken.None))
+        var crudService = new Mock<ICrudService>();
+        var service = new Mock<ISearchContactsService>();
+        service.Setup(x => x.Search(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
             .ReturnsAsync(new List<Contact>());
 
         // Act
-        var controller = new ContactController(mediator.Object);
+        var controller = new ContactController(crudService.Object, service.Object);
         var result = await controller.Search(new SearchContacts(string.Empty, string.Empty, string.Empty, string.Empty));
 
         // Assert
         result.Result.Should().BeAssignableTo<OkObjectResult>();
-        mediator.Verify(x => x.Send(It.IsAny<SearchContacts>(), CancellationToken.None), Times.Once);
+        service.Verify(x => x.Search(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     [Fact]

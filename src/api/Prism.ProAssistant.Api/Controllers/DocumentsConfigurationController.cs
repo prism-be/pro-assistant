@@ -4,28 +4,27 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Queries;
+using Prism.ProAssistant.Business.Services;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
 public class DocumentsConfigurationController : Controller
 {
-    private readonly IMediator _mediator;
+    private readonly ICrudService _crudService;
 
-    public DocumentsConfigurationController(IMediator mediator)
+    public DocumentsConfigurationController(ICrudService crudService)
     {
-        _mediator = mediator;
+        _crudService = crudService;
     }
 
     [Route("api/documents-configuration")]
     [HttpGet]
     public async Task<ActionResult<List<DocumentConfiguration>>> FindMany()
     {
-        var result = await _mediator.Send(new FindMany<DocumentConfiguration>());
+        var result = await _crudService.FindMany<DocumentConfiguration>();
         return result
             .OrderBy(x => x.Name)
             .ToList()
@@ -36,7 +35,7 @@ public class DocumentsConfigurationController : Controller
     [HttpGet]
     public async Task<ActionResult<DocumentConfiguration>> FindOne(string documentId)
     {
-        var result = await _mediator.Send(new FindOne<DocumentConfiguration>(documentId));
+        var result = await _crudService.FindOne<DocumentConfiguration>(documentId);
         return result.ToActionResult();
     }
 
@@ -44,14 +43,14 @@ public class DocumentsConfigurationController : Controller
     [HttpDelete]
     public async Task RemoveOne(string documentId)
     {
-        await _mediator.Send(new RemoveOne(documentId));
+        await _crudService.RemoveOne<DocumentConfiguration>(documentId);
     }
 
     [Route("api/documents-configuration")]
     [HttpPost]
     public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] DocumentConfiguration documentConfiguration)
     {
-        var result = await _mediator.Send(new UpsertOne<DocumentConfiguration>(documentConfiguration));
+        var result = await _crudService.UpsertOne(documentConfiguration);
         return result.ToActionResult();
     }
 }

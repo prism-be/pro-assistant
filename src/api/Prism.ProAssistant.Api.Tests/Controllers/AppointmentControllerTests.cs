@@ -5,13 +5,14 @@
 // -----------------------------------------------------------------------
 
 using FluentAssertions;
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Prism.ProAssistant.Api.Controllers;
+using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
+using Prism.ProAssistant.Business.Services;
 using Xunit;
 
 namespace Prism.ProAssistant.Api.Tests.Controllers;
@@ -29,25 +30,27 @@ public class AppointmentControllerTests
     public async Task Search()
     {
         // Arrange
-        var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<SearchAppointments>(), CancellationToken.None))
+        var crudService = new Mock<ICrudService>();
+        var searchService = new Mock<ISearchAppointmentsService>();
+        searchService.Setup(x => x.Search(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>()))
             .ReturnsAsync(new List<Appointment>());
 
         // Act
-        var controller = new AppointmentController(mediator.Object);
+        var controller = new AppointmentController(crudService.Object, searchService.Object);
         var result = await controller.Search(new SearchAppointments(DateTime.Today, DateTime.Today.AddDays(-7), null));
 
         // Assert
         result.Result.Should().BeAssignableTo<OkObjectResult>();
-        mediator.Verify(x => x.Send(It.IsAny<SearchAppointments>(), CancellationToken.None), Times.Once);
+        searchService.Verify(x => x.Search(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
     public async Task Search_Must_Filter()
     {
         // Arrange
-        var mediator = new Mock<IMediator>();
-        mediator.Setup(x => x.Send(It.IsAny<SearchAppointments>(), CancellationToken.None))
+        var crudService = new Mock<ICrudService>();
+        var searchService = new Mock<ISearchAppointmentsService>();
+        searchService.Setup(x => x.Search(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>()))
             .ReturnsAsync(new List<Appointment>
             {
                 new()
@@ -85,12 +88,12 @@ public class AppointmentControllerTests
             });
 
         // Act
-        var controller = new AppointmentController(mediator.Object);
+        var controller = new AppointmentController(crudService.Object, searchService.Object);
         var result = await controller.Search(new SearchAppointments(DateTime.Today, DateTime.Today.AddDays(-7), null));
 
         // Assert
         result.Result.Should().BeAssignableTo<OkObjectResult>();
-        mediator.Verify(x => x.Send(It.IsAny<SearchAppointments>(), CancellationToken.None), Times.Once);
+        searchService.Verify(x => x.Search(It.IsAny<DateTime>(), It.IsAny<DateTime>(), It.IsAny<string>()), Times.Once);
         var items = ((OkObjectResult)result.Result!).Value as List<Appointment>;
         items!.Count.Should().Be(3);
     }
@@ -121,7 +124,7 @@ public class AppointmentControllerTests
             }),
             m =>
             {
-                m.Setup(x => x.Send(It.IsAny<UpsertOne<Contact>>(), CancellationToken.None)).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
+                m.Setup(x => x.UpsertOne(It.IsAny<Contact>())).ReturnsAsync(new UpsertResult(Identifier.GenerateString(), Identifier.GenerateString()));
             });
     }
 }

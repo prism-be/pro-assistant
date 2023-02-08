@@ -29,7 +29,7 @@ public class DocumentsConfigurationControllerTests
     [Fact]
     public async Task RemoveOne()
     {
-        await CrudTests.RemoveOne<DocumentsConfigurationController>(c => c.RemoveOne(Identifier.GenerateString()));
+        await CrudTests.RemoveOne<DocumentsConfigurationController, DocumentConfiguration>(c => c.RemoveOne(Identifier.GenerateString()));
     }
 
     [Fact]

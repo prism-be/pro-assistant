@@ -4,11 +4,10 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using DotLiquid.Util;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Extensions;
+using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
@@ -20,10 +19,12 @@ namespace Prism.ProAssistant.Api.Controllers;
 public class AppointmentController : Controller
 {
     private readonly ICrudService _crudService;
+    private readonly ISearchAppointmentsService _searchAppointmentsService;
 
-    public AppointmentController(ICrudService crudService)
+    public AppointmentController(ICrudService crudService, ISearchAppointmentsService searchAppointmentsService)
     {
         _crudService = crudService;
+        _searchAppointmentsService = searchAppointmentsService;
     }
 
     [Route("api/appointment/{appointmentId}")]
@@ -38,7 +39,7 @@ public class AppointmentController : Controller
     [HttpPost]
     public async Task<ActionResult<List<Appointment>>> Search([FromBody] SearchAppointments search)
     {
-        var result = await _mediator.Send(search);
+        var result = await _searchAppointmentsService.Search(search.StartDate, search.EndDate, search.ContactId);
         return result
             .Where(x => x.State != (int)AppointmentState.Canceled)
             .ToList()
@@ -58,23 +59,23 @@ public class AppointmentController : Controller
                 FirstName = appointment.FirstName
             };
 
-            var contactId = await _mediator.Send(new UpsertOne<Contact>(contact));
+            await _crudService.UpsertOne(contact);
 
-            appointment.ContactId = contactId.Id;
+            appointment.ContactId = contact.Id;
         }
 
-        var result = await _mediator.Send(new UpsertOne<Appointment>(appointment));
+        var result = await _crudService.UpsertOne(appointment);
 
         if (!string.IsNullOrWhiteSpace(appointment.BirthDate))
         {
-            await _mediator.Send(new UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.BirthDate), appointment.BirthDate));
+            await _crudService.UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.BirthDate), appointment.BirthDate);
         }
-        
+
         if (!string.IsNullOrWhiteSpace(appointment.PhoneNumber))
         {
-            await _mediator.Send(new UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.PhoneNumber), appointment.PhoneNumber));
+            await _crudService.UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.PhoneNumber), appointment.PhoneNumber);
         }
-        
+
         return result.ToActionResult();
     }
 }

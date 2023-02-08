@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "UpdateManyService.cs" company = "Prism">
+//  <copyright file = "UpsertManyService.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -10,7 +10,7 @@ namespace Prism.ProAssistant.Business.Services;
 
 public interface IUpsertManyService
 {
-    Task Upsert<T>(List<T> items)
+    Task<List<UpsertResult>> Upsert<T>(List<T> items)
         where T : IDataModel;
 }
 
@@ -23,12 +23,16 @@ public class UpsertManyService : IUpsertManyService
         _upsertOneService = upsertOneService;
     }
 
-    public async Task Upsert<T>(List<T> items)
+    public async Task<List<UpsertResult>> Upsert<T>(List<T> items)
         where T : IDataModel
     {
+        var results = new List<UpsertResult>();
+
         foreach (var item in items)
         {
-            await _upsertOneService.Upsert(item);
+            results.Add(await _upsertOneService.Upsert(item));
         }
+
+        return results;
     }
 }

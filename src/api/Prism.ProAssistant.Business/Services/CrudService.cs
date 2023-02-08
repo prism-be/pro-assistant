@@ -25,10 +25,10 @@ public interface ICrudService
     Task UpdateProperty<T>(string id, string property, object value)
         where T : IDataModel;
 
-    Task UpsertMany<T>(List<T> items)
+    Task<List<UpsertResult>> UpsertMany<T>(List<T> items)
         where T : IDataModel;
 
-    Task UpsertOne<T>(T item)
+    Task<UpsertResult> UpsertOne<T>(T item)
         where T : IDataModel;
 }
 
@@ -84,15 +84,15 @@ public class CrudService : ICrudService
         await _updatePropertyService.Update<T>(id, property, value);
     }
 
-    public async Task UpsertMany<T>(List<T> items)
+    public async Task<List<UpsertResult>> UpsertMany<T>(List<T> items)
         where T : IDataModel
     {
-        await _upsertManyService.Upsert(items);
+        return await _upsertManyService.Upsert(items);
     }
 
-    public async Task UpsertOne<T>(T item)
+    public async Task<UpsertResult> UpsertOne<T>(T item)
         where T : IDataModel
     {
-        await _upsertOneService.Upsert(item);
+        return await _upsertOneService.Upsert(item);
     }
 }
