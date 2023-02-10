@@ -24,10 +24,10 @@ public class UpdatePropertyService : IUpdatePropertyService
 {
     private readonly ILogger<UpdatePropertyService> _logger;
     private readonly IOrganizationContext _organizationContext;
-    private readonly IPublisher _publisher;
-    private readonly IUser _user;
+    private readonly IPropertyUpdatePublisher _publisher;
+    private readonly User _user;
 
-    public UpdatePropertyService(ILogger<UpdatePropertyService> logger, IOrganizationContext organizationContext, IPublisher publisher, IUser user)
+    public UpdatePropertyService(ILogger<UpdatePropertyService> logger, IOrganizationContext organizationContext, IPropertyUpdatePublisher publisher, User user)
     {
         _logger = logger;
         _organizationContext = organizationContext;
@@ -51,7 +51,7 @@ public class UpdatePropertyService : IUpdatePropertyService
 
             if (result.ModifiedCount > 0)
             {
-                _publisher.Publish(Topics.PropertyUpdated, new PropertyUpdated(typeof(T).Name, id, property, value));
+                _publisher.Publish(new PropertyUpdated(typeof(T).Name, id, property, value));
             }
 
             return id;

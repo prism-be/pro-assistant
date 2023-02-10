@@ -19,7 +19,7 @@ public class PropertyUpdatedWorker : BaseServiceBusWorker<PropertyUpdated>
     {
     }
 
-    public override string Queue => Topics.PropertyUpdated;
+    public override string Queue => "PropertyUpdated";
     public override string WorkerName => nameof(PropertyUpdatedWorker);
 
     public override async Task ProcessMessageAsync(IServiceProvider provider, Event<PropertyUpdated> e)
