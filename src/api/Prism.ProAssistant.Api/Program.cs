@@ -47,7 +47,6 @@ builder.Services.AddSwaggerGen(options =>
 // Build and start app
 var app = builder.Build();
 app.UseMiddleware<ErrorLoggingMiddleware>();
-app.UseMiddleware<UserInformationMiddleware>();
 
 app.UseCors(opt =>
 {
@@ -64,6 +63,7 @@ app.MapControllers();
 
 app.UseRouting();
 app.UseAuthentication().UseAuthorization();
+app.UseMiddleware<UserInformationMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

@@ -13,14 +13,10 @@ public class UserInformationMiddleware
 {
     
     private readonly RequestDelegate _next;
-    private readonly ILogger<UserInformationMiddleware> _logger;
-    private readonly IUser _user;
 
-    public UserInformationMiddleware(RequestDelegate next, ILogger<UserInformationMiddleware> logger, IUser user)
+    public UserInformationMiddleware(RequestDelegate next)
     {
         _next = next;
-        _logger = logger;
-        _user = user;
     }
 
     /// <summary>
@@ -28,7 +24,7 @@ public class UserInformationMiddleware
     /// </summary>
     /// <param name="httpContext">The current http context.</param>
     /// <returns>The task to be waited.</returns>
-    public async Task InvokeAsync(HttpContext httpContext)
+    public async Task InvokeAsync(HttpContext httpContext, IUser _user)
     {
         _user.IsAuthenticated = httpContext.User.Identity?.IsAuthenticated == true;
 

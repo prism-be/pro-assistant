@@ -25,7 +25,6 @@ public class UserInformationMiddlewareTests
         var name = Identifier.GenerateString();
         var id = Identifier.GenerateString();
         var organizationId = Identifier.GenerateString();
-        var logger = new Mock<ILogger<UserInformationMiddleware>>();
 
         Task Next(HttpContext context)
         {
@@ -46,8 +45,8 @@ public class UserInformationMiddlewareTests
         };
 
         // Act
-        var middelware = new UserInformationMiddleware(Next, logger.Object, user);
-        await middelware.InvokeAsync(context);
+        var middelware = new UserInformationMiddleware(Next);
+        await middelware.InvokeAsync(context, user);
 
         // Assert
         user.IsAuthenticated.Should().BeTrue();
@@ -63,7 +62,6 @@ public class UserInformationMiddlewareTests
         var name = Identifier.GenerateString();
         var id = Identifier.GenerateString();
         var organizationId = Identifier.GenerateString();
-        var logger = new Mock<ILogger<UserInformationMiddleware>>();
 
         Task Next(HttpContext context)
         {
@@ -84,8 +82,8 @@ public class UserInformationMiddlewareTests
         };
 
         // Act
-        var middelware = new UserInformationMiddleware(Next, logger.Object, user);
-        await middelware.InvokeAsync(context);
+        var middelware = new UserInformationMiddleware(Next);
+        await middelware.InvokeAsync(context, user);
 
         // Assert
         user.IsAuthenticated.Should().BeTrue();
