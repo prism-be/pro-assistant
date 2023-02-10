@@ -41,7 +41,7 @@ public class ServiceCollectionExtensionsTests
         services.AddBusinessServices();
 
         // Assert
-        services.Should().Contain(x => x.ServiceType == typeof(User));
+        services.Should().Contain(x => x.ServiceType == typeof(IUser));
     }
 
     [Fact]
