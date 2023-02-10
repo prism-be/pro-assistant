@@ -23,9 +23,9 @@ public class UpdateManyPropertyService : IUpdateManyPropertyService
 {
     private readonly ILogger<UpdateManyPropertyService> _logger;
     private readonly IOrganizationContext _organizationContext;
-    private readonly IUser _user;
+    private readonly User _user;
 
-    public UpdateManyPropertyService(ILogger<UpdateManyPropertyService> logger, IOrganizationContext organizationContext, IUser user)
+    public UpdateManyPropertyService(ILogger<UpdateManyPropertyService> logger, IOrganizationContext organizationContext, User user)
     {
         _logger = logger;
         _organizationContext = organizationContext;

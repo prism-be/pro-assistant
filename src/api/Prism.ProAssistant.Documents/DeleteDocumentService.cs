@@ -23,9 +23,9 @@ public class DeleteDocumentService : IDeleteDocumentService
 {
     private readonly ILogger<DeleteDocumentService> _logger;
     private readonly IOrganizationContext _organizationContext;
-    private readonly IUser _user;
+    private readonly User _user;
 
-    public DeleteDocumentService(ILogger<DeleteDocumentService> logger, IOrganizationContext organizationContext, IUser user)
+    public DeleteDocumentService(ILogger<DeleteDocumentService> logger, IOrganizationContext organizationContext, User user)
     {
         _logger = logger;
         _organizationContext = organizationContext;

@@ -8,6 +8,7 @@ using System.Text;
 using System.Text.Json;
 using Prism.ProAssistant.Business;
 using Prism.ProAssistant.Business.Events;
+using Prism.ProAssistant.Business.Security;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -64,7 +65,6 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
 
         _channel = _connection!.CreateModel();
 
-        _channel.ExchangeDeclare(Queue, "fanout");
         _channel.QueueDeclare("workers/" + WorkerName, true, false, false);
         _channel.QueueBind("workers/" + WorkerName, Queue, "*");
 
@@ -82,9 +82,15 @@ public abstract class BaseServiceBusWorker<T> : BackgroundService
                 var payload = JsonSerializer.Deserialize<Event<T>>(json);
 
                 using var scope = _serviceProvider.CreateScope();
+                var user = scope.ServiceProvider.GetService<User>();
 
-                if (payload != null)
+                if (payload != null && user != null)
                 {
+                    user.IsAuthenticated = payload.User.IsAuthenticated;
+                    user.Id = payload.User.Id;
+                    user.Name = payload.User.Name;
+                    user.Organization = payload.User.Organization;
+                    
                     await ProcessMessageAsync(scope.ServiceProvider, payload);
                 }
 

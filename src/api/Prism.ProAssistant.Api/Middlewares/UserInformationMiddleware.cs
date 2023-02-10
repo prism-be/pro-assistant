@@ -24,7 +24,7 @@ public class UserInformationMiddleware
     /// </summary>
     /// <param name="httpContext">The current http context.</param>
     /// <returns>The task to be waited.</returns>
-    public async Task InvokeAsync(HttpContext httpContext, IUser _user)
+    public async Task InvokeAsync(HttpContext httpContext, User _user)
     {
         _user.IsAuthenticated = httpContext.User.Identity?.IsAuthenticated == true;
 

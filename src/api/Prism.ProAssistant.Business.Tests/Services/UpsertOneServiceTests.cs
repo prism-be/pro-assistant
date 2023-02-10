@@ -8,6 +8,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
+using Prism.ProAssistant.Business.Events;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Services;
@@ -41,8 +42,10 @@ public class UpsertOneServiceTests
         collection.Setup(x => x.InsertOneAsync(It.IsAny<Appointment>(), null, CancellationToken.None))
             .Callback(() => appointment.Id = id);
 
+        var publisher = new Mock<IPropertyUpdatePublisher>();
+
         // Act
-        var handler = new UpsertOneService(logger.Object, organizationContext.Object, user.Object);
+        var handler = new UpsertOneService(logger.Object, organizationContext.Object, user.Object, publisher.Object);
         var result = await handler.Upsert(appointment);
 
         // Assert
@@ -75,8 +78,10 @@ public class UpsertOneServiceTests
                 x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Appointment>>(), It.IsAny<Appointment>(), It.IsAny<FindOneAndReplaceOptions<Appointment>>(), CancellationToken.None))
             .ReturnsAsync(appointment);
 
+        var publisher = new Mock<IPropertyUpdatePublisher>();
+
         // Act
-        var handler = new UpsertOneService(logger.Object, organizationContext.Object, user.Object);
+        var handler = new UpsertOneService(logger.Object, organizationContext.Object, user.Object, publisher.Object);
         var result = await handler.Upsert(appointment);
 
         // Assert

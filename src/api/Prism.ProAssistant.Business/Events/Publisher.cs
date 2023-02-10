@@ -18,14 +18,14 @@ public interface IPublisher
 
 public record PropertyUpdated(string ItemType, string Id, string Property, object Value);
 
-public record Event<T>(IUser User, T Payload);
+public record Event<T>(User User, T Payload);
 
 public class Publisher : IPublisher
 {
     private readonly IModel _channel;
-    private readonly IUser _user;
+    private readonly User _user;
 
-    public Publisher(IModel channel, IUser user)
+    public Publisher(IModel channel, User user)
     {
         _channel = channel;
         _user = user;

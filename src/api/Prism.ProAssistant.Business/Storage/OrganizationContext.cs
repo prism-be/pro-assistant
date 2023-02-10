@@ -21,9 +21,9 @@ public interface IOrganizationContext
 public class OrganizationContext : IOrganizationContext
 {
     private readonly IMongoClient _client;
-    private readonly IUser _user;
+    private readonly User _user;
 
-    public OrganizationContext(IMongoClient client, IUser user)
+    public OrganizationContext(IMongoClient client, User user)
     {
         _client = client;
         _user = user;

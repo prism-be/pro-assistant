@@ -13,9 +13,9 @@ namespace Prism.ProAssistant.Api.Controllers;
 
 public class AuthenticationController : Controller
 {
-    private readonly IUser _user;
+    private readonly User _user;
 
-    public AuthenticationController(IUser user)
+    public AuthenticationController(User user)
     {
         _user = user;
     }

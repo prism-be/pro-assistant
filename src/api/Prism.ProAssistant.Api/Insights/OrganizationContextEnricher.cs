@@ -12,9 +12,9 @@ namespace Prism.ProAssistant.Api.Insights;
 
 public class OrganizationContextEnricher : ILogEventEnricher
 {
-    private readonly IUser _user;
+    private readonly User _user;
 
-    public OrganizationContextEnricher(IUser user)
+    public OrganizationContextEnricher(User user)
     {
         _user = user;
     }
