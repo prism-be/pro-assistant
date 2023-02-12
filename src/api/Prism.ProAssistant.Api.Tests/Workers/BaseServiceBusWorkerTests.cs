@@ -4,10 +4,10 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.ProAssistant.Api.Workers;
+using Prism.ProAssistant.Business.Events;
 using Prism.ProAssistant.Business.Security;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -29,7 +29,7 @@ public class DummyServiceBusWorker : BaseServiceBusWorker<string>
         await ExecuteAsync(CancellationToken.None);
     }
 
-    public override Task ProcessMessageAsync(IMediator mediator, string payload)
+    public override Task ProcessMessageAsync(IServiceProvider provider, Event<string> payload)
     {
         return Task.CompletedTask;
     }

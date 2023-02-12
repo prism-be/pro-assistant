@@ -17,6 +17,7 @@ import {getLocale} from "../../lib/localization";
 import Button from "../../components/forms/Button";
 import {alertSuccess} from "../../lib/events/alert";
 import {GeneratedDocuments} from "../../components/appointments/GeneratedDocuments";
+import InputDate from "../../components/forms/InputDate";
 
 const Appointments: NextPage = () => {
     const {t} = useTranslation('common');
@@ -121,6 +122,8 @@ const Appointments: NextPage = () => {
             paymentDate: parseInt(data.payment) !== 0 ? formatISO(new Date()) : null,
             firstName: data.firstName,
             lastName: data.lastName,
+            birthDate: data.birthDate,
+            phoneNumber: data.phoneNumber,
             documents: []
         }
 
@@ -168,6 +171,8 @@ const Appointments: NextPage = () => {
         setSuggested(contact.lastName + "|" + contact.firstName);
         setValue("lastName", contact.lastName);
         setValue("firstName", contact.firstName);
+        setValue("birthDate", contact.birthDate);
+        setValue("phoneNumber", contact.phoneNumber);
         setContactsSuggestions([]);
     }, []);
 
@@ -260,6 +265,9 @@ const Appointments: NextPage = () => {
             <form className={styles.content} onSubmit={handleSubmit(onSubmit)}>
                 <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName} onChange={() => startSuggestContacts()}/>
                 <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.firstName} onChange={() => startSuggestContacts()}/>
+                
+                <InputDate className={styles.birthDate} label={t("fields.birthDate")} name={"birthDate"} required={false} type={"text"} register={register} setValue={setValue} error={errors.birthDate}/>
+                <InputText className={styles.phoneNumber} label={t("fields.phoneNumber")} name={"phoneNumber"} autoCapitalize={false} required={false} type={"text"} register={register} setValue={setValue} error={errors.phoneNumber}/>
 
                 {contactsSuggestions.length !== 0 && <div className={styles.contactsSuggestions}>
                     <h2>{t("pages.appointment.contactsSuggestions.title")}</h2>

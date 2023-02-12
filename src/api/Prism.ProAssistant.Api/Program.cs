@@ -17,9 +17,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.AddApplicationInsights();
 builder.AddSerilog();
 
-// Add Mediatr
-builder.Services.AddQueriesCommands();
-
 // Add Mongo
 builder.Services.AddDatabase();
 
@@ -66,6 +63,7 @@ app.MapControllers();
 
 app.UseRouting();
 app.UseAuthentication().UseAuthorization();
+app.UseMiddleware<UserInformationMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

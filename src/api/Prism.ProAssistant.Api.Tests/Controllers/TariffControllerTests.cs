@@ -16,25 +16,25 @@ public class TariffControllerTests
     [Fact]
     public async Task FindMany()
     {
-        await CrudPublisherTests.FindMany<TariffController, Tariff>(c => c.FindMany());
+        await CrudTests.FindMany<TariffController, Tariff>(c => c.FindMany());
     }
 
     [Fact]
     public async Task FindOne()
     {
-        await CrudPublisherTests.FindOne<TariffController, Tariff>(c => c.FindOne(Identifier.GenerateString()));
+        await CrudTests.FindOne<TariffController, Tariff>(c => c.FindOne(Identifier.GenerateString()));
     }
 
     [Fact]
     public async Task RemoveOne()
     {
-        await CrudPublisherTests.RemoveOne<TariffController>(c => c.RemoveOne(Identifier.GenerateString()));
+        await CrudTests.RemoveOne<TariffController, Tariff>(c => c.RemoveOne(Identifier.GenerateString()));
     }
 
     [Fact]
     public async Task UpsertOne()
     {
-        await CrudPublisherTests.UpsertOne<TariffController, Tariff>(c => c.UpsertOne(new Tariff
+        await CrudTests.UpsertOne<TariffController, Tariff>(c => c.UpsertOne(new Tariff
         {
             Id = Identifier.GenerateString(),
             Name = Identifier.GenerateString()

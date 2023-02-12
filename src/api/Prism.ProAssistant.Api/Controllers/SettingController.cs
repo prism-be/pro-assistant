@@ -4,29 +4,27 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Extensions;
-using Prism.ProAssistant.Business.Commands;
 using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Queries;
+using Prism.ProAssistant.Business.Services;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
 public class SettingController : Controller
 {
-    private readonly IMediator _mediator;
+    private readonly ICrudService _crudService;
 
-    public SettingController(IMediator mediator)
+    public SettingController(ICrudService crudService)
     {
-        _mediator = mediator;
+        _crudService = crudService;
     }
 
     [Route("api/settings")]
     [HttpGet]
     public async Task<ActionResult<List<Setting>>> FindMany()
     {
-        var result = await _mediator.Send(new FindMany<Setting>());
+        var result = await _crudService.FindMany<Setting>();
         return result.ToActionResult();
     }
 
@@ -34,6 +32,6 @@ public class SettingController : Controller
     [HttpPost]
     public async Task SaveSettings([FromBody] List<Setting> settings)
     {
-        await _mediator.Send(new SaveSettings(settings));
+        await _crudService.UpsertMany(settings);
     }
 }

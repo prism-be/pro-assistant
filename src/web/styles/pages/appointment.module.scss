@@ -7,32 +7,42 @@
 }
 
 .lastName {
-  grid-row: 1;
   grid-column: 1 / span 4;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 1;
     grid-column: 1 / span 2;
   }
 }
 
 .firstName {
-  grid-row: 2;
   grid-column: 1 / span 4;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 1;
+    grid-column: 3 / span 2;
+  }
+}
+
+.birthDate {
+  grid-column: 1 / span 4;
+
+  @media (min-width: $breakpointMD) {
+    grid-column: 1 / span 2;
+  }
+}
+
+.phoneNumber {
+  grid-column: 1 / span 4;
+
+  @media (min-width: $breakpointMD) {
     grid-column: 3 / span 2;
   }
 }
 
 .contactsSuggestions {
-  grid-row: 3;
   grid-column: 1 / span 4;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 2;
-    grid-column: span 4;
+    grid-column: 1 / span 4;
   }
 }
 
@@ -46,11 +56,9 @@
 }
 
 .tariffs {
-  grid-row: 4;
   grid-column: 1 / span 4;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 3;
     grid-column: 1 / span 2;
   }
 
@@ -63,83 +71,69 @@
   }
 }
 
-.type {
-  grid-row: 5;
-  grid-column: 1 / span 4;
-
-  @media (min-width: $breakpointMD) {
-    grid-row: 4;
-    grid-column: span 4;
-  }
-}
-
 .price {
-  grid-row: 6;
   grid-column: 1 / span 4;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 3;
     grid-column: 3 / span 2;
   }
 }
 
-.date {
-  grid-row: 7;
+.type {
   grid-column: 1 / span 4;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 5 / span 3;
+    grid-column: 1 / span 4;
+  }
+}
+
+
+
+.date {
+  grid-column: 1 / span 4;
+
+  @media (min-width: $breakpointMD) {
     grid-column: 1 / span 2;
   }
 }
 
 .hour {
-  grid-row: 8;
   grid-column: 1 / span 2;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 5;
-    grid-column: 3 / span 2;
+    grid-column: 1 / span 2;
   }
 }
 
 .duration {
-  grid-row: 8;
   grid-column: 3 / span 2;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 6;
     grid-column: 3 / span 2;
   }
 }
 
 .durationText {
-  grid-row: 9;
   grid-column: 1 / span 4;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 7;
     grid-column: 3 / span 2;
   }
 }
 
 .payment {
-  grid-row: 10;
   grid-column: 1 / span 4;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 8;
-    grid-column: 3 / span 2;
+    grid-column: 1 / span 2;
   }
 }
 
 .state {
-  grid-row: 11;
   grid-column: 1 / span 4;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 8;
-    grid-column: 1 / span 2;
+    grid-column: 3 / span 2;
   }
 }
 
@@ -182,21 +176,17 @@
 }
 
 .cancel {
-  grid-row: 12;
   grid-column: 1 / span 2;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 9;
     grid-column: 1;
   }
 }
 
 .save {
-  grid-row: 12;
   grid-column: 3 / span 2;
 
   @media (min-width: $breakpointMD) {
-    grid-row: 9;
     grid-column: 4;
   }
 }

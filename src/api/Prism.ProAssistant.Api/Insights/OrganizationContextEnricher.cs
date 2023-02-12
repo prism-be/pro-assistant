@@ -12,19 +12,19 @@ namespace Prism.ProAssistant.Api.Insights;
 
 public class OrganizationContextEnricher : ILogEventEnricher
 {
-    private readonly IUserContextAccessor _userContextAccessor;
+    private readonly User _user;
 
-    public OrganizationContextEnricher(IUserContextAccessor userContextAccessor)
+    public OrganizationContextEnricher(User user)
     {
-        _userContextAccessor = userContextAccessor;
+        _user = user;
     }
 
     public void Enrich(LogEvent logEvent, ILogEventPropertyFactory propertyFactory)
     {
-        var userIdProperty = propertyFactory.CreateProperty("UserId", _userContextAccessor.UserId);
+        var userIdProperty = propertyFactory.CreateProperty("UserId", _user.Id);
         logEvent.AddPropertyIfAbsent(userIdProperty);
 
-        var organizationIdProperty = propertyFactory.CreateProperty("OrganizationId", _userContextAccessor.OrganizationId);
+        var organizationIdProperty = propertyFactory.CreateProperty("OrganizationId", _user.Organization);
         logEvent.AddPropertyIfAbsent(organizationIdProperty);
     }
 }

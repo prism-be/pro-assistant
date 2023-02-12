@@ -6,7 +6,6 @@
 
 using System.Text;
 using System.Text.Json;
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
@@ -19,19 +18,24 @@ namespace Prism.ProAssistant.Api.Controllers;
 public class DownloadController : Controller
 {
     private readonly IDistributedCache _cache;
-    private readonly IMediator _mediator;
+    private readonly IDeleteDocumentService _deleteDocumentService;
+    private readonly IDownloadDocumentService _downloadDocumentService;
+    private readonly IGenerateDocumentService _generateDocumentService;
 
-    public DownloadController(IMediator mediator, IDistributedCache cache)
+    public DownloadController(IDistributedCache cache, IDeleteDocumentService deleteDocumentService, IGenerateDocumentService generateDocumentService,
+        IDownloadDocumentService downloadDocumentService)
     {
-        _mediator = mediator;
         _cache = cache;
+        _deleteDocumentService = deleteDocumentService;
+        _generateDocumentService = generateDocumentService;
+        _downloadDocumentService = downloadDocumentService;
     }
 
     [HttpDelete]
     [Route("api/document")]
     public async Task Delete([FromBody] DeleteDocument request)
     {
-        await _mediator.Send(request);
+        await _deleteDocumentService.Delete(request.Id, request.AppointmentId);
     }
 
     [AllowAnonymous]
@@ -68,7 +72,7 @@ public class DownloadController : Controller
     public async Task Generate([FromBody] GenerateDocument request)
     {
         var downloadKey = Identifier.GenerateString();
-        var pdfBytes = await _mediator.Send(request);
+        var pdfBytes = await _generateDocumentService.Generate(request.DocumentId, request.AppointmentId);
 
         await _cache.SetAsync(GenerateDownloadKey(downloadKey), pdfBytes, new DistributedCacheEntryOptions
         {
@@ -81,7 +85,7 @@ public class DownloadController : Controller
     public async Task<ActionResult<DownloadKey>> Start([FromBody] DownloadDocument request)
     {
         var downloadKey = Identifier.GenerateString();
-        var document = await _mediator.Send(request);
+        var document = await _downloadDocumentService.Download(request.DocumentId);
 
         if (document == null)
         {

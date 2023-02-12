@@ -25,8 +25,16 @@ public static class ServiceCollectionExtensions
         var channel = connection.CreateModel();
         services.AddSingleton(channel);
 
-        services.AddScoped<IPublisher, Publisher>();
+        foreach (var watchedProperty in PropertyUpdatePublisher.WatchedProperties)
+        {
+            channel.ExchangeDeclare($"Property.Updated.{watchedProperty}", ExchangeType.Fanout);
+        }
 
-        services.AddHostedService<UpdateAppointmentColorWorker>();
+        services.AddScoped<IPublisher, Publisher>();
+        services.AddScoped<IPropertyUpdatePublisher, PropertyUpdatePublisher>();
+
+        services.AddHostedService<TariffBackgroundColorUpdatedWorker>();
+        services.AddHostedService<ContactPhoneNumberUpdatedWorker>();
+        services.AddHostedService<ContactBirthDateUpdatedWorker>();
     }
 }

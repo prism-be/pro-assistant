@@ -45,7 +45,9 @@ public class SerializationTests
                     Date = DateTime.UtcNow,
                     FileName = Identifier.GenerateString()
                 }
-            }
+            },
+            BirthDate = Identifier.GenerateString(),
+            PhoneNumber = Identifier.GenerateString()
         };
 
         // Act and Assert
@@ -123,6 +125,21 @@ public class SerializationTests
 
         // Act and Assert
         CheckSerialization(organization);
+    }
+
+    [Fact]
+    public void User_Ok()
+    {
+        // Arrange
+        var source = new User
+        {
+            Id = Identifier.GenerateString(),
+            Organization = Identifier.GenerateString(),
+            IsAuthenticated = true
+        };
+
+        // Act and Assert
+        CheckSerialization(source);
     }
 
     private static void CheckSerialization<T>(T source)

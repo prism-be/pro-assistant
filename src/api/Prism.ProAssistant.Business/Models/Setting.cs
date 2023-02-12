@@ -11,7 +11,6 @@ namespace Prism.ProAssistant.Business.Models;
 [BsonCollection("settings")]
 public class Setting : IDataModel
 {
-
     [JsonPropertyName("value")]
     required public string Value { get; set; }
 

@@ -4,8 +4,6 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using FluentValidation;
-using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using MongoDB.ApplicationInsights.DependencyInjection;
 using MongoDB.Bson;
@@ -13,14 +11,10 @@ using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Prism.ProAssistant.Api.Insights;
 using Prism.ProAssistant.Business;
-using Prism.ProAssistant.Business.Behaviors;
-using Prism.ProAssistant.Business.Commands;
-using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
+using Prism.ProAssistant.Business.Services;
 using Prism.ProAssistant.Business.Storage;
-using Prism.ProAssistant.Business.Storage.Migrations;
-using Prism.ProAssistant.Documents;
 using Prism.ProAssistant.Documents.Locales;
 
 namespace Prism.ProAssistant.Api.Extensions;
@@ -53,12 +47,24 @@ public static class ServiceCollectionExtensions
     public static void AddBusinessServices(this IServiceCollection services)
     {
         services.AddHttpContextAccessor();
-        services.AddTransient<IUserContextAccessor, UserContextAccessor>();
+        services.AddScoped<User, User>();
 
-        services.AddTransient<OrganizationContextEnricher>();
+        services.AddScoped<OrganizationContextEnricher>();
 
         // Add documents services
         services.AddScoped<ILocalizator, Localizator>();
+        
+        services.AddScoped<IFindManyService, FindManyService>();
+        services.AddScoped<IFindOneService, FindOneService>();
+        services.AddScoped<IRemoveOneService, RemoveOneService>();
+        services.AddScoped<ISearchAppointmentsService, SearchAppointmentsService>();
+        services.AddScoped<ISearchContactsService, SearchContactsService>();
+        services.AddScoped<IUpdateManyPropertyService, UpdateManyPropertyService>();
+        services.AddScoped<IUpsertManyService, UpsertManyService>();
+        services.AddScoped<IUpdatePropertyService, UpdatePropertyService>();
+        services.AddScoped<IUpsertOneService, UpsertOneService>();
+        
+        services.AddScoped<ICrudService, CrudService>();
     }
 
     public static void AddCache(this IServiceCollection services)
@@ -79,48 +85,5 @@ public static class ServiceCollectionExtensions
         services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
 
         services.AddScoped<IOrganizationContext, OrganizationContext>();
-
-        services.AddScoped<IMigrateDocumentConfiguration, MigrateDocumentConfiguration>();
-    }
-
-    public static void AddQueriesCommands(this IServiceCollection services)
-    {
-        var applicationAssembly = typeof(EntryPoint).Assembly;
-        services.AddMediatR(new[]
-        {
-            applicationAssembly
-        }, config => config.AsScoped());
-
-        services.AddScoped<IRequestHandler<FindOne<Contact>, Contact?>, FindOneHandler<Contact>>();
-        services.AddScoped<IRequestHandler<FindMany<Contact>, List<Contact>>, FindManyHandler<Contact>>();
-        services.AddScoped<IRequestHandler<UpsertOne<Contact>, UpsertResult>, UpsertOneHandler<Contact>>();
-
-        services.AddScoped<IRequestHandler<FindOne<Appointment>, Appointment?>, FindOneHandler<Appointment>>();
-        services.AddScoped<IRequestHandler<FindMany<Appointment>, List<Appointment>>, FindManyHandler<Appointment>>();
-        services.AddScoped<IRequestHandler<UpsertOne<Appointment>, UpsertResult>, UpsertOneHandler<Appointment>>();
-
-        services.AddScoped<IRequestHandler<FindOne<Tariff>, Tariff?>, FindOneHandler<Tariff>>();
-        services.AddScoped<IRequestHandler<FindMany<Tariff>, List<Tariff>>, FindManyHandler<Tariff>>();
-        services.AddScoped<IRequestHandler<UpsertOne<Tariff>, UpsertResult>, UpsertOneHandler<Tariff>>();
-        services.AddScoped<IRequestHandler<RemoveOne>, RemoveOneHandler<Tariff>>();
-
-        services.AddScoped<IRequestHandler<FindOne<DocumentConfiguration>, DocumentConfiguration?>, FindOneHandler<DocumentConfiguration>>();
-        services.AddScoped<IRequestHandler<FindMany<DocumentConfiguration>, List<DocumentConfiguration>>, FindManyHandler<DocumentConfiguration>>();
-        services.AddScoped<IRequestHandler<UpsertOne<DocumentConfiguration>, UpsertResult>, UpsertOneHandler<DocumentConfiguration>>();
-        services.AddScoped<IRequestHandler<RemoveOne, Unit>, RemoveOneHandler<DocumentConfiguration>>();
-
-        services.AddScoped<IRequestHandler<FindOne<Setting>, Setting?>, FindOneHandler<Setting>>();
-        services.AddScoped<IRequestHandler<FindMany<Setting>, List<Setting>>, FindManyHandler<Setting>>();
-        services.AddScoped<IRequestHandler<UpsertOne<Setting>, UpsertResult>, UpsertOneHandler<Setting>>();
-        services.AddScoped<IRequestHandler<SaveSettings, Unit>, SaveSettingsHandler>();
-
-        services.AddScoped<IRequestHandler<GenerateDocument, byte[]>, GenerateDocumentHandler>();
-        services.AddScoped<IRequestHandler<DownloadDocument, DownloadDocumentResponse?>, DownloadDocumentHandler>();
-        services.AddScoped<IRequestHandler<DeleteDocument, Unit>, DeleteDocumentHandler>();
-
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
-        services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LogCommandsBehavior<,>));
-
-        services.AddValidatorsFromAssembly(applicationAssembly);
     }
 }

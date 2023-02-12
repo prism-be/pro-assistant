@@ -13,35 +13,21 @@ namespace Prism.ProAssistant.Business.Storage;
 
 public interface IOrganizationContext
 {
-    IMongoDatabase Database { get; }
-
-    string OrganizationId { get; }
-
     IMongoCollection<T> GetCollection<T>();
 
     IGridFSBucket GetGridFsBucket();
-
-    void SelectOrganization(string organizationId);
 }
 
 public class OrganizationContext : IOrganizationContext
 {
     private readonly IMongoClient _client;
+    private readonly User _user;
 
-    public OrganizationContext(IMongoClient client, IUserContextAccessor userContextAccessor)
+    public OrganizationContext(IMongoClient client, User user)
     {
         _client = client;
-
-        OrganizationId = string.IsNullOrWhiteSpace(userContextAccessor.OrganizationId)
-            ? "unknown"
-            : userContextAccessor.OrganizationId;
-
-        Database = client.GetDatabase(OrganizationId);
+        _user = user;
     }
-
-    public string OrganizationId { get; private set; }
-
-    public IMongoDatabase Database { get; private set; }
 
     public IMongoCollection<T> GetCollection<T>()
     {
@@ -52,18 +38,14 @@ public class OrganizationContext : IOrganizationContext
             throw new NotSupportedException("The type is not supported as a data model : " + typeof(T).FullName);
         }
 
-        return Database.GetCollection<T>(collectionName);
-    }
-
-    public void SelectOrganization(string organizationId)
-    {
-        OrganizationId = organizationId;
-        Database = _client.GetDatabase(organizationId);
+        var database = _client.GetDatabase(_user.Organization);
+        return database.GetCollection<T>(collectionName);
     }
 
     public IGridFSBucket GetGridFsBucket()
     {
-        return new GridFSBucket(Database);
+        var database = _client.GetDatabase(_user.Organization);
+        return new GridFSBucket(database);
     }
 
     private static string? GetCollectionName<T>()

@@ -12,10 +12,11 @@ interface Props {
     register: UseFormRegister<FieldValues>;
     setValue: UseFormSetValue<FieldValues>;
     error: any;
+    className?: string;
 }
 
 
-const InputDate = ({label, name, type, required, register, error, setValue}: Props) => {
+const InputDate = ({label, name, type, required, register, error, setValue, className}: Props) => {
 
     let thinkTimeout: any;
 
@@ -41,7 +42,7 @@ const InputDate = ({label, name, type, required, register, error, setValue}: Pro
         }
     }
 
-    return <div className={styles.container}>
+    return <div className={styles.container + " " + className}>
         <label className={styles.label}>{label} {required && " *"} </label>
         <input
             className={error ? styles.errorInput : styles.input}

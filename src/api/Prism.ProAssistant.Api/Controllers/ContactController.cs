@@ -4,31 +4,32 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Extensions;
-using Prism.ProAssistant.Business.Commands;
+using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Business.Models;
-using Prism.ProAssistant.Business.Queries;
+using Prism.ProAssistant.Business.Services;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
 [Authorize]
 public class ContactController : Controller
 {
-    private readonly IMediator _mediator;
+    private readonly ICrudService _crudService;
+    private readonly ISearchContactsService _searchContactsService;
 
-    public ContactController(IMediator mediator)
+    public ContactController(ICrudService crudService, ISearchContactsService searchContactsService)
     {
-        _mediator = mediator;
+        _crudService = crudService;
+        _searchContactsService = searchContactsService;
     }
 
     [Route("api/contacts")]
     [HttpGet]
     public async Task<ActionResult<List<Contact>>> FindMany()
     {
-        var result = await _mediator.Send(new FindMany<Contact>());
+        var result = await _crudService.FindMany<Contact>();
         return result
             .OrderBy(x => x.LastName)
             .ThenBy(x => x.FirstName)
@@ -40,7 +41,7 @@ public class ContactController : Controller
     [HttpGet]
     public async Task<ActionResult<Contact>> FindOne(string contactId)
     {
-        var result = await _mediator.Send(new FindOne<Contact>(contactId));
+        var result = await _crudService.FindOne<Contact>(contactId);
         return result.ToActionResult();
     }
 
@@ -48,7 +49,7 @@ public class ContactController : Controller
     [HttpPost]
     public async Task<ActionResult<List<Contact>>> Search([FromBody] SearchContacts search)
     {
-        var result = await _mediator.Send(search);
+        var result = await _searchContactsService.Search(search.LastName, search.FirstName, search.PhoneNumber, search.BirthDate);
         return result
             .OrderBy(x => x.LastName)
             .ThenBy(x => x.FirstName)
@@ -60,7 +61,7 @@ public class ContactController : Controller
     [HttpPost]
     public async Task<ActionResult<UpsertResult>> UpsertOne([FromBody] Contact contact)
     {
-        var result = await _mediator.Send(new UpsertOne<Contact>(contact));
+        var result = await _crudService.UpsertOne(contact);
         return result.ToActionResult();
     }
 }
