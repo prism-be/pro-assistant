@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using System.Collections.Immutable;
 using Prism.ProAssistant.Business.Models;
 
 namespace Prism.ProAssistant.Business.Events;
@@ -15,12 +16,12 @@ public interface IPropertyUpdatePublisher
 
 public class PropertyUpdatePublisher : IPropertyUpdatePublisher
 {
-    public static readonly HashSet<string> WatchedProperties = new()
+    public static readonly ImmutableHashSet<string> WatchedProperties = ImmutableHashSet.CreateRange(new List<string>
     {
         $"{nameof(Tariff)}.{nameof(Tariff.BackgroundColor)}",
         $"{nameof(Contact)}.{nameof(Contact.BirthDate)}",
         $"{nameof(Contact)}.{nameof(Contact.PhoneNumber)}"
-    };
+    });
 
     private readonly IPublisher _publisher;
 
