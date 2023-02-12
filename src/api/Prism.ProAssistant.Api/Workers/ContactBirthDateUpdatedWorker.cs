@@ -13,13 +13,13 @@ namespace Prism.ProAssistant.Api.Workers;
 
 public class ContactBirthDateUpdatedWorker : BaseServiceBusWorker<PropertyUpdated>
 {
-    public ContactBirthDateUpdatedWorker(ILogger<ContactPhoneNumberUpdatedWorker> logger, IServiceProvider serviceProvider, IConnection? connection)
+    public ContactBirthDateUpdatedWorker(ILogger<ContactBirthDateUpdatedWorker> logger, IServiceProvider serviceProvider, IConnection? connection)
         : base(logger, serviceProvider, connection)
     {
     }
 
     public override string Queue => $"Property.Updated.{nameof(Contact)}.{nameof(Contact.BirthDate)}";
-    public override string WorkerName => nameof(ContactPhoneNumberUpdatedWorker);
+    public override string WorkerName => nameof(ContactBirthDateUpdatedWorker);
 
     public override async Task ProcessMessageAsync(IServiceProvider provider, Event<PropertyUpdated> e)
     {
