@@ -66,15 +66,8 @@ public class AppointmentController : Controller
 
         var result = await _crudService.UpsertOne(appointment);
 
-        if (!string.IsNullOrWhiteSpace(appointment.BirthDate))
-        {
-            await _crudService.UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.BirthDate), appointment.BirthDate);
-        }
-
-        if (!string.IsNullOrWhiteSpace(appointment.PhoneNumber))
-        {
-            await _crudService.UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.PhoneNumber), appointment.PhoneNumber);
-        }
+        await _crudService.UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.BirthDate), appointment.BirthDate ?? string.Empty);
+        await _crudService.UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.PhoneNumber), appointment.PhoneNumber ?? string.Empty);
 
         return result.ToActionResult();
     }

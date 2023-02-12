@@ -6,6 +6,7 @@
 
 using System.Text;
 using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using Prism.ProAssistant.Business.Security;
 using RabbitMQ.Client;
 
@@ -24,11 +25,13 @@ public class Publisher : IPublisher
 {
     private readonly IModel _channel;
     private readonly User _user;
+    private readonly ILogger<Publisher> _logger;
 
-    public Publisher(IModel channel, User user)
+    public Publisher(IModel channel, User user, ILogger<Publisher> logger)
     {
         _channel = channel;
         _user = user;
+        _logger = logger;
     }
 
     public void Publish<T>(string exchange, T message)
@@ -37,5 +40,6 @@ public class Publisher : IPublisher
         var json = JsonSerializer.Serialize(e);
         var payload = Encoding.Default.GetBytes(json);
         _channel.BasicPublish(exchange, typeof(T).FullName, null, payload);
+        _logger.LogInformation("Published event on object {eventType} to exchange {exchange}", typeof(T).FullName, exchange);
     }
 }

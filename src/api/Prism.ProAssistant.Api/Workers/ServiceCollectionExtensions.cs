@@ -35,5 +35,7 @@ public static class ServiceCollectionExtensions
 
         // services.AddHostedService<UpdateAppointmentColorWorker>();
         services.AddHostedService<TariffBackgroundColorUpdatedWorker>();
+        services.AddHostedService<ContactPhoneNumberUpdatedWorker>();
+        services.AddHostedService<ContactBirthDateUpdatedWorker>();
     }
 }

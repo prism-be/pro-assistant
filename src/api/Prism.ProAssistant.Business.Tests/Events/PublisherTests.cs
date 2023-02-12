@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.ProAssistant.Business.Events;
 using Prism.ProAssistant.Business.Security;
@@ -21,7 +22,7 @@ public class PublisherTests
         var user = new Mock<User>();
 
         // Act
-        var publisher = new Publisher(channel.Object, user.Object);
+        var publisher = new Publisher(channel.Object, user.Object, Mock.Of<ILogger<Publisher>>());
         publisher.Publish("test", "test");
 
         // Assert

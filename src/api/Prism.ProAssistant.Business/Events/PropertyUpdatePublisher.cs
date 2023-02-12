@@ -17,7 +17,9 @@ public class PropertyUpdatePublisher : IPropertyUpdatePublisher
 {
     public static readonly HashSet<string> WatchedProperties = new()
     {
-        $"{nameof(Tariff)}.{nameof(Tariff.BackgroundColor)}"
+        $"{nameof(Tariff)}.{nameof(Tariff.BackgroundColor)}",
+        $"{nameof(Contact)}.{nameof(Contact.BirthDate)}",
+        $"{nameof(Contact)}.{nameof(Contact.PhoneNumber)}"
     };
 
     private readonly IPublisher _publisher;
