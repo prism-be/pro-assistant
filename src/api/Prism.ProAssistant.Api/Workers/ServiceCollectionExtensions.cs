@@ -33,7 +33,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPublisher, Publisher>();
         services.AddScoped<IPropertyUpdatePublisher, PropertyUpdatePublisher>();
 
-        // services.AddHostedService<UpdateAppointmentColorWorker>();
         services.AddHostedService<TariffBackgroundColorUpdatedWorker>();
         services.AddHostedService<ContactPhoneNumberUpdatedWorker>();
         services.AddHostedService<ContactBirthDateUpdatedWorker>();
