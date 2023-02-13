@@ -15,7 +15,7 @@
         <PackageReference Include="Acme.Core.Extensions" Version="2.0.0" />
         <PackageReference Include="DotLiquid" Version="2.2.677" />
         <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="2.8.2.3" />
-        <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="12.2.2" />
+        <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="12.3.0" />
         <PackageReference Include="QuestPDF" Version="2022.12.1" />
         <PackageReference Include="SkiaSharp.NativeAssets.Linux" Version="2.88.3" />
         <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.3" />

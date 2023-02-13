@@ -1,4 +1,6 @@
 ﻿#!/bin/sh
+
+# replace env vars
  
 echo "Replace NEXT_PUBLIC_AZURE_AD_CLIENT_ID vars"
 test -n "NEXT_PUBLIC_AZURE_AD_CLIENT_ID"
