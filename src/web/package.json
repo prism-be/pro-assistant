@@ -12,7 +12,7 @@
     "@azure/msal-browser": "^2.32.2",
     "@azure/msal-react": "^1.4.7",
     "@heroicons/react": "^2.0.14",
-    "@hookform/resolvers": "^2.9.8",
+    "@hookform/resolvers": "^2.9.11",
     "date-fns": "^2.29.3",
     "jsonwebtoken": "^9.0.0",
     "jwks-rsa": "^3.0.1",
