@@ -1,7 +1,6 @@
 ﻿# Rebuild the source code
 FROM node:18-alpine AS deps
 WORKDIR /app
-COPY .yarn ./.yarn
 COPY .pnp.cjs .yarnrc.yml package.json yarn.lock* ./
 
 # Install Yarn
