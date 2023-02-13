@@ -17,7 +17,7 @@ public interface IPublisher
     void Publish<T>(string exchange, T message);
 }
 
-public record PropertyUpdated(string ItemType, string Id, string Property, object Value);
+public record PropertyUpdated(string ItemType, string Id, string Property, object? Value);
 
 public record Event<T>(User User, T Payload);
 
