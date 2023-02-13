@@ -1,8 +1,5 @@
 ﻿#!/bin/sh
 
-corepack enable
-corepack prepare yarn@stable --activate
-
 # replace env vars
  
 echo "Replace NEXT_PUBLIC_AZURE_AD_CLIENT_ID vars"
