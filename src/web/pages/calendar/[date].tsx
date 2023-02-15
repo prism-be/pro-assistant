@@ -46,7 +46,7 @@ const Calendar: NextPage = () => {
     async function loadAppointments() {
         return await postData<Appointment[]>("/appointments", {
             startDate: formatISO(monday),
-            endDate: formatISO(add(monday, {days: 8}))
+            endDate: formatISO(add(monday, {weeks: 1}))
         });
     }
 
