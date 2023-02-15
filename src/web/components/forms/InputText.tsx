@@ -1,6 +1,4 @@
-﻿import styles from "../../styles/components/forms/input.text.module.scss"
-
-import {FieldValues, UseFormRegister} from "react-hook-form";
+﻿import {FieldValues, UseFormRegister} from "react-hook-form";
 import {UseFormSetValue} from "react-hook-form/dist/types/form";
 
 interface Props {
@@ -29,10 +27,10 @@ const InputText = ({label, name, type, required, register, error, autoCapitalize
         }
     }
 
-    return <div className={styles.container + " " + className}>
-        <label className={styles.label}>{label} {required && " *"} </label>
+    return <div className={"block" + " " + className}>
+        <label className={"block"}>{label} {required && " *"} </label>
         <input
-            className={error ? styles.errorInput : styles.input}
+            className={"w-full block p-2 outline-0 " + (error ? "border border-red-400" : "border border-gray-100")}
             type={type}
             {...register(name, {
                 required, onChange: (e) => {
@@ -40,7 +38,7 @@ const InputText = ({label, name, type, required, register, error, autoCapitalize
                 }
             })}
             autoComplete="off"/>
-        {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
+        {error?.message && <p className={"text-red-400"}>{error.message}</p>}
     </div>
 }
 

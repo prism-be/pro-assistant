@@ -1,6 +1,4 @@
-﻿import styles from '../../styles/components/design/header.module.scss';
-
-import React from "react";
+﻿import React from "react";
 import Image, {ImageLoaderProps} from "next/image";
 
 import useTranslation from "next-translate/useTranslation"
@@ -27,15 +25,15 @@ const Header = () => {
         <Head>
             <title>Pro Assistant - {data?.organization}</title>
         </Head>
-        <div className={styles.bar}>
-            <div className={styles.logo} onClick={() => toggledMobileMenu()}>
+        <div className={"h-14 flex border-b shadow"}>
+            <div className={"p-1"} onClick={() => toggledMobileMenu()}>
                 <div>
                     <Image loader={myLoader} src="/images/logo.svg" height={42} width={42} alt={"ProAssistant by PRISM"} unoptimized={true}></Image>
                 </div>
             </div>
-            <div className={styles.menu}>
+            <div className={"grow"}>
             </div>
-            <div className={styles.hello}>
+            <div className={"flex"}>
                 <div className="m-auto pl-2 pr-2 text-sm">
                     {t("header.hello")} {data?.name} !<br/>
                     <a href="#" onClick={() => instance.logout()}>{t("header.logout")}</a>

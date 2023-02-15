@@ -1,17 +1,15 @@
-﻿import styles from '../styles/components/popin.module.scss'
-
-interface Props {
+﻿interface Props {
     children: JSX.Element;
 }
 
 export const Popin = (props: Props) => {
-    return <div className={styles.popin}>
+    return <div className={"border max-w-lg text-center p-2 mx-auto mt-2"}>
         {props.children}
     </div>
 }
 
 export const Popup = (props: Props) => {
-    return <div className={styles.popup}>
+    return <div className={"border max-w-lg text-center p-2 mx-auto mt-2"}>
         <div>
             {props.children}
         </div>

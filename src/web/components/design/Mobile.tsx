@@ -1,5 +1,4 @@
-﻿import styles from '../../styles/components/design/mobile.module.scss'
-
+﻿
 export interface Props {
     visible?: boolean;
     children: JSX.Element | JSX.Element[];
@@ -14,24 +13,24 @@ const Mobile = ({visible, children, breakpoint, className}: Props) => {
         if (visible) {
             switch (breakpoint) {
                 case "SM":
-                    return styles.mobileDisplaySM;
+                    return" styles.mobileDisplaySM";
                 case "MD":
-                    return styles.mobileDisplayMD;
+                    return "styles.mobileDisplayMD";
                 case "LG":
-                    return styles.mobileDisplayLG;
+                    return "styles.mobileDisplayLG";
                 case "XL":
-                    return styles.mobileDisplayXL;
+                    return "styles.mobileDisplayXL";
             }
         } else {
             switch (breakpoint) {
                 case "SM":
-                    return styles.mobileHideSM;
+                    return "styles.mobileHideSM";
                 case "MD":
-                    return styles.mobileHideMD;
+                    return "styles.mobileHideMD";
                 case "LG":
-                    return styles.mobileHideLG;
+                    return "styles.mobileHideLG";
                 case "XL":
-                    return styles.mobileHideXL;
+                    return "styles.mobileHideXL";
             }
         }
     }

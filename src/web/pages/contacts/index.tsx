@@ -1,8 +1,4 @@
-﻿import grid from '../../styles/grid.module.scss';
-import table from '../../styles/table.module.scss';
-import styles from '../../styles/styles.module.scss';
-
-import ContentContainer from "../../components/design/ContentContainer";
+﻿import ContentContainer from "../../components/design/ContentContainer";
 import InputText from "../../components/forms/InputText";
 import InputDate from "../../components/forms/InputDate";
 import Button from "../../components/forms/Button";
@@ -71,26 +67,26 @@ const Contacts: NextPage = () => {
             <Section>
                 <>
                     <h1>{t("pages.contacts.title")}</h1>
-                    <form className={grid.container} onSubmit={handleSubmit(onSubmit)}>
-                        <div className={grid.small}>
+                    <form className={""} onSubmit={handleSubmit(onSubmit)}>
+                        <div className={"pt-2"}>
                             <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                         </div>
-                        <div className={grid.small}>
+                        <div className={"pt-2"}>
                             <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} setValue={setValue} error={errors.firstName} autoCapitalize={true}/>
                         </div>
-                        <div className={grid.small}>
+                        <div className={"pt-2"}>
                             <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
                         </div>
-                        <div className={grid.small}>
+                        <div className={"pt-2"}>
                             <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                         </div>
-                        <div className={grid.small}>
+                        <div className={"pt-4"}>
                             <Button text={t("actions.reset")} onClick={resetSearch} secondary={true}/>
                         </div>
-                        <div className={grid.small}>
+                        <div className={"pt-4"}>
                             <Button text={t("actions.new")} onClick={() => router.push("/contacts/000000000000000000000000")} secondary={true}/>
                         </div>
-                        <div className={grid.small + " " + grid.last}>
+                        <div className={"pt-4"}>
                             <Button submit={true} text={t("actions.search")} onClick={handleSubmit(onSubmit)}/>
                         </div>
                     </form>
@@ -102,27 +98,27 @@ const Contacts: NextPage = () => {
                     {contacts && <>
                         <h2>{t("results.title")}</h2>
                         {contacts.length !== 0 && <div>
-                            <div className={table.row}>
-                                <div className={table.table3 + " " + table.header}>{t("fields.lastName")}</div>
-                                <div className={table.table3 + " " + table.header}>{t("fields.firstName")}</div>
-                                <div className={table.table3 + " " + table.header}>{t("fields.phoneNumber")}</div>
-                                <div className={table.table3 + " " + table.header}>{t("fields.birthDate")}</div>
+                            <div className={"table.row"}>
+                                <div className={"table.table3" + " " + "table.header"}>{t("fields.lastName")}</div>
+                                <div className={"table.table3" + " " + "table.header"}>{t("fields.firstName")}</div>
+                                <div className={"table.table3" + " " + "table.header"}>{t("fields.phoneNumber")}</div>
+                                <div className={"table.table3" + " " + "table.header"}>{t("fields.birthDate")}</div>
                             </div>
                             {contacts?.map(contact =>
-                                <div className={table.row + " " + styles.clickable} key={contact.id} onClick={() => navigate(contact.id)}>
-                                    <div className={table.table3}>{contact.lastName}</div>
-                                    <div className={table.table3}>{contact.firstName}</div>
-                                    <div className={table.table3}>{contact.phoneNumber}</div>
-                                    <div className={table.table3}>{contact.birthDate}</div>
+                                <div className={"table.row" + " " + "styles.clickable"} key={contact.id} onClick={() => navigate(contact.id)}>
+                                    <div className={"table.table3"}>{contact.lastName}</div>
+                                    <div className={"table.table3"}>{contact.firstName}</div>
+                                    <div className={"table.table3"}>{contact.phoneNumber}</div>
+                                    <div className={"table.table3"}>{contact.birthDate}</div>
                                 </div>
                             )}
                         </div>}
 
-                        {contacts.length === 0 && <div className={styles.helpText}>{t("results.noResults")}</div>}
+                        {contacts.length === 0 && <div className={"styles.helpText"}>{t("results.noResults")}</div>}
                     </>}
 
                     {!contacts && <>
-                        <div className={styles.help}>{t("results.doSearch")}</div>
+                        <div className={"text-center italic"}>{t("results.doSearch")}</div>
                     </>}
                 </>
             </Section>

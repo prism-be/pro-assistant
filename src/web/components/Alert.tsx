@@ -1,6 +1,4 @@
-﻿import styles from '../styles/components/alert.module.scss';
-
-import {useEffect, useRef, useState} from "react";
+﻿import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import {AlertType, clear, onAlert} from "../lib/events/alert";
 import {XCircleIcon} from '@heroicons/react/24/outline';
@@ -68,7 +66,7 @@ export const Alert = ({id, fade}: Props) => {
     const cssClasses = (alert: any) => {
         if (!alert) return;
 
-        const classes = [styles.toaster];
+        /*const classes = [styles.toaster];
 
         const alertTypeClass = {
             [AlertType.Success]: styles.toasterSuccess,
@@ -83,15 +81,15 @@ export const Alert = ({id, fade}: Props) => {
             classes.push('fade');
         }
 
-        return classes.join(' ');
+        return classes.join(' ');*/
     }
 
     if (!alerts.length) return null;
 
     return (
-        <div className={styles.toasterContainer}>
+        <div className={""}>
             {alerts.map((alert, index) =>
-                <div key={index} className={cssClasses(alert)}>
+                <div key={index} className={""}>
                     <a className="close" onClick={() => removeAlert(alert)}>
                         <XCircleIcon/>
                     </a>

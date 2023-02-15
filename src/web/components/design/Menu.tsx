@@ -1,5 +1,4 @@
-﻿import styles from '../../styles/components/design/menu.module.scss';
-import Link from "next/link";
+﻿import Link from "next/link";
 import useTranslation from "next-translate/useTranslation";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
@@ -22,25 +21,25 @@ const Menu = () => {
 
     const getActiveLinkClass = (path: string) => {
         if (router.pathname.startsWith(path)) {
-            return " " + styles.active;
+            return " border-r-4 border-primary bg-gray-100 ";
         }
 
         return "";
     }
 
-    return <div className={styles.container + (displayMobileMenu ? " " + styles.mobile : "")} onClick={() => toggledMobileMenu()}>
+    return <div className={"bg-white w-64 border-r h-100 fixed top-18 h-full " + (displayMobileMenu ? "block" : "hidden md:block")} onClick={() => toggledMobileMenu()}>
         <ul>
-            <li className={styles.title}>{t("menu.global")}</li>
-            <li className={styles.item + getActiveLinkClass('/contacts')}><Link href={"/contacts"}>{t("menu.contacts")}</Link></li>
-            <li className={styles.item + getActiveLinkClass('/agenda')}><Link href={"/agenda/" + format(new Date(), "yyyy-MM-dd")}>{t("menu.agenda")}</Link></li>
-            <li className={styles.item + getActiveLinkClass('/calendar')}><Link href={"/calendar"}>{t("menu.calendar")}</Link></li>
-            <li className={styles.item + getActiveLinkClass('/appointments')}><Link href={"/appointments"}>{t("menu.appointments")}</Link></li>
+            <li className={"px-4 pt-4 font-bold"}>{t("menu.global")}</li>
+            <li className={getActiveLinkClass('/contacts')}><Link className={"block px-4 py-2"} href={"/contacts"}>{t("menu.contacts")}</Link></li>
+            <li className={getActiveLinkClass('/agenda')}><Link className={"block px-4 py-2"} href={"/agenda/" + format(new Date(), "yyyy-MM-dd")}>{t("menu.agenda")}</Link></li>
+            <li className={getActiveLinkClass('/calendar')}><Link className={"block px-4 py-2"} href={"/calendar"}>{t("menu.calendar")}</Link></li>
+            <li className={getActiveLinkClass('/appointments')}><Link className={"block px-4 py-2"} href={"/appointments"}>{t("menu.appointments")}</Link></li>
 
-            <Mobile breakpoint={"MD"}>
-                <li className={styles.title}>{t("menu.configurationTitle")}</li>
-                <li className={styles.item + getActiveLinkClass('/configuration')}><Link href={"/configuration"}>{t("menu.configuration")}</Link></li>
-                <li className={styles.item + getActiveLinkClass('/documents')}><Link href={"/documents"}>{t("menu.documents")}</Link></li>
-            </Mobile>
+            <div className={"hidden md:block"}>
+                <li className={"px-4 pt-4 font-bold"}>{t("menu.configurationTitle")}</li>
+                <li className={getActiveLinkClass('/configuration')}><Link className={"block px-4 py-2"} href={"/configuration"}>{t("menu.configuration")}</Link></li>
+                <li className={getActiveLinkClass('/documents')}><Link className={"block px-4 py-2"} href={"/documents"}>{t("menu.documents")}</Link></li>
+            </div>
         </ul>
     </div>
 }
