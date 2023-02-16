@@ -27,7 +27,7 @@ const Menu = () => {
         return "";
     }
 
-    return <div className={"bg-white w-64 border-r h-100 fixed top-14 h-full" + (displayMobileMenu ? "block" : "hidden md:block")} onClick={() => toggledMobileMenu()}>
+    return <div className={"bg-white w-64 border-r h-100 fixed top-14 h-full " + (displayMobileMenu ? "block" : "hidden md:block")} onClick={() => toggledMobileMenu()}>
         <ul>
             <li className={"px-4 pt-4 font-bold"}>{t("menu.global")}</li>
             <li className={getActiveLinkClass('/contacts')}><Link className={"block px-4 py-2"} href={"/contacts"}>{t("menu.contacts")}</Link></li>

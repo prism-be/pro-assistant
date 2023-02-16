@@ -87,10 +87,10 @@ export const Alert = ({id, fade}: Props) => {
     if (!alerts.length) return null;
 
     return (
-        <div className={""}>
+        <div className={"fixed top-20 left-0 right-0 p-4"}>
             {alerts.map((alert, index) =>
-                <div key={index} className={""}>
-                    <a className="close" onClick={() => removeAlert(alert)}>
+                <div key={index} className={"m-auto max-w-screen-md bg-white p-4 border border-primary text-primary rounded shadow relative mb-2"}>
+                    <a className="w-6 cursor-pointer block absolute top-2 right-2" onClick={() => removeAlert(alert)}>
                         <XCircleIcon/>
                     </a>
                     <span dangerouslySetInnerHTML={{__html: alert.message}}></span>

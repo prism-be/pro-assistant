@@ -18,6 +18,15 @@ a:hover {
 
 h1, h2
 {
-    color: #31859c;
+    color: #205969;
     font-weight: bold;
+    font-size: 1.25rem;
+    line-height: 2rem;
+}
+
+.contact-appointments
+{
+    display: grid;
+    grid-template-columns: 0.25rem 1fr 15rem 10rem;
+    cursor: pointer;
 }

@@ -28,23 +28,23 @@ export const ContactAppointments = (props: Props) => {
 
     return <Section>
         <h2>{t("pages.contacts.details.appointments.title")}</h2>
-        <div className={"styles.list"}>
-            {appointments?.map(m => <div key={m.id} className={"componentStyles.appointment"} onClick={() => displayAppointment(m.id)}>
-                <div className={"componentStyles.typeColor"} style={{backgroundColor: m.backgroundColor ?? ""}}></div>
-                <div className={"componentStyles.title"}>
+        <div>
+            {appointments?.map(m => <div key={m.id} className={"grid contact-appointments border-b last:border-0"} onClick={() => displayAppointment(m.id)}>
+                <div className={"row-span-2"} style={{backgroundColor: m.backgroundColor ?? ""}}></div>
+                <div className={"col-span-3 pt-2 pl-2 lg:col-span-1"}>
                     {m.title}
-                    <span className={"styles.badge"}>
+                    <span className={"inline-block px-2 mx-2 border border-primary rounded text-sm text-primary"}>
                         {t("options.appointments.state" + m.state)}
                     </span>
-                    <span className={"styles.badge"}>
+                    <span className={"inline-block px-2 mx-2 border border-primary rounded text-sm text-primary"}>
                         {t("options.payments.state" + m.payment)}
                     </span>
                 </div>
-                <div className={"componentStyles.date"}>
+                <div className={"col-span-2 pb-2 pl-2 lg:col-span-1 lg:pt-2"}>
                     {format(parseISO(m.startDate), "EEEE dd MMMM yyyy", {locale: getLocale()})}
                 </div>
 
-                <div className={"componentStyles.hour"}>
+                <div className={"pb-2 lg:pt-2"}>
                     {format(parseISO(m.startDate), "HH:mm", {locale: getLocale()})}
                     &nbsp;-&nbsp;
                     {format(add(parseISO(m.startDate), {minutes: m.duration}), "HH:mm", {locale: getLocale()})}

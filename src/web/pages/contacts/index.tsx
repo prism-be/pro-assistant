@@ -105,7 +105,7 @@ const Contacts: NextPage = () => {
                                 <div className={"font-bold p-2"}>{t("fields.birthDate")}</div>
                             </div>
                             {contacts?.map(contact =>
-                                <div className={"grid grid-cols-2 lg:grid-cols-4 border-b border-dashed last:border-0"} key={contact.id} onClick={() => navigate(contact.id)}>
+                                <div className={"grid grid-cols-2 lg:grid-cols-4 border-b border-dashed last:border-0 cursor-pointer hover:bg-gray-100"} key={contact.id} onClick={() => navigate(contact.id)}>
                                     <div className={"p-2"}>{contact.lastName}</div>
                                     <div className={"p-2"}>{contact.firstName}</div>
                                     <div className={"p-2"}>{contact.phoneNumber}</div>
