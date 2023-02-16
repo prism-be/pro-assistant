@@ -67,7 +67,7 @@ const Contacts: NextPage = () => {
             <Section>
                 <>
                     <h1>{t("pages.contacts.title")}</h1>
-                    <form className={""} onSubmit={handleSubmit(onSubmit)}>
+                    <form className={"grid gap-2 md:grid-cols-2 lg:grid-cols-4"} onSubmit={handleSubmit(onSubmit)}>
                         <div className={"pt-2"}>
                             <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                         </div>
@@ -80,13 +80,13 @@ const Contacts: NextPage = () => {
                         <div className={"pt-2"}>
                             <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                         </div>
-                        <div className={"pt-4"}>
+                        <div className={"pt-2"}>
                             <Button text={t("actions.reset")} onClick={resetSearch} secondary={true}/>
                         </div>
-                        <div className={"pt-4"}>
+                        <div className={"pt-2"}>
                             <Button text={t("actions.new")} onClick={() => router.push("/contacts/000000000000000000000000")} secondary={true}/>
                         </div>
-                        <div className={"pt-4"}>
+                        <div className={"pt-2 md:col-start-2 lg:col-start-4"}>
                             <Button submit={true} text={t("actions.search")} onClick={handleSubmit(onSubmit)}/>
                         </div>
                     </form>
@@ -98,18 +98,18 @@ const Contacts: NextPage = () => {
                     {contacts && <>
                         <h2>{t("results.title")}</h2>
                         {contacts.length !== 0 && <div>
-                            <div className={"table.row"}>
-                                <div className={"table.table3" + " " + "table.header"}>{t("fields.lastName")}</div>
-                                <div className={"table.table3" + " " + "table.header"}>{t("fields.firstName")}</div>
-                                <div className={"table.table3" + " " + "table.header"}>{t("fields.phoneNumber")}</div>
-                                <div className={"table.table3" + " " + "table.header"}>{t("fields.birthDate")}</div>
+                            <div className={"grid grid-cols-2 lg:grid-cols-4 border-b border-primary"}>
+                                <div className={"font-bold p-2"}>{t("fields.lastName")}</div>
+                                <div className={"font-bold p-2"}>{t("fields.firstName")}</div>
+                                <div className={"font-bold p-2"}>{t("fields.phoneNumber")}</div>
+                                <div className={"font-bold p-2"}>{t("fields.birthDate")}</div>
                             </div>
                             {contacts?.map(contact =>
-                                <div className={"table.row" + " " + "styles.clickable"} key={contact.id} onClick={() => navigate(contact.id)}>
-                                    <div className={"table.table3"}>{contact.lastName}</div>
-                                    <div className={"table.table3"}>{contact.firstName}</div>
-                                    <div className={"table.table3"}>{contact.phoneNumber}</div>
-                                    <div className={"table.table3"}>{contact.birthDate}</div>
+                                <div className={"grid grid-cols-2 lg:grid-cols-4 border-b border-dashed last:border-0"} key={contact.id} onClick={() => navigate(contact.id)}>
+                                    <div className={"p-2"}>{contact.lastName}</div>
+                                    <div className={"p-2"}>{contact.firstName}</div>
+                                    <div className={"p-2"}>{contact.phoneNumber}</div>
+                                    <div className={"p-2"}>{contact.birthDate}</div>
                                 </div>
                             )}
                         </div>}
