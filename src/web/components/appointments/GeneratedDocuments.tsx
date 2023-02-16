@@ -1,7 +1,4 @@
-﻿import componentStyles from "../../styles/pages/appointment.module.scss";
-import styles from "../../styles/styles.module.scss";
-
-import {Appointment, DocumentConfiguration} from "../../lib/contracts"
+﻿import {Appointment, DocumentConfiguration} from "../../lib/contracts"
 import Section from "../design/Section";
 import {deleteDataWithBody, downloadDocument, generateDocument} from "../../lib/ajaxHelper";
 import useSWR, {mutate} from "swr";
@@ -45,37 +42,37 @@ export const GeneratedDocuments = ({appointment}: Props) => {
     return <Section>
         <h2>{t("pages.appointment.documents.title")}</h2>
 
-        <>{appointment.documents.length === 0 && <div className={componentStyles.noDocuments}>
+        <>{appointment.documents.length === 0 && <div className={""}>
             {t("pages.appointment.documents.no-documents")}
         </div>}</>
 
-        <div className={styles.list}>
-            {appointment.documents.map(d => <div key={d.id} className={componentStyles.document}>
-                <div className={componentStyles.documentTitle}>{d.title}</div>
-                <div className={componentStyles.documentDate}>
+        <div className={""}>
+            {appointment.documents.map(d => <div key={d.id} className={""}>
+                <div className={""}>{d.title}</div>
+                <div className={""}>
                     (
                     {t("pages.appointment.documents.generated")}
                     {format(parseISO(d.date), "dd/MM/yy HH:mm", {locale: getLocale()})}
                     )
                 </div>
-                <div className={componentStyles.documentAction}>
-                    <div onClick={() => startDownloadDocument(d.id)} className={componentStyles.documentSave}>
+                <div className={""}>
+                    <div onClick={() => startDownloadDocument(d.id)} className={""}>
                         <ArrowDownTrayIcon/>
                     </div>
 
-                    <div onClick={() => startDeleteDocument(d.id)} className={componentStyles.documentSave}>
+                    <div onClick={() => startDeleteDocument(d.id)} className={""}>
                         <TrashIcon/>
                     </div>
                 </div>
             </div>)}
         </div>
 
-        <div className={componentStyles.documents}>
+        <div className={""}>
             <select onChange={(e) => setDocument(e.target.value)}>
                 <option value={""}>{t("pages.appointment.documents.generate")}</option>
                 {documents?.map(d => <option key={d.id} value={d.id}>{d.name}</option>)}
             </select>
-            <div onClick={() => startGenerateDocument()} className={componentStyles.documentsSave}>
+            <div onClick={() => startGenerateDocument()} className={""}>
                 <CheckIcon/>
             </div>
         </div>
