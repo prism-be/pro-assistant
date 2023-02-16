@@ -15,6 +15,7 @@ using Prism.ProAssistant.Business.Queries;
 using Prism.ProAssistant.Business.Security;
 using Prism.ProAssistant.Business.Services;
 using Prism.ProAssistant.Business.Storage;
+using Prism.ProAssistant.Documents;
 using Prism.ProAssistant.Documents.Locales;
 
 namespace Prism.ProAssistant.Api.Extensions;
@@ -63,6 +64,10 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IUpsertManyService, UpsertManyService>();
         services.AddScoped<IUpdatePropertyService, UpdatePropertyService>();
         services.AddScoped<IUpsertOneService, UpsertOneService>();
+        
+        services.AddScoped<IDeleteDocumentService, DeleteDocumentService>();
+        services.AddScoped<IDownloadDocumentService, DownloadDocumentService>();
+        services.AddScoped<IGenerateDocumentService, GenerateDocumentService>();
         
         services.AddScoped<ICrudService, CrudService>();
     }

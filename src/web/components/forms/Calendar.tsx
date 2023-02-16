@@ -42,7 +42,7 @@ export const Calendar = ({value, onChange, className}: Props) => {
         return "";
     }
 
-    return <div className={"grid gap-2 grid-cols-7" + " " + className} title={formatISO(value)}>
+    return <div className={"grid gap-2 grid-cols-7 select-none" + " " + className} title={formatISO(value)}>
         <div className={"col-start-1 w-6 text-primary cursor-pointer m-auto"} onClick={() => setMonth(add(month, {months: -1}))}><ArrowSmallLeftIcon/></div>
         <div className={"font-bold col-span-5 text-center"}>{format(month, "MMMM yyyy", {locale: getLocale()})}</div>
         <div className={"col-start-7 w-6 text-right text-primary cursor-pointer m-auto"} onClick={() => setMonth(add(month, {months: 1}))}><ArrowSmallRightIcon/></div>
