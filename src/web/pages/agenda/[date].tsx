@@ -1,6 +1,4 @@
-﻿import styles from '../../styles/pages/agenda.module.scss';
-
-import {NextPage} from "next";
+﻿import {NextPage} from "next";
 import Section from "../../components/design/Section";
 import ContentContainer from "../../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
@@ -42,21 +40,21 @@ const Agenda: NextPage = () => {
         onSwipedRight: () => changeDay(-1),
     });
 
-    function getHourRowClassName(h: number, m: number) {
+    function getHourRowStart(h: number, m: number) {
         if (m < 30) {
-            return styles["hour" + h];
+            return h * 2;
         }
 
-        return styles["hourEnd" + h];
+        return getHourRowEnd(h);
     }
 
-    function getHourRowEndClassName(h: number) {
-        return styles["hourEnd" + h];
+    function getHourRowEnd(h: number) {
+        return h * 2 + 1;
     }
 
     function getDurationClassName(d: number) {
         d = Math.round(d / 30) * 30;
-        return styles["duration" + d];
+        return 'span ' + (d / 30);
     }
 
     function addAppointment(h: number, m: number) {
@@ -75,43 +73,46 @@ const Agenda: NextPage = () => {
     return <ContentContainer>
         <Section>
             <>
-                <div className={styles.agenda} {...swipeHandlers}>
-                    <Button secondary={true} onClick={previousDay} className={styles.previous} text={t("actions.prev")}></Button>
-                    <Button secondary={true} onClick={nextDay} className={styles.next} text={t("actions.nex")}></Button>
+                <div {...swipeHandlers} className={"grid grid-cols-8 cursor-pointer"}>
 
-                    <Mobile className={styles.title} visible={false} breakpoint={"MD"}>
-                        <h1>{t("pages.agenda.title")} {format(day, "EEEE d MMMM yyyy", {locale: getLocale()})}</h1>
-                    </Mobile>
+                    <div className={"col-start-1"}>
+                        <Button secondary={true} onClick={previousDay} text={t("actions.prev")}></Button>
+                    </div>
 
-                    <Mobile className={styles.title} visible={true} breakpoint={"MD"}>
-                        <h1>
-                            {format(day, "EEEE", {locale: getLocale()})}
-                            <br/>
-                            {format(day, "d/MM/yy", {locale: getLocale()})}
-                        </h1>
-                    </Mobile>
+                    <h1 className={"hidden text-center md:block col-span-6"}>{t("pages.agenda.title")} {format(day, "EEEE d MMMM yyyy", {locale: getLocale()})}</h1>
 
-                    {appointments?.length === 0 && <div className={styles.noAppointment}>{t("pages.agenda.noAppointment")}</div>}
+                    <h1 className={"text-center md:hidden col-span-6"}>
+                        {format(day, "EEEE", {locale: getLocale()})}
+                        <br/>
+                        {format(day, "d/MM/yy", {locale: getLocale()})}
+                    </h1>
+                    
+                    <div className={"col-start-8"}>
+                        <Button secondary={true} onClick={nextDay} className={"styles.next"} text={t("actions.nex")}></Button>
+                    </div>
 
-                    <div className={styles.gap}/>
+                    {appointments?.length === 0 && <div className={"col-span-8 p-2 text-center italic"}>{t("pages.agenda.noAppointment")}</div>}
+
+                    <div className={"h-4"}/>
 
                     {hours.map(h => <React.Fragment key={h}>
-                        <div className={styles.hour + " " + getHourRowClassName(h, 0)}>{h}H</div>
-                        <div className={styles.halfHour + " " + getHourRowClassName(h, 0)} onClick={() => addAppointment(h, 0)}></div>
-                        <div className={styles.halfHourEnd + " " + getHourRowEndClassName(h)} onClick={() => addAppointment(h, 30)}></div>
+                        <div className={"col-start-1 row-span-2 text-right border-r border-b pr-2"} style={ { gridRowStart: getHourRowStart(h, 0) } }>{h}H</div>
+                        <div className={"col-start-2 col-span-7 h-6 border-b border-dashed"} style={ { gridRowStart: getHourRowStart(h, 0) } } onClick={() => addAppointment(h, 0)}></div>
+                        <div className={"col-start-2 col-span-7 h-6 border-b"} style={ { gridRowStart: getHourRowEnd(h) } } onClick={() => addAppointment(h, 30)}></div>
                     </React.Fragment>)}
 
                     {appointments?.map(a =>
-                        <div className={styles.calendarItem + " " + getHourRowClassName(parseISO(a.startDate).getHours(), parseISO(a.startDate).getMinutes()) + " " + getDurationClassName(a.duration)} key={a.id}
+                        <div className={"col-start-2 col-span-7 text-sm pl-1 leading-6 text-white"} key={a.id}
                              onClick={() => router.push("/appointments/" + a.id)}
-                             style={{backgroundColor: a.backgroundColor ?? ""}}>
-                            <div>
+                             style={{backgroundColor: a.backgroundColor ?? "",
+                             gridRowStart: getHourRowStart(parseISO(a.startDate).getHours(), parseISO(a.startDate).getMinutes()),
+                             gridRowEnd: getDurationClassName(a.duration)}}>
+                            <div className={"relative"}>
                                 {a.title?.slice(0, 40)}
-                                <AppointmentStateIcon  payment={a.payment} state={a.state} backgroundColor={a.backgroundColor ?? ""}/>
+                                <AppointmentStateIcon payment={a.payment} state={a.state} backgroundColor={a.backgroundColor ?? ""}/>
                             </div>
-                            
-                            
-                            
+
+
                         </div>)}
 
                 </div>

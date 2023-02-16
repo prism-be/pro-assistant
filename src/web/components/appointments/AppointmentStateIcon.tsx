@@ -10,7 +10,7 @@ interface Props
 
 export const AppointmentStateIcon = ({payment, state, backgroundColor}: Props) => {
     return <>
-        {state === 10 && payment === 0 && <div className={"styles.iconSmall"} style={{backgroundColor: backgroundColor ?? ""}}><CheckCircleIcon /></div>}
-        {state === 10 && payment > 0 && <div className={"styles.iconSmall"} style={{backgroundColor: backgroundColor ?? ""}}><CheckCircleIconSolid /></div>}
+        {state === 10 && payment === 0 && <div className={"w-4 absolute top-1 right-1"} style={{backgroundColor: backgroundColor ?? ""}}><CheckCircleIcon /></div>}
+        {state === 10 && payment > 0 && <div className={"w-4 absolute top-1 right-1"} style={{backgroundColor: backgroundColor ?? ""}}><CheckCircleIconSolid /></div>}
     </>
 }
