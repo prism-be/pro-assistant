@@ -8,7 +8,6 @@ import Button from "../../components/forms/Button";
 import {postData} from "../../lib/ajaxHelper";
 import {Appointment} from "../../lib/contracts";
 import React from 'react';
-import Mobile from "../../components/design/Mobile";
 import {useSwipeable} from "react-swipeable";
 import {useRouter} from "next/router";
 import useSWR from "swr";

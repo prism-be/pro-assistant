@@ -35,3 +35,8 @@ h3
     grid-template-columns: 0.25rem 1fr 15rem 10rem;
     cursor: pointer;
 }
+
+.border-b-dashed
+{
+    border-bottom-style: dashed;
+}

@@ -3,7 +3,6 @@ import useTranslation from "next-translate/useTranslation";
 import {useRouter} from "next/router";
 import {useEffect, useState} from "react";
 import {onToggledMobileMenu, toggledMobileMenu} from "../../lib/events/mobileMenu";
-import Mobile from "./Mobile";
 import {format} from "date-fns";
 
 const Menu = () => {
