@@ -97,7 +97,7 @@ const Calendar: NextPage = () => {
                         </React.Fragment>)}
 
                         {appointments?.map(a =>
-                            <div className={"text-xs text-white leading-6 pl-1"} style={{
+                            <div className={"text-xs text-white leading-6 pl-1 lg:text-sm"} style={{
                                 gridColumnStart: (parseISO(a.startDate)).getDay() + 1,
                                 gridRowStart: (parseISO(a.startDate)).getHours() * 2 + 1,
                                 backgroundColor: a.backgroundColor ?? "",
