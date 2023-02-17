@@ -7,14 +7,17 @@ import {getData} from "../lib/ajaxHelper";
 import {MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "../lib/msal";
 import {Alert} from "../components/Alert";
+import { AppInsightsContext } from '@microsoft/applicationinsights-react-js';
+import {reactPlugin} from "../lib/insights";
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
-    return <>
+    return <AppInsightsContext.Provider value={reactPlugin}>
         <Head>
             <title>Pro Assistant</title>
         </Head>
 
+        
         <MsalProvider instance={msalInstance}>
 
             <SWRConfig value={{fetcher: getData}}>
@@ -23,7 +26,7 @@ const MyApp = ({Component, pageProps}: AppProps) => {
             </SWRConfig>
 
         </MsalProvider>
-    </>
+    </AppInsightsContext.Provider>
 }
 
 export default MyApp;
