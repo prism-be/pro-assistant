@@ -11,16 +11,6 @@ import Insights from "../components/Insights";
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
-    /*const router = useRouter();
-    
-    useEffect(() => {
-        appInsights.trackPageView({
-            name: router.asPath,
-            uri: window.location.href
-        });
-        
-    }, [router.asPath])*/
-
     return <Insights>
         <Head>
             <title>Pro Assistant</title>
