@@ -46,7 +46,7 @@ export const GeneratedDocuments = ({appointment}: Props) => {
             {t("pages.appointment.documents.no-documents")}
         </div>}</>
 
-        <div className={""}>
+        <div>
             {appointment.documents.map(d => <div key={d.id} className={"flex border-b last:border-0 pb-2"}>
                 <div className={"grow py-2"}>
                 <div>{d.title}</div>

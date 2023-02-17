@@ -73,11 +73,11 @@ const Documents: NextPage = () => {
                 <>
                     <HeaderWithAction title={t("edit.title")} action={() => saveDocument()} actionText={t("common:actions.save")}/>
 
-                    <div className={""}>
-                        <InputText className={""} label={t("edit.form.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
-                        <InputText className={""} label={t("edit.form.title")} name={"title"} type={"text"} required={true} register={register} setValue={setValue} error={errors.title}/>
-                        <TextArea className={""} label={t("edit.form.body")} name={"body"} required={true} register={register} error={errors.body}/>
-                        <div className={""}>
+                    <div>
+                        <InputText label={t("edit.form.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
+                        <InputText label={t("edit.form.title")} name={"title"} type={"text"} required={true} register={register} setValue={setValue} error={errors.title}/>
+                        <TextArea label={t("edit.form.body")} name={"body"} required={true} register={register} error={errors.body}/>
+                        <div>
                             <h3>{t("edit.help.title")}</h3>
                             <div>{t("edit.help.help")}</div>
                             <ul>

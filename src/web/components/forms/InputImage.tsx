@@ -53,7 +53,7 @@ const InputImage = ({label, name, required, register, error, setValue, className
             })} />
 
             <input
-                className={""}
+               
                 type="file"
                 accept="image/*"
                 onChange={(e) => fileChanged(e)}

@@ -74,8 +74,8 @@ const Tariffs = () => {
                         <div className={"col-span-2"}>
                             <InputColor label={t("tariffs.color")} name={"backgroundColor"} setValue={setValue} error={errors.backgroundColor} initialColor={getValues()["backgroundColor"]}/>
                         </div>
-                        <Button className={""} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
-                        <Button className={""} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
+                        <Button text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
+                        <Button text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
                     </div>
                 </form>
             </Popup>}
