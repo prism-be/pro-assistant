@@ -12,6 +12,7 @@ import {useSwipeable} from "react-swipeable";
 import {useRouter} from "next/router";
 import useSWR from "swr";
 import {AppointmentStateIcon} from "../../components/appointments/AppointmentStateIcon";
+import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
 
 const Agenda: NextPage = () => {
     const router = useRouter();
@@ -74,28 +75,23 @@ const Agenda: NextPage = () => {
             <>
                 <div {...swipeHandlers} className={"grid grid-cols-8 cursor-pointer"}>
 
-                    <div className={"col-start-1"}>
-                        <Button secondary={true} onClick={previousDay} text={t("actions.prev")}></Button>
-                    </div>
+                    <div className={"col-start-1 w-8 m-auto text-primary"} onClick={previousDay}><ArrowSmallLeftIcon/></div>
 
                     <h1 className={"hidden text-center md:block col-span-6"}>{t("pages.agenda.title")} {format(day, "EEEE d MMMM yyyy", {locale: getLocale()})}</h1>
-
                     <h1 className={"text-center md:hidden col-span-6"}>
                         {format(day, "EEEE", {locale: getLocale()})}
                         <br/>
                         {format(day, "d/MM/yy", {locale: getLocale()})}
                     </h1>
-                    
-                    <div className={"col-start-8"}>
-                        <Button secondary={true} onClick={nextDay} className={"styles.next"} text={t("actions.nex")}></Button>
-                    </div>
+
+                    <div className={"col-start-8 1 w-8 m-auto text-primary"} onClick={nextDay}><ArrowSmallRightIcon/></div>
 
                     {appointments?.length === 0 && <div className={"col-span-8 p-2 text-center italic"}>{t("pages.agenda.noAppointment")}</div>}
 
                     <div className={"h-4"}/>
 
                     {hours.map(h => <React.Fragment key={h}>
-                        <div className={"col-start-1 row-span-2 text-right border-r border-b pr-2"} style={ { gridRowStart: getHourRowStart(h, 0) } }>{h}H</div>
+                        <div className={"col-start-1 row-span-2 text-right border-r border-b pr-2 text-sm leading-6"} style={ { gridRowStart: getHourRowStart(h, 0) } }>{h}H</div>
                         <div className={"col-start-2 col-span-7 h-6 border-b border-dashed"} style={ { gridRowStart: getHourRowStart(h, 0) } } onClick={() => addAppointment(h, 0)}></div>
                         <div className={"col-start-2 col-span-7 h-6 border-b"} style={ { gridRowStart: getHourRowEnd(h) } } onClick={() => addAppointment(h, 30)}></div>
                     </React.Fragment>)}
