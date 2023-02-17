@@ -25,19 +25,21 @@ const Menu = () => {
 
         return "";
     }
+    
+    const itemClassName = "block px-4 py-2 hover:bg-gray-100 no-underline hover:no-underline";
 
     return <div className={"bg-white w-64 border-r h-100 fixed top-14 h-full " + (displayMobileMenu ? "block" : "hidden md:block")} onClick={() => toggledMobileMenu()}>
         <ul>
             <li className={"px-4 pt-4 font-bold"}>{t("menu.global")}</li>
-            <li className={getActiveLinkClass('/contacts')}><Link className={"block px-4 py-2"} href={"/contacts"}>{t("menu.contacts")}</Link></li>
-            <li className={getActiveLinkClass('/agenda')}><Link className={"block px-4 py-2"} href={"/agenda/" + format(new Date(), "yyyy-MM-dd")}>{t("menu.agenda")}</Link></li>
-            <li className={getActiveLinkClass('/calendar')}><Link className={"block px-4 py-2"} href={"/calendar"}>{t("menu.calendar")}</Link></li>
-            <li className={getActiveLinkClass('/appointments')}><Link className={"block px-4 py-2"} href={"/appointments"}>{t("menu.appointments")}</Link></li>
+            <li className={getActiveLinkClass('/contacts')}><Link className={itemClassName} href={"/contacts"}>{t("menu.contacts")}</Link></li>
+            <li className={getActiveLinkClass('/agenda')}><Link className={itemClassName} href={"/agenda/" + format(new Date(), "yyyy-MM-dd")}>{t("menu.agenda")}</Link></li>
+            <li className={getActiveLinkClass('/calendar')}><Link className={itemClassName} href={"/calendar"}>{t("menu.calendar")}</Link></li>
+            <li className={getActiveLinkClass('/appointments')}><Link className={itemClassName} href={"/appointments"}>{t("menu.appointments")}</Link></li>
 
             <div className={"hidden md:block"}>
                 <li className={"px-4 pt-4 font-bold"}>{t("menu.configurationTitle")}</li>
-                <li className={getActiveLinkClass('/configuration')}><Link className={"block px-4 py-2"} href={"/configuration"}>{t("menu.configuration")}</Link></li>
-                <li className={getActiveLinkClass('/documents')}><Link className={"block px-4 py-2"} href={"/documents"}>{t("menu.documents")}</Link></li>
+                <li className={getActiveLinkClass('/configuration')}><Link className={itemClassName} href={"/configuration"}>{t("menu.configuration")}</Link></li>
+                <li className={getActiveLinkClass('/documents')}><Link className={itemClassName} href={"/documents"}>{t("menu.documents")}</Link></li>
             </div>
         </ul>
     </div>
