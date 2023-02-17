@@ -7,17 +7,26 @@ import {getData} from "../lib/ajaxHelper";
 import {MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "../lib/msal";
 import {Alert} from "../components/Alert";
-import { AppInsightsContext } from '@microsoft/applicationinsights-react-js';
-import {reactPlugin} from "../lib/insights";
+import Insights from "../components/Insights";
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
-    return <AppInsightsContext.Provider value={reactPlugin}>
+    /*const router = useRouter();
+    
+    useEffect(() => {
+        appInsights.trackPageView({
+            name: router.asPath,
+            uri: window.location.href
+        });
+        
+    }, [router.asPath])*/
+
+    return <Insights>
         <Head>
             <title>Pro Assistant</title>
         </Head>
 
-        
+
         <MsalProvider instance={msalInstance}>
 
             <SWRConfig value={{fetcher: getData}}>
@@ -26,7 +35,7 @@ const MyApp = ({Component, pageProps}: AppProps) => {
             </SWRConfig>
 
         </MsalProvider>
-    </AppInsightsContext.Provider>
+    </Insights>
 }
 
 export default MyApp;
