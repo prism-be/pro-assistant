@@ -201,7 +201,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/applicationinsights-common@npm:2.8.10":
+"@microsoft/applicationinsights-common@npm:2.8.10, @microsoft/applicationinsights-common@npm:^2.8.10":
   version: 2.8.10
   resolution: "@microsoft/applicationinsights-common@npm:2.8.10"
   dependencies:
@@ -214,7 +214,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/applicationinsights-core-js@npm:2.8.10":
+"@microsoft/applicationinsights-core-js@npm:2.8.10, @microsoft/applicationinsights-core-js@npm:^2.8.10":
   version: 2.8.10
   resolution: "@microsoft/applicationinsights-core-js@npm:2.8.10"
   dependencies:
@@ -254,14 +254,30 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/applicationinsights-shims@npm:2.0.2":
+"@microsoft/applicationinsights-react-js@npm:^3.4.1":
+  version: 3.4.1
+  resolution: "@microsoft/applicationinsights-react-js@npm:3.4.1"
+  dependencies:
+    "@microsoft/applicationinsights-common": ^2.8.10
+    "@microsoft/applicationinsights-core-js": ^2.8.10
+    "@microsoft/applicationinsights-shims": ^2.0.1
+    "@microsoft/dynamicproto-js": ^1.1.6
+  peerDependencies:
+    history: ">= 4.10.1"
+    react: ">= 17.0.1"
+    tslib: "*"
+  checksum: 71c7ad8af56e291acf7d3c8ac6febeb9132460d957f0020467f1ec4c12d0ca46c0a9d33895f40211f631f5312b39b51ea7b6e5f14b037e22f70f41fb8b76d121
+  languageName: node
+  linkType: hard
+
+"@microsoft/applicationinsights-shims@npm:2.0.2, @microsoft/applicationinsights-shims@npm:^2.0.1":
   version: 2.0.2
   resolution: "@microsoft/applicationinsights-shims@npm:2.0.2"
   checksum: 838e1b6620a12b475db9d39213d5ad64f4b63f9293c62e1ff55a9422a2ec3516ec69d98acb592274fcbbcd6508e1a00b6631c4e68dea8372d18f24a62b805c2f
   languageName: node
   linkType: hard
 
-"@microsoft/applicationinsights-web@npm:^2.1.0":
+"@microsoft/applicationinsights-web@npm:^2.8.10":
   version: 2.8.10
   resolution: "@microsoft/applicationinsights-web@npm:2.8.10"
   dependencies:
@@ -279,7 +295,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@microsoft/dynamicproto-js@npm:^1.1.7":
+"@microsoft/dynamicproto-js@npm:^1.1.6, @microsoft/dynamicproto-js@npm:^1.1.7":
   version: 1.1.7
   resolution: "@microsoft/dynamicproto-js@npm:1.1.7"
   checksum: 60446aaa7dc7918bf514099bc2b26610319e1d78dbca3d43b5878273b108f17743b361197f083c7faa46130ee24a147eb60bac98e34c5214f386789cc1708424
@@ -3461,18 +3477,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-applicationinsights@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "next-applicationinsights@npm:1.0.4"
-  dependencies:
-    "@microsoft/applicationinsights-web": ^2.1.0
-  peerDependencies:
-    next: ^9.0.0
-    react: ^16.0.0
-  checksum: 99a4ab438826dc657ec5acf322c179f211c5403bc365426a107e50a1a6481464a138e6758b2f8bcb958365b6a635bed81bf9e316b16989f7211440502e6df05c
-  languageName: node
-  linkType: hard
-
 "next-translate@npm:^1.6.0":
   version: 1.6.0
   resolution: "next-translate@npm:1.6.0"
@@ -3963,6 +3967,8 @@ __metadata:
     "@azure/msal-react": ^1.4.7
     "@heroicons/react": ^2.0.14
     "@hookform/resolvers": ^2.9.8
+    "@microsoft/applicationinsights-react-js": ^3.4.1
+    "@microsoft/applicationinsights-web": ^2.8.10
     "@testing-library/jest-dom": ^5.16.5
     "@testing-library/react": ^13.4.0
     "@types/node": ^18.7.18
@@ -3977,7 +3983,6 @@ __metadata:
     keyboardjs: ^2.7.0
     lottie-react: ^2.3.1
     next: ^13.1.4
-    next-applicationinsights: ^1.0.4
     next-translate: ^1.6.0
     postcss: ^8.4.21
     react: ^18.2.0
