@@ -7,7 +7,6 @@ import {getData} from "../lib/ajaxHelper";
 import {MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "../lib/msal";
 import {Alert} from "../components/Alert";
-import {withApplicationInsights} from 'next-applicationinsights';
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
@@ -27,10 +26,4 @@ const MyApp = ({Component, pageProps}: AppProps) => {
     </>
 }
 
-export default withApplicationInsights({
-        namePrefix: 'proassistant',
-        connectionString: process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING,
-        isEnabled: true
-    }
-// @ts-ignore
-)(MyApp);
+export default MyApp;
