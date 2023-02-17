@@ -16,6 +16,7 @@ import {postData, putData} from "../lib/ajaxHelper";
 import Section from "../components/design/Section";
 import InputColor from "../components/forms/InputColor";
 import {PencilSquareIcon} from '@heroicons/react/24/outline';
+import {HeaderWithAction} from "../components/design/HeaderWithAction";
 
 const Tariffs = () => {
     const {t} = useTranslation("configuration");
@@ -56,12 +57,7 @@ const Tariffs = () => {
 
     return <Section>
         <>
-            <header className={"flex"}>
-                <h2 className={"grow"}>{t("tariffs.title")}</h2>
-                <div className={"w-64"}>
-                    <Button text={t("common:actions.add")} onClick={() => addTariff()} secondary={true}></Button>
-                </div>
-            </header>
+            <HeaderWithAction title={t('tariffs.title')} action={() => addTariff()} actionText={t("common:actions.add")}/>
 
             {editing && <Popup>
                 <form>
@@ -154,12 +150,8 @@ const Documents = () => {
 
     return <Section>
         <>
-            <header className={"flex"}>
-                <h2 className={"grow"}>{t("documents.header.title")}</h2>
-                <div className={"w-64"}>
-                    <Button text={t("common:actions.save")} onClick={() => saveDocumentHeaders()} secondary={true}></Button>
-                </div>
-            </header>
+            <HeaderWithAction title={t("documents.header.title")} action={() => saveDocumentHeaders()} actionText={t("common:actions.new")}/>
+            
             <div className={"grid grid-cols-4 gap-2"}>
                 <InputText className={"col-span-4 md:col-span-2"} label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
                 <TextArea className={"col-span-4 md:col-span-2"} label={t("documents.header.address")} name={"address"} register={register}/>

@@ -1,9 +1,4 @@
-﻿import grid from '../styles/grid.module.scss';
-import table from '../styles/table.module.scss';
-import styles from '../styles/styles.module.scss';
-
-
-import React, {useState} from 'react';
+﻿import React, {useState} from 'react';
 import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
@@ -16,6 +11,7 @@ import InputText from "../components/forms/InputText";
 import TextArea from "../components/forms/TextArea";
 import {deleteData, postData} from "../lib/ajaxHelper";
 import {PencilSquareIcon, TrashIcon} from '@heroicons/react/24/outline';
+import {HeaderWithAction} from "../components/design/HeaderWithAction";
 
 const Documents: NextPage = () => {
 
@@ -57,22 +53,18 @@ const Documents: NextPage = () => {
         <>
             <Section>
                 <>
-                    <header>
-                        <h1>{t("title")}</h1>
-                        <Button secondary={true} onClick={() => createNew()} text={t("common:actions.new")}/>
-                    </header>
+                    <HeaderWithAction title={t("title")} action={() => createNew()} actionText={t("common:actions.new")}/>
+
                     <div>
                         {documents?.length === 0 && <>
-                            <i className={styles.tip}>{t("list.NoElements")}</i>
+                            <i className={"text-center italic p-4"}>{t("list.NoElements")}</i>
                         </>}
                         {documents && documents.length > 0 && <>
-                            <div className={table.rowAction2}>
-                                {documents.map(d => <React.Fragment key={d.id}>
-                                    <a className={table.rowAction + " " + styles.iconButton} onClick={() => editDocument(d)}> <PencilSquareIcon/> </a>
-                                    <a className={table.rowAction + " " + styles.iconButton} onClick={() => deleteDocument(d)}> <TrashIcon/> </a>
-                                    <div className={table.table10}>{d.name}</div>
-                                </React.Fragment>)}
-                            </div>
+                            {documents.map(d => <div className={"flex"} key={d.id}>
+                                <a className={"w-6 cursor-pointer"} onClick={() => editDocument(d)}> <PencilSquareIcon/> </a>
+                                <a className={"w-6 ml-2 cursor-pointer"} onClick={() => deleteDocument(d)}> <TrashIcon/> </a>
+                                <div className={"pl-2"}>{d.name}</div>
+                            </div>)}
                         </>}
                     </div>
                 </>
@@ -80,15 +72,13 @@ const Documents: NextPage = () => {
 
             {currentDocument && <Section>
                 <>
-                    <header>
-                        <h1>{t("edit.title")}</h1>
-                        <Button secondary={true} onClick={() => saveDocument()} text={t("common:actions.save")}/>
-                    </header>
-                    <div className={grid.container}>
-                        <InputText className={grid.extraLarge} label={t("edit.form.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
-                        <InputText className={grid.extraLarge} label={t("edit.form.title")} name={"title"} type={"text"} required={true} register={register} setValue={setValue} error={errors.title}/>
-                        <TextArea className={grid.extraLarge + " " + styles.text} label={t("edit.form.body")} name={"body"} required={true} register={register} error={errors.body}/>
-                        <div className={grid.extraLarge}>
+                    <HeaderWithAction title={t("edit.title")} action={() => saveDocument()} actionText={t("common:actions.save")}/>
+
+                    <div className={""}>
+                        <InputText className={""} label={t("edit.form.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
+                        <InputText className={""} label={t("edit.form.title")} name={"title"} type={"text"} required={true} register={register} setValue={setValue} error={errors.title}/>
+                        <TextArea className={""} label={t("edit.form.body")} name={"body"} required={true} register={register} error={errors.body}/>
+                        <div className={""}>
                             <h3>{t("edit.help.title")}</h3>
                             <div>{t("edit.help.help")}</div>
                             <ul>
