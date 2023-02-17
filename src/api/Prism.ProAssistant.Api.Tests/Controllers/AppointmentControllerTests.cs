@@ -6,6 +6,7 @@
 
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Controllers;
 using Prism.ProAssistant.Api.Models;
@@ -41,6 +42,24 @@ public class AppointmentControllerTests
         // Assert
         result.Result.Should().BeAssignableTo<OkObjectResult>();
         crudService.Verify(x => x.FindOne<Appointment>(It.IsAny<string>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Opened()
+    {
+        // Arrange
+        var crudService = new Mock<ICrudService>();
+        var searchService = new Mock<ISearchAppointmentsService>();
+        crudService.Setup(x => x.FindMany(It.IsAny<FilterDefinition<Appointment>>()))
+            .ReturnsAsync(new List<Appointment>());
+
+        // Act
+        var controller = new AppointmentController(crudService.Object, searchService.Object);
+        var result = await controller.Opened();
+
+        // Assert
+        result.Result.Should().BeAssignableTo<OkObjectResult>();
+        crudService.Verify(x => x.FindMany(It.IsAny<FilterDefinition<Appointment>>()), Times.Once);
     }
 
     [Fact]
@@ -90,14 +109,6 @@ public class AppointmentControllerTests
                 {
                     Id = Identifier.GenerateString(),
                     State = (int)AppointmentState.Done,
-                    FirstName = Identifier.GenerateString(),
-                    LastName = Identifier.GenerateString(),
-                    Title = Identifier.GenerateString()
-                },
-                new()
-                {
-                    Id = Identifier.GenerateString(),
-                    State = (int)AppointmentState.Canceled,
                     FirstName = Identifier.GenerateString(),
                     LastName = Identifier.GenerateString(),
                     Title = Identifier.GenerateString()

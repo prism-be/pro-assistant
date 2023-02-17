@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using MongoDB.Driver;
 using Prism.ProAssistant.Business.Models;
 
 namespace Prism.ProAssistant.Business.Services;
@@ -11,6 +12,9 @@ namespace Prism.ProAssistant.Business.Services;
 public interface ICrudService
 {
     Task<List<T>> FindMany<T>()
+        where T : IDataModel;
+
+    Task<List<T>> FindMany<T>(FilterDefinition<T> filter)
         where T : IDataModel;
 
     Task<T?> FindOne<T>(string id)
@@ -58,6 +62,11 @@ public class CrudService : ICrudService
         where T : IDataModel
     {
         return await _findManyService.Find<T>();
+    }
+
+    public async Task<List<T>> FindMany<T>(FilterDefinition<T> filter) where T : IDataModel
+    {
+        return await _findManyService.Find(filter);
     }
 
     public async Task<T?> FindOne<T>(string id)

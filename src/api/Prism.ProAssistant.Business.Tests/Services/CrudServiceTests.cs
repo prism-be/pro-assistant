@@ -4,6 +4,7 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Business.Models;
 using Prism.ProAssistant.Business.Security;
@@ -32,6 +33,28 @@ public class CrudServiceTests
 
         // Assert
         findManyService.Verify(x => x.Find<Contact>(), Times.Once);
+    }
+
+    [Fact]
+    public async Task FindManyFilter()
+    {
+        // Arrange
+        var findManyService = new Mock<IFindManyService>();
+        var findOneService = new Mock<IFindOneService>();
+        var removeOneService = new Mock<IRemoveOneService>();
+        var updateManyPropertyService = new Mock<IUpdateManyPropertyService>();
+        var updatePropertyService = new Mock<IUpdatePropertyService>();
+        var upsertManyService = new Mock<IUpsertManyService>();
+        var upsertOneService = new Mock<IUpsertOneService>();
+        var filter = Builders<Contact>.Filter.Eq("FirstName", "Simon");
+
+        // Act
+        var crudService = new CrudService(findManyService.Object, findOneService.Object, removeOneService.Object, updateManyPropertyService.Object, updatePropertyService.Object,
+            upsertManyService.Object, upsertOneService.Object);
+        await crudService.FindMany(filter);
+
+        // Assert
+        findManyService.Verify(x => x.Find(filter), Times.Once);
     }
 
     [Fact]
