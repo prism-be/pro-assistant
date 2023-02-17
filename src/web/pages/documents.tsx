@@ -5,7 +5,6 @@ import useTranslation from "next-translate/useTranslation";
 import Section from "../components/design/Section";
 import useSWR from "swr";
 import {DocumentConfiguration} from "../lib/contracts";
-import Button from "../components/forms/Button";
 import {useForm} from "react-hook-form";
 import InputText from "../components/forms/InputText";
 import TextArea from "../components/forms/TextArea";
