@@ -4,7 +4,6 @@ import ContentContainer from "../../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import {add, format, formatISO, parse, parseISO} from "date-fns";
 import {getLocale} from "../../lib/localization";
-import Button from "../../components/forms/Button";
 import {postData} from "../../lib/ajaxHelper";
 import {Appointment} from "../../lib/contracts";
 import React from 'react';
