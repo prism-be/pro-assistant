@@ -3175,6 +3175,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lottie-react@npm:^2.3.1":
+  version: 2.3.1
+  resolution: "lottie-react@npm:2.3.1"
+  dependencies:
+    lottie-web: ^5.9.4
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 3f83511eec9ef80c6500658fcb188f757c663c5de49de5cfd55d061d5de72b9242fd0a3b7ec7ce84bbad5acbcd7293468228a0f6cbe28e50e4c44e5b25df1c8d
+  languageName: node
+  linkType: hard
+
+"lottie-web@npm:^5.9.4":
+  version: 5.10.2
+  resolution: "lottie-web@npm:5.10.2"
+  checksum: 9ec80b479d8d03c079bd4f246d301f0c4aac2c4d6f8daaa79f6f3fc285aaba377c64879f6748d49c1db52b9854aea81c3203d858e9c686f7a47cd8b771d112d0
+  languageName: node
+  linkType: hard
+
 "lru-cache@npm:^6.0.0":
   version: 6.0.0
   resolution: "lru-cache@npm:6.0.0"
@@ -3956,6 +3975,7 @@ __metadata:
     jsonwebtoken: ^9.0.0
     jwks-rsa: ^3.0.1
     keyboardjs: ^2.7.0
+    lottie-react: ^2.3.1
     next: ^13.1.4
     next-applicationinsights: ^1.0.4
     next-translate: ^1.6.0

@@ -11,7 +11,9 @@
     "configurationTitle": "Configuration",
     "configuration": "Général",
     "documents": "Types de documents",
-    "appointments": "Rendez-vous"
+    "appointments": "Rendez-vous",
+    "accounting": "Comptabilité",
+    "accounting-closing": "Clôture"
   },
   "actions": {
     "back": "Retour",
@@ -97,6 +99,13 @@
         "generate": "Générer le document ...",
         "no-documents": "Il n'y a pas encore de documents pour ce rendez-vous",
         "generated": "Document généré le "
+      }
+    },
+    "accounting": {
+      "title": "Comptabilité",
+      "closing": {
+        "title": "Clôture des rendez-vous",
+        "noUnclosed": "Félicitations : il n'y a pas de rendez-vous à clôturer, tout les rendez-vous sont notés comme payés ou annulés."
       }
     }
   },

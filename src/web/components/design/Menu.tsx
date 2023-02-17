@@ -39,6 +39,9 @@ const Menu = () => {
                 <li className={getActiveLinkClass('/configuration')}><Link className={"block px-4 py-2"} href={"/configuration"}>{t("menu.configuration")}</Link></li>
                 <li className={getActiveLinkClass('/documents')}><Link className={"block px-4 py-2"} href={"/documents"}>{t("menu.documents")}</Link></li>
             </div>
+
+            <li className={"px-4 pt-4 font-bold"}>{t("menu.accounting")}</li>
+            <li className={getActiveLinkClass('/accounting/closing')}><Link className={"block px-4 py-2"} href={"/accounting/closing"}>{t("menu.accounting-closing")}</Link></li>
         </ul>
     </div>
 }
