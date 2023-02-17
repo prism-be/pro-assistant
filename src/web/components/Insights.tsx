@@ -16,7 +16,10 @@ let appInsights = new ApplicationInsights({
     },
 });
 
-appInsights.loadAppInsights();
+try {
+    appInsights.loadAppInsights();
+} catch (e) {
+}
 
 interface Props {
     children: any;
