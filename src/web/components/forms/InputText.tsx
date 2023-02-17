@@ -30,7 +30,7 @@ const InputText = ({label, name, type, required, register, error, autoCapitalize
     return <div className={"block" + " " + className}>
         <label className={"block"}>{label} {required && " *"} </label>
         <input
-            className={"w-full block p-2 outline-0 " + (error ? "border border-red-400" : "border border-gray-100")}
+            className={"w-full block p-2 outline-0 " + (error ? "border border-red-400" : "border border-gray-200")}
             type={type}
             {...register(name, {
                 required, onChange: (e) => {

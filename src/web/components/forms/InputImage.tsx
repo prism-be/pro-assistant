@@ -1,6 +1,4 @@
-﻿import styles from "../../styles/components/forms/input.image.module.scss"
-
-import {FieldValues, UseFormRegister} from "react-hook-form";
+﻿import {FieldValues, UseFormRegister} from "react-hook-form";
 import {UseFormSetValue} from "react-hook-form/dist/types/form";
 import {useEffect, useState} from "react";
 
@@ -43,10 +41,10 @@ const InputImage = ({label, name, required, register, error, setValue, className
         }
     }
 
-    return <div className={styles.container + " " + className}>
-        <label className={styles.label}>{label} {required && " *"} </label>
-        <div className={styles.containerInput}>
-            {preview && <img className={styles.preview} src={preview} alt={"logo"}/>}
+    return <div className={"block" + " " + className}>
+        <label className={"block"}>{label} {required && " *"} </label>
+        <div className={"w-full block p-2 outline-0 " + (error ? "border border-red-400" : "border border-gray-200")}>
+            {preview && <img className={"h-32 m-auto"} src={preview} alt={"logo"}/>}
 
             <input type={"hidden"} {...register(name, {
                 required, onChange: (e) => {
@@ -55,12 +53,12 @@ const InputImage = ({label, name, required, register, error, setValue, className
             })} />
 
             <input
-                className={error ? styles.errorInput : styles.input}
+                className={""}
                 type="file"
                 accept="image/*"
                 onChange={(e) => fileChanged(e)}
             />
-            {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
+            {error?.message && <p className={"text-red-400"}>{error.message}</p>}
         </div>
     </div>
 }

@@ -22,7 +22,7 @@ const InputSelect = ({label, name, required, register, error, className, options
     return <div className={"block" + " " + className}>
         <label className={"block"}>{label} {required && " *"} </label>
         <select
-            className={"w-full block p-2 outline-0 " + (error ? "border border-red-400" : "border border-gray-100")}
+            className={"w-full block p-2 outline-0 " + (error ? "border border-red-400" : "border border-gray-200")}
             {...register(name, {
                 required, onChange: (e) => {
                     if (onChange) {
