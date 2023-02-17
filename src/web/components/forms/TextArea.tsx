@@ -1,6 +1,4 @@
-﻿import styles from "../../styles/components/forms/input.text.module.scss"
-
-import {FieldValues, UseFormRegister} from "react-hook-form";
+﻿import {FieldValues, UseFormRegister} from "react-hook-form";
 
 interface Props {
     label: string;
@@ -21,16 +19,16 @@ const TextArea = ({label, name, required, register, error, className, onChange}:
         }
     }
 
-    return <div className={styles.container + " " + className}>
-        <label className={styles.label}>{label} {required && " *"} </label>
+    return <div className={"block" + " " + className}>
+        <label className={"block"}>{label} {required && " *"} </label>
         <textarea
-            className={error ? styles.errorInput : styles.input}
+            className={"w-full block p-2 outline-0 h-48 " + (error ? "border border-red-400" : "border border-gray-200")}
             {...register(name, {
                 required, onChange: (e) => {
                     valueChanged(e)
                 }
             })}/>
-        {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
+        {error?.message && <p className={"text-red-400"}>{error.message}</p>}
     </div>
 }
 

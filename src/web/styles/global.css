@@ -1,0 +1,42 @@
+﻿@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body {
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+}
+
+a, a:visited, a:link, a:active {
+    color: #31859c;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+h1, h2
+{
+    color: #205969;
+    font-weight: bold;
+    font-size: 1rem;
+    line-height: 2rem;
+}
+
+h3
+{
+    font-weight: bold;
+}
+
+.contact-appointments
+{
+    display: grid;
+    grid-template-columns: 0.25rem 1fr 15rem 10rem;
+    cursor: pointer;
+}
+
+.border-b-dashed
+{
+    border-bottom-style: dashed;
+}

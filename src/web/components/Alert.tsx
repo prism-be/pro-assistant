@@ -1,6 +1,4 @@
-﻿import styles from '../styles/components/alert.module.scss';
-
-import {useEffect, useRef, useState} from "react";
+﻿import {useEffect, useRef, useState} from "react";
 import {useRouter} from "next/router";
 import {AlertType, clear, onAlert} from "../lib/events/alert";
 import {XCircleIcon} from '@heroicons/react/24/outline';
@@ -68,13 +66,13 @@ export const Alert = ({id, fade}: Props) => {
     const cssClasses = (alert: any) => {
         if (!alert) return;
 
-        const classes = [styles.toaster];
+        const classes = [];
 
         const alertTypeClass = {
-            [AlertType.Success]: styles.toasterSuccess,
-            [AlertType.Error]: styles.toasterError,
-            [AlertType.Info]: styles.toasterInfo,
-            [AlertType.Warning]: styles.toasterWarning
+            [AlertType.Success]: "border-green-800 text-green-800",
+            [AlertType.Error]: "border-red-800 text-red-800",
+            [AlertType.Info]: "border-primary text-primary",
+            [AlertType.Warning]: "border-orange-800 text-orange-800"
         }
 
         classes.push(alertTypeClass[alert.type]);
@@ -89,10 +87,10 @@ export const Alert = ({id, fade}: Props) => {
     if (!alerts.length) return null;
 
     return (
-        <div className={styles.toasterContainer}>
+        <div className={"fixed top-20 left-0 right-0 p-4"}>
             {alerts.map((alert, index) =>
-                <div key={index} className={cssClasses(alert)}>
-                    <a className="close" onClick={() => removeAlert(alert)}>
+                <div key={index} className={"m-auto max-w-screen-md bg-white p-4 border rounded shadow relative mb-2 " + cssClasses(alert)}>
+                    <a className={"w-6 cursor-pointer block absolute top-2 right-2 " + cssClasses(alert)} onClick={() => removeAlert(alert)}>
                         <XCircleIcon/>
                     </a>
                     <span dangerouslySetInnerHTML={{__html: alert.message}}></span>

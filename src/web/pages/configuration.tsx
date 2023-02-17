@@ -1,8 +1,4 @@
-﻿import grid from '../styles/grid.module.scss';
-import table from '../styles/table.module.scss';
-import styles from '../styles/styles.module.scss';
-
-import {NextPage} from "next";
+﻿import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import useTranslation from "next-translate/useTranslation";
 import useSWR from "swr";
@@ -20,6 +16,7 @@ import {postData, putData} from "../lib/ajaxHelper";
 import Section from "../components/design/Section";
 import InputColor from "../components/forms/InputColor";
 import {PencilSquareIcon} from '@heroicons/react/24/outline';
+import {HeaderWithAction} from "../components/design/HeaderWithAction";
 
 const Tariffs = () => {
     const {t} = useTranslation("configuration");
@@ -60,45 +57,42 @@ const Tariffs = () => {
 
     return <Section>
         <>
-            <header>
-                <h2>{t("tariffs.title")}</h2>
-                <Button text={t("common:actions.add")} onClick={() => addTariff()} secondary={true}></Button>
-            </header>
+            <HeaderWithAction title={t('tariffs.title')} action={() => addTariff()} actionText={t("common:actions.add")}/>
 
             {editing && <Popup>
                 <form>
-                    <div className={grid.container}>
-                        <div className={grid.extraLarge}>
+                    <div className={"grid grid-cols-2 gap-2"}>
+                        <div className={"col-span-2"}>
                             <InputText label={t("tariffs.name")} name={"name"} type={"text"} required={true} register={register} setValue={setValue} error={errors.name}/>
                         </div>
-                        <div className={grid.extraLarge}>
+                        <div className={"col-span-2"}>
                             <InputText label={t("tariffs.price")} name={"price"} type={"text"} required={true} register={register} setValue={setValue} error={errors.price}/>
                         </div>
-                        <div className={grid.extraLarge}>
+                        <div className={"col-span-2"}>
                             <InputText label={t("tariffs.defaultDuration")} name={"defaultDuration"} type={"number"} required={true} register={register} setValue={setValue} error={errors.defaultDuration}/>
                         </div>
-                        <div className={grid.extraLarge}>
+                        <div className={"col-span-2"}>
                             <InputColor label={t("tariffs.color")} name={"backgroundColor"} setValue={setValue} error={errors.backgroundColor} initialColor={getValues()["backgroundColor"]}/>
                         </div>
-                        <Button className={grid.medium + " " + grid.first} text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
-                        <Button className={grid.medium + " " + grid.last} text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
+                        <Button text={t("common:actions.cancel")} onClick={() => setEditing(false)} secondary={true}/>
+                        <Button text={t("common:actions.save")} onClick={handleSubmit(onSaveTariff)}/>
                     </div>
                 </form>
             </Popup>}
 
             <div>
                 {tariffs?.map(tariff =>
-                    <div key={tariff.id} className={table.rowAction1}>
-                        <div className={table.rowAction}>
-                            <a className={styles.iconButton} onClick={() => editTariff(tariff)}>
+                    <div key={tariff.id} className={"flex"}>
+                        <div className={"w-6"}>
+                            <a className={"cursor-pointer"} onClick={() => editTariff(tariff)}>
                                 <PencilSquareIcon/>
                             </a>
                         </div>
-                        <div className={table.table3}>
+                        <div className={"pl-2"}>
                             {tariff.name} - {tariff.defaultDuration}m
                         </div>
-                        <div className={table.table1}>
-                            {tariff.price.toFixed(2)} &euro;
+                        <div className={"pl-2"}>
+                            ({tariff.price.toFixed(2)} &euro;)
                         </div>
 
                     </div>)}
@@ -156,18 +150,16 @@ const Documents = () => {
 
     return <Section>
         <>
-            <header>
-                <h2>{t("documents.header.title")}</h2>
-                <Button text={t("common:actions.save")} onClick={() => saveDocumentHeaders()} secondary={true}></Button>
-            </header>
-            <div className={grid.container}>
-                <InputText className={grid.large} label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
-                <TextArea className={grid.large} label={t("documents.header.address")} name={"address"} register={register}/>
-                <InputImage className={grid.large} label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>
-                <InputImage className={grid.large} label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
-                <InputText className={grid.large} label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
-                <InputText className={grid.large} label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
-                <InputColor className={grid.large} label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue} initialColor={accentuateColor}/>
+            <HeaderWithAction title={t("documents.header.title")} action={() => saveDocumentHeaders()} actionText={t("common:actions.new")}/>
+            
+            <div className={"grid grid-cols-4 gap-2"}>
+                <InputText className={"col-span-4 md:col-span-2"} label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
+                <TextArea className={"col-span-4 md:col-span-2"} label={t("documents.header.address")} name={"address"} register={register}/>
+                <InputImage className={"col-span-4 md:col-span-2"} label={t("documents.header.logo")} name={"logo"} register={register} setValue={setValue} initialPreview={logo}/>
+                <InputImage className={"col-span-4 md:col-span-2"} label={t("documents.header.signature")} name={"signature"} register={register} setValue={setValue} initialPreview={signature}/>
+                <InputText className={"col-span-4 md:col-span-2"} label={t("documents.header.yourName")} name={"yourName"} type={"text"} register={register} setValue={setValue}/>
+                <InputText className={"col-span-4 md:col-span-2"} label={t("documents.header.yourCity")} name={"yourCity"} type={"text"} register={register} setValue={setValue}/>
+                <InputColor className={"col-span-4 md:col-span-2"} label={t("documents.header.accentuateColor")} name={"accentuateColor"} setValue={setValue} initialColor={accentuateColor}/>
             </div>
         </>
     </Section>

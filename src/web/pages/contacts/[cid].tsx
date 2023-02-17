@@ -1,8 +1,4 @@
-﻿import grid from '../../styles/grid.module.scss';
-import table from '../../styles/table.module.scss';
-import styles from '../../styles/styles.module.scss';
-
-import {NextPage} from "next";
+﻿import {NextPage} from "next";
 import useTranslation from "next-translate/useTranslation";
 import ContentContainer from "../../components/design/ContentContainer";
 import {useRouter} from "next/router";
@@ -77,47 +73,47 @@ const Contacts: NextPage = () => {
 
     return <ContentContainer>
         <Section>
-            <div className={table.rowAction1}>
-                <a className={styles.iconButton + " " + table.rowAction} onClick={() => router.push("/contacts")}>
+            <div className={"flex"}>
+                <a className={"w-8 cursor-pointer"} onClick={() => router.push("/contacts")}>
                     <ArrowSmallLeftIcon/>
                 </a>
-                <h1 className={table.table11}>{t("pages.contacts.details.title")} {contact?.lastName} {contact?.firstName}</h1>
+                <h1>{t("pages.contacts.details.title")} {contact?.lastName} {contact?.firstName}</h1>
             </div>
-            <form className={grid.container} onSubmit={handleSubmit(onSaveContactSubmit)}>
-                <div className={grid.dot}>
+            <form className={"grid gap-2 md:grid-cols-6 lg:grid-cols-12"} onSubmit={handleSubmit(onSaveContactSubmit)}>
+                <div className={"md:col-span-2 lg:col-span-1"}>
                     <InputText name="title" label={t("fields.title")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                 </div>
-                <div className={grid.medium}>
+                <div className={"md:col-span-2 lg:col-span-4"}>
                     <InputText name="lastName" label={t("fields.lastName")} type="text" required={false} register={register} setValue={setValue} error={errors.lastName} autoCapitalize={true}/>
                 </div>
-                <div className={grid.medium}>
+                <div className={"md:col-span-2 lg:col-span-4"}>
                     <InputText name="firstName" label={t("fields.firstName")} type="text" required={false} register={register} setValue={setValue} error={errors.firstName} autoCapitalize={true}/>
                 </div>
-                <div className={grid.extraSmall}>
+                <div className={"md:col-span-2 lg:col-span-3"}>
                     <InputDate name="birthDate" label={t("fields.birthDate")} type="text" required={false} register={register} setValue={setValue} error={errors.birthDate}/>
                 </div>
-                <div className={grid.large + " " + grid.first}>
+                <div className={"md:col-span-2 lg:col-span-6"}>
                     <InputText name="email" label={t("fields.email")} type="text" required={false} register={register} setValue={setValue} error={errors.email}/>
                 </div>
-                <div className={grid.large}>
+                <div className={"md:col-span-2 lg:col-span-6"}>
                     <InputText name="phoneNumber" label={t("fields.phoneNumber")} type="text" required={false} register={register} setValue={setValue} error={errors.phoneNumber}/>
                 </div>
-                <div className={grid.large}>
+                <div className={"md:col-span-4 lg:col-span-10"}>
                     <InputText name="street" label={t("fields.street")} type="text" required={false} register={register} setValue={setValue} error={errors.street} autoCapitalize={true}/>
                 </div>
-                <div className={grid.extraSmall}>
+                <div className={"md:col-span-2 lg:col-span-2"}>
                     <InputText name="number" label={t("fields.number")} type="text" required={false} register={register} setValue={setValue} error={errors.number}/>
                 </div>
-                <div className={grid.small + " " + grid.first}>
+                <div className={"md:col-span-2 lg:col-span-2"}>
                     <InputText name="zipCode" label={t("fields.zipCode")} type="text" required={false} register={register} setValue={setValue} error={errors.zipCode}/>
                 </div>
-                <div className={grid.small}>
+                <div className={"md:col-span-2 lg:col-span-5"}>
                     <InputText name="city" label={t("fields.city")} type="text" required={false} register={register} setValue={setValue} error={errors.city} autoCapitalize={true}/>
                 </div>
-                <div className={grid.small}>
+                <div className={"md:col-span-2 lg:col-span-5"}>
                     <InputText name="country" label={t("fields.country")} type="text" required={false} register={register} setValue={setValue} error={errors.country} autoCapitalize={true}/>
                 </div>
-                <div className={grid.small + " " + grid.last + " " + styles.buttonField}>
+                <div className={"md:col-start-4 pt-4 md:pt-0 md:col-span-3 lg:col-span-3 lg:col-start-10"}>
                     <Button text={t("actions.save")} onClick={handleSubmit(onSaveContactSubmit)} secondary={true}/>
                 </div>
             </form>

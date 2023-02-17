@@ -1,6 +1,5 @@
 ﻿import {FieldValues} from "react-hook-form";
 import {UseFormSetValue} from "react-hook-form/dist/types/form";
-import styles from "../../styles/components/forms/input.color.module.scss";
 import {useEffect, useState} from "react";
 import useTranslation from "next-translate/useTranslation";
 import {PencilSquareIcon} from '@heroicons/react/24/outline';
@@ -70,27 +69,28 @@ const InputColor = ({label, name, error, className, setValue, onChange, initialC
         "#696969",
     ]
 
-    return <div className={styles.container + " " + className}>
-        <label className={styles.label}>{label}</label>
-        <div className={styles.pill} style={{backgroundColor: color, color: foreColor}}>
-            <div className={styles.refresh} onClick={() => setDisplayPicker(!displayPicker)}>
+    return <div className={"block relative" + " " + className}>
+        <label className={"block"}>{label}</label>
+        <div className={"w-28 rounded-lg cursor-pointer text-center max-w-xs block p-2 outline-0 " + (error ? "border border-red-400" : "border border-gray-200")}
+             style={{backgroundColor: color, color: foreColor}}>
+            <div className={"w-8 m-auto"} onClick={() => setDisplayPicker(!displayPicker)}>
                 <PencilSquareIcon/>
             </div>
-            <div className={styles.colorName} onClick={() => setCustomColor()}>
+            <div className={"text-sm"} onClick={() => setCustomColor()}>
                 {color}
             </div>
         </div>
 
-        {displayPicker && <div className={styles.colorPicker}>
+        {displayPicker && <div className={"grid grid-cols-8 md:absolute bg-white gap-2 p-2 border mt-2"}>
             {
-                colors.map(c => <div key={c} className={styles.colorPickerChoice} style={{backgroundColor: c}} onClick={() => {
+                colors.map(c => <div key={c} className={"h-6 w-6 cursor-pointer m-auto"} style={{backgroundColor: c}} onClick={() => {
                     changeColor(c);
                     setDisplayPicker(false);
                 }}></div>)
             }
         </div>}
 
-        {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
+        {error?.message && <p className={"text-red-400"}>{error.message}</p>}
     </div>
 }
 

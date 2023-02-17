@@ -1,6 +1,4 @@
-﻿import styles from "../../styles/components/forms/input.select.module.scss"
-
-import {FieldValues, UseFormRegister} from "react-hook-form";
+﻿import {FieldValues, UseFormRegister} from "react-hook-form";
 
 interface Option {
     value: string;
@@ -21,10 +19,10 @@ interface Props {
 
 const InputSelect = ({label, name, required, register, error, className, options, onChange}: Props) => {
 
-    return <div className={styles.container + " " + className}>
-        <label className={styles.label}>{label} {required && " *"} </label>
+    return <div className={"block" + " " + className}>
+        <label className={"block"}>{label} {required && " *"} </label>
         <select
-            className={error ? styles.errorInput : styles.input}
+            className={"w-full block p-2 outline-0 " + (error ? "border border-red-400" : "border border-gray-200")}
             {...register(name, {
                 required, onChange: (e) => {
                     if (onChange) {
@@ -34,7 +32,7 @@ const InputSelect = ({label, name, required, register, error, className, options
             })}>
             {options.map(o => <option key={o.value} value={o.value}>{o.text}</option>)}
         </select>
-        {error?.message && <p className={styles.errorMessage}>{error.message}</p>}
+        {error?.message && <p className={"text-red-400"}>{error.message}</p>}
     </div>
 }
 

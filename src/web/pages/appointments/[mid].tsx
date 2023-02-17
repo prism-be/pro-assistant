@@ -1,5 +1,4 @@
-﻿import styles from '../../styles/pages/appointment.module.scss';
-import {NextPage} from "next";
+﻿import {NextPage} from "next";
 import ContentContainer from "../../components/design/ContentContainer";
 import Section from "../../components/design/Section";
 import useTranslation from "next-translate/useTranslation";
@@ -262,39 +261,39 @@ const Appointments: NextPage = () => {
                 {appointment?.id === undefined && <h1>{t("pages.appointment.titleNew")}</h1>}
                 {appointment?.id !== undefined && <h1>{t("pages.appointment.titleEditing")}</h1>}
             </>
-            <form className={styles.content} onSubmit={handleSubmit(onSubmit)}>
-                <InputText className={styles.lastName} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName} onChange={() => startSuggestContacts()}/>
-                <InputText className={styles.firstName} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.firstName} onChange={() => startSuggestContacts()}/>
+            <form className={"grid grid-cols-4 gap-4"} onSubmit={handleSubmit(onSubmit)}>
+                <InputText className={"col-span-4 md:col-span-2"} label={t("fields.lastName")} name={"lastName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.lastName} onChange={() => startSuggestContacts()}/>
+                <InputText className={"col-span-4 md:col-span-2"} label={t("fields.firstName")} name={"firstName"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.firstName} onChange={() => startSuggestContacts()}/>
                 
-                <InputDate className={styles.birthDate} label={t("fields.birthDate")} name={"birthDate"} required={false} type={"text"} register={register} setValue={setValue} error={errors.birthDate}/>
-                <InputText className={styles.phoneNumber} label={t("fields.phoneNumber")} name={"phoneNumber"} autoCapitalize={false} required={false} type={"text"} register={register} setValue={setValue} error={errors.phoneNumber}/>
+                <InputDate className={"col-span-4 md:col-span-2"} label={t("fields.birthDate")} name={"birthDate"} required={false} type={"text"} register={register} setValue={setValue} error={errors.birthDate}/>
+                <InputText className={"col-span-4 md:col-span-2"} label={t("fields.phoneNumber")} name={"phoneNumber"} autoCapitalize={false} required={false} type={"text"} register={register} setValue={setValue} error={errors.phoneNumber}/>
 
-                {contactsSuggestions.length !== 0 && <div className={styles.contactsSuggestions}>
-                    <h2>{t("pages.appointment.contactsSuggestions.title")}</h2>
-                    {contactsSuggestions.map(p => <div key={p.id} className={styles.contactsSuggestion} onClick={() => selectContact(p)}>
+                {contactsSuggestions.length !== 0 && <div className={"col-span-4"}>
+                    <h3>{t("pages.appointment.contactsSuggestions.title")}</h3>
+                    {contactsSuggestions.map(p => <div key={p.id} className={"cursor-pointer p-2 hover:bg-gray-100"} onClick={() => selectContact(p)}>
                         {p.lastName} {p.firstName} {p.birthDate && p.birthDate !== "" && <>({p.birthDate})</>}
                     </div>)}
                 </div>}
 
-                <InputSelect className={styles.tariffs} label={t("pages.appointment.tariffs.title")} name={"tariff"} register={register} options={getTariffsOptions()} onChange={(v) => setAppointmentType(v)}/>
-                <InputText className={styles.price} label={t("fields.price")} name={"price"} required={true} type={"text"} register={register} setValue={setValue} error={errors.price}/>
+                <InputSelect className={"col-span-3"} label={t("pages.appointment.tariffs.title")} name={"tariff"} register={register} options={getTariffsOptions()} onChange={(v) => setAppointmentType(v)}/>
+                <InputText className={"col-span-1"} label={t("fields.price")} name={"price"} required={true} type={"text"} register={register} setValue={setValue} error={errors.price}/>
 
-                {customTitle && <InputText className={styles.type} label={t("fields.appointmentType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>}
+                {customTitle && <InputText className={"col-span-4"} label={t("fields.appointmentType")} name={"type"} autoCapitalize={true} required={true} type={"text"} register={register} setValue={setValue} error={errors.type}/>}
 
-                <Calendar className={styles.date} value={date} onChange={(d) => selectDate(d)}/>
+                <Calendar className={"col-span-4 md:col-span-2 md:row-span-3"} value={date} onChange={(d) => selectDate(d)}/>
 
-                <InputText className={styles.hour} label={t("fields.hour")} name={"hour"} required={true} type={"text"} register={register} setValue={setValue} error={errors.hour} onChange={() => computeDate()}/>
-                <InputText className={styles.duration} label={t("fields.duration")} name={"duration"} required={true} type={"text"} register={register} setValue={setValue} error={errors.duration} onChange={() => computeDate()}/>
-                <div className={styles.durationText}>
+                <InputText className={"col-span-2"} label={t("fields.hour")} name={"hour"} required={true} type={"text"} register={register} setValue={setValue} error={errors.hour} onChange={() => computeDate()}/>
+                <InputText className={"col-span-2"} label={t("fields.duration")} name={"duration"} required={true} type={"text"} register={register} setValue={setValue} error={errors.duration} onChange={() => computeDate()}/>
+                <div className={"col-span-4 md:col-span-2"}>
                     <div>{format(date, "EEEE dd MMMM", {locale: getLocale()})} {t("fields.fromHour")} {format(date, "HH:mm", {locale: getLocale()})} {t("fields.toHour")} {format(add(date, {minutes: duration}), "HH:mm")}</div>
                 </div>
 
-                <InputSelect className={styles.payment} label={t("fields.payment")} name={"payment"} required={false} register={register} error={errors.payment} options={paymentOptions} onChange={() => updateState()}/>
-                <InputSelect className={styles.state} label={t("fields.appointmentState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions}/>
+                <InputSelect className={"col-span-2"} label={t("fields.payment")} name={"payment"} required={false} register={register} error={errors.payment} options={paymentOptions} onChange={() => updateState()}/>
+                <InputSelect className={"col-span-2"} label={t("fields.appointmentState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions}/>
 
-                <Button text={t("actions.back")} secondary={true} className={styles.cancel} onClick={() => router.back()}/>
+                <Button text={t("actions.back")} secondary={true} className={"col-span-2"} onClick={() => router.back()}/>
 
-                <Button text={t("actions.save")} className={styles.save} onClick={handleSubmit(onSubmit)}/>
+                <Button text={t("actions.save")} className={"col-span-2"} onClick={handleSubmit(onSubmit)}/>
             </form>
         </Section>
         <>{appointment && <GeneratedDocuments appointment={appointment}/>}</>
