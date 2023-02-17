@@ -6,6 +6,7 @@
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Business.Models;
@@ -41,7 +42,6 @@ public class AppointmentController : Controller
     {
         var result = await _searchAppointmentsService.Search(search.StartDate, search.EndDate, search.ContactId);
         return result
-            .Where(x => x.State != (int)AppointmentState.Canceled)
             .ToList()
             .ToActionResult();
     }
@@ -70,5 +70,21 @@ public class AppointmentController : Controller
         await _crudService.UpdateProperty<Contact>(appointment.ContactId, nameof(Contact.PhoneNumber), appointment.PhoneNumber ?? string.Empty);
 
         return result.ToActionResult();
+    }
+    
+    [Route("api/appointments/opened")]
+    [HttpGet]
+    public async Task<ActionResult<List<Appointment>>> Opened()
+    {
+        var filter = Builders<Appointment>.Filter.And(
+            Builders<Appointment>.Filter.Ne(x => x.State, (int)AppointmentState.Canceled),
+            Builders<Appointment>.Filter.Eq(x => x.Payment, (int)PaymentTypes.Unpayed)
+        );
+
+        var result = await _crudService.FindMany(filter);
+        return result
+            .OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ThenBy(x => x.StartDate)
+            .ToList()
+            .ToActionResult();
     }
 }

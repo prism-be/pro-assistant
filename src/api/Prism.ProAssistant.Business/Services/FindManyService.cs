@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------------
-//  <copyright file = "FindMany.cs" company = "Prism">
+//  <copyright file = "FindManyService.cs" company = "Prism">
 //  Copyright (c) Prism.All rights reserved.
 //  </copyright>
 // -----------------------------------------------------------------------
@@ -12,6 +12,7 @@ namespace Prism.ProAssistant.Business.Services;
 public interface IFindManyService
 {
     Task<List<T>> Find<T>();
+    Task<List<T>> Find<T>(FilterDefinition<T> filter);
 }
 
 public class FindManyService : IFindManyService
@@ -27,6 +28,13 @@ public class FindManyService : IFindManyService
     {
         var collection = _organizationContext.GetCollection<T>();
         var results = await collection.FindAsync<T>(Builders<T>.Filter.Empty);
+        return results.ToList();
+    }
+
+    public async Task<List<T>> Find<T>(FilterDefinition<T> filter)
+    {
+        var collection = _organizationContext.GetCollection<T>();
+        var results = await collection.FindAsync<T>(filter);
         return results.ToList();
     }
 }

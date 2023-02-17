@@ -27,7 +27,8 @@
     "previous": "Précédent",
     "next": "Suivant",
     "prev": "Préc.",
-    "nex": "Suiv."
+    "nex": "Suiv.",
+    "close": "Fermer"
   },
   "confirmations": {
     "deleteDocument": "Etes-vous sûr de vouloir supprimer ce document ?"

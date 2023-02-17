@@ -43,6 +43,8 @@ public class SearchAppointmentsService : ISearchAppointmentsService
             filters.Add(Builders<Appointment>.Filter.Eq(x => x.ContactId, contactId));
         }
 
+        filters.Add(Builders<Appointment>.Filter.Ne(x => x.State, (int)AppointmentState.Canceled));
+
         var collection = _organizationContext.GetCollection<Appointment>();
         var results = await collection.FindAsync(Builders<Appointment>.Filter.And(filters));
 
