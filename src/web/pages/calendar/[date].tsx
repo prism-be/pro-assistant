@@ -76,12 +76,12 @@ const Calendar: NextPage = () => {
 
                         <div className={"h-8 col-span-8"}></div>
 
-                        <div className={"text-sm col-start-1 text-center leading-8 border-b border-b-gray-300 border-r"}></div>
+                        <div className={"text-sm col-start-1 text-center leading-8 border-b border-b-gray-300 border-r border-r-light"}></div>
                         {days.map(d => <div className={"text-xs text-center leading-8 border-b border-b-gray-300 border-r border-r-light"} style={{gridColumnStart: d + 1}} key={d}>
                             {t("days.short.day" + d)} {format(add(monday, {days: d - 1}), "dd MMM", {locale: getLocale()})}
                         </div>)}
 
-                        {hours.map(h => <div key={h} className={"text-sm text-right leading-6 pr-1 border-b border-b-gray-300 border-r row-span-2"} style={{gridRowStart: h * 2}}>{h}H</div>)}
+                        {hours.map(h => <div key={h} className={"text-sm text-right leading-6 pr-1 border-b border-b-gray-300 border-r border-r-light row-span-2"} style={{gridRowStart: h * 2}}>{h}H</div>)}
 
                         {days.map(d => <React.Fragment key={d}>
                             {hours.map(h => <React.Fragment key={h}>
