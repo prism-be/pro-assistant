@@ -21,7 +21,7 @@
     "jwks-rsa": "^3.0.1",
     "keyboardjs": "^2.7.0",
     "next": "^13.1.4",
-    "next-translate": "^1.6.0",
+    "next-translate": "^2.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.43.0",

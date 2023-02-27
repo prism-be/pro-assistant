@@ -3477,13 +3477,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next-translate@npm:^1.6.0":
-  version: 1.6.0
-  resolution: "next-translate@npm:1.6.0"
+"next-translate@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "next-translate@npm:2.0.2"
   peerDependencies:
     next: ">= 10.0.0"
     react: ">= 16.8.0"
-  checksum: 766475bc7362fc8b6a5409586d6248e0c03405d71b5ced2274fefc275803eb68137225952ed9d1651d8bd396fec14fad42ad63b4eca64e2b038dbcc7926a3ddc
+  checksum: 3c14bcf9e7056be3480d6cb3888e62ff30ca3188755b1a9efc3ce159d0599349001bfd262c0ae5efcfdbea08b44c40cdd39a9226e861d598bdbd943f9fb52786
   languageName: node
   linkType: hard
 
@@ -3983,7 +3983,7 @@ __metadata:
     keyboardjs: ^2.7.0
     lottie-react: ^2.3.1
     next: ^13.1.4
-    next-translate: ^1.6.0
+    next-translate: ^2.0.2
     postcss: ^8.4.21
     react: ^18.2.0
     react-dom: ^18.2.0
