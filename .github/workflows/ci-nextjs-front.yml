@@ -24,17 +24,14 @@ jobs:
         name: Setup Node
         with:
           node-version: '18'
-      - name: Cache yarn cache
+      - name: Cache Dependencies
         uses: actions/cache@v3
         with:
           path: |
-            **/.yarn
+            ${{ github.workspace }}/.yarn
+            ${{ github.workspace }}/.pnp.cjs
+            ${{ github.workspace }}/.next/cache
           key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-      - name: Cache Yarn PnP
-        uses: actions/cache@v3
-        with:
-          path: ./.pnp.cjs
-          key: ${{ runner.os }}-yarn-pnp-${{ hashFiles('**/yarn.lock') }}
       - name: Install Dependencies
         run: |
           corepack enable
