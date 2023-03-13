@@ -7,14 +7,14 @@ import InputText from "../../components/forms/InputText";
 import {useForm} from "react-hook-form";
 import {useEffect} from "react";
 import Button from "../../components/forms/Button";
-import {alertSuccess} from "../../lib/events/alert";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import InputDate from "../../components/forms/InputDate";
-import {getData, postData} from "../../lib/ajaxHelper";
-import {Contact, UpsertResult} from "../../lib/contracts";
 import Section from "../../components/design/Section";
-import {ContactAppointments} from "../../components/contacts/ContactAppointments";
+import {ContactAppointments} from "@/components/contacts/ContactAppointments";
 import {ArrowSmallLeftIcon} from '@heroicons/react/24/outline';
+import {getData, postData} from "@/libs/http";
+import {Contact, UpsertResult} from "@/libs/models";
+import {alertSuccess} from "@/modules/events/alert";
 
 const Contacts: NextPage = () => {
     const {t} = useTranslation('common');
@@ -48,7 +48,7 @@ const Contacts: NextPage = () => {
             data.id = '';
             const newPid = await postData<UpsertResult>("/contact", data);
             alertSuccess(t("details.saveSuccess"), {autoClose: true});
-            await router.push("/contacts/" + newPid?.id);
+            await router.push("/contacts/" + newPid?._id.toHexString());
             return;
         }
 
