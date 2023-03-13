@@ -19,9 +19,7 @@ const Header = () => {
     const {user} = useUser();
     
     return <>
-        <Head>
-            <title>Pro Assistant - {user?.name}</title>
-        </Head>
+       
         <div className={"h-14 flex border-b shadow"}>
             <div className={"p-1"} onClick={() => toggledMobileMenu()}>
                 <div>
