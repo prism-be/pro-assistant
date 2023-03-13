@@ -28,7 +28,7 @@ export const ContactAppointments = (props: Props) => {
     return <Section>
         <h2>{t("pages.contacts.details.appointments.title")}</h2>
         <div>
-            <AppointmentsList appointments={appointments ?? []} onClick={(m) => displayAppointment(m._id.toHexString())}/>
+            <AppointmentsList appointments={appointments ?? []} onClick={(m) => displayAppointment(m._id)}/>
         </div>
         <>
             {appointments?.length === 0 && <div className={"componentStyles.noAppointments"}>

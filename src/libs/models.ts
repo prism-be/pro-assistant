@@ -1,6 +1,4 @@
-﻿import {ObjectId} from "mongodb";
-
-export interface Appointment {
+﻿export interface Appointment {
     startDate: string;
     paymentDate?: string | null;
     price: number;
@@ -18,13 +16,13 @@ export interface Appointment {
     foreColor?: string | null;
     type?: string | null;
     typeId?: string | null;
-    _id: ObjectId
+    _id: any
 }
 
 export interface BinaryDocument {
     date: string;
     fileName: string;
-    _id: ObjectId
+    _id: any
     title: string;
 }
 
@@ -41,23 +39,23 @@ export interface Contact {
     street?: string | null;
     title?: string | null;
     zipCode?: string | null;
-    _id: ObjectId
+    _id: any
 }
 
 export interface DeleteDocument {
-    _id: ObjectId
-    appointment_id: ObjectId
+    _id: any
+    appointment_id: any
 }
 
 export interface DocumentConfiguration {
     body?: string | null;
     name?: string | null;
     title?: string | null;
-    _id: ObjectId
+    _id: any
 }
 
 export interface DownloadDocument {
-    document_id: ObjectId
+    document_id: any
 }
 
 export interface DownloadKey {
@@ -65,8 +63,8 @@ export interface DownloadKey {
 }
 
 export interface GenerateDocument {
-    document_id: ObjectId
-    appointment_id: ObjectId
+    document_id: any
+    appointment_id: any
 }
 
 export interface SearchAppointments {
@@ -84,7 +82,7 @@ export interface SearchContacts {
 
 export interface Setting {
     value: string;
-    _id: ObjectId
+    _id: any
 }
 
 export interface Tariff {
@@ -93,11 +91,11 @@ export interface Tariff {
     name: string;
     backgroundColor?: string | null;
     foreColor?: string | null;
-    _id: ObjectId
+    _id: any
 }
 
 export interface UpsertResult {
-    _id: ObjectId
+    _id: any
     organization: string;
 }
 

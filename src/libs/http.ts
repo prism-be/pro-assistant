@@ -60,7 +60,6 @@ export async function postData<TResult>(route: string, body: any): Promise<TResu
 
     globalTrim(body);
 
-
     const response = await fetch("/api" + route, {
         body: JSON.stringify(body),
         method: "POST",

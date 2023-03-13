@@ -19,12 +19,12 @@ export const GeneratedDocuments = ({appointment}: Props) => {
     const {t} = useTranslation('common');
 
     const startGenerateDocument = useCallback(async () => {
-        if (!document || document === "" || appointment?._id.toHexString() == null) {
+        if (!document || document === "" || appointment?._id == null) {
             return;
         }
 
-        await generateDocument(document, appointment._id.toHexString());
-        await mutate("/appointment/" + appointment._id.toHexString());
+        await generateDocument(document, appointment._id);
+        await mutate("/appointment/" + appointment._id);
     }, [document]);
 
 
@@ -34,8 +34,8 @@ export const GeneratedDocuments = ({appointment}: Props) => {
 
     const startDeleteDocument = useCallback(async (documentId: string) => {
         if (confirm(t("confirmations.deleteDocument"))) {
-            await deleteDataWithBody("/document", {id: documentId, appointmentId: appointment._id.toHexString()});
-            await mutate("/appointment/" + appointment._id.toHexString());
+            await deleteDataWithBody("/document", {id: documentId, appointmentId: appointment._id});
+            await mutate("/appointment/" + appointment._id);
         }
     }, [appointment]);
 
@@ -47,7 +47,7 @@ export const GeneratedDocuments = ({appointment}: Props) => {
         </div>}</>
 
         <div>
-            {appointment.documents.map(d => <div key={d._id.toHexString()} className={"flex border-b last:border-0 pb-2"}>
+            {appointment.documents.map(d => <div key={d._id} className={"flex border-b last:border-0 pb-2"}>
                 <div className={"grow py-2"}>
                     <div>{d.title}</div>
                     <div>
@@ -58,11 +58,11 @@ export const GeneratedDocuments = ({appointment}: Props) => {
                     </div>
                 </div>
                 <div className={"col-start-11 row-span-2 row-start-1"}>
-                    <div onClick={() => startDownloadDocument(d._id.toHexString())} className={"w-10 p-2 cursor-pointer"}>
+                    <div onClick={() => startDownloadDocument(d._id)} className={"w-10 p-2 cursor-pointer"}>
                         <ArrowDownTrayIcon/>
                     </div>
 
-                    <div onClick={() => startDeleteDocument(d._id.toHexString())} className={"w-10 p-2 cursor-pointer"}>
+                    <div onClick={() => startDeleteDocument(d._id)} className={"w-10 p-2 cursor-pointer"}>
                         <TrashIcon/>
                     </div>
                 </div>
@@ -72,7 +72,7 @@ export const GeneratedDocuments = ({appointment}: Props) => {
         <div className={"flex"}>
             <select className={"w-full block p-2 outline-0 border border-gray-100"} onChange={(e) => setDocument(e.target.value)}>
                 <option value={""}>{t("pages.appointment.documents.generate")}</option>
-                {documents?.map(d => <option key={d._id.toHexString()} value={d._id.toHexString()}>{d.name}</option>)}
+                {documents?.map(d => <option key={d._id} value={d._id}>{d.name}</option>)}
             </select>
             <div onClick={() => startGenerateDocument()} className={"w-12 h-12 bg-primary p-2 text-white cursor-pointer"}>
                 <CheckIcon/>

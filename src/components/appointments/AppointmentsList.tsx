@@ -13,7 +13,7 @@ export const AppointmentsList = ({appointments, onClick}: Props) => {
     const {t} = useTranslation('common');
     
     return <>
-        {appointments?.map(m => <div key={m._id.toHexString()} className={"grid contact-appointments border-b last:border-0"} onClick={() => onClick(m)}>
+        {appointments?.map(m => <div key={m._id} className={"grid contact-appointments border-b last:border-0"} onClick={() => onClick(m)}>
             <div className={"row-span-2"} style={{backgroundColor: m.backgroundColor ?? ""}}></div>
             <div className={"col-span-3 pt-2 pl-2 lg:col-span-1"}>
                 {m.title}

@@ -48,7 +48,7 @@ const Contacts: NextPage = () => {
             data.id = '';
             const newPid = await postData<UpsertResult>("/contact", data);
             alertSuccess(t("details.saveSuccess"), {autoClose: true});
-            await router.push("/contacts/" + newPid?._id.toHexString());
+            await router.push("/contacts/" + newPid?._id);
             return;
         }
 
