@@ -31,7 +31,7 @@ jobs:
             ${{ github.workspace }}/.yarn
             ${{ github.workspace }}/.pnp.cjs
             ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
       - name: Install Dependencies
         run: |
           corepack enable
