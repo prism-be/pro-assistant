@@ -83,7 +83,7 @@ const Appointments: NextPage = () => {
     }, [appointment, tariffs]);
 
     useEffect(() => {
-        if (router.asPath.startsWith("/data/appointments/new")) {
+        if (router.asPath.startsWith("/appointments/new")) {
             let startDate = startOfHour(new Date());
 
             if (router.query.startDate) {
