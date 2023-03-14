@@ -1,4 +1,4 @@
-﻿import {GenerateDocumentRequest} from "@/modules/documents/types";
+﻿import {DocumentRequest} from "@/modules/documents/types";
 import {Db, GridFSBucket, ObjectId} from "mongodb";
 import {Appointment, BinaryDocument, Contact} from "@/libs/models";
 import { jsPDF } from "jspdf";
@@ -71,10 +71,25 @@ async function saveDocument(db: Db, appointment: Appointment, title: any, pdfByt
     await db.collection("appointments").updateOne({_id: new ObjectId(appointment._id)}, {$set: existing});
 }
 
-export async function generateDocument<TResult>(db: Db, request: GenerateDocumentRequest): Promise<void> {
+export async function generateDocument<TResult>(db: Db, request: DocumentRequest): Promise<void> {
     const {title, content} = await getDocumentConfiguration(db, request.documentId);
     const appointment = await getAppointment(db, request.appointmentId);
     const contact = await getContact(db, appointment.contactId);
     const pdfBytes = generatePdf(title, content, appointment, contact);
     await saveDocument(db, appointment, title, pdfBytes);
+}
+
+export async function deleteDocument<TResult>(db: Db, request: DocumentRequest): Promise<void> {
+    const bucket = new GridFSBucket(db);
+    await bucket.delete(new ObjectId(request.documentId));
+    
+    const appointment = await getAppointment(db, request.appointmentId);
+    const existing = await db.collection("appointments").findOne<Appointment>({_id: new ObjectId(appointment._id)});
+    if (!existing)
+    {
+        throw new Error("Appointment not found");
+    }
+    
+    existing.documents = existing.documents.filter(d => d.id !== request.documentId);
+    await db.collection("appointments").updateOne({_id: new ObjectId(appointment._id)}, {$set: existing});
 }

@@ -1,7 +1,7 @@
 ﻿import {getUserDatabase} from "@/libs/mongodb";
 import {NextApiRequest, NextApiResponse} from "next";
 import {getSession} from "@auth0/nextjs-auth0";
-import {GenerateDocumentRequest} from "@/modules/documents/types";
+import {DocumentRequest} from "@/modules/documents/types";
 import {generateDocument} from "@/modules/documents/generator";
 
 
@@ -11,7 +11,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         return
     }
 
-    const body = req.body as GenerateDocumentRequest;
+    const body = req.body as DocumentRequest;
 
     if (!body) {
         throw new Error("The body must be defined");

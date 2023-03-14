@@ -7,6 +7,7 @@ import {ArrowDownTrayIcon, CheckIcon, TrashIcon} from '@heroicons/react/24/outli
 import {Appointment, DocumentConfiguration} from "@/libs/models";
 import {deleteDataWithBody, downloadDocument, generateDocument} from "@/libs/http";
 import {getLocale} from "@/libs/localization";
+import {DocumentRequest} from "@/modules/documents/types";
 
 interface Props {
     appointment: Appointment;
@@ -24,18 +25,14 @@ export const GeneratedDocuments = ({appointment}: Props) => {
         }
 
         await generateDocument(document, appointment._id);
-        await mutate("/appointment/" + appointment._id);
+        await mutate("/data/appointments/" + appointment._id);
     }, [document]);
 
 
-    const startDownloadDocument = useCallback(async (documentId: string) => {
-        await downloadDocument(documentId);
-    }, []);
-
     const startDeleteDocument = useCallback(async (documentId: string) => {
         if (confirm(t("confirmations.deleteDocument"))) {
-            await deleteDataWithBody("/document", {id: documentId, appointmentId: appointment._id});
-            await mutate("/appointment/" + appointment._id);
+            await deleteDataWithBody("/documents/delete", {documentId, appointmentId: appointment._id} as DocumentRequest);
+            await mutate("/data/appointments/" + appointment._id);
         }
     }, [appointment]);
 
@@ -58,7 +55,7 @@ export const GeneratedDocuments = ({appointment}: Props) => {
                     </div>
                 </div>
                 <div className={"col-start-11 row-span-2 row-start-1"}>
-                    <div onClick={() => startDownloadDocument(d.id)} className={"w-10 p-2 cursor-pointer"}>
+                    <div onClick={() => window.open(`/api/documents/${d.id}`)} className={"w-10 p-2 cursor-pointer"}>
                         <ArrowDownTrayIcon/>
                     </div>
 

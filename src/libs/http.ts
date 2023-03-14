@@ -21,7 +21,7 @@ export async function generateDocument<TResult>(documentId: string, appointmentI
         documentId,
         appointmentId: appointmentId
     };
-    await fetch("/api/document/generate", {
+    await fetch("/api/documents/generate", {
         method: "POST",
         body: JSON.stringify(body),
         headers: {
