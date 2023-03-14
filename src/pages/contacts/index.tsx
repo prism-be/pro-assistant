@@ -39,7 +39,26 @@ const Contacts: NextPage = () => {
 
     const onSubmit = async (data: any) => {
         sessionStorage.setItem('contacts/search-contacts', JSON.stringify(data));
-        const result = await postData<Contact[]>("/data/contacts/search", {});
+        
+        let query = {};
+        
+        if (data.lastName) {
+            query = {...query, lastName: { $regex: `^${data.lastName}`, $options: 'i' }};
+        }
+        
+        if (data.firstName) {
+            query = {...query, firstName: { $regex: `^${data.firstName}`, $options: 'i' }};
+        }
+        
+        if (data.birthDate) {
+            query = {...query, birthDate: { $regex: `${data.birthDate}`, $options: 'i' }};
+        }
+        
+        if (data.phoneNumber) {
+            query = {...query, phoneNumber: { $regex: `${data.phoneNumber}`, $options: 'i' }};
+        }
+        
+        const result = await postData<Contact[]>("/data/contacts/search", query);
         setContacts(result);
     }
 

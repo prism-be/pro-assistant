@@ -22,6 +22,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
     
     const db = await getUserDatabase(session.user.email);
+    
     const data = await db.collection(collection as string).find(req.body).toArray();
 
     res.status(200).json(data);
