@@ -1,16 +1,15 @@
-import type {NextPage} from 'next'
-import {useRouter} from "next/router";
-import {useEffect} from "react";
+import type { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 const Appointment: NextPage = () => {
+  const router = useRouter();
 
-    const router = useRouter();
+  useEffect(() => {
+    router.push("/appointments/new/");
+  }, [router]);
 
-    useEffect(() => {
-        router.push('/appointments/new/');
-    }, [router]);
+  return <></>;
+};
 
-    return <></>
-}
-
-export default Appointment
+export default Appointment;

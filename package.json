@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pretty": "prettier --write ./src"
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^2.2.3",
@@ -33,6 +34,7 @@
     "next-translate-plugin": "^2.0.2",
     "node-cache": "^5.1.2",
     "postcss": "^8.4.21",
+    "prettier": "^2.8.4",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.5",

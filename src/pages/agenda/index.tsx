@@ -1,17 +1,16 @@
-import type {NextPage} from 'next'
-import {useRouter} from "next/router";
-import {useEffect} from "react";
-import {format} from "date-fns";
+import type { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { format } from "date-fns";
 
 const Agenda: NextPage = () => {
+  const router = useRouter();
 
-    const router = useRouter();
+  useEffect(() => {
+    router.push("/agenda/" + format(new Date(), "yyyy-MM-dd"));
+  }, [router]);
 
-    useEffect(() => {
-        router.push('/agenda/' + format(new Date(), "yyyy-MM-dd"));
-    }, [router]);
+  return <></>;
+};
 
-    return <></>
-}
-
-export default Agenda
+export default Agenda;

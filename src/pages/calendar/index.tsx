@@ -1,17 +1,19 @@
-import type {NextPage} from 'next'
-import {useRouter} from "next/router";
-import {useEffect} from "react";
-import {format, startOfWeek} from "date-fns";
+import type { NextPage } from "next";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import { format, startOfWeek } from "date-fns";
 
 const Calendar: NextPage = () => {
+  const router = useRouter();
 
-    const router = useRouter();
+  useEffect(() => {
+    router.push(
+      "/calendar/" +
+        format(startOfWeek(new Date(), { weekStartsOn: 1 }), "yyyy-MM-dd")
+    );
+  }, [router]);
 
-    useEffect(() => {
-        router.push('/calendar/' + format(startOfWeek(new Date(), {weekStartsOn: 1}), "yyyy-MM-dd"));
-    }, [router]);
+  return <></>;
+};
 
-    return <></>
-}
-
-export default Calendar
+export default Calendar;
