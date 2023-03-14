@@ -13,7 +13,7 @@ import Section from "../../components/design/Section";
 import {ContactAppointments} from "@/components/contacts/ContactAppointments";
 import {ArrowSmallLeftIcon} from '@heroicons/react/24/outline';
 import {getData, postData} from "@/libs/http";
-import {Contact, UpsertResult} from "@/libs/models";
+import {Contact, InsertResult} from "@/libs/models";
 import {alertSuccess} from "@/modules/events/alert";
 
 const Contacts: NextPage = () => {
@@ -30,7 +30,7 @@ const Contacts: NextPage = () => {
         return await getData<Contact>(route);
     }
 
-    const {data: contact, mutate: mutateContact} = useSWR("/contact/" + cid, loadContact);
+    const {data: contact, mutate: mutateContact} = useSWR("/data/contacts/" + cid, loadContact);
     const {register, handleSubmit, formState: {errors}, setValue, getValues} = useForm();
 
     useEffect(() => {
@@ -46,13 +46,13 @@ const Contacts: NextPage = () => {
     const saveContactForm = async (data: any) => {
         if (cid === '000000000000000000000000') {
             data.id = '';
-            const newPid = await postData<UpsertResult>("/contact", data);
+            const result = await postData<InsertResult>("/data/contacts/insert", data);
             alertSuccess(t("details.saveSuccess"), {autoClose: true});
-            await router.push("/contacts/" + newPid?._id);
+            await router.push("/contacts/" + result.insertedId);
             return;
         }
 
-        await postData("/contact", data);
+        await postData("/data/contacts/update", data);
         await mutateContact();
         alertSuccess(t("pages.contacts.details.saveSuccess"), {autoClose: true});
     }

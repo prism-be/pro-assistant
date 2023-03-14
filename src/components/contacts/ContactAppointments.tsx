@@ -12,7 +12,7 @@ export interface Props {
 
 export const ContactAppointments = (props: Props) => {
     async function loadAppointments(): Promise<Appointment[]> {
-        const data = await postData<Appointment[]>("/appointments", {contactId: props.contactId});
+        const data = await postData<Appointment[]>("/data/appointments/search", {contactId: props.contactId});
         return data?.reverse() ?? [];
     }
 

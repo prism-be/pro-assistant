@@ -99,6 +99,11 @@ export interface UpsertResult {
     organization: string;
 }
 
+export interface InsertResult {
+    insertedId: string;
+    acknowledged: boolean;
+}
+
 export interface UserInformation {
     name?: string | null;
     organization?: string | null;
