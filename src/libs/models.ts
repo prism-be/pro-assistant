@@ -22,7 +22,7 @@
 export interface BinaryDocument {
     date: string;
     fileName: string;
-    _id: any
+    id: string;
     title: string;
 }
 

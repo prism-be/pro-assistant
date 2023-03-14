@@ -29,5 +29,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     await generateDocument(db, body);
 
 
-    res.status(204);
+    res.status(200).json({ message: "ok" });
 }

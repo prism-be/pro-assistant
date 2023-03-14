@@ -47,7 +47,7 @@ export const GeneratedDocuments = ({appointment}: Props) => {
         </div>}</>
 
         <div>
-            {appointment.documents.map(d => <div key={d._id} className={"flex border-b last:border-0 pb-2"}>
+            {appointment.documents.map(d => <div key={d.id} className={"flex border-b last:border-0 pb-2"}>
                 <div className={"grow py-2"}>
                     <div>{d.title}</div>
                     <div>
@@ -58,11 +58,11 @@ export const GeneratedDocuments = ({appointment}: Props) => {
                     </div>
                 </div>
                 <div className={"col-start-11 row-span-2 row-start-1"}>
-                    <div onClick={() => startDownloadDocument(d._id)} className={"w-10 p-2 cursor-pointer"}>
+                    <div onClick={() => startDownloadDocument(d.id)} className={"w-10 p-2 cursor-pointer"}>
                         <ArrowDownTrayIcon/>
                     </div>
 
-                    <div onClick={() => startDeleteDocument(d._id)} className={"w-10 p-2 cursor-pointer"}>
+                    <div onClick={() => startDeleteDocument(d.id)} className={"w-10 p-2 cursor-pointer"}>
                         <TrashIcon/>
                     </div>
                 </div>
