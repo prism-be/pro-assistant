@@ -14,7 +14,7 @@ interface Props {
 
 export const GeneratedDocuments = ({appointment}: Props) => {
 
-    const {data: documents} = useSWR<DocumentConfiguration[]>("/documents-configuration");
+    const {data: documents} = useSWR<DocumentConfiguration[]>("/data/documents-configuration/list");
     const [document, setDocument] = useState<string>();
     const {t} = useTranslation('common');
 
