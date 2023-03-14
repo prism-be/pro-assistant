@@ -1,11 +1,14 @@
 ﻿import {DocumentRequest} from "@/modules/documents/types";
 import {Db, GridFSBucket, ObjectId} from "mongodb";
-import {Appointment, BinaryDocument, Contact, DocumentConfiguration, Setting} from "@/libs/models";
+import {Appointment, BinaryDocument, Contact, Setting} from "@/libs/models";
 import {jsPDF} from "jspdf";
 import {format, formatISO, parseISO} from "date-fns";
 import {formatAmount, replaceSpecialChars} from "@/libs/formats";
 import {getLocale} from "@/libs/localization";
 import Mustache from "mustache";
+import sharp from "sharp";
+
+const documentMargin = 1;
 
 async function getDocumentConfiguration(db: Db, documentId: string) {
 
@@ -38,18 +41,91 @@ async function getContact(db: Db, contactId: any) {
     return contact;
 }
 
-async function generatePdf(db: Db, title: string, content: string, appointment: Appointment, contact: Contact): Promise<ArrayBuffer> {
-    
-    const documentHeaderName = await getSetting(db, "document-header-name");
+async function resizeImage(image: string, w: number, h: number) {
+    return await sharp(Buffer.from(Buffer.from(image.split(';base64,').pop() as string, 'base64')))
+        .resize(w, h, {fit: "contain", background: "white"})
+        .png()
+        .toBuffer();
+}
+
+function hexToRgb(color: string) {
+    const match = color.replace(/#/, '').match(/.{1,2}/g);
+    if (!match) {
+        return {r: 0, g: 0, b: 0};
+    }
+    const r = parseInt(match[0], 16);
+    const g = parseInt(match[1], 16);
+    const b = parseInt(match[2], 16);
+    return {r, g, b};
+}
+
+async function writeHeader(db: Db, doc: jsPDF) {
+    const accentuateColor = hexToRgb(await getSetting(db, "document-header-accentuate-color"));
+    const headerName = await getSetting(db, "document-header-name");
+    const headerAddress = await getSetting(db, "document-header-address");
     const logo = await getSetting(db, "document-header-logo");
-    
-    const doc = new jsPDF({unit: "cm", format: "a4"});
+    const resizedLogo = await resizeImage(logo, 250, 250);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+
+    doc.addImage(resizedLogo, "PNG", 1, 1, 2, 2);
+    doc.text(headerName + "\n" + headerAddress, 3.25, 1.5);
+    doc.setDrawColor(accentuateColor.r, accentuateColor.g, accentuateColor.b);
+    doc.setLineWidth(0.01);
+    doc.line(1, 3.25, doc.internal.pageSize.width - documentMargin, 3.25);
+}
+
+async function writeAddress(db: Db, doc: jsPDF, contact: Contact) {
+    doc.setFont("helvetica", "normal");
+
+    doc.setFontSize(10);
+    const date = format(new Date(), "iiii dd MMMM yyyy", {locale: getLocale()});
+    const dateWidth = doc.getTextWidth(date);
+    doc.text(date, doc.internal.pageSize.width - documentMargin - dateWidth, 4);
+
     doc.setFontSize(12);
-    doc.setFont('normal');
-    
-    doc.addImage(logo, "PNG", 1,1,2,2);
-    
-    doc.text(documentHeaderName, 3, 1.25);
+    let contactAddress = `${contact.title ?? ''} ${contact.lastName ?? ''} ${contact.firstName ?? ''}`.trim() + "\n";
+    contactAddress += `${contact.street ?? ''} ${contact.number ?? ''}`.trim() + "\n";
+    contactAddress += `${contact.zipCode ?? ''} ${contact.city ?? ''}`.trim() + "\n";
+    contactAddress += `${contact.country ?? ''}`.trim() + "\n";
+    doc.text(contactAddress, 11, 5.5);
+}
+
+async function writeContent(doc: jsPDF, title: string, content: string) {
+    doc.setFontSize(12);
+
+    doc.setFont("helvetica", "bold");
+    doc.text(title, documentMargin, 10);
+
+    doc.setFont("helvetica", "normal");
+    doc.text(doc.splitTextToSize(content, doc.internal.pageSize.width - documentMargin * 2), documentMargin, 11);
+}
+
+async function writeFooter(db: Db, doc: jsPDF) {
+    const name = await getSetting(db, "document-header-your-name");
+    const city = await getSetting(db, "document-header-your-city");
+    const signature = await getSetting(db, "document-header-signature");
+    const resizedSignature = await resizeImage(signature, 400, 200);
+
+    doc.addImage(resizedSignature, "PNG", doc.internal.pageSize.width - 8, doc.internal.pageSize.height - 6, 6.5, 2);
+
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+
+    const signatureContent = `${name}\n${city}, ${format(new Date(), "iiii dd MMMM yyyy", {locale: getLocale()})}`;
+    const signatureWidth = doc.getTextWidth(signatureContent);
+    doc.text(signatureContent, doc.internal.pageSize.width - documentMargin - signatureWidth, doc.internal.pageSize.height - 3);
+}
+
+async function generatePdf(db: Db, title: string, content: string, appointment: Appointment, contact: Contact): Promise<ArrayBuffer> {
+
+    const doc = new jsPDF({unit: "cm", format: "a4"});
+
+    await writeHeader(db, doc);
+    await writeAddress(db, doc, contact);
+    await writeContent(doc, title, content);
+    await writeFooter(db, doc);
 
     return doc.output("arraybuffer");
 }
@@ -118,7 +194,7 @@ async function replaceContent(db: Db, title: string, content: string, appointmen
     }
 
     const formattedTitle = Mustache.render(title, data);
-    const formattedContent = Mustache.render(content, data);
+    const formattedContent = Mustache.render(content.replaceAll("{{", "{{{").replaceAll("}}", "}}}"), data);
 
     return {formattedTitle, formattedContent};
 }
