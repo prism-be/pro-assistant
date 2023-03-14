@@ -2,7 +2,7 @@
 import useTranslation from "next-translate/useTranslation";
 import ContentContainer from "../../components/design/ContentContainer";
 import {useRouter} from "next/router";
-import useSWR from "swr";
+import useSWR, {mutate} from "swr";
 import InputText from "../../components/forms/InputText";
 import {useForm} from "react-hook-form";
 import {useEffect} from "react";
@@ -54,6 +54,7 @@ const Contacts: NextPage = () => {
 
         await postData("/data/contacts/update", data);
         await mutateContact();
+        await mutate(`/api/contacts/${cid}/appointments`);
         alertSuccess(t("pages.contacts.details.saveSuccess"), {autoClose: true});
     }
 
