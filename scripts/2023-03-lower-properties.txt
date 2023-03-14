@@ -1,5 +1,3 @@
-use labo
-
 db.appointments.updateMany({}, [{$set: {"backgroundColor": "$BackgroundColor" }}, {$unset: "BackgroundColor"}]);
 db.appointments.updateMany({}, [{$set: {"birthDate": "$BirthDate" }}, {$unset: "BirthDate"}]);
 db.appointments.updateMany({}, [{$set: {"contactId": "$ContactId" }}, {$unset: "ContactId"}]);
@@ -18,6 +16,9 @@ db.appointments.updateMany({}, [{$set: {"typeId": "$TypeId" }}, {$unset: "TypeId
 db.appointments.updateMany({}, [{$set: {"duration": "$Duration" }}, {$unset: "Duration"}]);
 db.appointments.updateMany({}, [{$set: {"payment": "$Payment" }}, {$unset: "Payment"}]);
 db.appointments.updateMany({}, [{$set: {"phoneNumber": "$PhoneNumber" }}, {$unset: "PhoneNumber"}]);
+
+db.appointments.updateMany({}, [{$set: {contactId: {$convert: {input: "$contactId", to: "string"}}}}]);
+db.appointments.updateMany({}, [{$set: {price: {$convert: {input: "$price", to: "double"}}}}]);
 
 db.contacts.updateMany({}, [{$set: {"birthDate": "$BirthDate" }}, {$unset: "BirthDate"}]);
 db.contacts.updateMany({}, [{$set: {"city": "$City" }}, {$unset: "City"}]);
@@ -48,3 +49,5 @@ db.tariffs.updateMany({}, [{$set: {"name": "$Name" }}, {$unset: "Name"}]);
 db.tariffs.updateMany({}, [{$set: {"defaultDuration": "$DefaultDuration" }}, {$unset: "DefaultDuration"}]);
 db.tariffs.updateMany({}, [{$set: {"price": "$Price" }}, {$unset: "Price"}]);
 db.tariffs.updateMany({}, [{$set: {"foreColor": "$ForeColor" }}, {$unset: "ForeColor"}]);
+
+db.tariffs.updateMany({}, [{$set: {price: {$convert: {input: "$price", to: "double"}}}}]);

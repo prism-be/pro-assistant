@@ -25,6 +25,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const db = await getUserDatabase(session.user.email);
     
     const value = req.body;
+    delete value._id;
 
     logger.info("Insert a new item in " + collection + " with " + JSON.stringify(value));
     const data = await db.collection(collection as string).insertOne(value);

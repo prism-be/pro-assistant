@@ -10,9 +10,9 @@ function buildQuery(body: any) {
     
     let query = body;
     
-    if (query.contactId && query.contactId.length === 24) {
-        query.contactId = new ObjectId(query.contactId);
-    }
+    // if (query.contactId && query.contactId.length === 24) {
+    //     query.contactId = new ObjectId(query.contactId);
+    // }
     
     return query;
 }
