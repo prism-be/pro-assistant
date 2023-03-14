@@ -113,7 +113,7 @@ const Tariffs = () => {
 const Documents = () => {
     const {t} = useTranslation("configuration");
     const {register, setValue, getValues} = useForm();
-    const {data: settings, mutate: mutateSettings} = useSWR<Setting[]>("/settings");
+    const {data: settings, mutate: mutateSettings} = useSWR<Setting[]>("/data/settings/list");
     const [logo, setLogo] = useState<string>();
     const [signature, setSignature] = useState<string>();
     const [accentuateColor, setAccentuateColor] = useState<string>();
@@ -151,14 +151,14 @@ const Documents = () => {
         settings.push({_id: "document-header-logo", value: data.logo});
         settings.push({_id: "document-header-signature", value: data.signature});
 
-        await putData("/settings", settings);
+        await putData("/data/settings/update-many", settings);
         alertSuccess(t("documents.header.saveSuccess"));
         await mutateSettings();
     }
 
     return <Section>
         <>
-            <HeaderWithAction title={t("documents.header.title")} action={() => saveDocumentHeaders()} actionText={t("common:actions.new")}/>
+            <HeaderWithAction title={t("documents.header.title")} action={() => saveDocumentHeaders()} actionText={t("common:actions.save")}/>
             
             <div className={"grid grid-cols-4 gap-2"}>
                 <InputText className={"col-span-4 md:col-span-2"} label={t("documents.header.name")} name={"name"} type={"text"} register={register} setValue={setValue}/>
