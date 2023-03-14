@@ -19,7 +19,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     downloadStream.on('file', (file) => {
         res.setHeader('Content-Type', "application/pdf");
-        res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
+        // res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
     });
 
     downloadStream.pipe(res)

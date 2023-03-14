@@ -1,7 +1,7 @@
 ﻿import {DocumentRequest} from "@/modules/documents/types";
 import {Db, GridFSBucket, ObjectId} from "mongodb";
 import {Appointment, BinaryDocument, Contact, DocumentConfiguration, Setting} from "@/libs/models";
-import { jsPDF } from "jspdf";
+import {jsPDF} from "jspdf";
 import {format, formatISO, parseISO} from "date-fns";
 import {formatAmount, replaceSpecialChars} from "@/libs/formats";
 import {getLocale} from "@/libs/localization";
@@ -38,18 +38,26 @@ async function getContact(db: Db, contactId: any) {
     return contact;
 }
 
-function generatePdf(title: string, content: string, appointment: Appointment, contact: Contact): ArrayBuffer {
-    const doc = new jsPDF();
-    doc.line(10, 10, 200, 10);
-    doc.text(title, 10, 20);
+async function generatePdf(db: Db, title: string, content: string, appointment: Appointment, contact: Contact): Promise<ArrayBuffer> {
     
-    return doc.output("arraybuffer")    ;
+    const documentHeaderName = await getSetting(db, "document-header-name");
+    const logo = await getSetting(db, "document-header-logo");
+    
+    const doc = new jsPDF({unit: "cm", format: "a4"});
+    doc.setFontSize(12);
+    doc.setFont('normal');
+    
+    doc.addImage(logo, "PNG", 1,1,2,2);
+    
+    doc.text(documentHeaderName, 3, 1.25);
+
+    return doc.output("arraybuffer");
 }
 
 async function saveDocument(db: Db, appointment: Appointment, title: any, pdfBytes: ArrayBuffer) {
     let fileName = `${format(new Date(), "yyyy-MM-dd HH:mm")}- ${appointment.lastName} ${appointment.firstName} - ${title}.pdf`;
     fileName = replaceSpecialChars(fileName);
-    
+
     const bucket = new GridFSBucket(db);
     const buffer = Buffer.from(pdfBytes);
     const uploadStream = bucket.openUploadStream(fileName);
@@ -64,11 +72,10 @@ async function saveDocument(db: Db, appointment: Appointment, title: any, pdfByt
     };
 
     const existing = await db.collection("appointments").findOne<Appointment>({_id: new ObjectId(appointment._id)});
-    if (!existing)
-    {
+    if (!existing) {
         throw new Error("Appointment not found");
     }
-    
+
     existing.documents.push(document);
     await db.collection("appointments").updateOne({_id: new ObjectId(appointment._id)}, {$set: existing});
 }
@@ -94,7 +101,7 @@ function getFormattedPayment(payment: number) {
             return "Payé par carte bancaire";
 
     }
-    
+
     throw new Error("Invalid payment");
 }
 
@@ -109,10 +116,10 @@ async function replaceContent(db: Db, title: string, content: string, appointmen
         paymentDate: format(parseISO(appointment.paymentDate ?? appointment.startDate), "dd/MM/yyyy", {locale: getLocale()}),
         paymentMode: getFormattedPayment(appointment.payment),
     }
-    
+
     const formattedTitle = Mustache.render(title, data);
     const formattedContent = Mustache.render(content, data);
-    
+
     return {formattedTitle, formattedContent};
 }
 
@@ -121,21 +128,20 @@ export async function generateDocument<TResult>(db: Db, request: DocumentRequest
     const appointment = await getAppointment(db, request.appointmentId);
     const contact = await getContact(db, appointment.contactId);
     const {formattedTitle, formattedContent} = await replaceContent(db, title ?? '', body ?? '', appointment, contact);
-    const pdfBytes = generatePdf(formattedTitle, formattedContent, appointment, contact);
+    const pdfBytes = await generatePdf(db, formattedTitle, formattedContent, appointment, contact);
     await saveDocument(db, appointment, formattedTitle, pdfBytes);
 }
 
 export async function deleteDocument<TResult>(db: Db, request: DocumentRequest): Promise<void> {
     const bucket = new GridFSBucket(db);
     await bucket.delete(new ObjectId(request.documentId));
-    
+
     const appointment = await getAppointment(db, request.appointmentId);
     const existing = await db.collection("appointments").findOne<Appointment>({_id: new ObjectId(appointment._id)});
-    if (!existing)
-    {
+    if (!existing) {
         throw new Error("Appointment not found");
     }
-    
+
     existing.documents = existing.documents.filter(d => d.id !== request.documentId);
     await db.collection("appointments").updateOne({_id: new ObjectId(appointment._id)}, {$set: existing});
 }
