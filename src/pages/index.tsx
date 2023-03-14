@@ -4,17 +4,17 @@ import { useRouter } from "next/router";
 import { useEffect } from "react";
 
 const Home: NextPage = () => {
-  const router = useRouter();
+    const router = useRouter();
 
-  useEffect(() => {
-    router.push("/contacts");
-  }, [router]);
+    useEffect(() => {
+        router.push("/contacts");
+    }, [router]);
 
-  return (
-    <ContentContainer>
-      <div></div>
-    </ContentContainer>
-  );
+    return (
+        <ContentContainer>
+            <div></div>
+        </ContentContainer>
+    );
 };
 
 export default Home;

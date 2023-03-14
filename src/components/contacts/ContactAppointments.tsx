@@ -7,45 +7,42 @@ import { Appointment } from "@/libs/models";
 import { postData } from "@/libs/http";
 
 export interface Props {
-  contactId: string;
+    contactId: string;
 }
 
 export const ContactAppointments = (props: Props) => {
-  async function loadAppointments(): Promise<Appointment[]> {
-    const data = await postData<Appointment[]>("/data/appointments/search", {
-      contactId: props.contactId,
-    });
-    return data?.reverse() ?? [];
-  }
+    async function loadAppointments(): Promise<Appointment[]> {
+        const data = await postData<Appointment[]>("/data/appointments/search", {
+            contactId: props.contactId,
+        });
+        return data?.reverse() ?? [];
+    }
 
-  const { data: appointments } = useSWR<Appointment[]>(
-    "/api/contacts/" + props.contactId + "/appointments",
-    loadAppointments
-  );
+    const { data: appointments } = useSWR<Appointment[]>(
+        "/api/contacts/" + props.contactId + "/appointments",
+        loadAppointments
+    );
 
-  const { t } = useTranslation("common");
-  const router = useRouter();
+    const { t } = useTranslation("common");
+    const router = useRouter();
 
-  async function displayAppointment(id: string | null) {
-    await router.push("/appointments/" + id);
-  }
+    async function displayAppointment(id: string | null) {
+        await router.push("/appointments/" + id);
+    }
 
-  return (
-    <Section>
-      <h2>{t("pages.contacts.details.appointments.title")}</h2>
-      <div>
-        <AppointmentsList
-          appointments={appointments ?? []}
-          onClick={(m) => displayAppointment(m._id)}
-        />
-      </div>
-      <>
-        {appointments?.length === 0 && (
-          <div className={"componentStyles.noAppointments"}>
-            {t("pages.contacts.details.appointments.noAppointments")}
-          </div>
-        )}
-      </>
-    </Section>
-  );
+    return (
+        <Section>
+            <h2>{t("pages.contacts.details.appointments.title")}</h2>
+            <div>
+                <AppointmentsList appointments={appointments ?? []} onClick={(m) => displayAppointment(m._id)} />
+            </div>
+            <>
+                {appointments?.length === 0 && (
+                    <div className={"componentStyles.noAppointments"}>
+                        {t("pages.contacts.details.appointments.noAppointments")}
+                    </div>
+                )}
+            </>
+        </Section>
+    );
 };

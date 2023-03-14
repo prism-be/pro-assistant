@@ -7,51 +7,51 @@ import { User } from "@/modules/admin/users/types";
 let currentClient: MongoClient | undefined;
 
 export async function getMongoClient() {
-  if (currentClient) {
+    if (currentClient) {
+        return currentClient;
+    }
+
+    if (!process.env.MONGODB_CONNECTION_STRING) {
+        throw new Error("The MONGODB_CONNECTION_STRING is empty");
+    }
+
+    currentClient = new MongoClient(process.env.MONGODB_CONNECTION_STRING);
+    await currentClient.connect();
     return currentClient;
-  }
-
-  if (!process.env.MONGODB_CONNECTION_STRING) {
-    throw new Error("The MONGODB_CONNECTION_STRING is empty");
-  }
-
-  currentClient = new MongoClient(process.env.MONGODB_CONNECTION_STRING);
-  await currentClient.connect();
-  return currentClient;
 }
 
 export async function getUserDatabase(email: string) {
-  let user = cache.get<User>("user-" + email);
-
-  if (!user) {
-    logger.info(`Getting user ${email} from admin database instead of cache`);
-
-    user = await getUser(email);
+    let user = cache.get<User>("user-" + email);
 
     if (!user) {
-      logger.info(`Creating user ${email} in admin database`);
-      user = {
-        _id: new ObjectId(),
-        email: email,
-        organization: "demo",
-      };
+        logger.info(`Getting user ${email} from admin database instead of cache`);
 
-      await saveUser(user);
+        user = await getUser(email);
+
+        if (!user) {
+            logger.info(`Creating user ${email} in admin database`);
+            user = {
+                _id: new ObjectId(),
+                email: email,
+                organization: "demo",
+            };
+
+            await saveUser(user);
+        }
+
+        cache.set("user-" + email, user, 60 * 60);
     }
 
-    cache.set("user-" + email, user, 60 * 60);
-  }
+    let db = cache.get<Db>("db-" + user.organization);
 
-  let db = cache.get<Db>("db-" + user.organization);
+    if (db) {
+        return db;
+    }
 
-  if (db) {
+    const client = await getMongoClient();
+    db = client.db(user.organization);
+
+    //cache.set("db-" + user.organization, db, 60 * 60);
+
     return db;
-  }
-
-  const client = await getMongoClient();
-  db = client.db(user.organization);
-
-  //cache.set("db-" + user.organization, db, 60 * 60);
-
-  return db;
 }

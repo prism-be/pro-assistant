@@ -3,9 +3,9 @@
 const toggleMobileMenu = new Subject();
 
 export const onToggledMobileMenu = () => {
-  return toggleMobileMenu.asObservable();
+    return toggleMobileMenu.asObservable();
 };
 
 export const toggledMobileMenu = () => {
-  toggleMobileMenu.next({});
+    toggleMobileMenu.next({});
 };
