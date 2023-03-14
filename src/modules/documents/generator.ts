@@ -1,9 +1,11 @@
 ﻿import {DocumentRequest} from "@/modules/documents/types";
 import {Db, GridFSBucket, ObjectId} from "mongodb";
-import {Appointment, BinaryDocument, Contact} from "@/libs/models";
+import {Appointment, BinaryDocument, Contact, DocumentConfiguration, Setting} from "@/libs/models";
 import { jsPDF } from "jspdf";
-import {format, formatISO} from "date-fns";
-import {replaceSpecialChars} from "@/libs/formats";
+import {format, formatISO, parseISO} from "date-fns";
+import {formatAmount, replaceSpecialChars} from "@/libs/formats";
+import {getLocale} from "@/libs/localization";
+import Mustache from "mustache";
 
 async function getDocumentConfiguration(db: Db, documentId: string) {
 
@@ -71,12 +73,56 @@ async function saveDocument(db: Db, appointment: Appointment, title: any, pdfByt
     await db.collection("appointments").updateOne({_id: new ObjectId(appointment._id)}, {$set: existing});
 }
 
+async function getSetting(db: Db, id: string) {
+    // @ts-ignore
+    const setting = await db.collection("settings").findOne<Setting>({_id: id});
+    if (!setting) {
+        throw new Error("Setting not found");
+    }
+    return setting.value as string;
+}
+
+function getFormattedPayment(payment: number) {
+    switch (payment) {
+        case 0:
+            return "Non payé";
+        case 1:
+            return "Payé en espèces";
+        case 2:
+            return "Payé par virement";
+        case 3:
+            return "Payé par carte bancaire";
+
+    }
+    
+    throw new Error("Invalid payment");
+}
+
+async function replaceContent(db: Db, title: string, content: string, appointment: Appointment, contact: Contact) {
+    const data = {
+        name: await getSetting(db, "document-header-your-name"),
+        contactName: `${contact.title} ${contact.lastName} ${contact.firstName}`,
+        price: formatAmount(appointment.price),
+        appointmentType: appointment.type,
+        appointmentDate: format(parseISO(appointment.startDate), "dd/MM/yyyy", {locale: getLocale()}),
+        appointmentHour: format(parseISO(appointment.startDate), "HH:mm", {locale: getLocale()}),
+        paymentDate: format(parseISO(appointment.paymentDate ?? appointment.startDate), "dd/MM/yyyy", {locale: getLocale()}),
+        paymentMode: getFormattedPayment(appointment.payment),
+    }
+    
+    const formattedTitle = Mustache.render(title, data);
+    const formattedContent = Mustache.render(content, data);
+    
+    return {formattedTitle, formattedContent};
+}
+
 export async function generateDocument<TResult>(db: Db, request: DocumentRequest): Promise<void> {
-    const {title, content} = await getDocumentConfiguration(db, request.documentId);
+    const {title, body} = await getDocumentConfiguration(db, request.documentId);
     const appointment = await getAppointment(db, request.appointmentId);
     const contact = await getContact(db, appointment.contactId);
-    const pdfBytes = generatePdf(title, content, appointment, contact);
-    await saveDocument(db, appointment, title, pdfBytes);
+    const {formattedTitle, formattedContent} = await replaceContent(db, title ?? '', body ?? '', appointment, contact);
+    const pdfBytes = generatePdf(formattedTitle, formattedContent, appointment, contact);
+    await saveDocument(db, appointment, formattedTitle, pdfBytes);
 }
 
 export async function deleteDocument<TResult>(db: Db, request: DocumentRequest): Promise<void> {

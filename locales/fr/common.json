@@ -125,7 +125,7 @@
     "unknown": "Inconnu",
     "payments": {
       "state0": "Non payé",
-      "state1": "En liquide",
+      "state1": "En espèces",
       "state2": "Par virement",
       "state3": "Par carte"
     },
