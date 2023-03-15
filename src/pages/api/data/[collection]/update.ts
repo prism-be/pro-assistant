@@ -1,9 +1,8 @@
 ﻿import { NextApiRequest, NextApiResponse } from "next";
-import { getUserDatabase } from "@/libs/mongodb";
-import { getSession } from "@auth0/nextjs-auth0";
 import { Db, ObjectId } from "mongodb";
 import logger from "@/libs/logging";
 import { Contact, Tariff } from "@/libs/models";
+import { getDatabase, getDatabaseAndCollection } from "@/libs/api";
 
 async function updateTariffsColors(db: Db, id: string, tariff: Tariff) {
     logger.info("Updating tariffs colors for tariff " + id + " to " + tariff.backgroundColor + " and " + tariff.foreColor);
@@ -46,25 +45,7 @@ async function processSideEffects(collection: string, id: string, value: any, db
 }
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-    if (req.method !== "POST") {
-        res.status(405).send({ message: "Only POST requests allowed" });
-        return;
-    }
-
-    const { collection } = req.query;
-
-    if (!collection) {
-        throw new Error("The collection must be defined");
-    }
-
-    const session = await getSession(req, res);
-
-    if (!session?.user) {
-        res.status(401).json({ message: "Unauthorized" });
-        return;
-    }
-
-    const db = await getUserDatabase(session.user.email);
+    const { db, collection } = await getDatabaseAndCollection("POST", req, res);
 
     const id = req.body._id;
     let value = req.body;
