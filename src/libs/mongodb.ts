@@ -4,18 +4,12 @@ import logger from "@/libs/logging";
 import { cache } from "@/libs/cache";
 import { User } from "@/modules/admin/users/types";
 
-let currentClient: MongoClient | undefined;
-
 export async function getMongoClient() {
-    if (currentClient) {
-        return currentClient;
-    }
-
     if (!process.env.MONGODB_CONNECTION_STRING) {
         throw new Error("The MONGODB_CONNECTION_STRING is empty");
     }
 
-    currentClient = new MongoClient(process.env.MONGODB_CONNECTION_STRING);
+    const currentClient = new MongoClient(process.env.MONGODB_CONNECTION_STRING);
     await currentClient.connect();
     return currentClient;
 }
