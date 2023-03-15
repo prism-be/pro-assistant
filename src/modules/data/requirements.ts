@@ -1,11 +1,11 @@
-﻿import { Appointment, Contact, Tariff } from "@/libs/models";
+﻿import { Appointment, Contact } from "@/libs/models";
 import { Db } from "mongodb";
 import { isNullOrEmpty } from "@/libs/text";
 import logger from "@/libs/logging";
 
 async function ensureContact(db: Db, id: string, appointment: Appointment) {
     if (isNullOrEmpty(appointment.contactId)) {
-        logger.info("Creating contact for appointment " + id + " with " + JSON.stringify(appointment));
+        logger.info("Creating contact for appointment " + (id ?? "[NEW]") + " with " + JSON.stringify(appointment));
 
         const contact: Contact = {
             firstName: appointment.firstName,
