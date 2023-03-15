@@ -3,7 +3,7 @@ import { ObjectId } from "mongodb";
 import { getDatabaseAndCollection } from "@/libs/api";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-    const { db, collection } = await getDatabaseAndCollection("POST", req, res);
+    const { db, collection } = await getDatabaseAndCollection("GET", req, res);
 
     const { id } = req.query;
 
