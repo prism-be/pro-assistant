@@ -1,6 +1,6 @@
 ﻿import { NextApiRequest, NextApiResponse } from "next";
 import logger from "@/libs/logging";
-import { getDatabase, getDatabaseAndCollection } from "@/libs/api";
+import { getDatabaseAndCollection } from "@/libs/api";
 
 export const config = {
     api: {

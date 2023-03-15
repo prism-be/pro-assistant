@@ -2,7 +2,7 @@
 import { Db, ObjectId } from "mongodb";
 import logger from "@/libs/logging";
 import { Contact, Tariff } from "@/libs/models";
-import { getDatabase, getDatabaseAndCollection } from "@/libs/api";
+import { getDatabaseAndCollection } from "@/libs/api";
 
 async function updateTariffsColors(db: Db, id: string, tariff: Tariff) {
     logger.info("Updating tariffs colors for tariff " + id + " to " + tariff.backgroundColor + " and " + tariff.foreColor);

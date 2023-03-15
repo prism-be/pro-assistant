@@ -1,6 +1,6 @@
 ﻿import { NextApiRequest, NextApiResponse } from "next";
 import { ObjectId } from "mongodb";
-import { getDatabase, getDatabaseAndCollection } from "@/libs/api";
+import { getDatabaseAndCollection } from "@/libs/api";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     const { db, collection } = await getDatabaseAndCollection("POST", req, res);
