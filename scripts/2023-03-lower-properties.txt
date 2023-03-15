@@ -1,0 +1,53 @@
+db.appointments.updateMany({}, [{$set: {"backgroundColor": "$BackgroundColor" }}, {$unset: "BackgroundColor"}]);
+db.appointments.updateMany({}, [{$set: {"birthDate": "$BirthDate" }}, {$unset: "BirthDate"}]);
+db.appointments.updateMany({}, [{$set: {"contactId": "$ContactId" }}, {$unset: "ContactId"}]);
+db.appointments.updateMany({}, [{$set: {"documents": "$Documents" }}, {$unset: "Documents"}]);
+db.appointments.updateMany({}, [{$set: {"firstName": "$FirstName" }}, {$unset: "FirstName"}]);
+db.appointments.updateMany({}, [{$set: {"foreColor": "$ForeColor" }}, {$unset: "ForeColor"}]);
+db.appointments.updateMany({}, [{$set: {"lastName": "$LastName" }}, {$unset: "LastName"}]);
+db.appointments.updateMany({}, [{$set: {"phoneNumbers": "$PhoneNumbers" }}, {$unset: "PhoneNumbers"}]);
+db.appointments.updateMany({}, [{$set: {"price": "$Price" }}, {$unset: "Price"}]);
+db.appointments.updateMany({}, [{$set: {"title": "$Title" }}, {$unset: "Title"}]);
+db.appointments.updateMany({}, [{$set: {"paymentDate": "$PaymentDate" }}, {$unset: "PaymentDate"}]);
+db.appointments.updateMany({}, [{$set: {"startDate": "$StartDate" }}, {$unset: "StartDate"}]);
+db.appointments.updateMany({}, [{$set: {"type": "$Type" }}, {$unset: "Type"}]);
+db.appointments.updateMany({}, [{$set: {"state": "$State" }}, {$unset: "State"}]);
+db.appointments.updateMany({}, [{$set: {"typeId": "$TypeId" }}, {$unset: "TypeId"}]);
+db.appointments.updateMany({}, [{$set: {"duration": "$Duration" }}, {$unset: "Duration"}]);
+db.appointments.updateMany({}, [{$set: {"payment": "$Payment" }}, {$unset: "Payment"}]);
+db.appointments.updateMany({}, [{$set: {"phoneNumber": "$PhoneNumber" }}, {$unset: "PhoneNumber"}]);
+
+db.appointments.updateMany({}, [{$set: {contactId: {$convert: {input: "$contactId", to: "string"}}}}]);
+db.appointments.updateMany({}, [{$set: {price: {$convert: {input: "$price", to: "double"}}}}]);
+
+db.contacts.updateMany({}, [{$set: {"birthDate": "$BirthDate" }}, {$unset: "BirthDate"}]);
+db.contacts.updateMany({}, [{$set: {"city": "$City" }}, {$unset: "City"}]);
+db.contacts.updateMany({}, [{$set: {"email": "$Email" }}, {$unset: "Email"}]);
+db.contacts.updateMany({}, [{$set: {"lastName": "$LastName" }}, {$unset: "LastName"}]);
+db.contacts.updateMany({}, [{$set: {"number": "$Number" }}, {$unset: "Number"}]);
+db.contacts.updateMany({}, [{$set: {"street": "$Street" }}, {$unset: "Street"}]);
+db.contacts.updateMany({}, [{$set: {"title": "$Title" }}, {$unset: "Title"}]);
+db.contacts.updateMany({}, [{$set: {"zipCode": "$ZipCode" }}, {$unset: "ZipCode"}]);
+db.contacts.updateMany({}, [{$set: {"phoneNumber": "$PhoneNumber" }}, {$unset: "PhoneNumber"}]);
+db.contacts.updateMany({}, [{$set: {"country": "$Country" }}, {$unset: "Country"}]);
+db.contacts.updateMany({}, [{$set: {"mobileNumber": "$MobileNumber" }}, {$unset: "MobileNumber"}]);
+db.contacts.updateMany({}, [{$set: {"firstName": "$FirstName" }}, {$unset: "FirstName"}]);
+
+db["documents-configuration"].updateMany({}, [{$set: {"name": "$Name" }}, {$unset: "Name"}]);
+db["documents-configuration"].updateMany({}, [{$set: {"body": "$Body" }}, {$unset: "Body"}]);
+db["documents-configuration"].updateMany({}, [{$set: {"title": "$Title" }}, {$unset: "Title"}]);
+
+db.history.updateMany({}, [{$set: {"actual": "$Actual" }}, {$unset: "Actual"}]);
+db.history.updateMany({}, [{$set: {"modificationDate": "$ModificationDate" }}, {$unset: "ModificationDate"}]);
+db.history.updateMany({}, [{$set: {"typeName": "$TypeName" }}, {$unset: "TypeName"}]);
+db.history.updateMany({}, [{$set: {"userId": "$UserId" }}, {$unset: "UserId"}]);
+
+db.settings.updateMany({}, [{$set: {"value": "$Value" }}, {$unset: "Value"}]);
+
+db.tariffs.updateMany({}, [{$set: {"backgroundColor": "$BackgroundColor" }}, {$unset: "BackgroundColor"}]);
+db.tariffs.updateMany({}, [{$set: {"name": "$Name" }}, {$unset: "Name"}]);
+db.tariffs.updateMany({}, [{$set: {"defaultDuration": "$DefaultDuration" }}, {$unset: "DefaultDuration"}]);
+db.tariffs.updateMany({}, [{$set: {"price": "$Price" }}, {$unset: "Price"}]);
+db.tariffs.updateMany({}, [{$set: {"foreColor": "$ForeColor" }}, {$unset: "ForeColor"}]);
+
+db.tariffs.updateMany({}, [{$set: {price: {$convert: {input: "$price", to: "double"}}}}]);

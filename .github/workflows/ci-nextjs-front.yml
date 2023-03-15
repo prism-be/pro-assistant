@@ -1,85 +1,42 @@
-﻿name: CI - Front
-
+﻿name: CI
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
-    paths:
-      - 'src/web/**'
+      - feature/*
+      - bugfix/*
+      - hotfix/*
+      - fix/*
   pull_request:
-    types: [ opened, synchronize, reopened ]
-    paths:
-      - 'src/web/**'
+    branches:
+      - main
+  workflow_dispatch:
 
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+concurrency: ci-${{ github.ref }}
 
 jobs:
-  build-and-analyze:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        name: Checkout Sources
+      - uses: actions/setup-node@v2
+        name: Setup Node
         with:
-          fetch-depth: 0
-      
-      - name: Set Node.js 18.x
-        uses: actions/setup-node@v3
+          node-version: '18'
+      - name: Cache Dependencies
+        uses: actions/cache@v3
         with:
-          node-version: 18.x
-          
-      - name: Install and Expose yarn config as "$GITHUB_OUTPUT"
-        id: yarn-config
-        working-directory: ./src/web
-        shell: bash
+          path: |
+            ${{ github.workspace }}/.yarn
+            ${{ github.workspace }}/.pnp.cjs
+            ${{ github.workspace }}/.next/cache
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
+      - name: Install Dependencies
         run: |
           corepack enable
           corepack prepare yarn@stable --activate
-          echo "CACHE_FOLDER=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
-          
-      - name: Restore yarn cache
-        id: yarn-download-cache
-        uses: actions/cache@v3
-        with:
-          path: ${{ steps.yarn-config.outputs.CACHE_FOLDER }}
-          key: yarn-download-cache-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            yarn-download-cache-
-          
-      - name: Restore yarn install state
-        id: yarn-install-state-cache
-        uses: actions/cache@v3
-        with:
-          path: ./src/web/.yarn/ci-cache/
-          key: ${{ runner.os }}-yarn-install-state-cache-${{ hashFiles('**/yarn.lock', '**/.yarnrc.yml') }}
-
-      - name: Install dependencies
-        shell: bash
-        working-directory: ./src/web
+          yarn install --immutable
+      - name: Build the application
         run: |
-          yarn install --immutable --inline-builds
-        env:
-          # CI optimizations. Overrides yarnrc.yml options (or their defaults) in the CI action.
-          YARN_ENABLE_GLOBAL_CACHE: 'false' # Use local cache folder to keep downloaded archives
-          YARN_NM_MODE: 'hardlinks-local' # Hardlinks-(local|global) reduces io / node_modules size
-          YARN_INSTALL_STATE_PATH: .yarn/ci-cache/install-state.gz # Very small speedup when lock does not change
-          HUSKY: '0' # By default do not run HUSKY install
-
-      - name: Extract Version
-        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
-
-      - name: Build Project
-        working-directory: ./src/web
-        run: yarn build
-      
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@master
-        with:
-          projectBaseDir: ./src/web
-          args: >
-            -Dsonar.projectVersion=${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ env.NUMBER_OF_COMMITS_SINCE_TAG }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          yarn build
