@@ -15,7 +15,8 @@ export const ContactAppointments = (props: Props) => {
         const data = await postData<Appointment[]>("/data/appointments/search", {
             contactId: props.contactId,
         });
-        return data?.reverse() ?? [];
+        data?.reverse();
+        return data ?? [];
     }
 
     const { data: appointments } = useSWR<Appointment[]>(

@@ -5,7 +5,7 @@ import useTranslation from "next-translate/useTranslation";
 import { format, parseISO } from "date-fns";
 import { ArrowDownTrayIcon, CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { Appointment, DocumentConfiguration } from "@/libs/models";
-import { deleteDataWithBody, downloadDocument, generateDocument } from "@/libs/http";
+import { deleteDataWithBody, generateDocument } from "@/libs/http";
 import { getLocale } from "@/libs/localization";
 import { DocumentRequest } from "@/modules/documents/types";
 
