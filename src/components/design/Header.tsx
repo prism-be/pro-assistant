@@ -3,7 +3,6 @@ import Image, { ImageLoaderProps } from "next/image";
 
 import useTranslation from "next-translate/useTranslation";
 
-import Head from "next/head";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { toggledMobileMenu } from "@/modules/events/mobileMenu";
 import Link from "next/link";

@@ -1,7 +1,6 @@
 ﻿import { NextApiRequest, NextApiResponse } from "next";
 import { getUserDatabase } from "@/libs/mongodb";
 import { getSession } from "@auth0/nextjs-auth0";
-import { ObjectId } from "mongodb";
 import logger from "@/libs/logging";
 
 export const config = {

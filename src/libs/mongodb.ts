@@ -1,4 +1,4 @@
-﻿import { Db, MongoClient, ObjectId } from "mongodb";
+﻿import { MongoClient, ObjectId } from "mongodb";
 import { getUser, saveUser } from "@/modules/admin/users/services";
 import logger from "@/libs/logging";
 import { cache } from "@/libs/cache";
@@ -42,16 +42,6 @@ export async function getUserDatabase(email: string) {
         cache.set("user-" + email, user, 60 * 60);
     }
 
-    let db = cache.get<Db>("db-" + user.organization);
-
-    if (db) {
-        return db;
-    }
-
     const client = await getMongoClient();
-    db = client.db(user.organization);
-
-    //cache.set("db-" + user.organization, db, 60 * 60);
-
-    return db;
+    return client.db(user.organization);
 }

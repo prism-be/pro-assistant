@@ -17,9 +17,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const bucket = new GridFSBucket(db);
     const downloadStream = bucket.openDownloadStream(new ObjectId(id as string));
 
-    downloadStream.on("file", (file) => {
+    downloadStream.on("file", () => {
         res.setHeader("Content-Type", "application/pdf");
-        // res.setHeader('Content-Disposition', `attachment; filename="${file.filename}"`);
     });
 
     downloadStream.pipe(res);
