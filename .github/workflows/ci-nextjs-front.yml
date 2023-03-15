@@ -3,10 +3,6 @@ on:
   push:
     branches:
       - main
-      - feature/*
-      - bugfix/*
-      - hotfix/*
-      - fix/*
   pull_request:
     branches:
       - main
