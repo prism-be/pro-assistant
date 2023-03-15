@@ -39,7 +39,7 @@ export interface Contact {
     street?: string | null;
     title?: string | null;
     zipCode?: string | null;
-    _id: any;
+    _id?: any;
 }
 
 export interface DeleteDocument {
