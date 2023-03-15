@@ -14,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     logger.info("Updating " + id + " in " + collection + " with " + JSON.stringify(value));
 
-    await processRequirements(collection as string, value._id, value, db);
+    await processRequirements(collection as string, id, value, db);
     const data = await db.collection(collection as string).updateOne({ _id: new ObjectId(id) }, { $set: value });
     await processSideEffects(collection as string, id, value, db);
 
