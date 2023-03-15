@@ -5,7 +5,6 @@ import useTranslation from "next-translate/useTranslation";
 
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { toggledMobileMenu } from "@/modules/events/mobileMenu";
-import Link from "next/link";
 import * as process from "process";
 
 const Header = () => {
