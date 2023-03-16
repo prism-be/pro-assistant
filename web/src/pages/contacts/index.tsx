@@ -156,8 +156,8 @@ const Contacts: NextPage = () => {
                                                 className={
                                                     "grid grid-cols-2 lg:grid-cols-4 border-b border-dashed last:border-0 cursor-pointer hover:bg-gray-100"
                                                 }
-                                                key={contact._id}
-                                                onClick={() => navigate(contact._id)}
+                                                key={contact.id}
+                                                onClick={() => navigate(contact.id)}
                                             >
                                                 <div className={"p-2"}>{contact.lastName}</div>
                                                 <div className={"p-2"}>{contact.firstName}</div>

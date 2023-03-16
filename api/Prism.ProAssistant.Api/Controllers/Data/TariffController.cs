@@ -45,7 +45,7 @@ public class TariffController : Controller
 
     [HttpGet]
     [Route("api/data/tariffs/{id}")]
-    public async Task<Tariff> Single(string id)
+    public async Task<Tariff?> Single(string id)
     {
         return await _dataService.SingleAsync<Tariff>(id);
     }

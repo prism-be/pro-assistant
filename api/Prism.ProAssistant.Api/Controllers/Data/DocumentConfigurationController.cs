@@ -45,7 +45,7 @@ public class DocumentConfigurationController : Controller
 
     [HttpGet]
     [Route("api/data/document-configurations/{id}")]
-    public async Task<DocumentConfiguration> Single(string id)
+    public async Task<DocumentConfiguration?> Single(string id)
     {
         return await _dataService.SingleAsync<DocumentConfiguration>(id);
     }

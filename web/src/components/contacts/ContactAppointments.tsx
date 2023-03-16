@@ -3,7 +3,7 @@ import Section from "../design/Section";
 import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { AppointmentsList } from "../appointments/AppointmentsList";
-import { Appointment } from "@/libs/models";
+import {Appointment, SearchFilter} from "@/libs/models";
 import { postData } from "@/libs/http";
 
 export interface Props {
@@ -12,9 +12,11 @@ export interface Props {
 
 export const ContactAppointments = (props: Props) => {
     async function loadAppointments(): Promise<Appointment[]> {
-        const data = await postData<Appointment[]>("/data/appointments/search", {
-            contactId: props.contactId,
-        });
+        const data = await postData<Appointment[]>("/data/appointments/search", [{
+            field: "ContactId",
+            operator: "eq",
+            value: props.contactId,
+        }] as SearchFilter[]);
         data?.reverse();
         return data ?? [];
     }
@@ -35,7 +37,7 @@ export const ContactAppointments = (props: Props) => {
         <Section>
             <h2>{t("pages.contacts.details.appointments.title")}</h2>
             <div>
-                <AppointmentsList appointments={appointments ?? []} onClick={(m) => displayAppointment(m._id)} />
+                <AppointmentsList appointments={appointments ?? []} onClick={(m) => displayAppointment(m.id)} />
             </div>
             <>
                 {appointments?.length === 0 && (

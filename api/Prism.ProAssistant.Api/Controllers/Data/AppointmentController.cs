@@ -45,7 +45,7 @@ public class AppointmentController : Controller
 
     [HttpGet]
     [Route("api/data/appointments/{id}")]
-    public async Task<Appointment> Single(string id)
+    public async Task<Appointment?> Single(string id)
     {
         return await _dataService.SingleAsync<Appointment>(id);
     }

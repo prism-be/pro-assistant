@@ -16,7 +16,7 @@ public interface IDataService
     Task<List<T>> SearchAsync<T>(List<SearchFilter> request)
         where T : IDataModel;
 
-    Task<T> SingleAsync<T>(string id)
+    Task<T?> SingleAsync<T>(string id)
         where T : IDataModel;
 
     Task<UpsertResult> UpdateAsync<T>(T request)
@@ -39,10 +39,15 @@ public class DataService : IDataService
         return await query.ToListAsync();
     }
 
-    public async Task<T> SingleAsync<T>(string id) where T : IDataModel
+    public async Task<T?> SingleAsync<T>(string id) where T : IDataModel
     {
+        if (id == "000000000000000000000000")
+        {
+            return default;
+        }
+        
         var collection = await _userOrganizationService.GetUserCollection<T>();
-        var query = await collection.FindAsync<T>(Builders<T>.Filter.Eq(x => x.Id, id));
+        IAsyncCursor<T?> query = await collection.FindAsync<T>(Builders<T>.Filter.Eq(x => x.Id, id));
         return await query.SingleAsync();
     }
 

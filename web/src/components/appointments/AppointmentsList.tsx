@@ -15,7 +15,7 @@ export const AppointmentsList = ({ appointments, onClick }: Props) => {
         <>
             {appointments?.map((m) => (
                 <div
-                    key={m._id}
+                    key={m.id}
                     className={"grid contact-appointments border-b last:border-0"}
                     onClick={() => onClick(m)}
                 >

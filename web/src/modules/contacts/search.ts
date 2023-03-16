@@ -1,8 +1,8 @@
-﻿import { Contact } from "@/libs/models";
+﻿import {Contact, SearchFilter} from "@/libs/models";
 import { postData } from "@/libs/http";
 
 export async function searchContacts(filter: any): Promise<Contact[]> {
-    let filters = [];
+    let filters : SearchFilter[] = [];
 
     if (filter.lastName) {
         filters.push({ field : "LastName", value: `^${filter.lastName}`, operator: "regex" });

@@ -45,7 +45,7 @@ public class ContactController : Controller
 
     [HttpGet]
     [Route("api/data/contacts/{id}")]
-    public async Task<Contact> Single(string id)
+    public async Task<Contact?> Single(string id)
     {
         return await _dataService.SingleAsync<Contact>(id);
     }

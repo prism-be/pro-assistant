@@ -13,7 +13,7 @@ import Section from "../../components/design/Section";
 import { ContactAppointments } from "@/components/contacts/ContactAppointments";
 import { ArrowSmallLeftIcon } from "@heroicons/react/24/outline";
 import { getData, postData } from "@/libs/http";
-import { Contact, InsertResult } from "@/libs/models";
+import {Contact, UpsertResult} from "@/libs/models";
 import { alertSuccess } from "@/modules/events/alert";
 
 const Contacts: NextPage = () => {
@@ -50,9 +50,9 @@ const Contacts: NextPage = () => {
     const saveContactForm = async (data: any) => {
         if (cid === "000000000000000000000000") {
             data.id = "";
-            const result = await postData<InsertResult>("/data/contacts/insert", data);
+            const result = await postData<UpsertResult>("/data/contacts/insert", data);
             alertSuccess(t("details.saveSuccess"), { autoClose: true });
-            await router.push("/contacts/" + result.insertedId);
+            await router.push("/contacts/" + result.id);
             return;
         }
 
