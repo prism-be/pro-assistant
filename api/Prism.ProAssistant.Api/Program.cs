@@ -1,4 +1,5 @@
 using Prism.ProAssistant.Api.Extensions;
+using Prism.ProAssistant.Api.Healtchecks;
 using Prism.ProAssistant.Api.Middlewares;
 using Prism.ProAssistant.Api.Models;
 
@@ -13,7 +14,9 @@ builder.Services.AddProAssistant();
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBearer();
-builder.Services.AddHealthChecks();
+builder.Services.AddHealthChecks()
+    .AddCheck<CheckCache>("Cache")
+    .AddCheck<CheckDatabase>("Database");
 builder.Services.AddControllers();
 
 builder.Services.AddSwaggerGen(options =>
