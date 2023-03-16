@@ -1,4 +1,6 @@
 ﻿import winston from "winston";
+// @ts-ignore
+import { AzureApplicationInsightsLogger } from "winston-azure-application-insights";
 
 const logger = winston.createLogger({
     level: "info",
@@ -11,5 +13,19 @@ logger.add(
         format: winston.format.simple(),
     })
 );
+
+if (process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING && process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING.length > 0) {
+    logger.add(
+        new AzureApplicationInsightsLogger({
+            connectionString: process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING,
+            level: "info",
+            context: {
+                tags: {
+                    "ai.cloud.role": "pro-assistant",
+                },
+            },
+        })
+    );
+}
 
 export default logger;
