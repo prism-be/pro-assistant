@@ -66,7 +66,7 @@ function globalTrim(obj: any) {
     Object.keys(obj).forEach(k => obj[k] = typeof obj[k] == 'string' ? obj[k].trim() : obj[k]);
 }
 
-export async function postData<TResult>(route: string, body: any): Promise<TResult | null> {
+export async function postData<TResult>(route: string, body: any): Promise<TResult> {
 
     globalTrim(body);
 
@@ -82,11 +82,7 @@ export async function postData<TResult>(route: string, body: any): Promise<TResu
         },
     });
 
-    if (response.status === 200) {
-        return await response.json();
-    }
-
-    return null;
+    return await response.json();
 }
 
 export async function putData(route: string, body: any): Promise<void> {

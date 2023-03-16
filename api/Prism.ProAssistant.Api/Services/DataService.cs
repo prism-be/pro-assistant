@@ -42,15 +42,15 @@ public class DataService : IDataService
     public async Task<T> SingleAsync<T>(string id) where T : IDataModel
     {
         var collection = await _userOrganizationService.GetUserCollection<T>();
-        var query = await collection.FindAsync<T>(Builders<T>.Filter.Empty);
+        var query = await collection.FindAsync<T>(Builders<T>.Filter.Eq(x => x.Id, id));
         return await query.SingleAsync();
     }
 
     public async Task<UpsertResult> UpdateAsync<T>(T request) where T : IDataModel
     {
         var collection = await _userOrganizationService.GetUserCollection<T>();
-        var result = await collection.UpdateOneAsync(Builders<T>.Filter.Eq(x => x.Id, request.Id), Builders<T>.Update.Set(x => x, request));
-        return UpsertResult.FromResult(result);
+        request = await collection.FindOneAndReplaceAsync(Builders<T>.Filter.Eq(x => x.Id, request.Id), request);
+        return new UpsertResult(request.Id);
     }
 
     public async Task<UpsertResult> InsertAsync<T>(T request) where T : IDataModel
@@ -66,7 +66,7 @@ public class DataService : IDataService
 
         foreach (var filter in request)
         {
-            switch (filter.Type)
+            switch (filter.Operator)
             {
                 case "eq":
                     query &= Builders<T>.Filter.Eq(filter.Field, filter.Value);
@@ -90,7 +90,7 @@ public class DataService : IDataService
                     query &= Builders<T>.Filter.Regex(filter.Field, BsonRegularExpression.Create(new Regex(filter.Value.ToString() ?? throw new InvalidOperationException("Value is null for regex filter"), RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100))));
                     break;
                 default:
-                    throw new NotImplementedException("Filter type not implemented: " + filter.Type);
+                    throw new NotImplementedException("Filter type not implemented: " + filter.Operator);
             }
         }
 

@@ -2,35 +2,23 @@
 import { postData } from "@/libs/http";
 
 export async function searchContacts(filter: any): Promise<Contact[]> {
-    let query = {};
+    let filters = [];
 
     if (filter.lastName) {
-        query = {
-            ...query,
-            lastName: { $regex: `^${filter.lastName}`, $options: "i" },
-        };
+        filters.push({ field : "LastName", value: `^${filter.lastName}`, operator: "regex" });
     }
-
+    
     if (filter.firstName) {
-        query = {
-            ...query,
-            firstName: { $regex: `^${filter.firstName}`, $options: "i" },
-        };
+        filters.push({ field : "FirstName", value: `^${filter.firstName}`, operator: "regex" });
     }
-
+    
     if (filter.birthDate) {
-        query = {
-            ...query,
-            birthDate: { $regex: `${filter.birthDate}`, $options: "i" },
-        };
+        filters.push({ field : "BirthDate", value: `${filter.birthDate}`, operator: "regex" });
     }
-
+    
     if (filter.phoneNumber) {
-        query = {
-            ...query,
-            phoneNumber: { $regex: `${filter.phoneNumber}`, $options: "i" },
-        };
+        filters.push({ field : "PhoneNumber", value: `${filter.phoneNumber}`, operator: "regex" });
     }
-
-    return await postData<Contact[]>("/data/contacts/search", query);
+    
+    return await postData<Contact[]>("/data/contacts/search", filters);
 }
