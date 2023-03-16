@@ -21,6 +21,9 @@ public interface IDataService
 
     Task<UpsertResult> UpdateAsync<T>(T request)
         where T : IDataModel;
+
+    Task<List<UpsertResult>> UpdateManyAsync<T>(List<T> request) where T : IDataModel;
+    Task UpdateAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel;
 }
 
 public class DataService : IDataService
@@ -45,7 +48,7 @@ public class DataService : IDataService
         {
             return default;
         }
-        
+
         var collection = await _userOrganizationService.GetUserCollection<T>();
         IAsyncCursor<T?> query = await collection.FindAsync<T>(Builders<T>.Filter.Eq(x => x.Id, id));
         return await query.SingleAsync();
@@ -56,6 +59,26 @@ public class DataService : IDataService
         var collection = await _userOrganizationService.GetUserCollection<T>();
         request = await collection.FindOneAndReplaceAsync(Builders<T>.Filter.Eq(x => x.Id, request.Id), request);
         return new UpsertResult(request.Id);
+    }
+
+    public async Task<List<UpsertResult>> UpdateManyAsync<T>(List<T> request) where T : IDataModel
+    {
+        var results = new List<UpsertResult>();
+        var collection = await _userOrganizationService.GetUserCollection<T>();
+
+        foreach (var item in request)
+        {
+            var replaced = await collection.FindOneAndReplaceAsync(Builders<T>.Filter.Eq(x => x.Id, item.Id), item);
+            results.Add(new UpsertResult(replaced.Id));
+        }
+
+        return results;
+    }
+
+    public async Task UpdateAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel
+    {
+        var collection = await _userOrganizationService.GetUserCollection<T>();
+        await collection.UpdateManyAsync(filter, update);
     }
 
     public async Task<UpsertResult> InsertAsync<T>(T request) where T : IDataModel

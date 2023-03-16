@@ -3,7 +3,7 @@ import useTranslation from "next-translate/useTranslation";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { onToggledMobileMenu, toggledMobileMenu } from "@/modules/events/mobileMenu";
+import {onToggledMobileMenu, toggledMobileMenu} from "@/libs/events/mobileMenu";
 
 const Menu = () => {
     const { t } = useTranslation("common");

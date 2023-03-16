@@ -8,7 +8,7 @@ import {useMsal} from "@azure/msal-react";
 import Head from "next/head";
 import {getData} from "@/libs/http";
 import {UserInformation} from "@/libs/models";
-import {toggledMobileMenu} from "@/modules/events/mobileMenu";
+import {toggledMobileMenu} from "@/libs/events/mobileMenu";
 
 const Header = () => {
 

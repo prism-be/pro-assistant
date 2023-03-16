@@ -12,7 +12,7 @@ import { Contact } from "@/libs/models";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
-import { searchContacts } from "@/modules/contacts/search";
+import {searchContacts} from "@/libs/search";
 
 const Contacts: NextPage = () => {
     const { t } = useTranslation("common");

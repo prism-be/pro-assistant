@@ -38,7 +38,7 @@ public class DocumentConfigurationController : Controller
 
     [HttpPost]
     [Route("api/data/document-configurations/update")]
-    public async Task<UpsertResult> Search([FromBody] DocumentConfiguration request)
+    public async Task<UpsertResult> Update([FromBody] DocumentConfiguration request)
     {
         return await _dataService.UpdateAsync(request);
     }

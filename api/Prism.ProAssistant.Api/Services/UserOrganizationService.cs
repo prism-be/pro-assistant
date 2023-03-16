@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using System.Text;
-using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -13,6 +12,8 @@ public interface IUserOrganizationService
 {
     Task<IMongoCollection<T>> GetUserCollection<T>()
         where T : IDataModel;
+
+    Task<string> GetUserOrganization();
 }
 
 public class UserOrganizationService : IUserOrganizationService
@@ -44,39 +45,7 @@ public class UserOrganizationService : IUserOrganizationService
         throw new NotFoundException("The collection was not found because the user is not authenticated.");
     }
 
-    public IDataModel? ToDataModel(string collection, JsonElement element)
-    {
-        var json = JsonSerializer.Serialize(element);
-
-        switch (collection)
-        {
-            case "appointments":
-                return JsonSerializer.Deserialize<Appointment>(json);
-            case "contacts":
-                return JsonSerializer.Deserialize<Contact>(json);
-            case "documents":
-                return JsonSerializer.Deserialize<DocumentConfiguration>(json);
-            case "tariffs":
-                return JsonSerializer.Deserialize<Tariff>(json);
-        }
-
-        throw new NotImplementedException("The collection type is not implemented.");
-    }
-
-    private static string GetCollectionName<T>()
-    {
-        var name = (typeof(T).GetCustomAttributes(typeof(BsonCollectionAttribute), true).FirstOrDefault()
-            as BsonCollectionAttribute)?.CollectionName;
-
-        if (string.IsNullOrWhiteSpace(name))
-        {
-            throw new NotImplementedException("The collection type is not implemented.");
-        }
-
-        return name;
-    }
-
-    private async Task<string> GetUserOrganization()
+    public async Task<string> GetUserOrganization()
     {
         if (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated != true)
         {
@@ -120,5 +89,18 @@ public class UserOrganizationService : IUserOrganizationService
         ));
 
         return "demo";
+    }
+
+    private static string GetCollectionName<T>()
+    {
+        var name = (typeof(T).GetCustomAttributes(typeof(BsonCollectionAttribute), true).FirstOrDefault()
+            as BsonCollectionAttribute)?.CollectionName;
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new NotImplementedException("The collection type is not implemented.");
+        }
+
+        return name;
     }
 }

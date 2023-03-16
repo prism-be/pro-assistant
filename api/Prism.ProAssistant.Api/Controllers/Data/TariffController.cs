@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
 
@@ -38,9 +39,19 @@ public class TariffController : Controller
 
     [HttpPost]
     [Route("api/data/tariffs/update")]
-    public async Task<UpsertResult> Search([FromBody] Tariff request)
+    public async Task<UpsertResult> Update([FromBody] Tariff request)
     {
-        return await _dataService.UpdateAsync(request);
+        var updated = await _dataService.UpdateAsync(request);
+        
+        var filter = Builders<Appointment>.Filter.Eq(x => x.Type, request.Id);
+        var update = Builders<Appointment>.Update.Combine(
+            Builders<Appointment>.Update.Set(x => x.ForeColor, request.ForeColor),
+            Builders<Appointment>.Update.Set(x => x.BackgroundColor, request.BackgroundColor)
+        );
+
+        await _dataService.UpdateAsync(filter, update);
+
+        return updated;
     }
 
     [HttpGet]

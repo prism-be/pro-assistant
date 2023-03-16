@@ -14,7 +14,7 @@ import { ContactAppointments } from "@/components/contacts/ContactAppointments";
 import { ArrowSmallLeftIcon } from "@heroicons/react/24/outline";
 import { getData, postData } from "@/libs/http";
 import {Contact, UpsertResult} from "@/libs/models";
-import { alertSuccess } from "@/modules/events/alert";
+import {alertSuccess} from "@/libs/events/alert";
 
 const Contacts: NextPage = () => {
     const { t } = useTranslation("common");

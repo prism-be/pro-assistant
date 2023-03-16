@@ -67,6 +67,11 @@ export interface SearchFilter {
     field: string;
 }
 
+export interface Setting {
+    value: string;
+    id: string;
+}
+
 export interface Tariff {
     price: number;
     defaultDuration: number;
@@ -78,4 +83,10 @@ export interface Tariff {
 
 export interface UpsertResult {
     id?: string | null;
+}
+
+export interface UserInformation {
+    isAuthenticated: boolean;
+    name: string;
+    organization: string;
 }

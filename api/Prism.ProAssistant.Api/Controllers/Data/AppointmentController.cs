@@ -38,7 +38,7 @@ public class AppointmentController : Controller
 
     [HttpPost]
     [Route("api/data/appointments/update")]
-    public async Task<UpsertResult> Search([FromBody] Appointment request)
+    public async Task<UpsertResult> Update([FromBody] Appointment request)
     {
         return await _dataService.UpdateAsync(request);
     }
