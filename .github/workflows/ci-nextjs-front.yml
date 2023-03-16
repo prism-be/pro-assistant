@@ -3,9 +3,13 @@ on:
   push:
     branches:
       - main
+    paths:
+      - 'src/web/**'
   pull_request:
     branches:
       - main
+    paths:
+      - 'src/web/**'
   workflow_dispatch:
 
 concurrency: ci-${{ github.ref }}
@@ -16,6 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         name: Checkout Sources
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v2
         name: Setup Node
         with:
@@ -24,22 +30,24 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ${{ github.workspace }}/.yarn
-            ${{ github.workspace }}/.pnp.cjs
-            ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-deps-${{ hashFiles('**/yarn.lock') }}
+            ${{ github.workspace }}/web/.yarn
+            ${{ github.workspace }}/web/.pnp.cjs
+            ${{ github.workspace }}/web/.next/cache
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/web/yarn.lock') }}
       - name: Install Dependencies
+        working-directory: ./web
         run: |
           corepack enable
           corepack prepare yarn@stable --activate
           yarn install --immutable
       - name: Build the application
+        working-directory: ./web
         run: |
           yarn build
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
-          projectBaseDir: ./
+          projectBaseDir: ./web
           args: >
             -Dsonar.projectVersion=${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ env.NUMBER_OF_COMMITS_SINCE_TAG }}
         env:

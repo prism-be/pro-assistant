@@ -1,8 +1,8 @@
-﻿if (process.env.APPINSIGHTS_CONNECTION_STRING && process.env.APPINSIGHTS_CONNECTION_STRING.length > 0) {
+﻿if (process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING && process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING.length > 0) {
     console.log("App Insights is enabled");
     let appInsights = require("applicationinsights");
     appInsights
-        .setup(process.env.APPINSIGHTS_CONNECTION_STRING)
+        .setup(process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING)
         .setAutoCollectConsole(false)
         .setAutoCollectDependencies(true)
         .setAutoCollectExceptions(true)
@@ -16,7 +16,7 @@
     appInsights.defaultClient.setAutoPopulateAzureProperties(true);
     appInsights.start();
 } else {
-    console.log("App Insights is disabled, set APPINSIGHTS_CONNECTION_STRING environment variable to enable");
+    console.log("App Insights is disabled, set NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING environment variable to enable");
 }
 
 const { createServer } = require("http");
