@@ -4,6 +4,7 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Prism.ProAssistant.Api.Config;
+using Prism.ProAssistant.Api.Services;
 using Prism.ProAssistant.Business;
 
 namespace Prism.ProAssistant.Api.Extensions;
@@ -40,5 +41,12 @@ public static class ServiceCollectionExtensions
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
         services.AddMongoClient(mongoDbConnectionString);
         services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
+    }
+    
+    public static void AddProAssistant(this IServiceCollection services)
+    {
+        services.AddDistributedMemoryCache();
+        
+        services.AddScoped<IUserOrganizationService, UserOrganizationService>();
     }
 }

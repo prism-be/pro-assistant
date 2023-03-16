@@ -8,6 +8,8 @@ builder.AddSerilog();
 
 builder.Services.AddDatabase();
 
+builder.Services.AddProAssistant();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBearer();
 builder.Services.AddHealthChecks();
