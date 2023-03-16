@@ -46,7 +46,8 @@ public static class ServiceCollectionExtensions
     public static void AddProAssistant(this IServiceCollection services)
     {
         services.AddDistributedMemoryCache();
-        
+
+        services.AddScoped<IDataService, DataService>();
         services.AddScoped<IUserOrganizationService, UserOrganizationService>();
     }
 }

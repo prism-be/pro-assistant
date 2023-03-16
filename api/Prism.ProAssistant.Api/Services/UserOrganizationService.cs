@@ -1,23 +1,26 @@
 ﻿using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Prism.ProAssistant.Api.Exceptions;
+using Prism.ProAssistant.Api.Models;
 
 namespace Prism.ProAssistant.Api.Services;
 
 public interface IUserOrganizationService
 {
-    Task<IMongoCollection<BsonDocument>> GetUserCollection(string collectionName);
+    Task<IMongoCollection<T>> GetUserCollection<T>()
+        where T : IDataModel;
 }
 
 public class UserOrganizationService : IUserOrganizationService
 {
-    private readonly ILogger<UserOrganizationService> _logger;
-    private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IMongoClient _mongoClient;
     private readonly IDistributedCache _cache;
+    private readonly IHttpContextAccessor _httpContextAccessor;
+    private readonly ILogger<UserOrganizationService> _logger;
+    private readonly IMongoClient _mongoClient;
 
     public UserOrganizationService(ILogger<UserOrganizationService> logger, IHttpContextAccessor httpContextAccessor, IMongoClient mongoClient, IDistributedCache cache)
     {
@@ -27,17 +30,50 @@ public class UserOrganizationService : IUserOrganizationService
         _cache = cache;
     }
 
-    public async Task<IMongoCollection<BsonDocument>> GetUserCollection(string collectionName)
+    public async Task<IMongoCollection<T>> GetUserCollection<T>() where T : IDataModel
     {
         if (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
         {
             var organization = await GetUserOrganization();
             var demoDatabase = _mongoClient.GetDatabase(organization);
-            return demoDatabase.GetCollection<BsonDocument>(collectionName);
+            var collectionName = GetCollectionName<T>();
+            return demoDatabase.GetCollection<T>(collectionName);
         }
 
         _logger.LogCritical("The collection was not found because the user is not authenticated.");
         throw new NotFoundException("The collection was not found because the user is not authenticated.");
+    }
+
+    public IDataModel? ToDataModel(string collection, JsonElement element)
+    {
+        var json = JsonSerializer.Serialize(element);
+
+        switch (collection)
+        {
+            case "appointments":
+                return JsonSerializer.Deserialize<Appointment>(json);
+            case "contacts":
+                return JsonSerializer.Deserialize<Contact>(json);
+            case "documents":
+                return JsonSerializer.Deserialize<DocumentConfiguration>(json);
+            case "tariffs":
+                return JsonSerializer.Deserialize<Tariff>(json);
+        }
+
+        throw new NotImplementedException("The collection type is not implemented.");
+    }
+
+    private static string GetCollectionName<T>()
+    {
+        var name = (typeof(T).GetCustomAttributes(typeof(BsonCollectionAttribute), true).FirstOrDefault()
+            as BsonCollectionAttribute)?.CollectionName;
+
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            throw new NotImplementedException("The collection type is not implemented.");
+        }
+
+        return name;
     }
 
     private async Task<string> GetUserOrganization()
@@ -67,7 +103,7 @@ public class UserOrganizationService : IUserOrganizationService
         if (user != null)
         {
             var organization = user["organization"].AsString;
-            await _cache.SetStringAsync($"organization-{userId}", organization, new DistributedCacheEntryOptions()
+            await _cache.SetStringAsync($"organization-{userId}", organization, new DistributedCacheEntryOptions
             {
                 AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5)
             });
