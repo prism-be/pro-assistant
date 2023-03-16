@@ -6,7 +6,9 @@
       "launchBrowser": true,
       "applicationUrl": "http://localhost:7099",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AZURE_AD_AUTHORITY": "https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/",
+        "AZURE_AD_CLIENT_ID": "b210005a-b610-43e2-9dd5-824e50b9f692"
       }
     }
   }
