@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-//  <copyright file = "ErrorLoggingMiddleware.cs" company = "Prism">
-//  Copyright (c) Prism.All rights reserved.
-//  </copyright>
-// -----------------------------------------------------------------------
-
-namespace Prism.ProAssistant.Api.Middlewares;
+﻿namespace Prism.ProAssistant.Api.Middlewares;
 
 public class ErrorLoggingMiddleware
 {

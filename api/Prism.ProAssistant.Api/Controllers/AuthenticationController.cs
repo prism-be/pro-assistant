@@ -20,7 +20,7 @@ public class AuthenticationController
         return new OkObjectResult(new
         {
             IsAuthenticated = true,
-            Name = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value,
+            Name = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value
         });
     }
 }

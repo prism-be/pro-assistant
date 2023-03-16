@@ -1,4 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using MongoDB.ApplicationInsights.DependencyInjection;
+using MongoDB.Bson;
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+using Prism.ProAssistant.Api.Config;
 using Prism.ProAssistant.Business;
 
 namespace Prism.ProAssistant.Api.Extensions;
@@ -26,5 +31,14 @@ public static class ServiceCollectionExtensions
             // TODO : LOG
             return Task.FromResult(0);
         }
+    }
+    
+    public static void AddDatabase(this IServiceCollection services)
+    {
+        var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");
+
+        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
+        services.AddMongoClient(mongoDbConnectionString);
+        services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
     }
 }

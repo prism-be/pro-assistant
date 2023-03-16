@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-//  <copyright file = "InvalidModelException.cs" company = "Prism">
-//  Copyright (c) Prism.All rights reserved.
-//  </copyright>
-// -----------------------------------------------------------------------
-
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
 namespace Prism.ProAssistant.Api.Exceptions;

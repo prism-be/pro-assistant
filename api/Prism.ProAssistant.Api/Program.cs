@@ -3,6 +3,11 @@ using Prism.ProAssistant.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.AddApplicationInsights();
+builder.AddSerilog();
+
+builder.Services.AddDatabase();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddBearer();
 builder.Services.AddHealthChecks();

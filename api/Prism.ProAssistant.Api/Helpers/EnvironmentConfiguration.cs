@@ -1,10 +1,4 @@
-﻿// -----------------------------------------------------------------------
-//  <copyright file = "EnvironmentConfiguration.cs" company = "Prism">
-//  Copyright (c) Prism.All rights reserved.
-//  </copyright>
-// -----------------------------------------------------------------------
-
-using Prism.ProAssistant.Api.Exceptions;
+﻿using Prism.ProAssistant.Api.Exceptions;
 
 namespace Prism.ProAssistant.Business;
 
