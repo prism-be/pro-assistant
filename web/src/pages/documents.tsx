@@ -15,7 +15,7 @@ import { deleteData, postData } from "@/libs/http";
 const Documents: NextPage = () => {
     const { t } = useTranslation("documents");
     const { data: documents, mutate: mutateDocuments } = useSWR<DocumentConfiguration[] | null>(
-        "/data/documents-configuration/list"
+        "/data/document-configurations"
     );
     const [currentDocument, setCurrentDocument] = useState<DocumentConfiguration | null>(null);
     const {
@@ -26,7 +26,7 @@ const Documents: NextPage = () => {
     } = useForm();
 
     const createNew = () => {
-        setCurrentDocument({ _id: "" });
+        setCurrentDocument({ id: "" });
         setValue("name", "");
         setValue("title", "");
         setValue("body", "");
@@ -41,18 +41,19 @@ const Documents: NextPage = () => {
 
     const deleteDocument = async (document: DocumentConfiguration) => {
         if (confirm(t("edit.confirmDelete") + document.name)) {
-            await deleteData("/documents-configuration/" + document._id);
+            await deleteData("/data/document-configurations/" + document.id);
             await mutateDocuments();
         }
     };
 
     const saveDocument = async () => {
         const data = getValues();
-        data._id = currentDocument?._id;
-        if (data._id && data._id.length > 0) {
-            await postData("/data/documents-configuration/update", data);
+        data.id = currentDocument?.id;
+        if (data.id && data.id.length > 0) {
+            await postData("/data/document-configurations/update", data);
         } else {
-            await postData("/data/documents-configuration/insert", data);
+            delete data.id;
+            await postData("/data/document-configurations/insert", data);
         }
         await mutateDocuments();
         setCurrentDocument(null);
@@ -78,7 +79,7 @@ const Documents: NextPage = () => {
                             {documents && documents.length > 0 && (
                                 <>
                                     {documents.map((d) => (
-                                        <div className={"flex"} key={d._id}>
+                                        <div className={"flex"} key={d.id}>
                                             <a className={"w-6 cursor-pointer"} onClick={() => editDocument(d)}>
                                                 {" "}
                                                 <PencilSquareIcon />{" "}
