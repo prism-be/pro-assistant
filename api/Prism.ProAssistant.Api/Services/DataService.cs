@@ -24,6 +24,7 @@ public interface IDataService
 
     Task<List<UpsertResult>> UpdateManyAsync<T>(List<T> request) where T : IDataModel;
     Task UpdateAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel;
+    Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
 }
 
 public class DataService : IDataService
@@ -85,6 +86,13 @@ public class DataService : IDataService
     {
         var collection = await _userOrganizationService.GetUserCollection<T>();
         await collection.UpdateManyAsync(filter, update);
+    }
+
+    public async Task<bool> DeleteAsync<T>(string id) where T : IDataModel
+    {
+        var collection = await _userOrganizationService.GetUserCollection<T>();
+        var result = await collection.DeleteOneAsync(Builders<T>.Filter.Eq(x => x.Id, id));
+        return result.IsAcknowledged && result.DeletedCount > 0;
     }
 
     public async Task<UpsertResult> InsertAsync<T>(T request) where T : IDataModel

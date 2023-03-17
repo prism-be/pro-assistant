@@ -15,6 +15,13 @@ public class DocumentConfigurationController : Controller
         _dataService = dataService;
     }
 
+    [HttpDelete]
+    [Route("api/data/document-configurations/{id}")]
+    public async Task<OperationResult?> Delete(string id)
+    {
+        return OperationResult.From(await _dataService.DeleteAsync<DocumentConfiguration>(id));
+    }
+
     [HttpPost]
     [Route("api/data/document-configurations/insert")]
     public async Task<UpsertResult> Insert([FromBody] DocumentConfiguration request)
@@ -36,17 +43,17 @@ public class DocumentConfigurationController : Controller
         return await _dataService.SearchAsync<DocumentConfiguration>(request);
     }
 
-    [HttpPost]
-    [Route("api/data/document-configurations/update")]
-    public async Task<UpsertResult> Update([FromBody] DocumentConfiguration request)
-    {
-        return await _dataService.UpdateAsync(request);
-    }
-
     [HttpGet]
     [Route("api/data/document-configurations/{id}")]
     public async Task<DocumentConfiguration?> Single(string id)
     {
         return await _dataService.SingleAsync<DocumentConfiguration>(id);
+    }
+
+    [HttpPost]
+    [Route("api/data/document-configurations/update")]
+    public async Task<UpsertResult> Update([FromBody] DocumentConfiguration request)
+    {
+        return await _dataService.UpdateAsync(request);
     }
 }
