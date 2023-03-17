@@ -13,12 +13,12 @@ import Button from "../../components/forms/Button";
 import InputDate from "../../components/forms/InputDate";
 import { Appointment, Contact, Tariff } from "@/libs/models";
 import { getData, postData } from "@/libs/http";
-import { alertSuccess } from "@/modules/events/alert";
 import { Calendar } from "@/components/forms/Calendar";
 import { getLocale } from "@/libs/localization";
 import { GeneratedDocuments } from "@/components/appointments/GeneratedDocuments";
 import { formatAmount } from "@/libs/formats";
-import { searchContacts } from "@/modules/contacts/search";
+import {alertSuccess} from "@/libs/events/alert";
+import {searchContacts} from "@/libs/search";
 
 const Appointments: NextPage = () => {
     const { t } = useTranslation("common");
@@ -71,7 +71,7 @@ const Appointments: NextPage = () => {
 
         if (appointment.contactId) {
             setContact({
-                _id: appointment.contactId,
+                id: appointment.contactId,
                 firstName: appointment.firstName,
                 lastName: appointment.lastName,
                 birthDate: "",
@@ -113,14 +113,14 @@ const Appointments: NextPage = () => {
         const tariff = tariffs?.find((x) => x.name == data.type);
 
         const updatedAppointment: Appointment = {
-            _id: appointment?._id ?? "",
-            contactId: contact?._id ?? null,
+            id: appointment?.id ?? "",
+            contactId: contact?.id ?? null,
             title: data.lastName + " " + data.firstName,
             price: parseFloat(data.price),
             duration: duration,
             startDate: formatISO(date),
             type: data.type,
-            typeId: tariff?._id ?? "",
+            typeId: tariff?.id ?? "",
             backgroundColor: tariff?.backgroundColor ?? "#31859c",
             foreColor: tariff?.foreColor ?? "#ffffff",
             state: parseInt(data.state),
@@ -133,7 +133,7 @@ const Appointments: NextPage = () => {
             documents: [],
         };
 
-        if (updatedAppointment._id === "") {
+        if (updatedAppointment.id === "") {
             await postData("/data/appointments/insert", updatedAppointment);
         } else {
             await postData("/data/appointments/update", updatedAppointment);
@@ -187,7 +187,7 @@ const Appointments: NextPage = () => {
         let options =
             tariffs?.map((x) => {
                 return {
-                    value: x._id,
+                    value: x.id,
                     text: x.name + " (" + formatAmount(x.price) + "€)",
                 };
             }) ?? [];
@@ -220,7 +220,7 @@ const Appointments: NextPage = () => {
         }
 
         setCustomTitle(false);
-        const tariff = tariffs?.find((x) => x._id == type);
+        const tariff = tariffs?.find((x) => x.id == type);
 
         if (tariff) {
             setValue("type", tariff.name);
@@ -266,8 +266,8 @@ const Appointments: NextPage = () => {
         <ContentContainer>
             <Section>
                 <>
-                    {appointment?._id === undefined && <h1>{t("pages.appointment.titleNew")}</h1>}
-                    {appointment?._id !== undefined && <h1>{t("pages.appointment.titleEditing")}</h1>}
+                    {appointment?.id === undefined && <h1>{t("pages.appointment.titleNew")}</h1>}
+                    {appointment?.id !== undefined && <h1>{t("pages.appointment.titleEditing")}</h1>}
                 </>
                 <form className={"grid grid-cols-4 gap-4"} onSubmit={handleSubmit(onSubmit)}>
                     <InputText
@@ -312,7 +312,7 @@ const Appointments: NextPage = () => {
                         <div className={"col-span-4"}>
                             <h3>{t("pages.appointment.contactsSuggestions.title")}</h3>
                             {contactsSuggestions.map((p) => (
-                                <div key={p._id} className={"cursor-pointer p-2 hover:bg-gray-100"} onClick={() => selectContact(p)}>
+                                <div key={p.id} className={"cursor-pointer p-2 hover:bg-gray-100"} onClick={() => selectContact(p)}>
                                     {p.lastName} {p.firstName} {p.birthDate && p.birthDate !== "" && <>({p.birthDate})</>}
                                 </div>
                             ))}

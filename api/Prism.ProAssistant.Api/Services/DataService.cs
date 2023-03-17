@@ -69,7 +69,13 @@ public class DataService : IDataService
         foreach (var item in request)
         {
             var replaced = await collection.FindOneAndReplaceAsync(Builders<T>.Filter.Eq(x => x.Id, item.Id), item);
-            results.Add(new UpsertResult(replaced.Id));
+
+            if (replaced == null)
+            {
+                await collection.InsertOneAsync(item);
+            }
+            
+            results.Add(new UpsertResult(item.Id));
         }
 
         return results;

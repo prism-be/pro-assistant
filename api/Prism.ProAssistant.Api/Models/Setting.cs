@@ -12,7 +12,7 @@ namespace Prism.ProAssistant.Api.Models;
 public class Setting : IDataModel
 {
     [JsonPropertyName("value")]
-    required public string Value { get; set; }
+    public string Value { get; set; } = string.Empty;
 
     [JsonPropertyName("id")]
     required public string Id { get; set; }
