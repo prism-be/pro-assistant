@@ -41,12 +41,19 @@ const Calendar: NextPage = () => {
     });
 
     async function loadAppointments() {
-        return await postData<Appointment[]>("/data/appointments/search", {
-            startDate: {
-                $gte: formatISO(monday),
-                $lt: formatISO(add(monday, { weeks: 1 })),
-            },
-        });
+        return await postData<Appointment[]>("/data/appointments/search", [
+            {
+                field: "StartDate",
+                operator: "gte",
+                value: monday
+            }
+            ,
+            {
+                field: "StartDate",
+                operator: "lt",
+                value: add(monday, { weeks: 1 })
+            }
+        ]);
     }
 
     function getDurationClassName(d: number) {
@@ -161,8 +168,8 @@ const Calendar: NextPage = () => {
                                         backgroundColor: a.backgroundColor ?? "",
                                         gridRowEnd: getDurationClassName(a.duration),
                                     }}
-                                    key={a._id}
-                                    onClick={() => router.push("/appointments/" + a._id)}
+                                    key={a.id}
+                                    onClick={() => router.push("/appointments/" + a.id)}
                                 >
                                     <div className={"hidden md:block relative"}>
                                         {a.title?.slice(0, 30)}

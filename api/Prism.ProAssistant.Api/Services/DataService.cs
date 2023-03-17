@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Prism.ProAssistant.Api.Models;
@@ -105,9 +106,14 @@ public class DataService : IDataService
     public async Task<List<T>> SearchAsync<T>(List<SearchFilter> request) where T : IDataModel
     {
         var query = Builders<T>.Filter.Empty;
-
+        
         foreach (var filter in request)
         {
+            if (DateTime.TryParse(filter.Value.ToString(), out var date))
+            {
+                filter.Value = date;
+            }
+            
             switch (filter.Operator)
             {
                 case "eq":
