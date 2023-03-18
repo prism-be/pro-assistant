@@ -25,7 +25,7 @@ const Appointments: NextPage = () => {
     const router = useRouter();
 
     const { data: appointment, mutate: mutateAppointment } = useSWR<Appointment | null>("/data/appointments/" + router.query.mid, loadAppointment);
-    const { data: tariffs } = useSWR<Tariff[]>("/data/tariffs/list");
+    const { data: tariffs } = useSWR<Tariff[]>("/data/tariffs");
 
     const {
         register,

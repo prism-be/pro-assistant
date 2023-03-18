@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 using Prism.ProAssistant.Api.Exceptions;
 using Prism.ProAssistant.Api.Models;
 
@@ -12,6 +13,8 @@ public interface IUserOrganizationService
 {
     Task<IMongoCollection<T>> GetUserCollection<T>()
         where T : IDataModel;
+
+    Task<GridFSBucket> GetUserGridFsBucket();
 
     Task<string> GetUserOrganization();
 }
@@ -36,9 +39,22 @@ public class UserOrganizationService : IUserOrganizationService
         if (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
         {
             var organization = await GetUserOrganization();
-            var demoDatabase = _mongoClient.GetDatabase(organization);
+            var userDatabase = _mongoClient.GetDatabase(organization);
             var collectionName = GetCollectionName<T>();
-            return demoDatabase.GetCollection<T>(collectionName);
+            return userDatabase.GetCollection<T>(collectionName);
+        }
+
+        _logger.LogCritical("The collection was not found because the user is not authenticated.");
+        throw new NotFoundException("The collection was not found because the user is not authenticated.");
+    }
+
+    public async Task<GridFSBucket> GetUserGridFsBucket()
+    {
+        if (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
+        {
+            var organization = await GetUserOrganization();
+            var userDatabase = _mongoClient.GetDatabase(organization);
+            return new GridFSBucket(userDatabase);
         }
 
         _logger.LogCritical("The collection was not found because the user is not authenticated.");

@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using Prism.ProAssistant.Api.Models;
@@ -8,6 +7,7 @@ namespace Prism.ProAssistant.Api.Services;
 
 public interface IDataService
 {
+    Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
 
     Task<UpsertResult> InsertAsync<T>(T request) where T : IDataModel;
 
@@ -23,9 +23,10 @@ public interface IDataService
     Task<UpsertResult> UpdateAsync<T>(T request)
         where T : IDataModel;
 
-    Task<List<UpsertResult>> UpdateManyAsync<T>(List<T> request) where T : IDataModel;
     Task UpdateAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel;
-    Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
+
+    Task<List<UpsertResult>> UpdateManyAsync<T>(List<T> request) where T : IDataModel;
+    Task<string> UploadFromBytesAsync(string fileName, byte[] bytes);
 }
 
 public class DataService : IDataService
@@ -76,7 +77,7 @@ public class DataService : IDataService
             {
                 await collection.InsertOneAsync(item);
             }
-            
+
             results.Add(new UpsertResult(item.Id));
         }
 
@@ -96,6 +97,13 @@ public class DataService : IDataService
         return result.IsAcknowledged && result.DeletedCount > 0;
     }
 
+    public async Task<string> UploadFromBytesAsync(string fileName, byte[] bytes)
+    {
+        var bucket = await _userOrganizationService.GetUserGridFsBucket();
+        var id = await bucket.UploadFromBytesAsync(fileName, bytes);
+        return id.ToString();
+    }
+
     public async Task<UpsertResult> InsertAsync<T>(T request) where T : IDataModel
     {
         var collection = await _userOrganizationService.GetUserCollection<T>();
@@ -106,14 +114,14 @@ public class DataService : IDataService
     public async Task<List<T>> SearchAsync<T>(List<SearchFilter> request) where T : IDataModel
     {
         var query = Builders<T>.Filter.Empty;
-        
+
         foreach (var filter in request)
         {
             if (DateTime.TryParse(filter.Value.ToString(), out var date))
             {
                 filter.Value = date;
             }
-            
+
             switch (filter.Operator)
             {
                 case "eq":

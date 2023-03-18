@@ -14,17 +14,17 @@ interface Props {
 }
 
 export const GeneratedDocuments = ({ appointment }: Props) => {
-    const { data: documents } = useSWR<DocumentConfiguration[]>("/data/documents-configuration/list");
+    const { data: documents } = useSWR<DocumentConfiguration[]>("/data/document-configurations");
     const [document, setDocument] = useState<string>();
     const { t } = useTranslation("common");
 
     const startGenerateDocument = useCallback(async () => {
-        if (!document || document === "" || appointment?._id == null) {
+        if (!document || document === "" || appointment?.id == null) {
             return;
         }
 
-        await generateDocument(document, appointment._id);
-        await mutate("/data/appointments/" + appointment._id);
+        await generateDocument(document, appointment.id);
+        await mutate("/data/appointments/" + appointment.id);
     }, [document]);
 
     const startDeleteDocument = useCallback(
@@ -32,9 +32,9 @@ export const GeneratedDocuments = ({ appointment }: Props) => {
             if (confirm(t("confirmations.deleteDocument"))) {
                 await deleteDataWithBody("/documents/delete", {
                     documentId,
-                    appointmentId: appointment._id,
+                    appointmentId: appointment.id,
                 } as DocumentRequest);
-                await mutate("/data/appointments/" + appointment._id);
+                await mutate("/data/appointments/" + appointment.id);
             }
         },
         [appointment]
@@ -86,7 +86,7 @@ export const GeneratedDocuments = ({ appointment }: Props) => {
                 >
                     <option value={""}>{t("pages.appointment.documents.generate")}</option>
                     {documents?.map((d) => (
-                        <option key={d._id} value={d._id}>
+                        <option key={d.id} value={d.id}>
                             {d.name}
                         </option>
                     ))}
