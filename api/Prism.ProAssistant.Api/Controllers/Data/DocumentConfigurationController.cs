@@ -47,13 +47,13 @@ public class DocumentConfigurationController : Controller
     [Route("api/data/document-configurations/{id}")]
     public async Task<DocumentConfiguration?> Single(string id)
     {
-        return await _dataService.SingleAsync<DocumentConfiguration>(id);
+        return await _dataService.SingleOrDefaultAsync<DocumentConfiguration>(id);
     }
 
     [HttpPost]
     [Route("api/data/document-configurations/update")]
     public async Task<UpsertResult> Update([FromBody] DocumentConfiguration request)
     {
-        return await _dataService.UpdateAsync(request);
+        return await _dataService.ReplaceAsync(request);
     }
 }

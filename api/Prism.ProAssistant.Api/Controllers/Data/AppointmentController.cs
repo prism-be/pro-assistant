@@ -40,13 +40,13 @@ public class AppointmentController : Controller
     [Route("api/data/appointments/update")]
     public async Task<UpsertResult> Update([FromBody] Appointment request)
     {
-        return await _dataService.UpdateAsync(request);
+        return await _dataService.ReplaceAsync(request);
     }
 
     [HttpGet]
     [Route("api/data/appointments/{id}")]
     public async Task<Appointment?> Single(string id)
     {
-        return await _dataService.SingleAsync<Appointment>(id);
+        return await _dataService.SingleOrDefaultAsync<Appointment>(id);
     }
 }

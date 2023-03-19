@@ -41,14 +41,14 @@ public class ContactController : Controller
     [Route("api/data/contacts/{id}")]
     public async Task<Contact?> Single(string id)
     {
-        return await _dataService.SingleAsync<Contact>(id);
+        return await _dataService.SingleOrDefaultAsync<Contact>(id);
     }
 
     [HttpPost]
     [Route("api/data/contacts/update")]
     public async Task<UpsertResult> Update([FromBody] Contact request)
     {
-        var result = await _dataService.UpdateAsync(request);
+        var result = await _dataService.ReplaceAsync(request);
 
         var filter = Builders<Appointment>.Filter.Eq(x => x.Type, request.Id);
         var update = Builders<Appointment>.Update.Combine(
@@ -58,7 +58,7 @@ public class ContactController : Controller
             Builders<Appointment>.Update.Set(x => x.PhoneNumber, request.PhoneNumber)
         );
 
-        await _dataService.UpdateAsync(filter, update);
+        await _dataService.ReplaceAsync(filter, update);
 
         return result;
     }

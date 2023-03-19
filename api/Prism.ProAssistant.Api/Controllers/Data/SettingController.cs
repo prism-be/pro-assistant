@@ -41,14 +41,14 @@ public class SettingController : Controller
     [Route("api/data/settings/{id}")]
     public async Task<Setting?> Single(string id)
     {
-        return await _dataService.SingleAsync<Setting>(id);
+        return await _dataService.SingleOrDefaultAsync<Setting>(id);
     }
 
     [HttpPost]
     [Route("api/data/settings/update")]
     public async Task<UpsertResult> Update([FromBody] Setting request)
     {
-        return await _dataService.UpdateAsync(request);
+        return await _dataService.ReplaceAsync(request);
     }
 
     [HttpPost]

@@ -49,5 +49,6 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IDataService, DataService>();
         services.AddScoped<IUserOrganizationService, UserOrganizationService>();
+        services.AddScoped<IPdfService, PdfService>();
     }
 }

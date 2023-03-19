@@ -58,7 +58,20 @@ export interface DocumentConfiguration {
     body?: string | null;
     name?: string | null;
     title?: string | null;
+    id?: string | null;
+}
+
+export interface DocumentRequest {
+    documentId: string;
+    appointmentId: string;
+}
+
+export interface DownloadReference {
     id: string;
+}
+
+export interface OperationResult {
+    success: boolean;
 }
 
 export interface SearchFilter {

@@ -1,6 +1,8 @@
 ﻿using System.Text.RegularExpressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
+using Prism.ProAssistant.Api.Exceptions;
 using Prism.ProAssistant.Api.Models;
 
 namespace Prism.ProAssistant.Api.Services;
@@ -8,24 +10,33 @@ namespace Prism.ProAssistant.Api.Services;
 public interface IDataService
 {
     Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
+    Task DeleteFileAsync(string id);
+    Task<byte[]?> GetFileAsync(string id);
+    Task<string> GetFileNameAsync(string id);
 
     Task<UpsertResult> InsertAsync<T>(T request) where T : IDataModel;
 
     Task<List<T>> ListAsync<T>()
         where T : IDataModel;
 
+    Task<UpsertResult> ReplaceAsync<T>(T request)
+        where T : IDataModel;
+
+    Task ReplaceAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel;
+
     Task<List<T>> SearchAsync<T>(List<SearchFilter> request)
         where T : IDataModel;
 
-    Task<T?> SingleAsync<T>(string id)
+    Task<T> SingleAsync<T>(string id)
         where T : IDataModel;
 
-    Task<UpsertResult> UpdateAsync<T>(T request)
+    Task<T?> SingleOrDefaultAsync<T>(string id)
         where T : IDataModel;
 
-    Task UpdateAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel;
+    Task<UpsertResult> UpdateAsync<T>(T request, params string[] properties) where T : IDataModel;
 
     Task<List<UpsertResult>> UpdateManyAsync<T>(List<T> request) where T : IDataModel;
+
     Task<string> UploadFromBytesAsync(string fileName, byte[] bytes);
 }
 
@@ -45,7 +56,21 @@ public class DataService : IDataService
         return await query.ToListAsync();
     }
 
-    public async Task<T?> SingleAsync<T>(string id) where T : IDataModel
+    public async Task<T> SingleAsync<T>(string id) where T : IDataModel
+    {
+        var collection = await _userOrganizationService.GetUserCollection<T>();
+        IAsyncCursor<T?> query = await collection.FindAsync<T>(Builders<T>.Filter.Eq(x => x.Id, id));
+        var result = await query.SingleAsync();
+
+        if (result == null)
+        {
+            throw new NotFoundException($"Document not found in collection {typeof(T).Name} with id {id}");
+        }
+
+        return result;
+    }
+
+    public async Task<T?> SingleOrDefaultAsync<T>(string id) where T : IDataModel
     {
         if (id == "000000000000000000000000")
         {
@@ -57,7 +82,20 @@ public class DataService : IDataService
         return await query.SingleAsync();
     }
 
-    public async Task<UpsertResult> UpdateAsync<T>(T request) where T : IDataModel
+    public async Task<UpsertResult> UpdateAsync<T>(T request, params string[] properties) where T : IDataModel
+    {
+        var collection = await _userOrganizationService.GetUserCollection<T>();
+
+        var updates = (from property in properties
+            let value = request.GetType().GetProperty(property)?.GetValue(request)
+            select Builders<T>.Update.Set(property, value)).ToList();
+
+        await collection.UpdateOneAsync(Builders<T>.Filter.Eq(x => x.Id, request.Id), Builders<T>.Update.Combine(updates));
+
+        return new UpsertResult(request.Id);
+    }
+
+    public async Task<UpsertResult> ReplaceAsync<T>(T request) where T : IDataModel
     {
         var collection = await _userOrganizationService.GetUserCollection<T>();
         request = await collection.FindOneAndReplaceAsync(Builders<T>.Filter.Eq(x => x.Id, request.Id), request);
@@ -84,7 +122,7 @@ public class DataService : IDataService
         return results;
     }
 
-    public async Task UpdateAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel
+    public async Task ReplaceAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel
     {
         var collection = await _userOrganizationService.GetUserCollection<T>();
         await collection.UpdateManyAsync(filter, update);
@@ -102,6 +140,25 @@ public class DataService : IDataService
         var bucket = await _userOrganizationService.GetUserGridFsBucket();
         var id = await bucket.UploadFromBytesAsync(fileName, bytes);
         return id.ToString();
+    }
+
+    public async Task DeleteFileAsync(string id)
+    {
+        var bucket = await _userOrganizationService.GetUserGridFsBucket();
+        await bucket.DeleteAsync(new ObjectId(id));
+    }
+
+    public async Task<byte[]?> GetFileAsync(string id)
+    {
+        var bucket = await _userOrganizationService.GetUserGridFsBucket();
+        return await bucket.DownloadAsBytesAsync(new ObjectId(id));
+    }
+
+    public async Task<string> GetFileNameAsync(string id)
+    {
+        var bucket = await _userOrganizationService.GetUserGridFsBucket();
+        var result = await bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq(x => x.Id, new ObjectId(id)));
+        return await result.SingleAsync().ContinueWith(x => x.Result.Filename);
     }
 
     public async Task<UpsertResult> InsertAsync<T>(T request) where T : IDataModel

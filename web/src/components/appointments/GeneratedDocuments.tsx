@@ -4,10 +4,9 @@ import { useCallback, useState } from "react";
 import useTranslation from "next-translate/useTranslation";
 import { format, parseISO } from "date-fns";
 import { ArrowDownTrayIcon, CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { Appointment, DocumentConfiguration } from "@/libs/models";
-import { deleteDataWithBody, generateDocument } from "@/libs/http";
+import {Appointment, DocumentConfiguration, DocumentRequest, DownloadReference} from "@/libs/models";
+import {deleteData, deleteDataWithBody, generateDocument, postData} from "@/libs/http";
 import { getLocale } from "@/libs/localization";
-import { DocumentRequest } from "@/modules/documents/types";
 
 interface Props {
     appointment: Appointment;
@@ -28,17 +27,20 @@ export const GeneratedDocuments = ({ appointment }: Props) => {
     }, [document]);
 
     const startDeleteDocument = useCallback(
-        async (documentId: string) => {
+        async (appointmentId: string, documentId: string) => {
             if (confirm(t("confirmations.deleteDocument"))) {
-                await deleteDataWithBody("/documents/delete", {
-                    documentId,
-                    appointmentId: appointment.id,
-                } as DocumentRequest);
+                await deleteData(`/document/${appointmentId}/${documentId}`);
                 await mutate("/data/appointments/" + appointment.id);
             }
         },
         [appointment]
     );
+
+    async function startDownloadDocument(id: string) {
+        console.log( id);
+        const reference = await postData<DownloadReference>(`/document/download/${id}`, { });
+        window.open(`/api/document/download/${id}/${reference.id}`, "_blank")
+    }
 
     return (
         <Section>
@@ -65,13 +67,13 @@ export const GeneratedDocuments = ({ appointment }: Props) => {
                         </div>
                         <div className={"col-start-11 row-span-2 row-start-1"}>
                             <div
-                                onClick={() => window.open(`/api/documents/${d.id}`)}
+                                onClick={() => startDownloadDocument(d.id)}
                                 className={"w-10 p-2 cursor-pointer"}
                             >
                                 <ArrowDownTrayIcon />
                             </div>
 
-                            <div onClick={() => startDeleteDocument(d.id)} className={"w-10 p-2 cursor-pointer"}>
+                            <div onClick={() => startDeleteDocument(appointment.id, d.id)} className={"w-10 p-2 cursor-pointer"}>
                                 <TrashIcon />
                             </div>
                         </div>
@@ -86,7 +88,7 @@ export const GeneratedDocuments = ({ appointment }: Props) => {
                 >
                     <option value={""}>{t("pages.appointment.documents.generate")}</option>
                     {documents?.map((d) => (
-                        <option key={d.id} value={d.id}>
+                        <option key={d.id} value={d.id ?? ''}>
                             {d.name}
                         </option>
                     ))}

@@ -41,7 +41,7 @@ public class TariffController : Controller
     [Route("api/data/tariffs/update")]
     public async Task<UpsertResult> Update([FromBody] Tariff request)
     {
-        var updated = await _dataService.UpdateAsync(request);
+        var updated = await _dataService.ReplaceAsync(request);
         
         var filter = Builders<Appointment>.Filter.Eq(x => x.Type, request.Id);
         var update = Builders<Appointment>.Update.Combine(
@@ -49,7 +49,7 @@ public class TariffController : Controller
             Builders<Appointment>.Update.Set(x => x.BackgroundColor, request.BackgroundColor)
         );
 
-        await _dataService.UpdateAsync(filter, update);
+        await _dataService.ReplaceAsync(filter, update);
 
         return updated;
     }
@@ -58,6 +58,6 @@ public class TariffController : Controller
     [Route("api/data/tariffs/{id}")]
     public async Task<Tariff?> Single(string id)
     {
-        return await _dataService.SingleAsync<Tariff>(id);
+        return await _dataService.SingleOrDefaultAsync<Tariff>(id);
     }
 }
