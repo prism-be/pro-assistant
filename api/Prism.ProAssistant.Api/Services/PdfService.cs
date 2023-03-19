@@ -34,18 +34,7 @@ public class PdfService : IPdfService
         Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("fr-be");
 
         var documentConfiguration = await _dataService.SingleAsync<DocumentConfiguration>(request.DocumentId);
-
-        if (documentConfiguration == null)
-        {
-            throw new MissingConfigurationException("Document configuration not found.", request.DocumentId);
-        }
-
         var appointment = await _dataService.SingleAsync<Appointment>(request.AppointmentId);
-
-        if (appointment == null)
-        {
-            throw new MissingConfigurationException("Appointment not found.", request.AppointmentId);
-        }
 
         var contact = !string.IsNullOrEmpty(appointment.ContactId) ? await _dataService.SingleAsync<Contact>(appointment.ContactId) : null;
 

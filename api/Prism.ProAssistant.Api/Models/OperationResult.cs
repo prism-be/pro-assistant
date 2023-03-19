@@ -9,7 +9,7 @@ public class OperationResult
 
     public static OperationResult? From(bool result)
     {
-        return new OperationResult()
+        return new OperationResult
         {
             Success = result
         };

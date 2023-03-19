@@ -4,8 +4,8 @@ using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 using Prism.ProAssistant.Api.Config;
+using Prism.ProAssistant.Api.Helpers;
 using Prism.ProAssistant.Api.Services;
-using Prism.ProAssistant.Business;
 
 namespace Prism.ProAssistant.Api.Extensions;
 

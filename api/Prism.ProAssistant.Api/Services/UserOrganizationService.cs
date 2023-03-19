@@ -12,7 +12,7 @@ namespace Prism.ProAssistant.Api.Services;
 public interface IUserOrganizationService
 {
     Task<IMongoCollection<T>> GetUserCollection<T>() where T : IDataModel;
-    Task<GridFSBucket> GetUserGridFsBucket();
+    Task<IGridFSBucket> GetUserGridFsBucket();
     string? GetUserId();
     Task<string> GetUserOrganization();
 }
@@ -46,7 +46,7 @@ public class UserOrganizationService : IUserOrganizationService
         throw new NotFoundException("The collection was not found because the user is not authenticated.");
     }
 
-    public async Task<GridFSBucket> GetUserGridFsBucket()
+    public async Task<IGridFSBucket> GetUserGridFsBucket()
     {
         if (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
         {

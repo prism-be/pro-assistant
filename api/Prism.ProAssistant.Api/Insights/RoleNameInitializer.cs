@@ -1,6 +1,6 @@
 ﻿using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
-using Prism.ProAssistant.Business;
+using Prism.ProAssistant.Api.Helpers;
 
 namespace Prism.ProAssistant.Api.Insights;
 
