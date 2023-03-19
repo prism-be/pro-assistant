@@ -49,7 +49,7 @@ public class TariffController : Controller
             Builders<Appointment>.Update.Set(x => x.BackgroundColor, request.BackgroundColor)
         );
 
-        await _dataService.ReplaceAsync(filter, update);
+        await _dataService.UpdateManyAsync(filter, update);
 
         return updated;
     }

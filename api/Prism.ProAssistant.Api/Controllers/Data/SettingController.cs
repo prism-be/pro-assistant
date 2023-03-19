@@ -55,6 +55,6 @@ public class SettingController : Controller
     [Route("api/data/settings/update-many")]
     public async Task<List<UpsertResult>> UpdateMany([FromBody] List<Setting> request)
     {
-        return await _dataService.UpdateManyAsync(request);
+        return await _dataService.ReplaceManyAsync(request);
     }
 }

@@ -58,7 +58,7 @@ public class ContactController : Controller
             Builders<Appointment>.Update.Set(x => x.PhoneNumber, request.PhoneNumber)
         );
 
-        await _dataService.ReplaceAsync(filter, update);
+        await _dataService.UpdateManyAsync(filter, update);
 
         return result;
     }

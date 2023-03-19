@@ -11,11 +11,9 @@ namespace Prism.ProAssistant.Api.Services;
 
 public interface IUserOrganizationService
 {
-    Task<IMongoCollection<T>> GetUserCollection<T>()
-        where T : IDataModel;
-
+    Task<IMongoCollection<T>> GetUserCollection<T>() where T : IDataModel;
     Task<GridFSBucket> GetUserGridFsBucket();
-
+    string? GetUserId();
     Task<string> GetUserOrganization();
 }
 
@@ -68,7 +66,7 @@ public class UserOrganizationService : IUserOrganizationService
             return "demo";
         }
 
-        var userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
+        var userId = GetUserId();
 
         if (string.IsNullOrWhiteSpace(userId))
         {
@@ -105,6 +103,16 @@ public class UserOrganizationService : IUserOrganizationService
         ));
 
         return "demo";
+    }
+
+    public string? GetUserId()
+    {
+        if (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated != true)
+        {
+            return null;
+        }
+
+        return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
     }
 
     private static string GetCollectionName<T>()
