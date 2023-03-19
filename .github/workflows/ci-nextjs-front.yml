@@ -4,12 +4,12 @@ on:
     branches:
       - main
     paths:
-      - 'src/web/**'
+      - 'web/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'src/web/**'
+      - 'web/**'
   workflow_dispatch:
 
 concurrency: ci-${{ github.ref }}
