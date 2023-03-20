@@ -220,7 +220,7 @@ public class DataService : IDataService
                     query &= Builders<T>.Filter.Regex(filter.Field, BsonRegularExpression.Create(new Regex(filter.Value.ToString() ?? throw new InvalidOperationException("Value is null for regex filter"), RegexOptions.IgnoreCase, TimeSpan.FromMilliseconds(100))));
                     break;
                 default:
-                    throw new NotImplementedException("Filter type not implemented: " + filter.Operator);
+                    throw new NotSupportedException("Filter type not supported: " + filter.Operator);
             }
         }
 

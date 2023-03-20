@@ -1,10 +1,31 @@
 ﻿using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 using Moq;
 
 namespace Prism.ProAssistant.Api.Tests;
 
 public static class MongoTestsExtensions
 {
+
+    public static void SetupBucket(this Mock<IGridFSBucket> collection, params GridFSFileInfo[] samples)
+    {
+        var items = new List<GridFSFileInfo>();
+        items.AddRange(samples);
+        var cursor = new Mock<IAsyncCursor<GridFSFileInfo>>();
+        cursor.Setup(_ => _.Current).Returns(items);
+        cursor
+            .SetupSequence(_ => _.MoveNext(It.IsAny<CancellationToken>()))
+            .Returns(true)
+            .Returns(false);
+        cursor
+            .SetupSequence(_ => _.MoveNextAsync(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true)
+            .ReturnsAsync(false);
+
+        collection.Setup(x => x.FindAsync(It.IsAny<FilterDefinition<GridFSFileInfo>>(), null, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(cursor.Object);
+    }
+
     public static void SetupCollection<T>(this Mock<IMongoCollection<T>> collection, params T[] samples)
     {
         CreateCollection(collection, samples);
