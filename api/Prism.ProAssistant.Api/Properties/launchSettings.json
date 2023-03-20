@@ -1,0 +1,18 @@
+﻿{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:7099",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "AZURE_AD_AUTHORITY": "https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/",
+        "AZURE_AD_CLIENT_ID": "b210005a-b610-43e2-9dd5-824e50b9f692",
+        "ENVIRONMENT": "proassistant-dev",
+        "APPLICATIONINSIGHTS_CONNECTION_STRING": "InstrumentationKey=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/",
+        "MONGODB_CONNECTION_STRING": "mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin"
+      }
+    }
+  }
+}

@@ -10,8 +10,8 @@ jobs:
     uses: ./.github/workflows/cd-docker.yml
     with:
       dockerFile: ./Dockerfile
-      imageTag: next
-      workingDirectory: ./
+      imageTag: web
+      workingDirectory: ./web
       isProduction: true
     secrets:
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
