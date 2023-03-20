@@ -7,7 +7,7 @@ using Prism.ProAssistant.Api.Services;
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 [Authorize]
-public class TariffController : Controller
+public class TariffController : Controller, IDataController<Tariff>
 {
     private readonly IDataService _dataService;
 

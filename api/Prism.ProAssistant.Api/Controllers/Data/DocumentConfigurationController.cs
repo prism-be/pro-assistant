@@ -6,7 +6,7 @@ using Prism.ProAssistant.Api.Services;
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 [Authorize]
-public class DocumentConfigurationController : Controller
+public class DocumentConfigurationController : Controller, IDataController<DocumentConfiguration>
 {
     private readonly IDataService _dataService;
 

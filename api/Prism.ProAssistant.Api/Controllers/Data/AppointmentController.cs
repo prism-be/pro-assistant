@@ -6,7 +6,7 @@ using Prism.ProAssistant.Api.Services;
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 [Authorize]
-public class AppointmentController : Controller
+public class AppointmentController : Controller, IDataController<Appointment>
 {
     private readonly IDataService _dataService;
 

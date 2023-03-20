@@ -7,7 +7,7 @@ using Prism.ProAssistant.Api.Services;
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 [Authorize]
-public class ContactController : Controller
+public class ContactController : Controller, IDataController<Contact>
 {
     private readonly IDataService _dataService;
 

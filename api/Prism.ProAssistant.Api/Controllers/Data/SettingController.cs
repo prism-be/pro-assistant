@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
@@ -7,7 +6,7 @@ using Prism.ProAssistant.Api.Services;
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 [Authorize]
-public class SettingController : Controller
+public class SettingController : Controller, IDataController<Setting>
 {
     private readonly IDataService _dataService;
 
