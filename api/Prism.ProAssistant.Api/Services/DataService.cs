@@ -51,7 +51,7 @@ public class DataService : IDataService
 
         var collection = await _userOrganizationService.GetUserCollection<T>();
         IAsyncCursor<T?> query = await collection.FindAsync<T>(Builders<T>.Filter.Eq(x => x.Id, id));
-        var result = await query.SingleAsync();
+        var result = await query.SingleOrDefaultAsync();
 
         if (result == null)
         {
