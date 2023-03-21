@@ -19,6 +19,8 @@ public class AppointmentController : Controller, IDataController<Appointment>
     [Route("api/data/appointments/insert")]
     public async Task<UpsertResult> Insert([FromBody] Appointment request)
     {
+        await EnsureContact(request);
+
         return await _dataService.InsertAsync(request);
     }
 
@@ -40,6 +42,8 @@ public class AppointmentController : Controller, IDataController<Appointment>
     [Route("api/data/appointments/update")]
     public async Task<UpsertResult> Update([FromBody] Appointment request)
     {
+        await EnsureContact(request);
+
         return await _dataService.ReplaceAsync(request);
     }
 
@@ -48,5 +52,21 @@ public class AppointmentController : Controller, IDataController<Appointment>
     public async Task<Appointment?> Single(string id)
     {
         return await _dataService.SingleOrDefaultAsync<Appointment>(id);
+    }
+
+    private async Task EnsureContact(Appointment request)
+    {
+        if (request.ContactId == null)
+        {
+            request.ContactId = Identifier.GenerateString();
+            await _dataService.InsertAsync(new Contact
+            {
+                Id = request.ContactId,
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                BirthDate = request.BirthDate,
+                PhoneNumber = request.PhoneNumber
+            });
+        }
     }
 }

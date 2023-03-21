@@ -8,6 +8,31 @@ namespace Prism.ProAssistant.Api.Tests.Controllers;
 
 public class DataControllersTests
 {
+
+    [Fact]
+    public async Task Appointment_Insert_No_Contact()
+    {
+        // Arrange
+        var appointment = new Appointment
+        {
+            Id = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
+        };
+
+        var dataService = new Mock<IDataService>();
+
+        // Act
+        var controller = new AppointmentController(dataService.Object);
+        await controller.Insert(appointment);
+
+        // Assert
+        dataService.Verify(x => x.InsertAsync(appointment), Times.Once);
+        dataService.Verify(x => x.InsertAsync(It.Is<Contact>(c => c.FirstName == appointment.FirstName && c.LastName == appointment.LastName)));
+        appointment.ContactId.Should().NotBeNull();
+    }
+
     [Fact]
     public async Task Appointment_Ok()
     {
@@ -16,8 +41,33 @@ public class DataControllersTests
             Id = Identifier.GenerateString(),
             FirstName = Identifier.GenerateString(),
             LastName = Identifier.GenerateString(),
-            Title = Identifier.GenerateString()
+            Title = Identifier.GenerateString(),
+            ContactId = Identifier.GenerateString()
         });
+    }
+
+    [Fact]
+    public async Task Appointment_Update_No_Contact()
+    {
+        // Arrange
+        var appointment = new Appointment
+        {
+            Id = Identifier.GenerateString(),
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
+        };
+
+        var dataService = new Mock<IDataService>();
+
+        // Act
+        var controller = new AppointmentController(dataService.Object);
+        await controller.Update(appointment);
+
+        // Assert
+        dataService.Verify(x => x.ReplaceAsync(appointment), Times.Once);
+        dataService.Verify(x => x.InsertAsync(It.Is<Contact>(c => c.FirstName == appointment.FirstName && c.LastName == appointment.LastName)));
+        appointment.ContactId.Should().NotBeNull();
     }
 
     [Fact]
