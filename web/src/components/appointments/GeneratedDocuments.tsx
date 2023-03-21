@@ -1,7 +1,7 @@
 ﻿import Section from "../design/Section";
 import useSWR, { mutate } from "swr";
 import { useCallback, useState } from "react";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import { format, parseISO } from "date-fns";
 import { ArrowDownTrayIcon, CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
 import {Appointment, DocumentConfiguration, DocumentRequest, DownloadReference} from "@/libs/models";
@@ -28,7 +28,7 @@ export const GeneratedDocuments = ({ appointment }: Props) => {
 
     const startDeleteDocument = useCallback(
         async (appointmentId: string, documentId: string) => {
-            if (confirm(t("confirmations.deleteDocument"))) {
+            if (confirm(t("confirmations.deleteDocument").toString())) {
                 await deleteData(`/document/${appointmentId}/${documentId}`);
                 await mutate("/data/appointments/" + appointment.id);
             }

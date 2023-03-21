@@ -1,7 +1,7 @@
 ﻿import React, { useState } from "react";
 import { NextPage } from "next";
 import ContentContainer from "../components/design/ContentContainer";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import Section from "../components/design/Section";
 import useSWR from "swr";
 import { useForm } from "react-hook-form";

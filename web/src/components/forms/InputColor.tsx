@@ -1,7 +1,7 @@
 ﻿import { FieldValues } from "react-hook-form";
 import { UseFormSetValue } from "react-hook-form/dist/types/form";
 import { useEffect, useState } from "react";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 interface Props {
@@ -25,7 +25,7 @@ const InputColor = ({ label, name, error, className, setValue, onChange, initial
     }, [initialColor]);
 
     function setCustomColor() {
-        const newColor = prompt(t("alerts.customColor"), color);
+        const newColor = prompt(t("alerts.customColor").toString(), color);
 
         if (newColor && newColor !== "") {
             changeColor(newColor);

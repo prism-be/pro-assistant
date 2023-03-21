@@ -1,6 +1,6 @@
 ﻿import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import useSWR from "swr";
 import {useEffect, useState} from "react";
 import InputText from "../components/forms/InputText";

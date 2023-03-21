@@ -1,17 +1,27 @@
 /** @type {import('next').NextConfig} */
 
-const nextTranslate = require('next-translate-plugin');
-
 const nextConfig = {
     reactStrictMode: true,
-    async rewrites() {
+    rewrites: process.env.NODE_ENV !== 'production' ? async () => {
         return [
             {
                 source: '/api/:path*',
                 destination: 'http://localhost:7099/api/:path*'
             }
         ]
-    }
+    } : null,
+    publicRuntimeConfig: {
+        i18n: {
+            languages: ["fr"],
+            defaultLanguage: "fr",
+            namespaces: ["common", "configuration", "documents", "login"],
+            defaultNamespace: "common",
+        },
+    },
+    images: {
+        unoptimized: true
+    },
+    output: process.env.NODE_ENV === 'production' ? 'export' : undefined
 }
 
-module.exports = nextTranslate(nextConfig);
+module.exports = nextConfig;

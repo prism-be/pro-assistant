@@ -1,5 +1,5 @@
 ﻿import { add, format, parseISO } from "date-fns";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import { getLocale } from "@/libs/localization";
 import { Appointment } from "@/libs/models";
 

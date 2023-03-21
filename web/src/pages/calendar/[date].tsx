@@ -1,7 +1,7 @@
 ﻿import { NextPage } from "next";
 import ContentContainer from "../../components/design/ContentContainer";
 import { add, format, formatISO, parse, parseISO, startOfWeek } from "date-fns";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import React from "react";
 import { useKeyPressEvent } from "react-use";
 import { useSwipeable } from "react-swipeable";
