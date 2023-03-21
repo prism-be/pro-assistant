@@ -1,40 +1,23 @@
 ﻿name: Build and Publish Docker Image
 on:
-  workflow_call:
-    inputs:
-      dockerFile:
-        required: true
-        type: string
-      imageTag:
-        required: true
-        type: string
-      workingDirectory:
-        required: true
-        type: string
-      isProduction:
-        required: true
-        type: boolean
-    secrets:
-      DOCKER_USERNAME:
-        required: true
-      DOCKER_PASSWORD:
-        required: true
+  release:
+    types: [published]
+  workflow_dispatch:
 
 jobs:
   publish-package:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Extract Version
-        uses: damienaicheh/extract-version-from-tag-action@v1.0.0
+        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
 
       - name: Build the Docker image
-        working-directory: ${{ inputs.workingDirectory }}
-        run: docker build . --file ${{ inputs.dockerFile }} --build-arg NUGET_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }} --tag simonbaudart/pro-assistant:${{ inputs.imageTag }}-latest --tag simonbaudart/pro-assistant:${{ inputs.imageTag }}-nightly --tag simonbaudart/pro-assistant:${{ inputs.imageTag }}-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
+        run: docker build . --tag simonbaudart/pro-assistant:latest --tag simonbaudart/pro-assistant:${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
 
       - name: Docker - Login
         uses: docker/login-action@v1.12.0
@@ -43,13 +26,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Push the Docker image
-        if: ${{ inputs.isProduction }}
         working-directory: src
         run: |
-          docker push simonbaudart/pro-assistant:${{ inputs.imageTag }}-latest
-          docker push simonbaudart/pro-assistant:${{ inputs.imageTag }}-${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
-
-      - name: Push the Docker image - Nightly
-        working-directory: src
-        run: |
-          docker push simonbaudart/pro-assistant:${{ inputs.imageTag }}-nightly
+          docker push simonbaudart/pro-assistant:latest
+          docker push simonbaudart/pro-assistant:${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
