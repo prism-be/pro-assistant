@@ -3,7 +3,7 @@ import InputText from "../../components/forms/InputText";
 import InputDate from "../../components/forms/InputDate";
 import Button from "../../components/forms/Button";
 import { NextPage } from "next";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import { useForm } from "react-hook-form";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";

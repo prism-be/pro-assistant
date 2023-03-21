@@ -1,7 +1,7 @@
 ﻿import {NextPage} from "next";
 import Section from "../../components/design/Section";
 import ContentContainer from "../../components/design/ContentContainer";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import {add, format, formatISO, parse, parseISO} from "date-fns";
 import React from "react";
 import {useSwipeable} from "react-swipeable";

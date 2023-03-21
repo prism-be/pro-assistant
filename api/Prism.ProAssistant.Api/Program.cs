@@ -33,10 +33,14 @@ app.MapControllers();
 
 app.UseRouting();
 app.UseAuthentication().UseAuthorization();
+app.UseDefaultFiles();
+app.UseStaticFiles();
 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
 }
+
+app.ReplaceEnvironmentVariables();
 
 app.Run();

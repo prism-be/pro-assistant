@@ -8,8 +8,20 @@ import {getData} from "@/libs/http";
 import Insights from "@/components/Insights";
 import {MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "@/libs/msal";
+import {I18nProvider, languages, defaultLanguage, namespaces, defaultNamespace,} from "next-i18next-static-site";
+
+import locales from "@/libs/localization";
 
 const MyApp = ({Component, pageProps}: AppProps) => {
+
+    const i18n = {
+        languages,
+        defaultLanguage,
+        namespaces,
+        defaultNamespace,
+        locales,
+    };
+
     return (
             <Insights>
                 <MsalProvider instance={msalInstance}>
@@ -17,7 +29,9 @@ const MyApp = ({Component, pageProps}: AppProps) => {
                         <title>Pro Assistant</title>
                     </Head>
                     <SWRConfig value={{fetcher: getData}}>
-                        <Component {...pageProps} />
+                        <I18nProvider i18n={i18n}>
+                            <Component {...pageProps} />
+                        </I18nProvider>
                         <Alert/>
                     </SWRConfig>
                 </MsalProvider>

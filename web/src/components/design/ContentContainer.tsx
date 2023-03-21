@@ -2,7 +2,7 @@
 import {AuthenticatedTemplate, UnauthenticatedTemplate, useMsal} from "@azure/msal-react";
 import Header from "./Header";
 import Button from "../forms/Button";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import {Popin} from "../Pops";
 
 interface Props {

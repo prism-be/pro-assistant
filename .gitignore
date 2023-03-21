@@ -439,3 +439,6 @@ fabric.properties
 secrets.json
 local.settings.json
 .yarn
+.env.development
+
+api/**/wwwroot/**

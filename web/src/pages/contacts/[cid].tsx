@@ -1,5 +1,5 @@
 ﻿import { NextPage } from "next";
-import useTranslation from "next-translate/useTranslation";
+import {useTranslation} from "react-i18next";
 import ContentContainer from "../../components/design/ContentContainer";
 import { useRouter } from "next/router";
 import useSWR, { mutate } from "swr";
