@@ -14,6 +14,7 @@ public static class HostBuilderExtensions
     {
         builder.Services.AddSingleton<ITelemetryInitializer, RoleNameInitializer>();
         builder.Services.AddApplicationInsightsTelemetry();
+        builder.Services.AddApplicationInsightsTelemetryProcessor<CleanTelemetryFilter>();
         builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
         builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft.Hosting.Lifetime", LogLevel.Information);
         builder.Logging.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Warning);
