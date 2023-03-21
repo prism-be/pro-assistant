@@ -36,6 +36,8 @@ app.UseAuthentication().UseAuthorization();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
+app.UseMiddleware<NextJsRouterMiddleWare>();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
