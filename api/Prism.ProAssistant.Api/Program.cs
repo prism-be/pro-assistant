@@ -28,7 +28,9 @@ builder.Services.AddSwaggerGen(options =>
 var app = builder.Build();
 app.UseMiddleware<ErrorLoggingMiddleware>();
 
-app.UseHealthChecks("/api/health");
+app.UseHealthChecks("/health");
+app.UseHealthChecks("/ready");
+app.UseHealthChecks("/startup");
 app.MapControllers();
 
 app.UseRouting();
