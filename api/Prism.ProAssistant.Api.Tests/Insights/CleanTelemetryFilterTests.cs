@@ -17,7 +17,8 @@ public class CleanTelemetryFilterTests
 
         // Act
         var filter = new CleanTelemetryFilter(next.Object);
-        filter.Process(new RequestTelemetry { Url = new Uri("http://localhost/api/health") });
+        filter.Process(new RequestTelemetry { Url = new Uri("http://localhost/health") });
+        filter.Process(new RequestTelemetry { Url = new Uri("http://localhost/health/plop") });
 
         // Assert
         next.Verify(x => x.Process(It.IsAny<ITelemetry>()), Times.Never);
