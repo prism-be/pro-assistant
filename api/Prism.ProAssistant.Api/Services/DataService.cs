@@ -128,7 +128,7 @@ public class DataService : IDataService
         _logger.LogInformation("UpdateManyAsync - {Type} - {UserId}", typeof(T).Name, _userOrganizationService.GetUserId());
 
         var collection = await _userOrganizationService.GetUserCollection<T>();
-        var result = await collection.UpdateManyAsync(filter, update);
+        await collection.UpdateManyAsync(filter, update);
     }
 
     public async Task<bool> DeleteAsync<T>(string id) where T : IDataModel
