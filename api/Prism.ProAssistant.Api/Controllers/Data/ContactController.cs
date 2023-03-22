@@ -50,12 +50,13 @@ public class ContactController : Controller, IDataController<Contact>
     {
         var result = await _dataService.ReplaceAsync(request);
 
-        var filter = Builders<Appointment>.Filter.Eq(x => x.Type, request.Id);
+        var filter = Builders<Appointment>.Filter.Eq(x => x.ContactId, request.Id);
         var update = Builders<Appointment>.Update.Combine(
             Builders<Appointment>.Update.Set(x => x.FirstName, request.FirstName),
             Builders<Appointment>.Update.Set(x => x.LastName, request.LastName),
             Builders<Appointment>.Update.Set(x => x.BirthDate, request.BirthDate),
-            Builders<Appointment>.Update.Set(x => x.PhoneNumber, request.PhoneNumber)
+            Builders<Appointment>.Update.Set(x => x.PhoneNumber, request.PhoneNumber),
+            Builders<Appointment>.Update.Set(x => x.Title, $"{request.LastName} {request.FirstName}")
         );
 
         await _dataService.UpdateManyAsync(filter, update);
