@@ -17,7 +17,7 @@ public class CleanTelemetryFilter: ITelemetryProcessor
     {
         if (item is RequestTelemetry request)
         {
-            if (request.Url.LocalPath.Contains("api/health", StringComparison.InvariantCultureIgnoreCase))
+            if (request.Url.LocalPath.StartsWith("/health", StringComparison.InvariantCultureIgnoreCase))
             {
                 // Do not send telemetry data for health checks
                 return;
