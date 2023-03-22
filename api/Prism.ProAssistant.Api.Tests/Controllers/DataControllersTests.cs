@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Controllers.Data;
 using Prism.ProAssistant.Api.Models;
@@ -83,6 +85,22 @@ public class DataControllersTests
     }
 
     [Fact]
+    public async Task Contact_Update_Appointments()
+    {
+        var id = Identifier.GenerateString();
+
+        var dataService = await CheckUpdate(service => new ContactController(service.Object), () => new Contact
+        {
+            Id = id,
+            FirstName = Identifier.GenerateString(),
+            LastName = Identifier.GenerateString(),
+            Title = Identifier.GenerateString()
+        });
+
+        dataService.Verify(x => x.UpdateManyAsync(It.Is<FilterDefinition<Appointment>>(t => Check(t, nameof(Appointment.ContactId), id)), It.IsAny<UpdateDefinition<Appointment>>()), Times.Once);
+    }
+
+    [Fact]
     public async Task DocumentConfiguration_Delete()
     {
         // Arrange
@@ -150,6 +168,30 @@ public class DataControllersTests
         });
     }
 
+    [Fact]
+    public async Task Tariff_Update_Appointments()
+    {
+        var id = Identifier.GenerateString();
+
+        var dataService = await CheckUpdate(service => new TariffController(service.Object), () => new Tariff
+        {
+            Id = id,
+            Name = Identifier.GenerateString()
+        });
+
+        dataService.Verify(x => x.UpdateManyAsync(It.Is<FilterDefinition<Appointment>>(t => Check(t, nameof(Appointment.TypeId), id)), It.IsAny<UpdateDefinition<Appointment>>()), Times.Once);
+    }
+
+    private static bool Check<T>(FilterDefinition<T> filterDefinition, string propertyName, string value) where T : IDataModel
+    {
+        var serializerRegistry = BsonSerializer.SerializerRegistry;
+        var documentSerializer = serializerRegistry.GetSerializer<T>();
+
+        var rendered = filterDefinition.Render(documentSerializer, serializerRegistry);
+
+        return rendered[propertyName]?.ToString() == value;
+    }
+
     private async static Task CheckInsert<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         var mock = new Mock<IDataService>();
@@ -204,7 +246,7 @@ public class DataControllersTests
         mock.Verify(x => x.SingleOrDefaultAsync<T>(id), Times.Once);
     }
 
-    private async static Task CheckUpdate<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task<Mock<IDataService>> CheckUpdate<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         var mock = new Mock<IDataService>();
         var controller = factory(mock);
@@ -212,6 +254,8 @@ public class DataControllersTests
         var item = itemFactory();
         await controller.Update(item);
         mock.Verify(x => x.ReplaceAsync(item), Times.Once);
+
+        return mock;
     }
 
     private async Task TestCrud<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
