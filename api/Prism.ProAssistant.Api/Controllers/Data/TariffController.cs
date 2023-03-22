@@ -43,7 +43,7 @@ public class TariffController : Controller, IDataController<Tariff>
     {
         var updated = await _dataService.ReplaceAsync(request);
         
-        var filter = Builders<Appointment>.Filter.Eq(x => x.Type, request.Id);
+        var filter = Builders<Appointment>.Filter.Eq(x => x.TypeId, request.Id);
         var update = Builders<Appointment>.Update.Combine(
             Builders<Appointment>.Update.Set(x => x.ForeColor, request.ForeColor),
             Builders<Appointment>.Update.Set(x => x.BackgroundColor, request.BackgroundColor)
