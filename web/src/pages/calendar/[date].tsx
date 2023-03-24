@@ -164,7 +164,7 @@ const Calendar: NextPage = () => {
                                     className={"text-xs text-white leading-6 pl-1 lg:text-sm"}
                                     style={{
                                         gridColumnStart: parseISO(a.startDate).getDay() + 1,
-                                        gridRowStart: parseISO(a.startDate).getHours() * 2 + 1,
+                                        gridRowStart: parseISO(a.startDate).getHours() * 2,
                                         backgroundColor: a.backgroundColor ?? "",
                                         gridRowEnd: getDurationClassName(a.duration),
                                     }}
