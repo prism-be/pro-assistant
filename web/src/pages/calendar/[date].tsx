@@ -56,6 +56,18 @@ const Calendar: NextPage = () => {
         ]);
     }
 
+    function getHourRowStart(h: number, m: number) {
+        if (m < 30) {
+            return h * 2;
+        }
+
+        return getHourRowEnd(h);
+    }
+
+    function getHourRowEnd(h: number) {
+        return h * 2 + 1;
+    }
+
     function getDurationClassName(d: number) {
         d = Math.round(d / 30) * 30;
         return "span " + d / 30;
@@ -164,7 +176,10 @@ const Calendar: NextPage = () => {
                                     className={"text-xs text-white leading-6 pl-1 lg:text-sm"}
                                     style={{
                                         gridColumnStart: parseISO(a.startDate).getDay() + 1,
-                                        gridRowStart: parseISO(a.startDate).getHours() * 2,
+                                        gridRowStart:getHourRowStart(
+                                                parseISO(a.startDate).getHours(),
+                                                parseISO(a.startDate).getMinutes()
+                                        ),
                                         backgroundColor: a.backgroundColor ?? "",
                                         gridRowEnd: getDurationClassName(a.duration),
                                     }}
