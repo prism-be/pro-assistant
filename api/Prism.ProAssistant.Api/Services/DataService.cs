@@ -13,7 +13,6 @@ public interface IDataService
     Task DeleteFileAsync(string id);
     Task<byte[]?> GetFileAsync(string id);
     Task<string> GetFileNameAsync(string id);
-    Task<UpsertResult> InsertAsync<T>(T request) where T : IDataModel;
     Task<List<T>> ListAsync<T>() where T : IDataModel;
     Task<UpsertResult> ReplaceAsync<T>(T request) where T : IDataModel;
     Task<List<UpsertResult>> ReplaceManyAsync<T>(List<T> request) where T : IDataModel;
@@ -172,15 +171,6 @@ public class DataService : IDataService
         var bucket = await _userOrganizationService.GetUserGridFsBucket();
         var result = await bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq(x => x.Id, new ObjectId(id)));
         return await result.SingleAsync().ContinueWith(x => x.Result.Filename);
-    }
-
-    public async Task<UpsertResult> InsertAsync<T>(T request) where T : IDataModel
-    {
-        _logger.LogInformation("InsertAsync - {Type} - {UserId}", typeof(T).Name, _userOrganizationService.GetUserId());
-
-        var collection = await _userOrganizationService.GetUserCollection<T>();
-        await collection.InsertOneAsync(request);
-        return new UpsertResult(request.Id);
     }
 
     public async Task<List<T>> SearchAsync<T>(List<SearchFilter> request) where T : IDataModel

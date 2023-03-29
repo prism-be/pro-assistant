@@ -10,17 +10,19 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 public class ContactController : Controller, IDataController<Contact>
 {
     private readonly IDataService _dataService;
+    private readonly IEventService _eventService;
 
-    public ContactController(IDataService dataService)
+    public ContactController(IDataService dataService, IEventService eventService)
     {
         _dataService = dataService;
+        _eventService = eventService;
     }
 
     [HttpPost]
     [Route("api/data/contacts/insert")]
     public async Task<UpsertResult> Insert([FromBody] Contact request)
     {
-        return await _dataService.InsertAsync(request);
+        return await _eventService.CreateAsync(request);
     }
 
     [HttpGet]

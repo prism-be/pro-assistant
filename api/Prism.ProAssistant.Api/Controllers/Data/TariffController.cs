@@ -10,17 +10,19 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 public class TariffController : Controller, IDataController<Tariff>
 {
     private readonly IDataService _dataService;
+    private readonly IEventService _eventService;
 
-    public TariffController(IDataService dataService)
+    public TariffController(IDataService dataService, IEventService eventService)
     {
         _dataService = dataService;
+        _eventService = eventService;
     }
 
     [HttpPost]
     [Route("api/data/tariffs/insert")]
     public async Task<UpsertResult> Insert([FromBody] Tariff request)
     {
-        return await _dataService.InsertAsync(request);
+        return await _eventService.CreateAsync(request);
     }
 
     [HttpGet]

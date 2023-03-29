@@ -11,7 +11,9 @@ namespace Prism.ProAssistant.Api.Services;
 
 public interface IUserOrganizationService
 {
+    string GetCollectionName<T>();
     Task<IMongoCollection<T>> GetUserCollection<T>() where T : IDataModel;
+    Task<IMongoCollection<Event<T>>> GetUserEventCollection<T>() where T : IDataModel;
     Task<IGridFSBucket> GetUserGridFsBucket();
     string? GetUserId();
     Task<string> GetUserOrganization();
@@ -40,6 +42,20 @@ public class UserOrganizationService : IUserOrganizationService
             var userDatabase = _mongoClient.GetDatabase(organization);
             var collectionName = GetCollectionName<T>();
             return userDatabase.GetCollection<T>(collectionName);
+        }
+
+        _logger.LogCritical("The collection was not found because the user is not authenticated.");
+        throw new NotFoundException("The collection was not found because the user is not authenticated.");
+    }
+
+    public async Task<IMongoCollection<Event<T>>> GetUserEventCollection<T>() where T : IDataModel
+    {
+        if (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated == true)
+        {
+            var organization = await GetUserOrganization();
+            var userDatabase = _mongoClient.GetDatabase(organization);
+            var collectionName = GetCollectionName<T>() + ".events";
+            return userDatabase.GetCollection<Event<T>>(collectionName);
         }
 
         _logger.LogCritical("The collection was not found because the user is not authenticated.");
@@ -115,7 +131,7 @@ public class UserOrganizationService : IUserOrganizationService
         return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.NameIdentifier)?.Value;
     }
 
-    private static string GetCollectionName<T>()
+    public string GetCollectionName<T>()
     {
         var name = (typeof(T).GetCustomAttributes(typeof(BsonCollectionAttribute), true).FirstOrDefault()
             as BsonCollectionAttribute)?.CollectionName;

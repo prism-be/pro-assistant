@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
@@ -129,40 +128,6 @@ public class DataServiceTests
 
         // Assert
         result.Should().BeEquivalentTo(id);
-
-        logger.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((o, t) => true),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
-            Times.AtLeastOnce());
-    }
-
-    [Fact]
-    public async Task InsertAsync_Ok()
-    {
-        // Arrange
-        var id = Identifier.GenerateString();
-        var contact = new Contact
-        {
-            Id = id
-        };
-
-        var logger = new Mock<ILogger<DataService>>();
-        var userOrganizationService = new Mock<IUserOrganizationService>();
-
-        var collection = new Mock<IMongoCollection<Contact>>();
-
-        userOrganizationService.Setup(x => x.GetUserCollection<Contact>()).ReturnsAsync(collection.Object);
-
-        // Act
-        var service = new DataService(userOrganizationService.Object, logger.Object);
-        await service.InsertAsync(contact);
-
-        // Assert
-        collection.Verify(x => x.InsertOneAsync(contact, null, CancellationToken.None), Times.Once);
 
         logger.Verify(
             x => x.Log(
@@ -395,7 +360,7 @@ public class DataServiceTests
         collection.Verify(x => x.FindAsync(It.IsAny<FilterDefinition<Contact>>(), It.IsAny<FindOptions<Contact, Contact>>(), CancellationToken.None), Times.Once);
 
         result.Count.Should().Be(1);
-        
+
         logger.Verify(
             x => x.Log(
                 LogLevel.Information,
@@ -405,7 +370,7 @@ public class DataServiceTests
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
             Times.AtLeastOnce());
     }
-    
+
     [Fact]
     public async Task SearchAsync_Unsupported()
     {
@@ -426,7 +391,7 @@ public class DataServiceTests
         var filters = new List<SearchFilter>
         {
             new()
-                { Field = "field1", Operator = "yolo", Value = "value1" },
+                { Field = "field1", Operator = "yolo", Value = "value1" }
         };
 
         // Act

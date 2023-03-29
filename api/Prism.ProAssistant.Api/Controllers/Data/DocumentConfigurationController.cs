@@ -9,10 +9,12 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 public class DocumentConfigurationController : Controller, IDataController<DocumentConfiguration>
 {
     private readonly IDataService _dataService;
+    private readonly IEventService _eventService;
 
-    public DocumentConfigurationController(IDataService dataService)
+    public DocumentConfigurationController(IDataService dataService, IEventService eventService)
     {
         _dataService = dataService;
+        _eventService = eventService;
     }
 
     [HttpDelete]
@@ -26,7 +28,7 @@ public class DocumentConfigurationController : Controller, IDataController<Docum
     [Route("api/data/document-configurations/insert")]
     public async Task<UpsertResult> Insert([FromBody] DocumentConfiguration request)
     {
-        return await _dataService.InsertAsync(request);
+        return await _eventService.CreateAsync(request);
     }
 
     [HttpGet]
