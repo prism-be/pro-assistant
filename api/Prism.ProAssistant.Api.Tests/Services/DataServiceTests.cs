@@ -491,41 +491,6 @@ public class DataServiceTests
     }
 
     [Fact]
-    public async Task UpdateAsync_Ok()
-    {
-        // Arrange
-        var id = Identifier.GenerateString();
-        var contact = new Contact
-        {
-            Id = id
-        };
-
-        var logger = new Mock<ILogger<DataService>>();
-        var userOrganizationService = new Mock<IUserOrganizationService>();
-
-        var collection = new Mock<IMongoCollection<Contact>>();
-        collection.SetupCollection(contact);
-
-        userOrganizationService.Setup(x => x.GetUserCollection<Contact>()).ReturnsAsync(collection.Object);
-
-        // Act
-        var service = new DataService(userOrganizationService.Object, logger.Object);
-        await service.UpdateAsync(contact, nameof(contact.Id));
-
-        // Assert
-        collection.Verify(x => x.UpdateOneAsync(It.IsAny<FilterDefinition<Contact>>(), It.IsAny<UpdateDefinition<Contact>>(), null, CancellationToken.None), Times.Once);
-
-        logger.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((o, t) => true),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
-            Times.AtLeastOnce());
-    }
-
-    [Fact]
     public async Task UpdateManyAsync_Ok()
     {
         // Arrange

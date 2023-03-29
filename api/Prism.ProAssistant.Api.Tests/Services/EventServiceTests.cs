@@ -110,4 +110,40 @@ public class EventServiceTests
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
             Times.AtLeastOnce());
     }
+
+    [Fact]
+    public async Task UpdateAsync_Ok()
+    {
+        // Arrange
+        var id = Identifier.GenerateString();
+        var contact = new Contact
+        {
+            Id = id
+        };
+
+        var logger = new Mock<ILogger<EventService>>();
+        var userOrganizationService = new Mock<IUserOrganizationService>();
+
+        var collection = new Mock<IMongoCollection<Event<Contact>>>();
+        userOrganizationService.Setup(x => x.GetUserEventCollection<Contact>()).ReturnsAsync(collection.Object);
+
+        var aggregator = new Mock<IEventAggregator>();
+
+        // Act
+        var service = new EventService(userOrganizationService.Object, logger.Object, aggregator.Object);
+        await service.UpdateAsync<Contact>(contact.Id, new KeyValuePair<string, object>(nameof(Contact.Id), contact.Id));
+
+        // Assert
+        collection.Verify(x => x.InsertOneAsync(It.Is<Event<Contact>>(c => c.ObjectId == contact.Id && c.EventType == EventType.Update), null, CancellationToken.None), Times.Once);
+        aggregator.Verify(x => x.AggregateAsync<Contact>(id), Times.Once);
+
+        logger.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((o, t) => true),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
+            Times.AtLeastOnce());
+    }
 }

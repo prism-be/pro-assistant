@@ -1,4 +1,5 @@
-﻿using Prism.ProAssistant.Api.Models;
+﻿using System.Text.Json;
+using Prism.ProAssistant.Api.Models;
 
 namespace Prism.ProAssistant.Api.Services;
 
@@ -6,7 +7,8 @@ public interface IEventService
 {
     Task<UpsertResult> CreateAsync<T>(T data) where T : IDataModel;
     Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
-    Task<UpsertResult> ReplaceAsync<T>(T request) where T : IDataModel;
+    Task<UpsertResult> ReplaceAsync<T>(T item) where T : IDataModel;
+    Task<UpsertResult> UpdateAsync<T>(string id, params KeyValuePair<string, object>[] updates) where T : IDataModel;
 }
 
 public class EventService : IEventService
@@ -59,22 +61,40 @@ public class EventService : IEventService
         return true;
     }
 
-    public async Task<UpsertResult> ReplaceAsync<T>(T request) where T : IDataModel
+    public async Task<UpsertResult> ReplaceAsync<T>(T item) where T : IDataModel
     {
-        _logger.LogInformation("ReplaceAsync - {Id} - {Type} - {UserId}", request.Id, typeof(T).Name, _userOrganizationService.GetUserId());
+        _logger.LogInformation("ReplaceAsync - {Id} - {Type} - {UserId}", item.Id, typeof(T).Name, _userOrganizationService.GetUserId());
 
         var e = new Event<T>
         {
-            ObjectId = request.Id,
+            ObjectId = item.Id,
             EventType = EventType.Replace,
-            Data = request,
+            Data = item,
             UserId = _userOrganizationService.GetUserId()
         };
 
         await Save(e);
-        await _eventAggregator.AggregateAsync<T>(request.Id);
+        await _eventAggregator.AggregateAsync<T>(item.Id);
 
-        return new UpsertResult(request.Id);
+        return new UpsertResult(item.Id);
+    }
+
+    public async Task<UpsertResult> UpdateAsync<T>(string id, params KeyValuePair<string, object>[] updates) where T : IDataModel
+    {
+        _logger.LogInformation("UpdateAsync - {Id} - {Type} - {UserId}", id, typeof(T).Name, _userOrganizationService.GetUserId());
+
+        var e = new Event<T>
+        {
+            ObjectId = id,
+            EventType = EventType.Update,
+            Updates = updates.Select(x => new KeyValuePair<string, string>(x.Key, JsonSerializer.Serialize(x.Value))).ToArray(),
+            UserId = _userOrganizationService.GetUserId()
+        };
+
+        await Save(e);
+        await _eventAggregator.AggregateAsync<T>(id);
+        
+        return new UpsertResult(id);
     }
 
     private async Task Save<T>(Event<T> e) where T : IDataModel

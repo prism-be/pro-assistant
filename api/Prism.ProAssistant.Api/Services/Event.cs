@@ -10,7 +10,7 @@ public class Event<T> where T : IDataModel
     required public string ObjectId { get; set; }
     public string? UserId { get; set; }
     public T? Data { get; set; }
-    public KeyValuePair<string, object>[]? Updates { get; set; }
+    public KeyValuePair<string, string>[]? Updates { get; set; }
 }
 
 public enum EventType

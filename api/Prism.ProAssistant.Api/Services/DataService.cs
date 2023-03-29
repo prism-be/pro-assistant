@@ -17,7 +17,6 @@ public interface IDataService
     Task<List<T>> SearchAsync<T>(List<SearchFilter> request) where T : IDataModel;
     Task<T> SingleAsync<T>(string id) where T : IDataModel;
     Task<T?> SingleOrDefaultAsync<T>(string id) where T : IDataModel;
-    Task<UpsertResult> UpdateAsync<T>(T request, params string[] properties) where T : IDataModel;
     Task UpdateManyAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel;
     Task<string> UploadFromBytesAsync(string fileName, byte[] bytes);
 }
@@ -70,21 +69,6 @@ public class DataService : IDataService
         var collection = await _userOrganizationService.GetUserCollection<T>();
         IAsyncCursor<T?> query = await collection.FindAsync<T>(Builders<T>.Filter.Eq(x => x.Id, id));
         return await query.SingleOrDefaultAsync();
-    }
-
-    public async Task<UpsertResult> UpdateAsync<T>(T request, params string[] properties) where T : IDataModel
-    {
-        _logger.LogInformation("UpdateAsync - {Type}({ItemId}) - {UserId}", typeof(T).Name, request.Id, _userOrganizationService.GetUserId());
-
-        var collection = await _userOrganizationService.GetUserCollection<T>();
-
-        var updates = (from property in properties
-            let value = request.GetType().GetProperty(property)?.GetValue(request)
-            select Builders<T>.Update.Set(property, value)).ToList();
-
-        await collection.UpdateOneAsync(Builders<T>.Filter.Eq(x => x.Id, request.Id), Builders<T>.Update.Combine(updates));
-
-        return new UpsertResult(request.Id);
     }
 
     public async Task<List<UpsertResult>> ReplaceManyAsync<T>(List<T> request) where T : IDataModel

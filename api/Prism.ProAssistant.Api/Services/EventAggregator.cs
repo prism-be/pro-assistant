@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using System.Text.Json;
+using MongoDB.Driver;
 using Prism.ProAssistant.Api.Models;
 
 namespace Prism.ProAssistant.Api.Services;
@@ -65,6 +66,30 @@ public class EventAggregator : IEventAggregator
                 return e.Data;
             case EventType.Delete:
                 return default;
+            case EventType.Update:
+                if (item == null)
+                {
+                    throw new InvalidOperationException("Cannot update a null item.");
+                }
+                
+                if (e.Updates == null)
+                {
+                    throw new InvalidOperationException("Cannot apply null updates.");
+                }
+
+                foreach (var update in e.Updates)
+                {
+                    var property = item.GetType().GetProperty(update.Key);
+                    if (property == null)
+                    {
+                        throw new InvalidOperationException($"Property {update.Key} does not exist on type {typeof(T).Name}.");
+                    }
+
+                    var value = JsonSerializer.Deserialize(update.Value, property.PropertyType);
+                    property.SetValue(item, value);
+                }
+
+                return item;
             default:
                 throw new NotSupportedException($"Event type {e.EventType} is not supported.");
         }
