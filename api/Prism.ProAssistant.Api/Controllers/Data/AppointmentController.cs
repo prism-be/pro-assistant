@@ -46,7 +46,7 @@ public class AppointmentController : Controller, IDataController<Appointment>
     {
         await EnsureContact(request);
 
-        return await _dataService.ReplaceAsync(request);
+        return await _eventService.ReplaceAsync(request);
     }
 
     [HttpGet]

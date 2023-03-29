@@ -56,6 +56,6 @@ public class DocumentConfigurationController : Controller, IDataController<Docum
     [Route("api/data/document-configurations/update")]
     public async Task<UpsertResult> Update([FromBody] DocumentConfiguration request)
     {
-        return await _dataService.ReplaceAsync(request);
+        return await _eventService.ReplaceAsync(request);
     }
 }

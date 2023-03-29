@@ -49,7 +49,7 @@ public class SettingController : Controller, IDataController<Setting>
     [Route("api/data/settings/update")]
     public async Task<UpsertResult> Update([FromBody] Setting request)
     {
-        return await _dataService.ReplaceAsync(request);
+        return await _eventService.ReplaceAsync(request);
     }
 
     [HttpPost]

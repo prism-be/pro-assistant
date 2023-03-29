@@ -61,6 +61,7 @@ public class EventAggregator : IEventAggregator
         switch (e.EventType)
         {
             case EventType.Insert:
+            case EventType.Replace:
                 return e.Data;
             case EventType.Delete:
                 return default;

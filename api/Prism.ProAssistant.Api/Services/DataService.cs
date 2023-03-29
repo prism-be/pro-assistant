@@ -13,7 +13,6 @@ public interface IDataService
     Task<byte[]?> GetFileAsync(string id);
     Task<string> GetFileNameAsync(string id);
     Task<List<T>> ListAsync<T>() where T : IDataModel;
-    Task<UpsertResult> ReplaceAsync<T>(T request) where T : IDataModel;
     Task<List<UpsertResult>> ReplaceManyAsync<T>(List<T> request) where T : IDataModel;
     Task<List<T>> SearchAsync<T>(List<SearchFilter> request) where T : IDataModel;
     Task<T> SingleAsync<T>(string id) where T : IDataModel;
@@ -85,15 +84,6 @@ public class DataService : IDataService
 
         await collection.UpdateOneAsync(Builders<T>.Filter.Eq(x => x.Id, request.Id), Builders<T>.Update.Combine(updates));
 
-        return new UpsertResult(request.Id);
-    }
-
-    public async Task<UpsertResult> ReplaceAsync<T>(T request) where T : IDataModel
-    {
-        _logger.LogInformation("ReplaceAsync - {Type}({ItemId}) - {UserId}", typeof(T).Name, request.Id, _userOrganizationService.GetUserId());
-
-        var collection = await _userOrganizationService.GetUserCollection<T>();
-        request = await collection.FindOneAndReplaceAsync(Builders<T>.Filter.Eq(x => x.Id, request.Id), request);
         return new UpsertResult(request.Id);
     }
 

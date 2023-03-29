@@ -50,7 +50,7 @@ public class ContactController : Controller, IDataController<Contact>
     [Route("api/data/contacts/update")]
     public async Task<UpsertResult> Update([FromBody] Contact request)
     {
-        var result = await _dataService.ReplaceAsync(request);
+        var result = await _eventService.ReplaceAsync(request);
 
         var filter = Builders<Appointment>.Filter.Eq(x => x.ContactId, request.Id);
         var update = Builders<Appointment>.Update.Combine(

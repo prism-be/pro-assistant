@@ -6,13 +6,14 @@ public interface IEventService
 {
     Task<UpsertResult> CreateAsync<T>(T data) where T : IDataModel;
     Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
+    Task<UpsertResult> ReplaceAsync<T>(T request) where T : IDataModel;
 }
 
 public class EventService : IEventService
 {
+    private readonly IEventAggregator _eventAggregator;
     private readonly ILogger<EventService> _logger;
     private readonly IUserOrganizationService _userOrganizationService;
-    private readonly IEventAggregator _eventAggregator;
 
     public EventService(IUserOrganizationService userOrganizationService, ILogger<EventService> logger, IEventAggregator eventAggregator)
     {
@@ -44,7 +45,7 @@ public class EventService : IEventService
     public async Task<bool> DeleteAsync<T>(string id) where T : IDataModel
     {
         _logger.LogInformation("DeleteAsync - {Id} - {Type} - {UserId}", id, typeof(T).Name, _userOrganizationService.GetUserId());
-        
+
         var e = new Event<T>
         {
             ObjectId = id,
@@ -54,8 +55,26 @@ public class EventService : IEventService
 
         await Save(e);
         await _eventAggregator.AggregateAsync<T>(id);
-        
+
         return true;
+    }
+
+    public async Task<UpsertResult> ReplaceAsync<T>(T request) where T : IDataModel
+    {
+        _logger.LogInformation("ReplaceAsync - {Id} - {Type} - {UserId}", request.Id, typeof(T).Name, _userOrganizationService.GetUserId());
+
+        var e = new Event<T>
+        {
+            ObjectId = request.Id,
+            EventType = EventType.Replace,
+            Data = request,
+            UserId = _userOrganizationService.GetUserId()
+        };
+
+        await Save(e);
+        await _eventAggregator.AggregateAsync<T>(request.Id);
+
+        return new UpsertResult(request.Id);
     }
 
     private async Task Save<T>(Event<T> e) where T : IDataModel

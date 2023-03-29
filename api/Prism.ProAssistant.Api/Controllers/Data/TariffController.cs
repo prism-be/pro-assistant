@@ -43,7 +43,7 @@ public class TariffController : Controller, IDataController<Tariff>
     [Route("api/data/tariffs/update")]
     public async Task<UpsertResult> Update([FromBody] Tariff request)
     {
-        var updated = await _dataService.ReplaceAsync(request);
+        var updated = await _eventService.ReplaceAsync(request);
         
         var filter = Builders<Appointment>.Filter.Eq(x => x.TypeId, request.Id);
         var update = Builders<Appointment>.Update.Combine(

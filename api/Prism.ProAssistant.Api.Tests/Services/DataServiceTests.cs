@@ -144,49 +144,6 @@ public class DataServiceTests
     }
 
     [Fact]
-    public async Task ReplaceAsync_Ok()
-    {
-        // Arrange
-        var id = Identifier.GenerateString();
-        var contact = new Contact
-        {
-            Id = id
-        };
-
-        var logger = new Mock<ILogger<DataService>>();
-        var userOrganizationService = new Mock<IUserOrganizationService>();
-
-        var collection = new Mock<IMongoCollection<Contact>>();
-        collection.SetupCollection(contact);
-        collection.Setup(x => x.FindOneAndReplaceAsync(
-                It.IsAny<FilterDefinition<Contact>>(),
-                It.IsAny<Contact>(),
-                It.IsAny<FindOneAndReplaceOptions<Contact>>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(contact);
-
-        userOrganizationService.Setup(x => x.GetUserCollection<Contact>()).ReturnsAsync(collection.Object);
-
-        // Act
-        var service = new DataService(userOrganizationService.Object, logger.Object);
-        var result = await service.ReplaceAsync(contact);
-
-        // Assert
-        collection.Verify(x => x.FindOneAndReplaceAsync(It.IsAny<FilterDefinition<Contact>>(), contact, It.IsAny<FindOneAndReplaceOptions<Contact>>(), CancellationToken.None), Times.Once);
-
-        result.Id.Should().Be(id);
-
-        logger.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((o, t) => true),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
-            Times.AtLeastOnce());
-    }
-
-    [Fact]
     public async Task ReplaceManyAsync_Ok()
     {
         // Arrange

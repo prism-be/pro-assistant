@@ -73,7 +73,7 @@ public class DataControllersTests
         await controller.Update(appointment);
 
         // Assert
-        dataService.Verify(x => x.ReplaceAsync(appointment), Times.Once);
+        eventService.Verify(x => x.ReplaceAsync(appointment), Times.Once);
         eventService.Verify(x => x.CreateAsync(It.Is<Contact>(c => c.FirstName == appointment.FirstName && c.LastName == appointment.LastName)));
         appointment.ContactId.Should().NotBeNull();
     }
@@ -266,7 +266,7 @@ public class DataControllersTests
 
         var item = itemFactory();
         await controller.Update(item);
-        mockDataService.Verify(x => x.ReplaceAsync(item), Times.Once);
+        mockEventService.Verify(x => x.ReplaceAsync(item), Times.Once);
 
         return mockDataService;
     }
