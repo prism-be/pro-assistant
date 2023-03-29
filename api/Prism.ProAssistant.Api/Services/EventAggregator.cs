@@ -38,14 +38,7 @@ public class EventAggregator : IEventAggregator
         {
             foreach (var e in events.Current)
             {
-                switch (e.EventType)
-                {
-                    case EventType.Insert:
-                        item = ApplyInsert(e);
-                        break;
-                    default:
-                        throw new NotSupportedException($"Event type {e.EventType} is not supported.");
-                }
+                item = Apply(item, e);
             }
         }
 
@@ -63,8 +56,16 @@ public class EventAggregator : IEventAggregator
         }
     }
 
-    private static T? ApplyInsert<T>(Event<T> e) where T : IDataModel
+    private T? Apply<T>(T? item, Event<T> e) where T : IDataModel
     {
-        return e.Data;
+        switch (e.EventType)
+        {
+            case EventType.Insert:
+                return e.Data;
+            case EventType.Delete:
+                return default;
+            default:
+                throw new NotSupportedException($"Event type {e.EventType} is not supported.");
+        }
     }
 }

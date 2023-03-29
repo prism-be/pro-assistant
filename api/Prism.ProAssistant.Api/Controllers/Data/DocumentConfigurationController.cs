@@ -21,7 +21,7 @@ public class DocumentConfigurationController : Controller, IDataController<Docum
     [Route("api/data/document-configurations/{id}")]
     public async Task<OperationResult?> Delete(string id)
     {
-        return OperationResult.From(await _dataService.DeleteAsync<DocumentConfiguration>(id));
+        return OperationResult.From(await _eventService.DeleteAsync<DocumentConfiguration>(id));
     }
 
     [HttpPost]

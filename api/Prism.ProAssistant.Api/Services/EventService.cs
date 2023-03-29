@@ -5,6 +5,7 @@ namespace Prism.ProAssistant.Api.Services;
 public interface IEventService
 {
     Task<UpsertResult> CreateAsync<T>(T data) where T : IDataModel;
+    Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
 }
 
 public class EventService : IEventService
@@ -38,6 +39,23 @@ public class EventService : IEventService
         await _eventAggregator.AggregateAsync<T>(data.Id);
 
         return new UpsertResult(data.Id);
+    }
+
+    public async Task<bool> DeleteAsync<T>(string id) where T : IDataModel
+    {
+        _logger.LogInformation("DeleteAsync - {Id} - {Type} - {UserId}", id, typeof(T).Name, _userOrganizationService.GetUserId());
+        
+        var e = new Event<T>
+        {
+            ObjectId = id,
+            EventType = EventType.Delete,
+            UserId = _userOrganizationService.GetUserId()
+        };
+
+        await Save(e);
+        await _eventAggregator.AggregateAsync<T>(id);
+        
+        return true;
     }
 
     private async Task Save<T>(Event<T> e) where T : IDataModel

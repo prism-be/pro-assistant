@@ -119,7 +119,7 @@ public class DataControllersTests
         await controller.Delete(id);
 
         // Assert
-        mockDataService.Verify(x => x.DeleteAsync<DocumentConfiguration>(id), Times.Once);
+        mockEventService.Verify(x => x.DeleteAsync<DocumentConfiguration>(id), Times.Once);
     }
 
     [Fact]

@@ -13,38 +13,6 @@ namespace Prism.ProAssistant.Api.Tests.Services;
 public class DataServiceTests
 {
     [Fact]
-    public async Task DeleteAsync_Ok()
-    {
-        // Arrange
-        var logger = new Mock<ILogger<DataService>>();
-        var userOrganizationService = new Mock<IUserOrganizationService>();
-
-        var collection = new Mock<IMongoCollection<Contact>>();
-        collection.Setup(x => x.DeleteOneAsync(It.IsAny<FilterDefinition<Contact>>(), CancellationToken.None))
-            .ReturnsAsync(new DeleteResult.Acknowledged(1));
-
-        userOrganizationService.Setup(x => x.GetUserCollection<Contact>()).ReturnsAsync(collection.Object);
-
-        var id = Identifier.GenerateString();
-
-        // Act
-        var service = new DataService(userOrganizationService.Object, logger.Object);
-        await service.DeleteAsync<Contact>(id);
-
-        // Assert
-        collection.Verify(x => x.DeleteOneAsync(It.IsAny<FilterDefinition<Contact>>(), CancellationToken.None), Times.Once);
-
-        logger.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((o, t) => true),
-                It.IsAny<Exception>(),
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
-            Times.AtLeastOnce());
-    }
-
-    [Fact]
     public async Task DeleteFileAsync_Ok()
     {
         // Arrange

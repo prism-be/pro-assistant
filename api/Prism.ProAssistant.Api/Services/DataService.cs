@@ -9,7 +9,6 @@ namespace Prism.ProAssistant.Api.Services;
 
 public interface IDataService
 {
-    Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
     Task DeleteFileAsync(string id);
     Task<byte[]?> GetFileAsync(string id);
     Task<string> GetFileNameAsync(string id);
@@ -128,15 +127,6 @@ public class DataService : IDataService
 
         var collection = await _userOrganizationService.GetUserCollection<T>();
         await collection.UpdateManyAsync(filter, update);
-    }
-
-    public async Task<bool> DeleteAsync<T>(string id) where T : IDataModel
-    {
-        _logger.LogInformation("DeleteAsync - {Type}({ItemId}) - {UserId}", typeof(T).Name, id, _userOrganizationService.GetUserId());
-
-        var collection = await _userOrganizationService.GetUserCollection<T>();
-        var result = await collection.DeleteOneAsync(Builders<T>.Filter.Eq(x => x.Id, id));
-        return result.IsAcknowledged && result.DeletedCount > 0;
     }
 
     public async Task<string> UploadFromBytesAsync(string fileName, byte[] bytes)
