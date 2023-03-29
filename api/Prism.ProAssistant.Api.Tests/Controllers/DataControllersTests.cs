@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Controllers.Data;
 using Prism.ProAssistant.Api.Models;
@@ -95,7 +93,7 @@ public class DataControllersTests
     {
         var id = Identifier.GenerateString();
 
-        var dataService = await CheckUpdate((dataService, eventService) => new ContactController(dataService.Object, eventService.Object), () => new Contact
+        var eventService = await CheckUpdate((dataService, eventService) => new ContactController(dataService.Object, eventService.Object), () => new Contact
         {
             Id = id,
             FirstName = Identifier.GenerateString(),
@@ -103,7 +101,7 @@ public class DataControllersTests
             Title = Identifier.GenerateString()
         });
 
-        dataService.Verify(x => x.UpdateManyAsync(It.Is<FilterDefinition<Appointment>>(t => Check(t, nameof(Appointment.ContactId), id)), It.IsAny<UpdateDefinition<Appointment>>()), Times.Once);
+        eventService.Verify(x => x.UpdateManyAsync<Appointment>(It.Is<FieldValue>(t => t.Field == nameof(Appointment.ContactId) && t.Value!.ToString() == id), It.IsAny<FieldValue[]>()), Times.Once);
     }
 
     [Fact]
@@ -163,7 +161,7 @@ public class DataControllersTests
         });
 
         // Assert
-        mockDataService.Verify(x => x.ReplaceManyAsync(It.IsAny<List<Setting>>()), Times.Once);
+        mockEventService.Verify(x => x.ReplaceManyAsync(It.IsAny<List<Setting>>()), Times.Once);
     }
 
     [Fact]
@@ -181,23 +179,13 @@ public class DataControllersTests
     {
         var id = Identifier.GenerateString();
 
-        var dataService = await CheckUpdate((dataService, eventService) => new TariffController(dataService.Object, eventService.Object), () => new Tariff
+        var eventService = await CheckUpdate((dataService, eventService) => new TariffController(dataService.Object, eventService.Object), () => new Tariff
         {
             Id = id,
             Name = Identifier.GenerateString()
         });
 
-        dataService.Verify(x => x.UpdateManyAsync(It.Is<FilterDefinition<Appointment>>(t => Check(t, nameof(Appointment.TypeId), id)), It.IsAny<UpdateDefinition<Appointment>>()), Times.Once);
-    }
-
-    private static bool Check<T>(FilterDefinition<T> filterDefinition, string propertyName, string value) where T : IDataModel
-    {
-        var serializerRegistry = BsonSerializer.SerializerRegistry;
-        var documentSerializer = serializerRegistry.GetSerializer<T>();
-
-        var rendered = filterDefinition.Render(documentSerializer, serializerRegistry);
-
-        return rendered[propertyName]?.ToString() == value;
+        eventService.Verify(x => x.UpdateManyAsync<Appointment>(It.Is<FieldValue>(t => t.Field == nameof(Appointment.TypeId) && t.Value!.ToString() == id), It.IsAny<FieldValue[]>()), Times.Once);
     }
 
     private async static Task CheckInsert<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
@@ -258,7 +246,7 @@ public class DataControllersTests
         mockDataService.Verify(x => x.SingleOrDefaultAsync<T>(id), Times.Once);
     }
 
-    private async static Task<Mock<IDataService>> CheckUpdate<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task<Mock<IEventService>> CheckUpdate<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         var mockDataService = new Mock<IDataService>();
         var mockEventService = new Mock<IEventService>();
@@ -268,7 +256,7 @@ public class DataControllersTests
         await controller.Update(item);
         mockEventService.Verify(x => x.ReplaceAsync(item), Times.Once);
 
-        return mockDataService;
+        return mockEventService;
     }
 
     private async Task TestCrud<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel

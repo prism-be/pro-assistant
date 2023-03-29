@@ -29,7 +29,7 @@ public class DocumentController : Controller
         var appointment = await _dataService.SingleAsync<Appointment>(appointmentId);
 
         appointment.Documents.Remove(appointment.Documents.Single(x => x.Id == documentId));
-        await _eventService.UpdateAsync<Appointment>(appointment.Id, new KeyValuePair<string, object>(nameof(appointment.Documents), appointment.Documents));
+        await _eventService.UpdateAsync<Appointment>(appointment.Id, new FieldValue(nameof(appointment.Documents), appointment.Documents));
 
         await _dataService.DeleteFileAsync(documentId);
     }

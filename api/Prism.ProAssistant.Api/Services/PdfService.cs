@@ -142,7 +142,7 @@ public class PdfService : IPdfService
 
         appointment.Documents.Insert(0, document);
 
-        await _eventService.UpdateAsync<Appointment>(appointment.Id, new KeyValuePair<string, object>(nameof(appointment.Documents), appointment.Documents));
+        await _eventService.UpdateAsync<Appointment>(appointment.Id, new FieldValue(nameof(appointment.Documents), appointment.Documents));
 
         _logger.LogInformation("Document {itemId} was saved for Appointment {appointmentId}", document.Id, appointment.Id);
     }

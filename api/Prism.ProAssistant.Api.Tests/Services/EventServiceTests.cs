@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Models;
@@ -95,7 +96,7 @@ public class EventServiceTests
 
         // Act
         var service = new EventService(userOrganizationService.Object, logger.Object, aggregator.Object);
-        var result = await service.ReplaceAsync(contact);
+        await service.ReplaceAsync(contact);
 
         // Assert
         collection.Verify(x => x.InsertOneAsync(It.Is<Event<Contact>>(c => c.Data == contact && c.EventType == EventType.Replace), null, CancellationToken.None), Times.Once);
@@ -109,6 +110,54 @@ public class EventServiceTests
                 It.IsAny<Exception>(),
                 It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
             Times.AtLeastOnce());
+    }
+
+    [Fact]
+    public async Task ReplaceManyAsync_ShouldInsert()
+    {
+        // Arrange
+        var id1 = Identifier.GenerateString();
+        var contact1 = new Contact
+        {
+            Id = id1
+        };
+
+        var id2 = Identifier.GenerateString();
+        var contact2 = new Contact
+        {
+            Id = id2
+        };
+
+        var logger = new Mock<ILogger<EventService>>();
+        var userOrganizationService = new Mock<IUserOrganizationService>();
+
+        var collection = new Mock<IMongoCollection<Event<Contact>>>();
+        userOrganizationService.Setup(x => x.GetUserEventCollection<Contact>()).ReturnsAsync(collection.Object);
+
+        var aggregator = new Mock<IEventAggregator>();
+
+        // Act
+        var service = new EventService(userOrganizationService.Object, logger.Object, aggregator.Object);
+        var result = await service.ReplaceManyAsync(new List<Contact>
+            { contact1, contact2 });
+
+        // Assert
+        collection.Verify(x => x.InsertOneAsync(It.Is<Event<Contact>>(c => c.Data == contact1 && c.EventType == EventType.Replace), null, CancellationToken.None), Times.Once);
+        aggregator.Verify(x => x.AggregateAsync<Contact>(contact1.Id), Times.Once);
+
+        collection.Verify(x => x.InsertOneAsync(It.Is<Event<Contact>>(c => c.Data == contact2 && c.EventType == EventType.Replace), null, CancellationToken.None), Times.Once);
+        aggregator.Verify(x => x.AggregateAsync<Contact>(contact2.Id), Times.Once);
+
+        result.Count.Should().Be(2);
+
+        logger.Verify(
+            x => x.Log(
+                LogLevel.Information,
+                It.IsAny<EventId>(),
+                It.Is<It.IsAnyType>((o, t) => true),
+                It.IsAny<Exception>(),
+                It.IsAny<Func<It.IsAnyType, Exception, string>>()!),
+            Times.AtLeast(2));
     }
 
     [Fact]
@@ -131,7 +180,7 @@ public class EventServiceTests
 
         // Act
         var service = new EventService(userOrganizationService.Object, logger.Object, aggregator.Object);
-        await service.UpdateAsync<Contact>(contact.Id, new KeyValuePair<string, object>(nameof(Contact.Id), contact.Id));
+        await service.UpdateAsync<Contact>(contact.Id, new FieldValue(nameof(Contact.Id), contact.Id));
 
         // Assert
         collection.Verify(x => x.InsertOneAsync(It.Is<Event<Contact>>(c => c.ObjectId == contact.Id && c.EventType == EventType.Update), null, CancellationToken.None), Times.Once);

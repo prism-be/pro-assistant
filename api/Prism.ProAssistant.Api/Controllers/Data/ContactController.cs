@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
 
@@ -52,16 +51,15 @@ public class ContactController : Controller, IDataController<Contact>
     {
         var result = await _eventService.ReplaceAsync(request);
 
-        var filter = Builders<Appointment>.Filter.Eq(x => x.ContactId, request.Id);
-        var update = Builders<Appointment>.Update.Combine(
-            Builders<Appointment>.Update.Set(x => x.FirstName, request.FirstName),
-            Builders<Appointment>.Update.Set(x => x.LastName, request.LastName),
-            Builders<Appointment>.Update.Set(x => x.BirthDate, request.BirthDate),
-            Builders<Appointment>.Update.Set(x => x.PhoneNumber, request.PhoneNumber),
-            Builders<Appointment>.Update.Set(x => x.Title, $"{request.LastName} {request.FirstName}")
-        );
+        var filter = new FieldValue(nameof(Appointment.ContactId), request.Id);
 
-        await _dataService.UpdateManyAsync(filter, update);
+        await _eventService.UpdateManyAsync<Appointment>(filter,
+            new FieldValue(nameof(Appointment.FirstName), request.FirstName),
+            new FieldValue(nameof(Appointment.LastName), request.LastName),
+            new FieldValue(nameof(Appointment.BirthDate), request.BirthDate),
+            new FieldValue(nameof(Appointment.PhoneNumber), request.PhoneNumber),
+            new FieldValue(nameof(Appointment.Title), $"{request.LastName} {request.FirstName}")
+        );
 
         return result;
     }

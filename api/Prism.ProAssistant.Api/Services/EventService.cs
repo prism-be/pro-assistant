@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using MongoDB.Driver;
 using Prism.ProAssistant.Api.Models;
 
 namespace Prism.ProAssistant.Api.Services;
@@ -8,8 +9,12 @@ public interface IEventService
     Task<UpsertResult> CreateAsync<T>(T data) where T : IDataModel;
     Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
     Task<UpsertResult> ReplaceAsync<T>(T item) where T : IDataModel;
-    Task<UpsertResult> UpdateAsync<T>(string id, params KeyValuePair<string, object>[] updates) where T : IDataModel;
+    Task<UpsertResult> UpdateAsync<T>(string id, params FieldValue[] updates) where T : IDataModel;
+    Task<List<UpsertResult>> ReplaceManyAsync<T>(List<T> items) where T : IDataModel;
+    Task<List<UpsertResult>> UpdateManyAsync<T>(FieldValue filter, params FieldValue[] updates) where T : IDataModel;
 }
+
+public record FieldValue(string Field, object? Value);
 
 public class EventService : IEventService
 {
@@ -79,7 +84,7 @@ public class EventService : IEventService
         return new UpsertResult(item.Id);
     }
 
-    public async Task<UpsertResult> UpdateAsync<T>(string id, params KeyValuePair<string, object>[] updates) where T : IDataModel
+    public async Task<UpsertResult> UpdateAsync<T>(string id, params FieldValue[] updates) where T : IDataModel
     {
         _logger.LogInformation("UpdateAsync - {Id} - {Type} - {UserId}", id, typeof(T).Name, _userOrganizationService.GetUserId());
 
@@ -87,7 +92,7 @@ public class EventService : IEventService
         {
             ObjectId = id,
             EventType = EventType.Update,
-            Updates = updates.Select(x => new KeyValuePair<string, string>(x.Key, JsonSerializer.Serialize(x.Value))).ToArray(),
+            Updates = updates.Select(x => new KeyValuePair<string, string>(x.Field, JsonSerializer.Serialize(x.Value))).ToArray(),
             UserId = _userOrganizationService.GetUserId()
         };
 
@@ -95,6 +100,38 @@ public class EventService : IEventService
         await _eventAggregator.AggregateAsync<T>(id);
         
         return new UpsertResult(id);
+    }
+
+    public async Task<List<UpsertResult>> ReplaceManyAsync<T>(List<T> items) where T : IDataModel
+    {
+        var results = new List<UpsertResult>();
+        
+        foreach (var item in items)
+        {
+            var result = await ReplaceAsync(item);
+            results.Add(result);
+        }
+        
+        return results;
+    }
+
+    public async Task<List<UpsertResult>> UpdateManyAsync<T>(FieldValue filter, FieldValue[] updates) where T : IDataModel
+    {
+        var collection = await _userOrganizationService.GetUserCollection<T>();
+        var items = await collection.FindAsync(Builders<T>.Filter.Eq(filter.Field, filter.Value));
+        
+        var results = new List<UpsertResult>();
+
+        while (await items.MoveNextAsync())
+        {
+            foreach (var item in items.Current)
+            {
+                var result = await UpdateAsync<T>(item.Id, updates);
+                results.Add(result);
+            }
+        }
+        
+        return results;
     }
 
     private async Task Save<T>(Event<T> e) where T : IDataModel

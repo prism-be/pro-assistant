@@ -13,11 +13,11 @@ public interface IDataService
     Task<byte[]?> GetFileAsync(string id);
     Task<string> GetFileNameAsync(string id);
     Task<List<T>> ListAsync<T>() where T : IDataModel;
-    Task<List<UpsertResult>> ReplaceManyAsync<T>(List<T> request) where T : IDataModel;
+    
     Task<List<T>> SearchAsync<T>(List<SearchFilter> request) where T : IDataModel;
     Task<T> SingleAsync<T>(string id) where T : IDataModel;
     Task<T?> SingleOrDefaultAsync<T>(string id) where T : IDataModel;
-    Task UpdateManyAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel;
+    
     Task<string> UploadFromBytesAsync(string fileName, byte[] bytes);
 }
 
@@ -69,38 +69,6 @@ public class DataService : IDataService
         var collection = await _userOrganizationService.GetUserCollection<T>();
         IAsyncCursor<T?> query = await collection.FindAsync<T>(Builders<T>.Filter.Eq(x => x.Id, id));
         return await query.SingleOrDefaultAsync();
-    }
-
-    public async Task<List<UpsertResult>> ReplaceManyAsync<T>(List<T> request) where T : IDataModel
-    {
-        _logger.LogInformation("ReplaceManyAsync - {Type} - {UserId}", typeof(T).Name, _userOrganizationService.GetUserId());
-
-        var results = new List<UpsertResult>();
-        var collection = await _userOrganizationService.GetUserCollection<T>();
-
-        foreach (var item in request)
-        {
-            _logger.LogInformation("ReplaceManyAsync - {Type}({ItemId}) - {UserId}", typeof(T).Name, item.Id, _userOrganizationService.GetUserId());
-
-            var replaced = await collection.FindOneAndReplaceAsync(Builders<T>.Filter.Eq(x => x.Id, item.Id), item);
-
-            if (replaced == null)
-            {
-                await collection.InsertOneAsync(item);
-            }
-
-            results.Add(new UpsertResult(item.Id));
-        }
-
-        return results;
-    }
-
-    public async Task UpdateManyAsync<T>(FilterDefinition<T> filter, UpdateDefinition<T> update) where T : IDataModel
-    {
-        _logger.LogInformation("UpdateManyAsync - {Type} - {UserId}", typeof(T).Name, _userOrganizationService.GetUserId());
-
-        var collection = await _userOrganizationService.GetUserCollection<T>();
-        await collection.UpdateManyAsync(filter, update);
     }
 
     public async Task<string> UploadFromBytesAsync(string fileName, byte[] bytes)
