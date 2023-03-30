@@ -259,7 +259,7 @@ public class DataControllersTests
         return mockEventService;
     }
 
-    private async Task TestCrud<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task TestCrud<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         await CheckUpdate(factory, itemFactory);
         await CheckInsert(factory, itemFactory);

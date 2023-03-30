@@ -57,7 +57,7 @@ public class EventAggregator : IEventAggregator
         }
     }
 
-    private T? Apply<T>(T? item, Event<T> e) where T : IDataModel
+    private static T? Apply<T>(T? item, Event<T> e) where T : IDataModel
     {
         switch (e.EventType)
         {
