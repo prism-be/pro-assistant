@@ -1,17 +1,16 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Driver;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
 
 namespace Prism.ProAssistant.Api.Controllers.Maintenance;
 
 [Authorize]
-public class RebuildEventController: Controller
+public class RebuildEventController : Controller
 {
-    private readonly ILogger<RebuildEventController> _logger;
     private readonly IDataService _dataService;
     private readonly IEventService _eventService;
+    private readonly ILogger<RebuildEventController> _logger;
 
     public RebuildEventController(ILogger<RebuildEventController> logger, IDataService dataService, IEventService eventService)
     {
@@ -32,10 +31,11 @@ public class RebuildEventController: Controller
         await RebuildEvents<Tariff>();
     }
 
-    private async Task RebuildEvents<T>() where T: IDataModel
+    private async Task RebuildEvents<T>() where T : IDataModel
     {
         _logger.LogInformation("Rebuilding events for {collection}", typeof(T).Name);
         var items = await _dataService.ListAsync<T>();
+
         foreach (var item in items)
         {
             await _eventService.AggregateAsync(item);
