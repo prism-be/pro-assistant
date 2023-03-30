@@ -116,7 +116,7 @@ public class EventService : IEventService
         return results;
     }
 
-    public async Task<List<UpsertResult>> UpdateManyAsync<T>(FieldValue filter, FieldValue[] updates) where T : IDataModel
+    public async Task<List<UpsertResult>> UpdateManyAsync<T>(FieldValue filter, params FieldValue[] updates) where T : IDataModel
     {
         var collection = await _userOrganizationService.GetUserCollection<T>();
         var items = await collection.FindAsync(Builders<T>.Filter.Eq(filter.Field, filter.Value));
