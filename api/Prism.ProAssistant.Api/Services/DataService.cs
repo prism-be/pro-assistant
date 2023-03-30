@@ -13,11 +13,9 @@ public interface IDataService
     Task<byte[]?> GetFileAsync(string id);
     Task<string> GetFileNameAsync(string id);
     Task<List<T>> ListAsync<T>() where T : IDataModel;
-    
     Task<List<T>> SearchAsync<T>(List<SearchFilter> request) where T : IDataModel;
     Task<T> SingleAsync<T>(string id) where T : IDataModel;
     Task<T?> SingleOrDefaultAsync<T>(string id) where T : IDataModel;
-    
     Task<string> UploadFromBytesAsync(string fileName, byte[] bytes);
 }
 

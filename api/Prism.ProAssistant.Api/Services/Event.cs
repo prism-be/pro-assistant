@@ -18,5 +18,6 @@ public enum EventType
     Insert = 0,
     Update = 1,
     Replace = 2,
-    Delete = 3
+    Delete = 3,
+    Aggregate = 4
 }

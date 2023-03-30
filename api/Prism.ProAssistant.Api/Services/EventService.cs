@@ -6,11 +6,12 @@ namespace Prism.ProAssistant.Api.Services;
 
 public interface IEventService
 {
+    Task AggregateAsync<T>(T item) where T : IDataModel;
     Task<UpsertResult> CreateAsync<T>(T data) where T : IDataModel;
     Task<bool> DeleteAsync<T>(string id) where T : IDataModel;
     Task<UpsertResult> ReplaceAsync<T>(T item) where T : IDataModel;
-    Task<UpsertResult> UpdateAsync<T>(string id, params FieldValue[] updates) where T : IDataModel;
     Task<List<UpsertResult>> ReplaceManyAsync<T>(List<T> items) where T : IDataModel;
+    Task<UpsertResult> UpdateAsync<T>(string id, params FieldValue[] updates) where T : IDataModel;
     Task<List<UpsertResult>> UpdateManyAsync<T>(FieldValue filter, params FieldValue[] updates) where T : IDataModel;
 }
 
@@ -98,20 +99,20 @@ public class EventService : IEventService
 
         await Save(e);
         await _eventAggregator.AggregateAsync<T>(id);
-        
+
         return new UpsertResult(id);
     }
 
     public async Task<List<UpsertResult>> ReplaceManyAsync<T>(List<T> items) where T : IDataModel
     {
         var results = new List<UpsertResult>();
-        
+
         foreach (var item in items)
         {
             var result = await ReplaceAsync(item);
             results.Add(result);
         }
-        
+
         return results;
     }
 
@@ -119,7 +120,7 @@ public class EventService : IEventService
     {
         var collection = await _userOrganizationService.GetUserCollection<T>();
         var items = await collection.FindAsync(Builders<T>.Filter.Eq(filter.Field, filter.Value));
-        
+
         var results = new List<UpsertResult>();
 
         while (await items.MoveNextAsync())
@@ -130,8 +131,26 @@ public class EventService : IEventService
                 results.Add(result);
             }
         }
-        
+
         return results;
+    }
+
+    public async Task AggregateAsync<T>(T item) where T : IDataModel
+    {
+        _logger.LogInformation("AggregateAsync - {Id} - {Type} - {UserId}", item.Id, typeof(T).Name, _userOrganizationService.GetUserId());
+        var collection = await _userOrganizationService.GetUserEventCollection<T>();
+        await collection.DeleteManyAsync(Builders<Event<T>>.Filter.Eq(x => x.ObjectId, item.Id));
+        
+        var e = new Event<T>
+        {
+            ObjectId = item.Id,
+            EventType = EventType.Aggregate,
+            Data = item,
+            UserId = _userOrganizationService.GetUserId()
+        };
+        
+        await Save(e);
+        await _eventAggregator.AggregateAsync<T>(item.Id);
     }
 
     private async Task Save<T>(Event<T> e) where T : IDataModel

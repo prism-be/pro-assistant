@@ -63,6 +63,7 @@ public class EventAggregator : IEventAggregator
         {
             case EventType.Insert:
             case EventType.Replace:
+            case EventType.Aggregate:
                 return e.Data;
             case EventType.Delete:
                 return default;
@@ -71,7 +72,7 @@ public class EventAggregator : IEventAggregator
                 {
                     throw new InvalidOperationException("Cannot update a null item.");
                 }
-                
+
                 if (e.Updates == null)
                 {
                     throw new InvalidOperationException("Cannot apply null updates.");
@@ -80,6 +81,7 @@ public class EventAggregator : IEventAggregator
                 foreach (var update in e.Updates)
                 {
                     var property = item.GetType().GetProperty(update.Key);
+
                     if (property == null)
                     {
                         throw new InvalidOperationException($"Property {update.Key} does not exist on type {typeof(T).Name}.");
