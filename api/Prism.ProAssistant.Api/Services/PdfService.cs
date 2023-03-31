@@ -20,12 +20,14 @@ public interface IPdfService
 public class PdfService : IPdfService
 {
     private readonly IDataService _dataService;
+    private readonly IEventService _eventService;
     private readonly ILogger<PdfService> _logger;
 
-    public PdfService(IDataService dataService, ILogger<PdfService> logger)
+    public PdfService(IDataService dataService, ILogger<PdfService> logger, IEventService eventService)
     {
         _dataService = dataService;
         _logger = logger;
+        _eventService = eventService;
     }
 
     public async Task GenerateDocument([FromBody] DocumentRequest request)
@@ -43,19 +45,6 @@ public class PdfService : IPdfService
         var document = CreateDocument(appointment, contact, title, content);
         var bytes = document.GeneratePdf();
         await SaveDocument(appointment, title, bytes);
-    }
-
-    private static void WriteContactAddress(TableDescriptor table, Appointment appointment, Contact? contact)
-    {
-        table.Cell().Row(3).Column(1).ColumnSpan(3).AlignRight().Text(DateTime.Today.ToLongDateString()).FontSize(10).LineHeight(0.75f);
-
-        table.Cell().Row(4).Column(3).PaddingTop(1, Unit.Centimetre).Element(e => e.Height(5, Unit.Centimetre)).Column(c =>
-        {
-            c.Item().Text($"{contact?.Title} {contact?.LastName ?? appointment.LastName} {contact?.FirstName ?? appointment.FirstName}".Trim());
-            c.Item().Text($"{contact?.Street} {contact?.Number}".Trim());
-            c.Item().Text($"{contact?.ZipCode} {contact?.City}".Trim());
-            c.Item().Text(contact?.Country);
-        });
     }
 
     private Document CreateDocument(Appointment appointment, Contact? contact, string title, string content)
@@ -153,9 +142,22 @@ public class PdfService : IPdfService
 
         appointment.Documents.Insert(0, document);
 
-        await _dataService.ReplaceAsync(appointment);
+        await _eventService.UpdateAsync<Appointment>(appointment.Id, new FieldValue(nameof(appointment.Documents), appointment.Documents));
 
         _logger.LogInformation("Document {itemId} was saved for Appointment {appointmentId}", document.Id, appointment.Id);
+    }
+
+    private static void WriteContactAddress(TableDescriptor table, Appointment appointment, Contact? contact)
+    {
+        table.Cell().Row(3).Column(1).ColumnSpan(3).AlignRight().Text(DateTime.Today.ToLongDateString()).FontSize(10).LineHeight(0.75f);
+
+        table.Cell().Row(4).Column(3).PaddingTop(1, Unit.Centimetre).Element(e => e.Height(5, Unit.Centimetre)).Column(c =>
+        {
+            c.Item().Text($"{contact?.Title} {contact?.LastName ?? appointment.LastName} {contact?.FirstName ?? appointment.FirstName}".Trim());
+            c.Item().Text($"{contact?.Street} {contact?.Number}".Trim());
+            c.Item().Text($"{contact?.ZipCode} {contact?.City}".Trim());
+            c.Item().Text(contact?.Country);
+        });
     }
 
     private void WriteHeader(TableDescriptor table)

@@ -11,13 +11,27 @@ public class DocumentController : Controller
 {
     private readonly IDistributedCache _cache;
     private readonly IDataService _dataService;
+    private readonly IEventService _eventService;
     private readonly IPdfService _pdfService;
 
-    public DocumentController(IPdfService pdfService, IDataService dataService, IDistributedCache cache)
+    public DocumentController(IPdfService pdfService, IDataService dataService, IDistributedCache cache, IEventService eventService)
     {
         _pdfService = pdfService;
         _dataService = dataService;
         _cache = cache;
+        _eventService = eventService;
+    }
+
+    [HttpDelete]
+    [Route("api/document/{appointmentId}/{documentId}")]
+    public async Task Delete(string appointmentId, string documentId)
+    {
+        var appointment = await _dataService.SingleAsync<Appointment>(appointmentId);
+
+        appointment.Documents.Remove(appointment.Documents.Single(x => x.Id == documentId));
+        await _eventService.UpdateAsync<Appointment>(appointment.Id, new FieldValue(nameof(appointment.Documents), appointment.Documents));
+
+        await _dataService.DeleteFileAsync(documentId);
     }
 
     [AllowAnonymous]
@@ -71,17 +85,5 @@ public class DocumentController : Controller
     public async Task GenerateDocument([FromBody] DocumentRequest request)
     {
         await _pdfService.GenerateDocument(request);
-    }
-    
-    [HttpDelete]
-    [Route("api/document/{appointmentId}/{documentId}")]
-    public async Task Delete(string appointmentId, string documentId)
-    {
-        var appointment = await _dataService.SingleAsync<Appointment>(appointmentId);
-        
-        appointment.Documents.Remove(appointment.Documents.Single(x => x.Id == documentId));
-        await _dataService.UpdateAsync(appointment, nameof(appointment.Documents));
-        
-        await _dataService.DeleteFileAsync(documentId);
     }
 }

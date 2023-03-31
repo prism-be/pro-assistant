@@ -9,24 +9,26 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 public class DocumentConfigurationController : Controller, IDataController<DocumentConfiguration>
 {
     private readonly IDataService _dataService;
+    private readonly IEventService _eventService;
 
-    public DocumentConfigurationController(IDataService dataService)
+    public DocumentConfigurationController(IDataService dataService, IEventService eventService)
     {
         _dataService = dataService;
+        _eventService = eventService;
     }
 
     [HttpDelete]
     [Route("api/data/document-configurations/{id}")]
     public async Task<OperationResult?> Delete(string id)
     {
-        return OperationResult.From(await _dataService.DeleteAsync<DocumentConfiguration>(id));
+        return OperationResult.From(await _eventService.DeleteAsync<DocumentConfiguration>(id));
     }
 
     [HttpPost]
     [Route("api/data/document-configurations/insert")]
     public async Task<UpsertResult> Insert([FromBody] DocumentConfiguration request)
     {
-        return await _dataService.InsertAsync(request);
+        return await _eventService.CreateAsync(request);
     }
 
     [HttpGet]
@@ -54,6 +56,6 @@ public class DocumentConfigurationController : Controller, IDataController<Docum
     [Route("api/data/document-configurations/update")]
     public async Task<UpsertResult> Update([FromBody] DocumentConfiguration request)
     {
-        return await _dataService.ReplaceAsync(request);
+        return await _eventService.ReplaceAsync(request);
     }
 }

@@ -33,9 +33,11 @@ public class PdfServiceTests
         });
 
         SetupSettings(dataService);
+        
+        var eventService = new Mock<IEventService>();
 
         // Act
-        var service = new PdfService(dataService.Object, Mock.Of<ILogger<PdfService>>());
+        var service = new PdfService(dataService.Object, Mock.Of<ILogger<PdfService>>(), eventService.Object);
         await service.GenerateDocument(new DocumentRequest
             { AppointmentId = id, DocumentId = documentId });
 
@@ -75,8 +77,10 @@ public class PdfServiceTests
 
         SetupSettings(dataService);
 
+        var eventService = new Mock<IEventService>();
+        
         // Act
-        var service = new PdfService(dataService.Object, Mock.Of<ILogger<PdfService>>());
+        var service = new PdfService(dataService.Object, Mock.Of<ILogger<PdfService>>(), eventService.Object);
         await service.GenerateDocument(new DocumentRequest
             { AppointmentId = id, DocumentId = documentId });
 

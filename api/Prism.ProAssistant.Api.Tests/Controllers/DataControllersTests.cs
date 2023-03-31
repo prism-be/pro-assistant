@@ -1,6 +1,4 @@
 ﻿using FluentAssertions;
-using MongoDB.Bson.Serialization;
-using MongoDB.Driver;
 using Moq;
 using Prism.ProAssistant.Api.Controllers.Data;
 using Prism.ProAssistant.Api.Models;
@@ -24,21 +22,24 @@ public class DataControllersTests
         };
 
         var dataService = new Mock<IDataService>();
+        var eventService = new Mock<IEventService>();
+        eventService.Setup(x => x.CreateAsync(It.IsAny<Contact>()))
+            .ReturnsAsync(new UpsertResult(Identifier.GenerateString()));
 
         // Act
-        var controller = new AppointmentController(dataService.Object);
+        var controller = new AppointmentController(dataService.Object, eventService.Object);
         await controller.Insert(appointment);
 
         // Assert
-        dataService.Verify(x => x.InsertAsync(appointment), Times.Once);
-        dataService.Verify(x => x.InsertAsync(It.Is<Contact>(c => c.FirstName == appointment.FirstName && c.LastName == appointment.LastName)));
+        eventService.Verify(x => x.CreateAsync(appointment), Times.Once);
+        eventService.Verify(x => x.CreateAsync(It.Is<Contact>(c => c.FirstName == appointment.FirstName && c.LastName == appointment.LastName)));
         appointment.ContactId.Should().NotBeNull();
     }
 
     [Fact]
     public async Task Appointment_Ok()
     {
-        await TestCrud(service => new AppointmentController(service.Object), () => new Appointment
+        await TestCrud((dataService, eventService) => new AppointmentController(dataService.Object, eventService.Object), () => new Appointment
         {
             Id = Identifier.GenerateString(),
             FirstName = Identifier.GenerateString(),
@@ -61,21 +62,24 @@ public class DataControllersTests
         };
 
         var dataService = new Mock<IDataService>();
+        var eventService = new Mock<IEventService>();
+        eventService.Setup(x => x.CreateAsync(It.IsAny<Contact>()))
+            .ReturnsAsync(new UpsertResult(Identifier.GenerateString()));
 
         // Act
-        var controller = new AppointmentController(dataService.Object);
+        var controller = new AppointmentController(dataService.Object, eventService.Object);
         await controller.Update(appointment);
 
         // Assert
-        dataService.Verify(x => x.ReplaceAsync(appointment), Times.Once);
-        dataService.Verify(x => x.InsertAsync(It.Is<Contact>(c => c.FirstName == appointment.FirstName && c.LastName == appointment.LastName)));
+        eventService.Verify(x => x.ReplaceAsync(appointment), Times.Once);
+        eventService.Verify(x => x.CreateAsync(It.Is<Contact>(c => c.FirstName == appointment.FirstName && c.LastName == appointment.LastName)));
         appointment.ContactId.Should().NotBeNull();
     }
 
     [Fact]
     public async Task Contact_Ok()
     {
-        await TestCrud(service => new ContactController(service.Object), () => new Contact
+        await TestCrud((dataService, eventService) => new ContactController(dataService.Object, eventService.Object), () => new Contact
         {
             Id = Identifier.GenerateString(),
             FirstName = Identifier.GenerateString(),
@@ -89,7 +93,7 @@ public class DataControllersTests
     {
         var id = Identifier.GenerateString();
 
-        var dataService = await CheckUpdate(service => new ContactController(service.Object), () => new Contact
+        var eventService = await CheckUpdate((dataService, eventService) => new ContactController(dataService.Object, eventService.Object), () => new Contact
         {
             Id = id,
             FirstName = Identifier.GenerateString(),
@@ -97,7 +101,7 @@ public class DataControllersTests
             Title = Identifier.GenerateString()
         });
 
-        dataService.Verify(x => x.UpdateManyAsync(It.Is<FilterDefinition<Appointment>>(t => Check(t, nameof(Appointment.ContactId), id)), It.IsAny<UpdateDefinition<Appointment>>()), Times.Once);
+        eventService.Verify(x => x.UpdateManyAsync<Appointment>(It.Is<FieldValue>(t => t.Field == nameof(Appointment.ContactId) && t.Value!.ToString() == id), It.IsAny<FieldValue[]>()), Times.Once);
     }
 
     [Fact]
@@ -105,20 +109,21 @@ public class DataControllersTests
     {
         // Arrange
         var id = Identifier.GenerateString();
-        var mock = new Mock<IDataService>();
-        var controller = new DocumentConfigurationController(mock.Object);
+        var mockDataService = new Mock<IDataService>();
+        var mockEventService = new Mock<IEventService>();
+        var controller = new DocumentConfigurationController(mockDataService.Object, mockEventService.Object);
 
         // Act
         await controller.Delete(id);
 
         // Assert
-        mock.Verify(x => x.DeleteAsync<DocumentConfiguration>(id), Times.Once);
+        mockEventService.Verify(x => x.DeleteAsync<DocumentConfiguration>(id), Times.Once);
     }
 
     [Fact]
     public async Task DocumentConfiguration_Ok()
     {
-        await TestCrud(service => new DocumentConfigurationController(service.Object), () => new DocumentConfiguration
+        await TestCrud((dataService, eventService) => new DocumentConfigurationController(dataService.Object, eventService.Object), () => new DocumentConfiguration
         {
             Id = Identifier.GenerateString(),
             Title = Identifier.GenerateString()
@@ -128,7 +133,7 @@ public class DataControllersTests
     [Fact]
     public async Task Setting_Ok()
     {
-        await TestCrud(service => new SettingController(service.Object), () => new Setting
+        await TestCrud((dataService, eventService) => new SettingController(dataService.Object, eventService.Object), () => new Setting
         {
             Id = Identifier.GenerateString()
         });
@@ -138,8 +143,9 @@ public class DataControllersTests
     public async Task Setting_UpdateMany()
     {
         // Arrange
-        var mock = new Mock<IDataService>();
-        var controller = new SettingController(mock.Object);
+        var mockDataService = new Mock<IDataService>();
+        var mockEventService = new Mock<IEventService>();
+        var controller = new SettingController(mockDataService.Object, mockEventService.Object);
 
         // Act
         await controller.UpdateMany(new List<Setting>
@@ -155,13 +161,13 @@ public class DataControllersTests
         });
 
         // Assert
-        mock.Verify(x => x.ReplaceManyAsync(It.IsAny<List<Setting>>()), Times.Once);
+        mockEventService.Verify(x => x.ReplaceManyAsync(It.IsAny<List<Setting>>()), Times.Once);
     }
 
     [Fact]
     public async Task Tariff_Ok()
     {
-        await TestCrud(service => new TariffController(service.Object), () => new Tariff
+        await TestCrud((dataService, eventService) => new TariffController(dataService.Object, eventService.Object), () => new Tariff
         {
             Id = Identifier.GenerateString(),
             Name = Identifier.GenerateString()
@@ -173,92 +179,87 @@ public class DataControllersTests
     {
         var id = Identifier.GenerateString();
 
-        var dataService = await CheckUpdate(service => new TariffController(service.Object), () => new Tariff
+        var eventService = await CheckUpdate((dataService, eventService) => new TariffController(dataService.Object, eventService.Object), () => new Tariff
         {
             Id = id,
             Name = Identifier.GenerateString()
         });
 
-        dataService.Verify(x => x.UpdateManyAsync(It.Is<FilterDefinition<Appointment>>(t => Check(t, nameof(Appointment.TypeId), id)), It.IsAny<UpdateDefinition<Appointment>>()), Times.Once);
+        eventService.Verify(x => x.UpdateManyAsync<Appointment>(It.Is<FieldValue>(t => t.Field == nameof(Appointment.TypeId) && t.Value!.ToString() == id), It.IsAny<FieldValue[]>()), Times.Once);
     }
 
-    private static bool Check<T>(FilterDefinition<T> filterDefinition, string propertyName, string value) where T : IDataModel
+    private async static Task CheckInsert<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
-        var serializerRegistry = BsonSerializer.SerializerRegistry;
-        var documentSerializer = serializerRegistry.GetSerializer<T>();
-
-        var rendered = filterDefinition.Render(documentSerializer, serializerRegistry);
-
-        return rendered[propertyName]?.ToString() == value;
-    }
-
-    private async static Task CheckInsert<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
-    {
-        var mock = new Mock<IDataService>();
-        var controller = factory(mock);
+        var mockDataService = new Mock<IDataService>();
+        var mockEventService = new Mock<IEventService>();
+        var controller = factory(mockDataService, mockEventService);
 
         var item = itemFactory();
         await controller.Insert(item);
-        mock.Verify(x => x.InsertAsync(item), Times.Once);
+        mockEventService.Verify(x => x.CreateAsync(item), Times.Once);
     }
 
-    private async static Task CheckList<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task CheckList<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
-        var mock = new Mock<IDataService>();
-        mock.Setup(x => x.ListAsync<T>())
+        var mockDataService = new Mock<IDataService>();
+        mockDataService.Setup(x => x.ListAsync<T>())
             .ReturnsAsync(new List<T>
             {
                 itemFactory(),
                 itemFactory()
             });
-        var controller = factory(mock);
+        var mockEventService = new Mock<IEventService>();
+        var controller = factory(mockDataService, mockEventService);
         var result = await controller.List();
 
         result.Count.Should().Be(2);
-        mock.Verify(x => x.ListAsync<T>(), Times.Once);
+        mockDataService.Verify(x => x.ListAsync<T>(), Times.Once);
     }
 
-    private async static Task CheckSearch<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task CheckSearch<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         var filters = new List<SearchFilter>();
-        var mock = new Mock<IDataService>();
-        mock.Setup(x => x.SearchAsync<T>(filters))
+        var mockDataService = new Mock<IDataService>();
+        mockDataService.Setup(x => x.SearchAsync<T>(filters))
             .ReturnsAsync(new List<T>
             {
                 itemFactory(),
                 itemFactory()
             });
-        var controller = factory(mock);
+        var mockEventService = new Mock<IEventService>();
+        var controller = factory(mockDataService, mockEventService);
 
         var results = await controller.Search(filters);
-        mock.Verify(x => x.SearchAsync<T>(filters), Times.Once);
+        mockDataService.Verify(x => x.SearchAsync<T>(filters), Times.Once);
         results.Count.Should().Be(2);
     }
 
-    private async static Task CheckSingle<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task CheckSingle<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         var id = Identifier.GenerateString();
-        var mock = new Mock<IDataService>();
-        mock.Setup(x => x.SingleOrDefaultAsync<T>(id))!.ReturnsAsync(itemFactory);
-        var controller = factory(mock);
+        var mockDataService = new Mock<IDataService>();
+        mockDataService.Setup(x => x.SingleOrDefaultAsync<T>(id))!.ReturnsAsync(itemFactory);
+        var mockEventService = new Mock<IEventService>();
+        var controller = factory(mockDataService, mockEventService);
         var result = await controller.Single(id);
         result.Should().NotBeNull();
-        mock.Verify(x => x.SingleOrDefaultAsync<T>(id), Times.Once);
+        mockDataService.Verify(x => x.SingleOrDefaultAsync<T>(id), Times.Once);
     }
 
-    private async static Task<Mock<IDataService>> CheckUpdate<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task<Mock<IEventService>> CheckUpdate<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
-        var mock = new Mock<IDataService>();
-        var controller = factory(mock);
+        var mockDataService = new Mock<IDataService>();
+        var mockEventService = new Mock<IEventService>();
+        var controller = factory(mockDataService, mockEventService);
 
         var item = itemFactory();
         await controller.Update(item);
-        mock.Verify(x => x.ReplaceAsync(item), Times.Once);
+        mockEventService.Verify(x => x.ReplaceAsync(item), Times.Once);
 
-        return mock;
+        return mockEventService;
     }
 
-    private async Task TestCrud<T>(Func<Mock<IDataService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task TestCrud<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         await CheckUpdate(factory, itemFactory);
         await CheckInsert(factory, itemFactory);

@@ -9,10 +9,12 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 public class AppointmentController : Controller, IDataController<Appointment>
 {
     private readonly IDataService _dataService;
+    private readonly IEventService _eventService;
 
-    public AppointmentController(IDataService dataService)
+    public AppointmentController(IDataService dataService, IEventService eventService)
     {
         _dataService = dataService;
+        _eventService = eventService;
     }
 
     [HttpPost]
@@ -21,7 +23,7 @@ public class AppointmentController : Controller, IDataController<Appointment>
     {
         await EnsureContact(request);
 
-        return await _dataService.InsertAsync(request);
+        return await _eventService.CreateAsync(request);
     }
 
     [HttpGet]
@@ -44,7 +46,7 @@ public class AppointmentController : Controller, IDataController<Appointment>
     {
         await EnsureContact(request);
 
-        return await _dataService.ReplaceAsync(request);
+        return await _eventService.ReplaceAsync(request);
     }
 
     [HttpGet]
@@ -58,15 +60,16 @@ public class AppointmentController : Controller, IDataController<Appointment>
     {
         if (request.ContactId == null)
         {
-            request.ContactId = Identifier.GenerateString();
-            await _dataService.InsertAsync(new Contact
+            var result = await _eventService.CreateAsync(new Contact
             {
-                Id = request.ContactId,
+                Id = Identifier.GenerateString(),
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 BirthDate = request.BirthDate,
                 PhoneNumber = request.PhoneNumber
             });
+
+            request.ContactId = result.Id;
         }
     }
 }

@@ -8,5 +8,5 @@ namespace Prism.ProAssistant.Api.Models;
 
 public interface IDataModel
 {
-    string Id { get; }
+    string Id { get; set; }
 }
