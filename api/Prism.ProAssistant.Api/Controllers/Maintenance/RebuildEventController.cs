@@ -8,14 +8,14 @@ namespace Prism.ProAssistant.Api.Controllers.Maintenance;
 [Authorize]
 public class RebuildEventController : Controller
 {
-    private readonly IDataService _dataService;
+    private readonly IQueryService _queryService;
     private readonly IEventService _eventService;
     private readonly ILogger<RebuildEventController> _logger;
 
-    public RebuildEventController(ILogger<RebuildEventController> logger, IDataService dataService, IEventService eventService)
+    public RebuildEventController(ILogger<RebuildEventController> logger, IQueryService queryService, IEventService eventService)
     {
         _logger = logger;
-        _dataService = dataService;
+        _queryService = queryService;
         _eventService = eventService;
     }
 
@@ -34,7 +34,7 @@ public class RebuildEventController : Controller
     private async Task RebuildEvents<T>() where T : IDataModel
     {
         _logger.LogInformation("Rebuilding events for {collection}", typeof(T).Name);
-        var items = await _dataService.ListAsync<T>();
+        var items = await _queryService.ListAsync<T>();
 
         foreach (var item in items)
         {

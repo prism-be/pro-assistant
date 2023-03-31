@@ -49,7 +49,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IEventService, EventService>();
         services.AddScoped<IEventAggregator, EventAggregator>();
-        services.AddScoped<IDataService, DataService>();
+        services.AddScoped<IQueryService, QueryService>();
         services.AddScoped<IUserOrganizationService, UserOrganizationService>();
         services.AddScoped<IPdfService, PdfService>();
     }

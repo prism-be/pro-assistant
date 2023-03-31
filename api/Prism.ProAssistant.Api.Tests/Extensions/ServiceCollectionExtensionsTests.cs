@@ -33,7 +33,7 @@ public class ServiceCollectionExtensionsTests
         services.AddProAssistant();
 
         // Assert
-        services.Should().Contain(x => x.ServiceType == typeof(IDataService));
+        services.Should().Contain(x => x.ServiceType == typeof(IQueryService));
     }
 
     [Fact]

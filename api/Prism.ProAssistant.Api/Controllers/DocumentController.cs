@@ -10,28 +10,30 @@ namespace Prism.ProAssistant.Api.Controllers;
 public class DocumentController : Controller
 {
     private readonly IDistributedCache _cache;
-    private readonly IDataService _dataService;
+    private readonly IQueryService _queryService;
     private readonly IEventService _eventService;
     private readonly IPdfService _pdfService;
+    private readonly IFileService _fileService;
 
-    public DocumentController(IPdfService pdfService, IDataService dataService, IDistributedCache cache, IEventService eventService)
+    public DocumentController(IPdfService pdfService, IQueryService queryService, IDistributedCache cache, IEventService eventService, IFileService fileService)
     {
         _pdfService = pdfService;
-        _dataService = dataService;
+        _queryService = queryService;
         _cache = cache;
         _eventService = eventService;
+        _fileService = fileService;
     }
 
     [HttpDelete]
     [Route("api/document/{appointmentId}/{documentId}")]
     public async Task Delete(string appointmentId, string documentId)
     {
-        var appointment = await _dataService.SingleAsync<Appointment>(appointmentId);
+        var appointment = await _queryService.SingleAsync<Appointment>(appointmentId);
 
         appointment.Documents.Remove(appointment.Documents.Single(x => x.Id == documentId));
         await _eventService.UpdateAsync<Appointment>(appointment.Id, new FieldValue(nameof(appointment.Documents), appointment.Documents));
 
-        await _dataService.DeleteFileAsync(documentId);
+        await _fileService.DeleteFileAsync(documentId);
     }
 
     [AllowAnonymous]
@@ -50,7 +52,7 @@ public class DocumentController : Controller
 
         if (download)
         {
-            content.FileDownloadName = await _dataService.GetFileNameAsync(id);
+            content.FileDownloadName = await _fileService.GetFileNameAsync(id);
         }
 
         return content;
@@ -60,7 +62,7 @@ public class DocumentController : Controller
     [Route("api/document/download/{id}")]
     public async Task<DownloadReference> DownloadDocument(string id)
     {
-        var data = await _dataService.GetFileAsync(id);
+        var data = await _fileService.GetFileAsync(id);
 
         if (data == null)
         {

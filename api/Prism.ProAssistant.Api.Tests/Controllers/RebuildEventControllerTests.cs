@@ -13,7 +13,7 @@ public class RebuildEventControllerTests
     {
         // Arrange
         var logger = new Mock<ILogger<RebuildEventController>>();
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         var eventService = new Mock<IEventService>();
 
         dataService.Setup(x => x.ListAsync<Appointment>()).ReturnsAsync(new List<Appointment>

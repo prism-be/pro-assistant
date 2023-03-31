@@ -8,12 +8,12 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 [Authorize]
 public class SettingController : Controller, IDataController<Setting>
 {
-    private readonly IDataService _dataService;
+    private readonly IQueryService _queryService;
     private readonly IEventService _eventService;
 
-    public SettingController(IDataService dataService, IEventService eventService)
+    public SettingController(IQueryService queryService, IEventService eventService)
     {
-        _dataService = dataService;
+        _queryService = queryService;
         _eventService = eventService;
     }
 
@@ -28,21 +28,21 @@ public class SettingController : Controller, IDataController<Setting>
     [Route("api/data/settings")]
     public async Task<List<Setting>> List()
     {
-        return await _dataService.ListAsync<Setting>();
+        return await _queryService.ListAsync<Setting>();
     }
 
     [HttpPost]
     [Route("api/data/settings/search")]
     public async Task<List<Setting>> Search([FromBody] List<SearchFilter> request)
     {
-        return await _dataService.SearchAsync<Setting>(request);
+        return await _queryService.SearchAsync<Setting>(request);
     }
 
     [HttpGet]
     [Route("api/data/settings/{id}")]
     public async Task<Setting?> Single(string id)
     {
-        return await _dataService.SingleOrDefaultAsync<Setting>(id);
+        return await _queryService.SingleOrDefaultAsync<Setting>(id);
     }
 
     [HttpPost]
