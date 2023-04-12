@@ -32,8 +32,10 @@ jobs:
         with:
           images: prism-be/pro-assistant
           tags: |
-            latest
             ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
+            latest
+          labels: |
+            version: ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
           
       - name: Build and push
         uses: docker/build-push-action@v4
