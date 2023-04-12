@@ -30,7 +30,6 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: prism-be/pro-assistant
           tags: |
             ${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
             latest
