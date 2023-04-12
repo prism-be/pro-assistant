@@ -26,10 +26,15 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: prism-be/pro-assistant
+          
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: |
-            simonbaudart/pro-assistant:latest
-            simonbaudart/pro-assistant:${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
