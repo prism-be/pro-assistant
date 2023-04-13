@@ -8,12 +8,12 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 [Authorize]
 public class TariffController : Controller, IDataController<Tariff>
 {
-    private readonly IDataService _dataService;
+    private readonly IQueryService _queryService;
     private readonly IEventService _eventService;
 
-    public TariffController(IDataService dataService, IEventService eventService)
+    public TariffController(IQueryService queryService, IEventService eventService)
     {
-        _dataService = dataService;
+        _queryService = queryService;
         _eventService = eventService;
     }
 
@@ -28,14 +28,14 @@ public class TariffController : Controller, IDataController<Tariff>
     [Route("api/data/tariffs")]
     public async Task<List<Tariff>> List()
     {
-        return await _dataService.ListAsync<Tariff>();
+        return await _queryService.ListAsync<Tariff>();
     }
 
     [HttpPost]
     [Route("api/data/tariffs/search")]
     public async Task<List<Tariff>> Search([FromBody] List<SearchFilter> request)
     {
-        return await _dataService.SearchAsync<Tariff>(request);
+        return await _queryService.SearchAsync<Tariff>(request);
     }
 
     [HttpPost]
@@ -58,6 +58,6 @@ public class TariffController : Controller, IDataController<Tariff>
     [Route("api/data/tariffs/{id}")]
     public async Task<Tariff?> Single(string id)
     {
-        return await _dataService.SingleOrDefaultAsync<Tariff>(id);
+        return await _queryService.SingleOrDefaultAsync<Tariff>(id);
     }
 }

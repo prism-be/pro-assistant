@@ -8,12 +8,12 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 [Authorize]
 public class DocumentConfigurationController : Controller, IDataController<DocumentConfiguration>
 {
-    private readonly IDataService _dataService;
+    private readonly IQueryService _queryService;
     private readonly IEventService _eventService;
 
-    public DocumentConfigurationController(IDataService dataService, IEventService eventService)
+    public DocumentConfigurationController(IQueryService queryService, IEventService eventService)
     {
-        _dataService = dataService;
+        _queryService = queryService;
         _eventService = eventService;
     }
 
@@ -35,21 +35,21 @@ public class DocumentConfigurationController : Controller, IDataController<Docum
     [Route("api/data/document-configurations")]
     public async Task<List<DocumentConfiguration>> List()
     {
-        return await _dataService.ListAsync<DocumentConfiguration>();
+        return await _queryService.ListAsync<DocumentConfiguration>();
     }
 
     [HttpPost]
     [Route("api/data/document-configurations/search")]
     public async Task<List<DocumentConfiguration>> Search([FromBody] List<SearchFilter> request)
     {
-        return await _dataService.SearchAsync<DocumentConfiguration>(request);
+        return await _queryService.SearchAsync<DocumentConfiguration>(request);
     }
 
     [HttpGet]
     [Route("api/data/document-configurations/{id}")]
     public async Task<DocumentConfiguration?> Single(string id)
     {
-        return await _dataService.SingleOrDefaultAsync<DocumentConfiguration>(id);
+        return await _queryService.SingleOrDefaultAsync<DocumentConfiguration>(id);
     }
 
     [HttpPost]

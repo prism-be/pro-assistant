@@ -8,12 +8,12 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 [Authorize]
 public class ContactController : Controller, IDataController<Contact>
 {
-    private readonly IDataService _dataService;
+    private readonly IQueryService _queryService;
     private readonly IEventService _eventService;
 
-    public ContactController(IDataService dataService, IEventService eventService)
+    public ContactController(IQueryService queryService, IEventService eventService)
     {
-        _dataService = dataService;
+        _queryService = queryService;
         _eventService = eventService;
     }
 
@@ -28,21 +28,21 @@ public class ContactController : Controller, IDataController<Contact>
     [Route("api/data/contacts")]
     public async Task<List<Contact>> List()
     {
-        return await _dataService.ListAsync<Contact>();
+        return await _queryService.ListAsync<Contact>();
     }
 
     [HttpPost]
     [Route("api/data/contacts/search")]
     public async Task<List<Contact>> Search([FromBody] List<SearchFilter> request)
     {
-        return await _dataService.SearchAsync<Contact>(request);
+        return await _queryService.SearchAsync<Contact>(request);
     }
 
     [HttpGet]
     [Route("api/data/contacts/{id}")]
     public async Task<Contact?> Single(string id)
     {
-        return await _dataService.SingleOrDefaultAsync<Contact>(id);
+        return await _queryService.SingleOrDefaultAsync<Contact>(id);
     }
 
     [HttpPost]

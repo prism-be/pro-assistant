@@ -22,7 +22,7 @@ public class PdfServiceTests
             Title = Identifier.GenerateString()
         };
 
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         dataService.Setup(x => x.SingleAsync<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
         dataService.Setup(x => x.SingleAsync<DocumentConfiguration>(It.IsAny<string>())).ReturnsAsync(new DocumentConfiguration
         {
@@ -33,16 +33,17 @@ public class PdfServiceTests
         });
 
         SetupSettings(dataService);
-        
+
         var eventService = new Mock<IEventService>();
+        var fileService = new Mock<IFileService>();
 
         // Act
-        var service = new PdfService(dataService.Object, Mock.Of<ILogger<PdfService>>(), eventService.Object);
+        var service = new PdfService(dataService.Object, Mock.Of<ILogger<PdfService>>(), eventService.Object, fileService.Object);
         await service.GenerateDocument(new DocumentRequest
             { AppointmentId = id, DocumentId = documentId });
 
         // Assert
-        dataService.Verify(x => x.UploadFromBytesAsync(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Once);
+        fileService.Verify(x => x.UploadFromBytesAsync(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Once);
     }
 
     [Fact]
@@ -61,7 +62,7 @@ public class PdfServiceTests
             Title = Identifier.GenerateString()
         };
 
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         dataService.Setup(x => x.SingleAsync<Appointment>(It.IsAny<string>())).ReturnsAsync(appointment);
         dataService.Setup(x => x.SingleAsync<Contact>(It.IsAny<string>())).ReturnsAsync(new Contact
         {
@@ -78,17 +79,18 @@ public class PdfServiceTests
         SetupSettings(dataService);
 
         var eventService = new Mock<IEventService>();
-        
+        var fileService = new Mock<IFileService>();
+
         // Act
-        var service = new PdfService(dataService.Object, Mock.Of<ILogger<PdfService>>(), eventService.Object);
+        var service = new PdfService(dataService.Object, Mock.Of<ILogger<PdfService>>(), eventService.Object, fileService.Object);
         await service.GenerateDocument(new DocumentRequest
             { AppointmentId = id, DocumentId = documentId });
 
         // Assert
-        dataService.Verify(x => x.UploadFromBytesAsync(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Once);
+        fileService.Verify(x => x.UploadFromBytesAsync(It.IsAny<string>(), It.IsAny<byte[]>()), Times.Once);
     }
 
-    private static void SetupSettings(Mock<IDataService> dataService)
+    private static void SetupSettings(Mock<IQueryService> dataService)
     {
         dataService.Setup(x => x.SingleAsync<Setting>("document-header-name")).ReturnsAsync(new Setting
         {

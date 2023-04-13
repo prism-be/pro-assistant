@@ -19,15 +19,17 @@ public interface IPdfService
 
 public class PdfService : IPdfService
 {
-    private readonly IDataService _dataService;
+    private readonly IQueryService _queryService;
     private readonly IEventService _eventService;
     private readonly ILogger<PdfService> _logger;
+    private readonly IFileService _fileService;
 
-    public PdfService(IDataService dataService, ILogger<PdfService> logger, IEventService eventService)
+    public PdfService(IQueryService queryService, ILogger<PdfService> logger, IEventService eventService, IFileService fileService)
     {
-        _dataService = dataService;
+        _queryService = queryService;
         _logger = logger;
         _eventService = eventService;
+        _fileService = fileService;
     }
 
     public async Task GenerateDocument([FromBody] DocumentRequest request)
@@ -35,10 +37,10 @@ public class PdfService : IPdfService
         Thread.CurrentThread.CurrentUICulture = CultureInfo.CreateSpecificCulture("fr-be");
         Thread.CurrentThread.CurrentCulture = CultureInfo.CreateSpecificCulture("fr-be");
 
-        var documentConfiguration = await _dataService.SingleAsync<DocumentConfiguration>(request.DocumentId);
-        var appointment = await _dataService.SingleAsync<Appointment>(request.AppointmentId);
+        var documentConfiguration = await _queryService.SingleAsync<DocumentConfiguration>(request.DocumentId);
+        var appointment = await _queryService.SingleAsync<Appointment>(request.AppointmentId);
 
-        var contact = !string.IsNullOrEmpty(appointment.ContactId) ? await _dataService.SingleAsync<Contact>(appointment.ContactId) : null;
+        var contact = !string.IsNullOrEmpty(appointment.ContactId) ? await _queryService.SingleAsync<Contact>(appointment.ContactId) : null;
 
         var (title, content) = ReplaceContent(documentConfiguration, appointment, contact);
 
@@ -93,9 +95,9 @@ public class PdfService : IPdfService
 
     private string GetSettingValue(string id)
     {
-        var task = _dataService.SingleAsync<Setting>(id);
+        var task = _queryService.SingleAsync<Setting>(id);
         task.Wait();
-        return task.Result?.Value ?? throw new MissingConfigurationException("Setting not found.", id);
+        return task.Result.Value ?? throw new MissingConfigurationException("Setting not found.", id);
     }
 
     private (string title, string content) ReplaceContent(DocumentConfiguration documentConfiguration, Appointment appointment, Contact? contact)
@@ -130,7 +132,7 @@ public class PdfService : IPdfService
         var documentTitle = $"{appointment.StartDate:yyyy-MM-dd HH:mm} - {appointment.LastName} {appointment.FirstName} - {title}";
         var fileName = documentTitle.ReplaceSpecialChars(true) + ".pdf";
 
-        var fileId = await _dataService.UploadFromBytesAsync(fileName, bytes);
+        var fileId = await _fileService.UploadFromBytesAsync(fileName, bytes);
 
         var document = new BinaryDocument
         {

@@ -21,7 +21,7 @@ public class DataControllersTests
             Title = Identifier.GenerateString()
         };
 
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         var eventService = new Mock<IEventService>();
         eventService.Setup(x => x.CreateAsync(It.IsAny<Contact>()))
             .ReturnsAsync(new UpsertResult(Identifier.GenerateString()));
@@ -61,7 +61,7 @@ public class DataControllersTests
             Title = Identifier.GenerateString()
         };
 
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         var eventService = new Mock<IEventService>();
         eventService.Setup(x => x.CreateAsync(It.IsAny<Contact>()))
             .ReturnsAsync(new UpsertResult(Identifier.GenerateString()));
@@ -109,7 +109,7 @@ public class DataControllersTests
     {
         // Arrange
         var id = Identifier.GenerateString();
-        var mockDataService = new Mock<IDataService>();
+        var mockDataService = new Mock<IQueryService>();
         var mockEventService = new Mock<IEventService>();
         var controller = new DocumentConfigurationController(mockDataService.Object, mockEventService.Object);
 
@@ -143,7 +143,7 @@ public class DataControllersTests
     public async Task Setting_UpdateMany()
     {
         // Arrange
-        var mockDataService = new Mock<IDataService>();
+        var mockDataService = new Mock<IQueryService>();
         var mockEventService = new Mock<IEventService>();
         var controller = new SettingController(mockDataService.Object, mockEventService.Object);
 
@@ -188,9 +188,9 @@ public class DataControllersTests
         eventService.Verify(x => x.UpdateManyAsync<Appointment>(It.Is<FieldValue>(t => t.Field == nameof(Appointment.TypeId) && t.Value!.ToString() == id), It.IsAny<FieldValue[]>()), Times.Once);
     }
 
-    private async static Task CheckInsert<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task CheckInsert<T>(Func<Mock<IQueryService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
-        var mockDataService = new Mock<IDataService>();
+        var mockDataService = new Mock<IQueryService>();
         var mockEventService = new Mock<IEventService>();
         var controller = factory(mockDataService, mockEventService);
 
@@ -199,9 +199,9 @@ public class DataControllersTests
         mockEventService.Verify(x => x.CreateAsync(item), Times.Once);
     }
 
-    private async static Task CheckList<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task CheckList<T>(Func<Mock<IQueryService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
-        var mockDataService = new Mock<IDataService>();
+        var mockDataService = new Mock<IQueryService>();
         mockDataService.Setup(x => x.ListAsync<T>())
             .ReturnsAsync(new List<T>
             {
@@ -216,10 +216,10 @@ public class DataControllersTests
         mockDataService.Verify(x => x.ListAsync<T>(), Times.Once);
     }
 
-    private async static Task CheckSearch<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task CheckSearch<T>(Func<Mock<IQueryService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         var filters = new List<SearchFilter>();
-        var mockDataService = new Mock<IDataService>();
+        var mockDataService = new Mock<IQueryService>();
         mockDataService.Setup(x => x.SearchAsync<T>(filters))
             .ReturnsAsync(new List<T>
             {
@@ -234,10 +234,10 @@ public class DataControllersTests
         results.Count.Should().Be(2);
     }
 
-    private async static Task CheckSingle<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task CheckSingle<T>(Func<Mock<IQueryService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         var id = Identifier.GenerateString();
-        var mockDataService = new Mock<IDataService>();
+        var mockDataService = new Mock<IQueryService>();
         mockDataService.Setup(x => x.SingleOrDefaultAsync<T>(id))!.ReturnsAsync(itemFactory);
         var mockEventService = new Mock<IEventService>();
         var controller = factory(mockDataService, mockEventService);
@@ -246,9 +246,9 @@ public class DataControllersTests
         mockDataService.Verify(x => x.SingleOrDefaultAsync<T>(id), Times.Once);
     }
 
-    private async static Task<Mock<IEventService>> CheckUpdate<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task<Mock<IEventService>> CheckUpdate<T>(Func<Mock<IQueryService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
-        var mockDataService = new Mock<IDataService>();
+        var mockDataService = new Mock<IQueryService>();
         var mockEventService = new Mock<IEventService>();
         var controller = factory(mockDataService, mockEventService);
 
@@ -259,7 +259,7 @@ public class DataControllersTests
         return mockEventService;
     }
 
-    private async static Task TestCrud<T>(Func<Mock<IDataService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
+    private async static Task TestCrud<T>(Func<Mock<IQueryService>, Mock<IEventService>, IDataController<T>> factory, Func<T> itemFactory) where T : IDataModel
     {
         await CheckUpdate(factory, itemFactory);
         await CheckInsert(factory, itemFactory);

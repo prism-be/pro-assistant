@@ -26,5 +26,5 @@ public class DocumentConfiguration : IDataModel
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
     [JsonPropertyName("id")]
-    public string? Id { get; set; }
+    required public string Id { get; set; }
 }

@@ -20,7 +20,7 @@ public class DocumentControllerTests
         var appointmentId = Identifier.GenerateString();
 
         var cache = new Mock<IDistributedCache>();
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         var eventService = new Mock<IEventService>();
         var pdfService = new Mock<IPdfService>();
 
@@ -44,13 +44,15 @@ public class DocumentControllerTests
 
         dataService.Setup(x => x.SingleAsync<Appointment>(appointmentId))
             .ReturnsAsync(appointment);
+        
+        var fileService = new Mock<IFileService>();
 
         // Act
-        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object);
+        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object, fileService.Object);
         await controller.Delete(appointmentId, documentId);
 
         // Assert
-        dataService.Verify(x => x.DeleteFileAsync(documentId), Times.Once);
+        fileService.Verify(x => x.DeleteFileAsync(documentId), Times.Once);
         appointment.Documents.Should().BeEmpty();
     }
 
@@ -62,14 +64,16 @@ public class DocumentControllerTests
         var downloadKey = Identifier.GenerateString();
 
         var cache = new Mock<IDistributedCache>();
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         var eventService = new Mock<IEventService>();
         var pdfService = new Mock<IPdfService>();
 
         cache.Setup(x => x.GetAsync(downloadKey, CancellationToken.None)).ReturnsAsync(null as byte[]);
 
+        var fileService = new Mock<IFileService>();
+        
         // Act
-        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object);
+        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object, fileService.Object);
         var result = await controller.Download(documentId, downloadKey, true);
 
         // Assert
@@ -85,14 +89,16 @@ public class DocumentControllerTests
         var downloadKey = Identifier.GenerateString();
 
         var cache = new Mock<IDistributedCache>();
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         var eventService = new Mock<IEventService>();
         var pdfService = new Mock<IPdfService>();
 
         cache.Setup(x => x.GetAsync(downloadKey, CancellationToken.None)).ReturnsAsync(Array.Empty<byte>());
+        
+        var fileService = new Mock<IFileService>();
 
         // Act
-        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object);
+        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object, fileService.Object);
         var result = await controller.Download(documentId, downloadKey, true);
 
         // Assert
@@ -107,14 +113,15 @@ public class DocumentControllerTests
         var documentId = Identifier.GenerateString();
 
         var cache = new Mock<IDistributedCache>();
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         var eventService = new Mock<IEventService>();
         var pdfService = new Mock<IPdfService>();
 
-        dataService.Setup(x => x.GetFileAsync(documentId)).ReturnsAsync(Array.Empty<byte>());
+        var fileService = new Mock<IFileService>();
+        fileService.Setup(x => x.GetFileAsync(documentId)).ReturnsAsync(Array.Empty<byte>());
 
         // Act
-        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object);
+        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object, fileService.Object);
         var result = await controller.DownloadDocument(documentId);
 
         // Assert
@@ -131,14 +138,15 @@ public class DocumentControllerTests
         var documentId = Identifier.GenerateString();
 
         var cache = new Mock<IDistributedCache>();
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         var eventService = new Mock<IEventService>();
         var pdfService = new Mock<IPdfService>();
         
-        dataService.Setup(x => x.GetFileAsync(documentId)).ReturnsAsync(null as byte[]);
+        var fileService = new Mock<IFileService>();
+        fileService.Setup(x => x.GetFileAsync(documentId)).ReturnsAsync(null as byte[]);
 
         // Act
-        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object);
+        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object,fileService.Object);
         await controller.Invoking(c => c.DownloadDocument(documentId)).Should().ThrowAsync<NotFoundException>();
     }
 
@@ -153,12 +161,13 @@ public class DocumentControllerTests
         };
 
         var cache = new Mock<IDistributedCache>();
-        var dataService = new Mock<IDataService>();
+        var dataService = new Mock<IQueryService>();
         var eventService = new Mock<IEventService>();
         var pdfService = new Mock<IPdfService>();
+        var fileService = new Mock<IFileService>();
 
         // Act
-        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object);
+        var controller = new DocumentController(pdfService.Object, dataService.Object, cache.Object, eventService.Object, fileService.Object);
         await controller.GenerateDocument(request);
 
         // Assert

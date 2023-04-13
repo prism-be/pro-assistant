@@ -1,30 +1,25 @@
 ﻿using System.Text.RegularExpressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.GridFS;
 using Prism.ProAssistant.Api.Exceptions;
 using Prism.ProAssistant.Api.Models;
 
 namespace Prism.ProAssistant.Api.Services;
 
-public interface IDataService
+public interface IQueryService
 {
-    Task DeleteFileAsync(string id);
-    Task<byte[]?> GetFileAsync(string id);
-    Task<string> GetFileNameAsync(string id);
     Task<List<T>> ListAsync<T>() where T : IDataModel;
     Task<List<T>> SearchAsync<T>(List<SearchFilter> request) where T : IDataModel;
     Task<T> SingleAsync<T>(string id) where T : IDataModel;
     Task<T?> SingleOrDefaultAsync<T>(string id) where T : IDataModel;
-    Task<string> UploadFromBytesAsync(string fileName, byte[] bytes);
 }
 
-public class DataService : IDataService
+public class QueryService : IQueryService
 {
-    private readonly ILogger<DataService> _logger;
+    private readonly ILogger<QueryService> _logger;
     private readonly IUserOrganizationService _userOrganizationService;
 
-    public DataService(IUserOrganizationService userOrganizationService, ILogger<DataService> logger)
+    public QueryService(IUserOrganizationService userOrganizationService, ILogger<QueryService> logger)
     {
         _userOrganizationService = userOrganizationService;
         _logger = logger;
@@ -67,40 +62,6 @@ public class DataService : IDataService
         var collection = await _userOrganizationService.GetUserCollection<T>();
         IAsyncCursor<T?> query = await collection.FindAsync<T>(Builders<T>.Filter.Eq(x => x.Id, id));
         return await query.SingleOrDefaultAsync();
-    }
-
-    public async Task<string> UploadFromBytesAsync(string fileName, byte[] bytes)
-    {
-        _logger.LogInformation("UploadFromBytesAsync - {FileName} - {UserId}", fileName, _userOrganizationService.GetUserId());
-
-        var bucket = await _userOrganizationService.GetUserGridFsBucket();
-        var id = await bucket.UploadFromBytesAsync(fileName, bytes);
-        return id.ToString();
-    }
-
-    public async Task DeleteFileAsync(string id)
-    {
-        _logger.LogInformation("DeleteFileAsync - {Id} - {UserId}", id, _userOrganizationService.GetUserId());
-
-        var bucket = await _userOrganizationService.GetUserGridFsBucket();
-        await bucket.DeleteAsync(new ObjectId(id));
-    }
-
-    public async Task<byte[]?> GetFileAsync(string id)
-    {
-        _logger.LogInformation("GetFileAsync - {Id} - {UserId}", id, _userOrganizationService.GetUserId());
-
-        var bucket = await _userOrganizationService.GetUserGridFsBucket();
-        return await bucket.DownloadAsBytesAsync(new ObjectId(id));
-    }
-
-    public async Task<string> GetFileNameAsync(string id)
-    {
-        _logger.LogInformation("GetFileNameAsync - {Id} - {UserId}", id, _userOrganizationService.GetUserId());
-
-        var bucket = await _userOrganizationService.GetUserGridFsBucket();
-        var result = await bucket.FindAsync(Builders<GridFSFileInfo>.Filter.Eq(x => x.Id, new ObjectId(id)));
-        return await result.SingleAsync().ContinueWith(x => x.Result.Filename);
     }
 
     public async Task<List<T>> SearchAsync<T>(List<SearchFilter> request) where T : IDataModel

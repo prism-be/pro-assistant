@@ -8,12 +8,12 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 [Authorize]
 public class AppointmentController : Controller, IDataController<Appointment>
 {
-    private readonly IDataService _dataService;
+    private readonly IQueryService _queryService;
     private readonly IEventService _eventService;
 
-    public AppointmentController(IDataService dataService, IEventService eventService)
+    public AppointmentController(IQueryService queryService, IEventService eventService)
     {
-        _dataService = dataService;
+        _queryService = queryService;
         _eventService = eventService;
     }
 
@@ -30,14 +30,14 @@ public class AppointmentController : Controller, IDataController<Appointment>
     [Route("api/data/appointments")]
     public async Task<List<Appointment>> List()
     {
-        return await _dataService.ListAsync<Appointment>();
+        return await _queryService.ListAsync<Appointment>();
     }
 
     [HttpPost]
     [Route("api/data/appointments/search")]
     public async Task<List<Appointment>> Search([FromBody] List<SearchFilter> request)
     {
-        return await _dataService.SearchAsync<Appointment>(request);
+        return await _queryService.SearchAsync<Appointment>(request);
     }
 
     [HttpPost]
@@ -53,7 +53,7 @@ public class AppointmentController : Controller, IDataController<Appointment>
     [Route("api/data/appointments/{id}")]
     public async Task<Appointment?> Single(string id)
     {
-        return await _dataService.SingleOrDefaultAsync<Appointment>(id);
+        return await _queryService.SingleOrDefaultAsync<Appointment>(id);
     }
 
     private async Task EnsureContact(Appointment request)
