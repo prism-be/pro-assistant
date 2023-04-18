@@ -39,6 +39,24 @@ public class AppointmentAggregatorTests
                 Title = "Title"
             }
         };
+        
+        var documentId = Identifier.GenerateString();
+        var attachAppointmentDocument = new AttachAppointmentDocument
+        {
+            Document = new BinaryDocument
+            {
+                Id = documentId,
+                FileName = "FileName",
+                Title = "Title"
+            },
+            StreamId = streamId
+        };
+        
+        var detachAppointmentDocument = new DetachAppointmentDocument
+        {
+            DocumentId = documentId,
+            StreamId = streamId
+        };
 
         // Act and assert events
         aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentCreated));
@@ -48,6 +66,12 @@ public class AppointmentAggregatorTests
         aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentUpdated));
         aggregator.State.FirstName.Should().Be("Jane");
         aggregator.State.LastName.Should().Be("Doe");
+        
+        aggregator.When(DomainEvent.FromEvent(streamId, userId, attachAppointmentDocument));
+        aggregator.State.Documents.Should().HaveCount(1);
+        
+        aggregator.When(DomainEvent.FromEvent(streamId, userId, detachAppointmentDocument));
+        aggregator.State.Documents.Should().BeEmpty();
 
         // Assert
         aggregator.State.Id.Should().Be(streamId);

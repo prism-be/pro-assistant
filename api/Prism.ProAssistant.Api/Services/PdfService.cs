@@ -5,12 +5,13 @@ using Microsoft.AspNetCore.Mvc;
 using Prism.Core.Exceptions;
 using Prism.ProAssistant.Api.Helpers;
 using Prism.ProAssistant.Api.Models;
-using Prism.ProAssistant.Domain.Configuration;
 using Prism.ProAssistant.Domain.Configuration.DocumentConfiguration;
 using Prism.ProAssistant.Domain.Configuration.Settings;
 using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
 using Prism.ProAssistant.Domain.DayToDay.Contacts;
 using Prism.ProAssistant.Storage;
+using Prism.ProAssistant.Storage.Events;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -25,16 +26,16 @@ public interface IPdfService
 
 public class PdfService : IPdfService
 {
-    private readonly IQueryService _queryService;
-    private readonly IEventService _eventService;
-    private readonly ILogger<PdfService> _logger;
+    private readonly IEventStore _eventStore;
     private readonly IFileService _fileService;
+    private readonly ILogger<PdfService> _logger;
+    private readonly IQueryService _queryService;
 
-    public PdfService(IQueryService queryService, ILogger<PdfService> logger, IEventService eventService, IFileService fileService)
+    public PdfService(IQueryService queryService, IEventStore eventStore, ILogger<PdfService> logger, IFileService fileService)
     {
         _queryService = queryService;
+        _eventStore = eventStore;
         _logger = logger;
-        _eventService = eventService;
         _fileService = fileService;
     }
 
@@ -148,9 +149,11 @@ public class PdfService : IPdfService
             FileName = fileName
         };
 
-        appointment.Documents.Insert(0, document);
-
-        await _eventService.UpdateAsync<Appointment>(appointment.Id, new FieldValue(nameof(appointment.Documents), appointment.Documents));
+        await _eventStore.RaiseAndPersist<Contact>(new AttachAppointmentDocument
+        {
+            Document = document,
+            StreamId = appointment.Id
+        });
 
         _logger.LogInformation("Document {itemId} was saved for Appointment {appointmentId}", document.Id, appointment.Id);
     }

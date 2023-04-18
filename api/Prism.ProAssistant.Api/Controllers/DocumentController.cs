@@ -5,7 +5,9 @@ using Prism.Core.Exceptions;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
 using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
 using Prism.ProAssistant.Storage;
+using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
@@ -13,16 +15,16 @@ public class DocumentController : Controller
 {
     private readonly IDistributedCache _cache;
     private readonly IQueryService _queryService;
-    private readonly IEventService _eventService;
+    private readonly IEventStore _eventStore;
     private readonly IPdfService _pdfService;
     private readonly IFileService _fileService;
 
-    public DocumentController(IPdfService pdfService, IQueryService queryService, IDistributedCache cache, IEventService eventService, IFileService fileService)
+    public DocumentController(IDistributedCache cache, IQueryService queryService, IEventStore eventStore, IPdfService pdfService, IFileService fileService)
     {
-        _pdfService = pdfService;
-        _queryService = queryService;
         _cache = cache;
-        _eventService = eventService;
+        _queryService = queryService;
+        _eventStore = eventStore;
+        _pdfService = pdfService;
         _fileService = fileService;
     }
 
@@ -30,12 +32,11 @@ public class DocumentController : Controller
     [Route("api/document/{appointmentId}/{documentId}")]
     public async Task Delete(string appointmentId, string documentId)
     {
-        var appointment = await _queryService.SingleAsync<Appointment>(appointmentId);
-
-        appointment.Documents.Remove(appointment.Documents.Single(x => x.Id == documentId));
-        await _eventService.UpdateAsync<Appointment>(appointment.Id, new FieldValue(nameof(appointment.Documents), appointment.Documents));
-
-        await _fileService.DeleteFileAsync(documentId);
+        await _eventStore.RaiseAndPersist<Appointment>(new DetachAppointmentDocument
+        {
+            StreamId = appointmentId,
+            DocumentId = documentId
+        });
     }
 
     [AllowAnonymous]

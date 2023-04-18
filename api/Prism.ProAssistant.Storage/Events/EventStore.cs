@@ -5,6 +5,7 @@ using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Domain;
 using Prism.ProAssistant.Domain.Configuration.DocumentConfiguration;
 using Prism.ProAssistant.Domain.Configuration.Settings;
+using Prism.ProAssistant.Domain.Configuration.Tariffs;
 using Prism.ProAssistant.Domain.DayToDay.Appointments;
 using Prism.ProAssistant.Domain.DayToDay.Contacts;
 
@@ -30,6 +31,7 @@ public class EventStore : IEventStore
             nameof(Contact) => (IDomainAggregator<T>)new ContactAggregator(),
             nameof(DocumentConfiguration) => (IDomainAggregator<T>)new DocumentConfigurationAggregator(),
             nameof(Setting) => (IDomainAggregator<T>)new SettingAggregator(),
+            nameof(Tariff) => (IDomainAggregator<T>)new TariffAggregator(),
             _ => throw new NotSupportedException($"No aggregator found for type {typeof(T).Name}")
         };
     }
