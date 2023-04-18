@@ -11,6 +11,12 @@ public class MongoStateContainer<T> : IStateContainer<T>
         _collection = collection;
     }
 
+    public async Task<IEnumerable<T>> ListAsync()
+    {
+        var results = await _collection.FindAsync(Builders<T>.Filter.Empty);
+        return results.ToEnumerable();
+    }
+
     public async Task<T?> ReadAsync(string id)
     {
         var result = await _collection.FindAsync(Builders<T>.Filter.Eq("Id", id));
@@ -20,6 +26,13 @@ public class MongoStateContainer<T> : IStateContainer<T>
     public Task WriteAsync(string id, T value)
     {
         return _collection.ReplaceOneAsync(Builders<T>.Filter.Eq("Id", id), value, new ReplaceOptions { IsUpsert = true });
+    }
+
+    public async Task<IEnumerable<T>> SearchAsync(IEnumerable<Filter> request)
+    {
+        var filter = BuildFilter(request.ToArray());
+        var results = await _collection.FindAsync(filter);
+        return results.ToEnumerable();
     }
 
     public async Task<IEnumerable<T>> FetchAsync(params Filter[] filters)
@@ -38,13 +51,13 @@ public class MongoStateContainer<T> : IStateContainer<T>
 
         return Builders<T>.Filter.And(filters.Select(f =>
         {
-            switch (f.Op)
+            switch (f.Operator)
             {
                 case FilterOperator.Equal:
-                    return Builders<T>.Filter.Eq(f.Property, f.Value);
+                    return Builders<T>.Filter.Eq(f.Field, f.Value);
             }
 
-            throw new NotSupportedException($"Filter operator {f.Op} not supported");
+            throw new NotSupportedException($"Filter operator {f.Operator} not supported");
         }));
     }
 }

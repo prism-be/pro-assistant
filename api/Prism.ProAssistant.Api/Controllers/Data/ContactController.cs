@@ -1,68 +1,73 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
-using Prism.ProAssistant.Api.Models;
+using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Api.Services;
 using Prism.ProAssistant.Domain.DayToDay.Contacts;
 using Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
+using Prism.ProAssistant.Storage;
 using Prism.ProAssistant.Storage.Events;
-using Contact = Prism.ProAssistant.Api.Models.Contact;
 
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 [Authorize]
 public class ContactController : Controller
 {
-    private readonly IEventService _eventService;
     private readonly IEventStore _eventStore;
-    private readonly IQueryService _queryService;
+    private readonly IStateProvider _stateProvider;
 
-    public ContactController(IQueryService queryService, IEventService eventService, IEventStore eventStore)
+    public ContactController(IEventStore eventStore, IStateProvider stateProvider)
     {
-        _queryService = queryService;
-        _eventService = eventService;
         _eventStore = eventStore;
+        _stateProvider = stateProvider;
     }
 
     [HttpPost]
     [Route("api/data/contacts/insert")]
-    public async Task<UpsertResult> Insert([FromBody] Prism.ProAssistant.Domain.DayToDay.Contacts.Contact request)
+    public async Task<UpsertResult> Insert([FromBody] Contact request)
     {
         request.Id = Identifier.GenerateString();
-        
-        await _eventStore.RaiseAndPersist<ContactAggregator, Prism.ProAssistant.Domain.DayToDay.Contacts.Contact>(new ContactCreated
+
+        return await _eventStore.RaiseAndPersist<ContactAggregator, Contact>(new ContactCreated
         {
             Contact = request
         });
-
-        return new UpsertResult(request.Id);
     }
 
     [HttpGet]
     [Route("api/data/contacts")]
-    public async Task<List<Contact>> List()
+    public async Task<IEnumerable<Contact>> List()
     {
-        return await _queryService.ListAsync<Contact>();
+        var container = await _stateProvider.GetContainerAsync<Contact>();
+        return await container.ListAsync();
     }
 
     [HttpPost]
     [Route("api/data/contacts/search")]
-    public async Task<List<Contact>> Search([FromBody] List<SearchFilter> request)
+    public async Task<IEnumerable<Contact>> Search([FromBody] List<Filter> request)
     {
-        return await _queryService.SearchAsync<Contact>(request);
+        var container = await _stateProvider.GetContainerAsync<Contact>();
+        return await container.SearchAsync(request);
     }
 
     [HttpGet]
     [Route("api/data/contacts/{id}")]
     public async Task<Contact?> Single(string id)
     {
-        return await _queryService.SingleOrDefaultAsync<Contact>(id);
+        var container = await _stateProvider.GetContainerAsync<Contact>();
+        return await container.ReadAsync(id);
     }
 
     [HttpPost]
     [Route("api/data/contacts/update")]
     public async Task<UpsertResult> Update([FromBody] Contact request)
     {
+        return await _eventStore.RaiseAndPersist<ContactAggregator, Contact>(new ContactUpdated
+        {
+            Contact = request
+        });
+
+        // TODO
+        /*
         var result = await _eventService.ReplaceAsync(request);
 
         var filter = new FieldValue(nameof(Appointment.ContactId), request.Id);
@@ -75,6 +80,6 @@ public class ContactController : Controller
             new FieldValue(nameof(Appointment.Title), $"{request.LastName} {request.FirstName}")
         );
 
-        return result;
+        return result;*/
     }
 }

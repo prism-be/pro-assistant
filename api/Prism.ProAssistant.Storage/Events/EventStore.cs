@@ -9,7 +9,7 @@ namespace Prism.ProAssistant.Storage.Events;
 public interface IEventStore
 {
     Task Raise(IDomainEvent eventData);
-    Task RaiseAndPersist<TAggregator, T>(IDomainEvent eventData) where TAggregator : IDomainAggregator<T>, new();
+    Task<UpsertResult> RaiseAndPersist<TAggregator, T>(IDomainEvent eventData) where TAggregator : IDomainAggregator<T>, new();
 }
 
 public class EventStore : IEventStore
@@ -35,7 +35,7 @@ public class EventStore : IEventStore
         await Store(@event);
     }
 
-    public async Task RaiseAndPersist<TAggregator, T>(IDomainEvent eventData)
+    public async Task<UpsertResult> RaiseAndPersist<TAggregator, T>(IDomainEvent eventData)
         where TAggregator : IDomainAggregator<T>, new()
     {
         await Raise(eventData);
@@ -53,6 +53,8 @@ public class EventStore : IEventStore
 
         var stateContainer = await _stateProvider.GetContainerAsync<T>();
         await stateContainer.WriteAsync(eventData.StreamId, aggregator.State);
+        
+        return new UpsertResult(eventData.StreamId);
     }
 
     private async Task<IEnumerable<DomainEvent>> GetEvents(string streamId)

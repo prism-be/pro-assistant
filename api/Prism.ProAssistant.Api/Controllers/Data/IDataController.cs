@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Models;
+using Prism.ProAssistant.Storage;
 
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
-public interface IDataController<T> where T : IDataModel
+public interface IDataController<T>
 {
     Task<UpsertResult> Insert([FromBody] T request);
     Task<List<T>> List();

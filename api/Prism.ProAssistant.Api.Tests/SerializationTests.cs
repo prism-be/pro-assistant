@@ -2,6 +2,7 @@
 using FluentAssertions;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
+using Prism.ProAssistant.Storage;
 
 namespace Prism.ProAssistant.Api.Tests;
 
