@@ -3,6 +3,8 @@
   <component name="UserContentModel">
     <attachedFolders>
       <Path>../.github/workflows</Path>
+      <Path>../ressources</Path>
+      <Path>../web</Path>
     </attachedFolders>
     <explicitIncludes />
     <explicitExcludes />

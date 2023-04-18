@@ -3,9 +3,13 @@ using MongoDB.ApplicationInsights.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using Prism.Infrastructure.Authentication;
+using Prism.Infrastructure.Providers;
+using Prism.Infrastructure.Providers.Mongo;
 using Prism.ProAssistant.Api.Config;
 using Prism.ProAssistant.Api.Helpers;
 using Prism.ProAssistant.Api.Services;
+using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Extensions;
 
@@ -33,7 +37,7 @@ public static class ServiceCollectionExtensions
             return Task.FromResult(0);
         }
     }
-    
+
     public static void AddDatabase(this IServiceCollection services)
     {
         var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");
@@ -42,7 +46,7 @@ public static class ServiceCollectionExtensions
         services.AddMongoClient(mongoDbConnectionString);
         services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
     }
-    
+
     public static void AddProAssistant(this IServiceCollection services)
     {
         services.AddDistributedMemoryCache();
@@ -50,7 +54,38 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEventService, EventService>();
         services.AddScoped<IEventAggregator, EventAggregator>();
         services.AddScoped<IQueryService, QueryService>();
-        services.AddScoped<IUserOrganizationService, UserOrganizationService>();
         services.AddScoped<IPdfService, PdfService>();
+        services.AddScoped<IFileService, FileService>();
+
+        services.AddScoped<IUserOrganizationService, UserOrganizationService>();
+        services.AddScoped<UserOrganization>(serviceProvider =>
+        {
+            var userOrganisationService = serviceProvider.GetService<IUserOrganizationService>();
+
+            if (userOrganisationService == null)
+            {
+                throw new InvalidOperationException("The user organisation service is not registered.");
+            }
+
+            var organisation = userOrganisationService.GetUserOrganization();
+            organisation.Wait(TimeSpan.FromSeconds(30));
+
+            return new UserOrganization
+            {
+                Id = userOrganisationService.GetUserId() ?? Guid.Empty.ToString(),
+                Organization = organisation.Result
+            };
+        });
+
+        services.AddScoped<IEventStore, EventStore>();
+        services.AddScoped<Storage.Users.IUserOrganizationService, Storage.Users.UserOrganizationService>();
+
+        services.AddMediatR(cfg =>
+        {
+            cfg.RegisterServicesFromAssembly(typeof(EventStore).Assembly);
+        });
+
+        services.AddScoped<IGlobalStateProvider, MongoGlobalStateProvider>();
+        services.AddScoped<IStateProvider, MongoStateProvider>();
     }
 }

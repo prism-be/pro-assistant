@@ -1,8 +1,10 @@
 ﻿using FluentAssertions;
+using MediatR;
 using Moq;
 using Prism.ProAssistant.Api.Controllers.Data;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
+using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Tests.Controllers;
 
@@ -79,7 +81,7 @@ public class DataControllersTests
     [Fact]
     public async Task Contact_Ok()
     {
-        await TestCrud((dataService, eventService) => new ContactController(dataService.Object, eventService.Object), () => new Contact
+        await TestCrud((dataService, eventService) => new ContactController(dataService.Object, eventService.Object, Mock.Of<IEventStore>()), () => new Contact
         {
             Id = Identifier.GenerateString(),
             FirstName = Identifier.GenerateString(),
@@ -93,7 +95,7 @@ public class DataControllersTests
     {
         var id = Identifier.GenerateString();
 
-        var eventService = await CheckUpdate((dataService, eventService) => new ContactController(dataService.Object, eventService.Object), () => new Contact
+        var eventService = await CheckUpdate((dataService, eventService) => new ContactController(dataService.Object, eventService.Object, Mock.Of<IEventStore>()), () => new Contact
         {
             Id = id,
             FirstName = Identifier.GenerateString(),

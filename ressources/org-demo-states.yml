@@ -1,0 +1,10 @@
+﻿apiVersion: dapr.io/v1alpha1
+kind: Component
+metadata:
+  name: org-demo-states
+spec:
+  type: state.sqlite
+  version: v1
+  metadata:
+    - name: connectionString
+      value: "org-demo-states.db"

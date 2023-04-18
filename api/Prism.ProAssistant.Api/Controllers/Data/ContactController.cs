@@ -1,27 +1,41 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Bson;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
+using Prism.ProAssistant.Domain.DayToDay.Contacts;
+using Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
+using Prism.ProAssistant.Storage.Events;
+using Contact = Prism.ProAssistant.Api.Models.Contact;
 
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 [Authorize]
-public class ContactController : Controller, IDataController<Contact>
+public class ContactController : Controller
 {
-    private readonly IQueryService _queryService;
     private readonly IEventService _eventService;
+    private readonly IEventStore _eventStore;
+    private readonly IQueryService _queryService;
 
-    public ContactController(IQueryService queryService, IEventService eventService)
+    public ContactController(IQueryService queryService, IEventService eventService, IEventStore eventStore)
     {
         _queryService = queryService;
         _eventService = eventService;
+        _eventStore = eventStore;
     }
 
     [HttpPost]
     [Route("api/data/contacts/insert")]
-    public async Task<UpsertResult> Insert([FromBody] Contact request)
+    public async Task<UpsertResult> Insert([FromBody] Prism.ProAssistant.Domain.DayToDay.Contacts.Contact request)
     {
-        return await _eventService.CreateAsync(request);
+        request.Id = ObjectId.GenerateNewId().ToString();
+        
+        await _eventStore.RaiseAndPersist<ContactAggregator, Prism.ProAssistant.Domain.DayToDay.Contacts.Contact>(new ContactCreated
+        {
+            Contact = request
+        });
+
+        return new UpsertResult(request.Id);
     }
 
     [HttpGet]
