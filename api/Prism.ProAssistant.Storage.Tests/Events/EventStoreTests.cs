@@ -5,6 +5,8 @@ using Prism.Core;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Domain;
+using Prism.ProAssistant.Domain.DayToDay.Contacts;
+using Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
 using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Storage.Tests.Events;
@@ -20,18 +22,23 @@ public class EventStoreTests
         var userOrganization = new UserOrganization();
 
         var eventContainer = new Mock<IStateContainer<DomainEvent>>();
-        var container = new Mock<IStateContainer<Dummy>>();
+        var container = new Mock<IStateContainer<Contact>>();
         var stateProvider = new Mock<IStateProvider>();
-        stateProvider.Setup(x => x.GetContainerAsync<Dummy>()).ReturnsAsync(container.Object);
+        var @event = new ContactCreated
+        {
+            Contact = new Contact
+                { Id = Identifier.GenerateString() }
+        };
+        stateProvider.Setup(x => x.GetContainerAsync<Contact>()).ReturnsAsync(container.Object);
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         // Act
         var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization);
-        await eventStore.Raise(new DummyDomainEvent());
+        await eventStore.Raise(@event);
 
         // Assert
         eventContainer.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<DomainEvent>()), Times.Once);
-        container.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<Dummy>()), Times.Never);
+        container.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<Contact>()), Times.Never);
     }
 
     [Fact]
@@ -42,55 +49,33 @@ public class EventStoreTests
         var userOrganization = new UserOrganization();
 
         var eventContainer = new Mock<IStateContainer<DomainEvent>>();
-        var container = new Mock<IStateContainer<Dummy>>();
+        var container = new Mock<IStateContainer<Contact>>();
         var stateProvider = new Mock<IStateProvider>();
+        var @event = new ContactCreated
+        {
+            Contact = new Contact
+                { Id = Identifier.GenerateString() }
+        };
         eventContainer.Setup(x => x.FetchAsync(It.IsAny<Filter[]>())).ReturnsAsync(new List<DomainEvent>
         {
             new()
             {
-                Data = JsonSerializer.Serialize(new DummyDomainEvent()),
-                Type = nameof(DummyDomainEvent),
+                Data = JsonSerializer.Serialize(@event),
+                Type = nameof(ContactCreated),
                 Id = Identifier.GenerateString(),
                 StreamId = Identifier.GenerateString(),
                 UserId = Identifier.GenerateString()
             }
         });
-        stateProvider.Setup(x => x.GetContainerAsync<Dummy>()).ReturnsAsync(container.Object);
+        stateProvider.Setup(x => x.GetContainerAsync<Contact>()).ReturnsAsync(container.Object);
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         // Act
         var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization);
-        await eventStore.RaiseAndPersist<DummyDomainEventAggregator, Dummy>(new DummyDomainEvent());
+        await eventStore.RaiseAndPersist<Contact>(@event);
 
         // Assert
         eventContainer.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<DomainEvent>()), Times.Once);
-        container.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<Dummy>()), Times.Once);
-    }
-
-    public class Dummy
-    {
-        public int Value { get; set; }
-    }
-
-    private class DummyDomainEvent : IDomainEvent
-    {
-
-        public string StreamId => "42";
-    }
-
-    private class DummyDomainEventAggregator : IDomainAggregator<Dummy>
-    {
-
-        public void Init(string id)
-        {
-            State = new Dummy { Value = 21 };
-        }
-
-        public Dummy State { get; private set; } = new();
-
-        public void When(DomainEvent @event)
-        {
-            State.Value += 1;
-        }
+        container.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<Contact>()), Times.Once);
     }
 }

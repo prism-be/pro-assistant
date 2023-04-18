@@ -8,9 +8,10 @@ using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.Infrastructure.Providers.Mongo;
 using Prism.ProAssistant.Api.Config;
-using Prism.ProAssistant.Api.Helpers;
 using Prism.ProAssistant.Api.Services;
+using Prism.ProAssistant.Storage;
 using Prism.ProAssistant.Storage.Events;
+using Prism.ProAssistant.Storage.Users;
 
 namespace Prism.ProAssistant.Api.Extensions;
 
@@ -52,8 +53,6 @@ public static class ServiceCollectionExtensions
     {
         services.AddDistributedMemoryCache();
 
-        services.AddScoped<IEventService, EventService>();
-        services.AddScoped<IEventAggregator, EventAggregator>();
         services.AddScoped<IQueryService, QueryService>();
         services.AddScoped<IPdfService, PdfService>();
         services.AddScoped<IFileService, FileService>();
@@ -79,7 +78,6 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IEventStore, EventStore>();
-        services.AddScoped<Storage.Users.IUserOrganizationService, Storage.Users.UserOrganizationService>();
 
         services.AddMediatR(cfg =>
         {

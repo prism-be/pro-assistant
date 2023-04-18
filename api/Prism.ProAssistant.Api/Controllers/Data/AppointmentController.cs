@@ -1,21 +1,26 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Prism.ProAssistant.Api.Models;
-using Prism.ProAssistant.Api.Services;
+using Prism.Core;
+using Prism.Infrastructure.Providers;
+using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
+using Prism.ProAssistant.Domain.DayToDay.Contacts;
+using Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
 using Prism.ProAssistant.Storage;
+using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 [Authorize]
-public class AppointmentController : Controller, IDataController<Appointment>
+public class AppointmentController : Controller
 {
+    private readonly IEventStore _eventStore;
     private readonly IQueryService _queryService;
-    private readonly IEventService _eventService;
 
-    public AppointmentController(IQueryService queryService, IEventService eventService)
+    public AppointmentController(IQueryService queryService, IEventStore eventStore)
     {
         _queryService = queryService;
-        _eventService = eventService;
+        _eventStore = eventStore;
     }
 
     [HttpPost]
@@ -24,30 +29,24 @@ public class AppointmentController : Controller, IDataController<Appointment>
     {
         await EnsureContact(request);
 
-        return await _eventService.CreateAsync(request);
+        return await _eventStore.RaiseAndPersist<Appointment>(new AppointmentCreated
+        {
+            Appointment = request
+        });
     }
 
     [HttpGet]
     [Route("api/data/appointments")]
-    public async Task<List<Appointment>> List()
+    public async Task<IEnumerable<Appointment>> List()
     {
         return await _queryService.ListAsync<Appointment>();
     }
 
     [HttpPost]
     [Route("api/data/appointments/search")]
-    public async Task<List<Appointment>> Search([FromBody] List<SearchFilter> request)
+    public async Task<IEnumerable<Appointment>> Search([FromBody] IEnumerable<Filter> request)
     {
         return await _queryService.SearchAsync<Appointment>(request);
-    }
-
-    [HttpPost]
-    [Route("api/data/appointments/update")]
-    public async Task<UpsertResult> Update([FromBody] Appointment request)
-    {
-        await EnsureContact(request);
-
-        return await _eventService.ReplaceAsync(request);
     }
 
     [HttpGet]
@@ -57,17 +56,34 @@ public class AppointmentController : Controller, IDataController<Appointment>
         return await _queryService.SingleOrDefaultAsync<Appointment>(id);
     }
 
+    [HttpPost]
+    [Route("api/data/appointments/update")]
+    public async Task<UpsertResult> Update([FromBody] Appointment request)
+    {
+        await EnsureContact(request);
+
+        return await _eventStore.RaiseAndPersist<Appointment>(new AppointmentUpdated
+        {
+            Appointment = request
+        });
+    }
+
     private async Task EnsureContact(Appointment request)
     {
         if (request.ContactId == null)
         {
-            var result = await _eventService.CreateAsync(new Contact
+            var contact = new Contact
             {
                 Id = Identifier.GenerateString(),
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 BirthDate = request.BirthDate,
                 PhoneNumber = request.PhoneNumber
+            };
+
+            var result = await _eventStore.RaiseAndPersist<Contact>(new ContactCreated
+            {
+                Contact = contact
             });
 
             request.ContactId = result.Id;

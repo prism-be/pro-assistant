@@ -3,13 +3,15 @@ using Prism.Core;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Domain;
+using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Contacts;
 
 namespace Prism.ProAssistant.Storage.Events;
 
 public interface IEventStore
 {
     Task Raise(IDomainEvent eventData);
-    Task<UpsertResult> RaiseAndPersist<TAggregator, T>(IDomainEvent eventData) where TAggregator : IDomainAggregator<T>, new();
+    Task<UpsertResult> RaiseAndPersist<T>(IDomainEvent eventData);
 }
 
 public class EventStore : IEventStore
@@ -17,6 +19,16 @@ public class EventStore : IEventStore
     private readonly ILogger<EventStore> _logger;
     private readonly IStateProvider _stateProvider;
     private readonly UserOrganization _userOrganization;
+
+    private static IDomainAggregator<T> GetAggregator<T>()
+    {
+        return typeof(T).Name switch
+        {
+            nameof(Appointment) => (IDomainAggregator<T>)new AppointmentAggregator(),
+            nameof(Contact) => (IDomainAggregator<T>)new ContactAggregator(),
+            _ => throw new NotSupportedException($"No aggregator found for type {typeof(T).Name}")
+        };
+    }
 
     public EventStore(ILogger<EventStore> logger, IStateProvider stateProvider, UserOrganization userOrganization)
     {
@@ -35,13 +47,12 @@ public class EventStore : IEventStore
         await Store(@event);
     }
 
-    public async Task<UpsertResult> RaiseAndPersist<TAggregator, T>(IDomainEvent eventData)
-        where TAggregator : IDomainAggregator<T>, new()
+    public async Task<UpsertResult> RaiseAndPersist<T>(IDomainEvent eventData)
     {
         await Raise(eventData);
 
         _logger.LogInformation("Persisting state for stream {StreamId}", eventData.StreamId);
-        var aggregator = new TAggregator();
+        var aggregator = GetAggregator<T>();
         var events = await GetEvents(eventData.StreamId);
 
         aggregator.Init(eventData.StreamId);

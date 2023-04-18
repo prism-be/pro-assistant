@@ -5,13 +5,12 @@
 // -----------------------------------------------------------------------
 
 using System.Text.Json.Serialization;
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
+using Prism.Core.Attributes;
 
-namespace Prism.ProAssistant.Api.Models;
+namespace Prism.ProAssistant.Domain.Configuration.DocumentConfiguration;
 
-[BsonCollection("documents-configuration")]
-public class DocumentConfiguration : IDataModel
+[Collection("documents-configuration")]
+public class DocumentConfiguration
 {
 
     [JsonPropertyName("body")]
@@ -23,8 +22,6 @@ public class DocumentConfiguration : IDataModel
     [JsonPropertyName("title")]
     public string? Title { get; set; }
 
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     [JsonPropertyName("id")]
     required public string Id { get; set; }
 }

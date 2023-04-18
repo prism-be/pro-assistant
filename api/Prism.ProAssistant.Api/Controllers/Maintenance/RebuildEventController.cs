@@ -2,6 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
+using Prism.ProAssistant.Domain.Configuration;
+using Prism.ProAssistant.Domain.Configuration.DocumentConfiguration;
+using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Contacts;
+using Prism.ProAssistant.Storage;
 
 namespace Prism.ProAssistant.Api.Controllers.Maintenance;
 

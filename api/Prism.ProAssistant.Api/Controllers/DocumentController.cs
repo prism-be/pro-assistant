@@ -4,6 +4,8 @@ using Microsoft.Extensions.Caching.Distributed;
 using Prism.Core.Exceptions;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
+using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Storage;
 
 namespace Prism.ProAssistant.Api.Controllers;
 

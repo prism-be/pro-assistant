@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using MongoDB.Bson;
+using MongoDB.Driver;
 
 namespace Prism.Infrastructure.Providers.Mongo;
 
@@ -55,6 +56,18 @@ public class MongoStateContainer<T> : IStateContainer<T>
             {
                 case FilterOperator.Equal:
                     return Builders<T>.Filter.Eq(f.Field, f.Value);
+                case FilterOperator.NotEqual:
+                    return Builders<T>.Filter.Ne(f.Field, f.Value);
+                case FilterOperator.GreaterThan:
+                    return Builders<T>.Filter.Gt(f.Field, f.Value);
+                case FilterOperator.GreaterThanOrEqual:
+                    return Builders<T>.Filter.Gte(f.Field, f.Value);
+                case FilterOperator.LessThan:
+                    return Builders<T>.Filter.Lt(f.Field, f.Value);
+                case FilterOperator.LessThanOrEqual:
+                    return Builders<T>.Filter.Lte(f.Field, f.Value);
+                case FilterOperator.Regex:
+                    return Builders<T>.Filter.Regex(f.Field, new BsonRegularExpression(f.Value.ToString()));
             }
 
             throw new NotSupportedException($"Filter operator {f.Operator} not supported");

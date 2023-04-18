@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Prism.Core;
 using Prism.Infrastructure.Providers;
-using Prism.ProAssistant.Api.Services;
 using Prism.ProAssistant.Domain.DayToDay.Contacts;
 using Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
 using Prism.ProAssistant.Storage;
@@ -13,12 +13,12 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 public class ContactController : Controller
 {
     private readonly IEventStore _eventStore;
-    private readonly IStateProvider _stateProvider;
+    private readonly IQueryService _queryService;
 
-    public ContactController(IEventStore eventStore, IStateProvider stateProvider)
+    public ContactController(IEventStore eventStore, IQueryService queryService)
     {
         _eventStore = eventStore;
-        _stateProvider = stateProvider;
+        _queryService = queryService;
     }
 
     [HttpPost]
@@ -27,7 +27,7 @@ public class ContactController : Controller
     {
         request.Id = Identifier.GenerateString();
 
-        return await _eventStore.RaiseAndPersist<ContactAggregator, Contact>(new ContactCreated
+        return await _eventStore.RaiseAndPersist<Contact>(new ContactCreated
         {
             Contact = request
         });
@@ -37,31 +37,28 @@ public class ContactController : Controller
     [Route("api/data/contacts")]
     public async Task<IEnumerable<Contact>> List()
     {
-        var container = await _stateProvider.GetContainerAsync<Contact>();
-        return await container.ListAsync();
+        return await _queryService.ListAsync<Contact>();
     }
 
     [HttpPost]
     [Route("api/data/contacts/search")]
     public async Task<IEnumerable<Contact>> Search([FromBody] List<Filter> request)
     {
-        var container = await _stateProvider.GetContainerAsync<Contact>();
-        return await container.SearchAsync(request);
+        return await _queryService.SearchAsync<Contact>(request);
     }
 
     [HttpGet]
     [Route("api/data/contacts/{id}")]
     public async Task<Contact?> Single(string id)
     {
-        var container = await _stateProvider.GetContainerAsync<Contact>();
-        return await container.ReadAsync(id);
+        return await _queryService.SingleAsync<Contact>(id);
     }
 
     [HttpPost]
     [Route("api/data/contacts/update")]
     public async Task<UpsertResult> Update([FromBody] Contact request)
     {
-        return await _eventStore.RaiseAndPersist<ContactAggregator, Contact>(new ContactUpdated
+        return await _eventStore.RaiseAndPersist<Contact>(new ContactUpdated
         {
             Contact = request
         });
