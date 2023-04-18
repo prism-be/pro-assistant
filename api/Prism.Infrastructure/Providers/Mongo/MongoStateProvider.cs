@@ -26,6 +26,6 @@ public class MongoStateProvider : IStateProvider
 
     public string GenerateUniqueIdentifier()
     {
-        return ObjectId.GenerateNewId().ToString();;
+        return ObjectId.GenerateNewId().ToString();
     }
 }
