@@ -1,11 +1,8 @@
 ﻿using FluentAssertions;
 using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.GridFS;
 using Moq;
 using Prism.Core.Exceptions;
-using Prism.ProAssistant.Api.Exceptions;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
 

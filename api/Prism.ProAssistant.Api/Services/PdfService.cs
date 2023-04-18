@@ -2,7 +2,7 @@
 using Acme.Core.Extensions;
 using DotLiquid;
 using Microsoft.AspNetCore.Mvc;
-using Prism.ProAssistant.Api.Exceptions;
+using Prism.Core.Exceptions;
 using Prism.ProAssistant.Api.Helpers;
 using Prism.ProAssistant.Api.Models;
 using QuestPDF.Fluent;

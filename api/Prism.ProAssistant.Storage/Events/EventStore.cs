@@ -49,7 +49,7 @@ public class EventStore : IEventStore
 
         _logger.LogInformation("Persisting state for stream {StreamId}", eventData.StreamId);
         var aggregator = new TAggregator();
-        var events = await GetEvents<T>(eventData.StreamId);
+        var events = await GetEvents(eventData.StreamId);
 
         aggregator.Init(eventData.StreamId);
         
@@ -62,7 +62,7 @@ public class EventStore : IEventStore
         await stateContainer.WriteAsync(eventData.StreamId, aggregator.State);
     }
 
-    private async Task<IEnumerable<DomainEvent>> GetEvents<T>(string streamId)
+    private async Task<IEnumerable<DomainEvent>> GetEvents(string streamId)
     {
         var container = await _stateProvider.GetContainerAsync<DomainEvent>();
         return await container.FetchAsync(new Filter(nameof(DomainEvent.StreamId), streamId));

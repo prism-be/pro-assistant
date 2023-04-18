@@ -3,9 +3,9 @@ using System.Text;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Prism.Core.Exceptions;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
-using Prism.ProAssistant.Storage.Exceptions;
 
 namespace Prism.ProAssistant.Storage.Users;
 

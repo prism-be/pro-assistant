@@ -4,7 +4,6 @@ using Microsoft.Extensions.Caching.Distributed;
 using Moq;
 using Prism.Core.Exceptions;
 using Prism.ProAssistant.Api.Controllers;
-using Prism.ProAssistant.Api.Exceptions;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
 

@@ -1,6 +1,7 @@
-﻿using Prism.ProAssistant.Api.Exceptions;
+﻿
+using Prism.Core.Exceptions;
 
-namespace Prism.ProAssistant.Api.Helpers;
+namespace Prism.Core;
 
 public static class EnvironmentConfiguration
 {
