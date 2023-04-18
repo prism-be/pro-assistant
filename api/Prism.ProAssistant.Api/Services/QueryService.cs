@@ -1,6 +1,7 @@
 ﻿using System.Text.RegularExpressions;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using Prism.Core.Exceptions;
 using Prism.ProAssistant.Api.Exceptions;
 using Prism.ProAssistant.Api.Models;
 

@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
-namespace Prism.ProAssistant.Api.Exceptions;
+namespace Prism.Core.Exceptions;
 
 [Serializable]
 public class InvalidModelException : Exception

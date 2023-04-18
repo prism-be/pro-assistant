@@ -1,5 +1,4 @@
-﻿using Prism.Core;
-using Prism.Core.Attributes;
+﻿using Prism.Core.Attributes;
 
 namespace Prism.Infrastructure.Authentication;
 

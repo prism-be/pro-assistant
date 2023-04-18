@@ -4,6 +4,7 @@ using Microsoft.Extensions.Caching.Distributed;
 using MongoDB.Bson;
 using MongoDB.Driver;
 using MongoDB.Driver.GridFS;
+using Prism.Core.Exceptions;
 using Prism.ProAssistant.Api.Exceptions;
 using Prism.ProAssistant.Api.Models;
 

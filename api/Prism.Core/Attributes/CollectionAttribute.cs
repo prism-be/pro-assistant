@@ -4,6 +4,8 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
+using Prism.Core.Exceptions;
+
 namespace Prism.Core.Attributes;
 
 [AttributeUsage(AttributeTargets.Class, Inherited = false)]
@@ -24,7 +26,7 @@ public class CollectionAttribute : Attribute
 
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw new NotImplementedException("The collection type is not implemented.");
+            throw new MissingConfigurationException("The collection name is not specified", typeof(T).FullName);
         }
 
         return name;

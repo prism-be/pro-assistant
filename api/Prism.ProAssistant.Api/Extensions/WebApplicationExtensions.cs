@@ -1,4 +1,5 @@
-﻿using Prism.ProAssistant.Api.Exceptions;
+﻿using Prism.Core.Exceptions;
+using Prism.ProAssistant.Api.Exceptions;
 
 namespace Prism.ProAssistant.Api.Extensions;
 

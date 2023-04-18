@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
+using Prism.Core.Exceptions;
 using Prism.ProAssistant.Api.Exceptions;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;

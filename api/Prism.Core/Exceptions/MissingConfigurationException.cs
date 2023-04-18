@@ -1,15 +1,15 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 
-namespace Prism.ProAssistant.Api.Exceptions;
+namespace Prism.Core.Exceptions;
 
 [Serializable]
 public class MissingConfigurationException : Exception
 {
 
-    public MissingConfigurationException(string message, string missingConfigurationKey) : base(message)
+    public MissingConfigurationException(string message, string? missingConfigurationKey) : base(message)
     {
-        MissingConfigurationKey = missingConfigurationKey;
+        MissingConfigurationKey = missingConfigurationKey ?? "Unknown";
     }
 
     [ExcludeFromCodeCoverage]
