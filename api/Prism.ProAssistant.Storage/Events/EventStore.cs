@@ -3,6 +3,8 @@ using Prism.Core;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Domain;
+using Prism.ProAssistant.Domain.Configuration.DocumentConfiguration;
+using Prism.ProAssistant.Domain.Configuration.Settings;
 using Prism.ProAssistant.Domain.DayToDay.Appointments;
 using Prism.ProAssistant.Domain.DayToDay.Contacts;
 
@@ -26,6 +28,8 @@ public class EventStore : IEventStore
         {
             nameof(Appointment) => (IDomainAggregator<T>)new AppointmentAggregator(),
             nameof(Contact) => (IDomainAggregator<T>)new ContactAggregator(),
+            nameof(DocumentConfiguration) => (IDomainAggregator<T>)new DocumentConfigurationAggregator(),
+            nameof(Setting) => (IDomainAggregator<T>)new SettingAggregator(),
             _ => throw new NotSupportedException($"No aggregator found for type {typeof(T).Name}")
         };
     }
@@ -63,8 +67,16 @@ public class EventStore : IEventStore
         }
 
         var stateContainer = await _stateProvider.GetContainerAsync<T>();
-        await stateContainer.WriteAsync(eventData.StreamId, aggregator.State);
-        
+
+        if (aggregator.State == null)
+        {
+            await stateContainer.DeleteAsync(eventData.StreamId);
+        }
+        else
+        {
+            await stateContainer.WriteAsync(eventData.StreamId, aggregator.State);
+        }
+
         return new UpsertResult(eventData.StreamId);
     }
 

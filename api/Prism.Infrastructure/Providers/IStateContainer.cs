@@ -7,4 +7,5 @@ public interface IStateContainer<T>
     Task<T?> ReadAsync(string id);
     Task<IEnumerable<T>> SearchAsync(IEnumerable<Filter> request);
     Task WriteAsync(string id, T value);
+    Task DeleteAsync(string id);
 }

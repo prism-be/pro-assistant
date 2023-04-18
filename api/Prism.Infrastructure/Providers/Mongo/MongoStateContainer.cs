@@ -29,6 +29,11 @@ public class MongoStateContainer<T> : IStateContainer<T>
         return _collection.ReplaceOneAsync(Builders<T>.Filter.Eq("Id", id), value, new ReplaceOptions { IsUpsert = true });
     }
 
+    public Task DeleteAsync(string id)
+    {
+        return _collection.DeleteOneAsync(Builders<T>.Filter.Eq("Id", id));
+    }
+
     public async Task<IEnumerable<T>> SearchAsync(IEnumerable<Filter> request)
     {
         var filter = BuildFilter(request.ToArray());
