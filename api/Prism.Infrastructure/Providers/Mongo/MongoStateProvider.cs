@@ -1,5 +1,6 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
+using Prism.Core;
 using Prism.Core.Attributes;
 using Prism.Infrastructure.Authentication;
 
@@ -22,10 +23,5 @@ public class MongoStateProvider : IStateProvider
         var collection = CollectionAttribute.GetCollectionName<T>();
         var container = db.GetCollection<T>(collection);
         return Task.FromResult(new MongoStateContainer<T>(container) as IStateContainer<T>);
-    }
-
-    public string GenerateUniqueIdentifier()
-    {
-        return ObjectId.GenerateNewId().ToString();
     }
 }

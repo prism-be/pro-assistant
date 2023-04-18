@@ -4,14 +4,16 @@
 //  </copyright>
 // -----------------------------------------------------------------------
 
-using MongoDB.Bson;
+using System.Security.Cryptography;
+using Acme.Core.Extensions;
 
-namespace Prism.ProAssistant.Api.Services;
+namespace Prism.Core;
 
 public static class Identifier
 {
     public static string GenerateString()
     {
-        return Identifier.GenerateString();
+        var bytes = RandomNumberGenerator.GetBytes(12);
+        return bytes.ToHexadecimalString();
     }
 }

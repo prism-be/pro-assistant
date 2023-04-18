@@ -28,7 +28,7 @@ public class ContactController : Controller
     [Route("api/data/contacts/insert")]
     public async Task<UpsertResult> Insert([FromBody] Prism.ProAssistant.Domain.DayToDay.Contacts.Contact request)
     {
-        request.Id = ObjectId.GenerateNewId().ToString();
+        request.Id = Identifier.GenerateString();
         
         await _eventStore.RaiseAndPersist<ContactAggregator, Prism.ProAssistant.Domain.DayToDay.Contacts.Contact>(new ContactCreated
         {

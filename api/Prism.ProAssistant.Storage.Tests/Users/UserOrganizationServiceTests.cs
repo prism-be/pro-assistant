@@ -3,8 +3,8 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
-using MongoDB.Bson;
 using Moq;
+using Prism.Core;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Storage.Users;
@@ -38,7 +38,7 @@ public class UserOrganizationServiceTests
     public void GetUserId_Ok()
     {
         // Arrange
-        var userId = ObjectId.GenerateNewId().ToString();
+        var userId = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
         var httpContext = new DefaultHttpContext
         {
@@ -86,8 +86,8 @@ public class UserOrganizationServiceTests
     public async Task GetUserOrganization_Ok()
     {
         // Arrange
-        var userId = ObjectId.GenerateNewId().ToString();
-        var organization = ObjectId.GenerateNewId().ToString();
+        var userId = Identifier.GenerateString();
+        var organization = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
         cache.Setup(x => x.GetAsync($"organization-{userId}", CancellationToken.None)).ReturnsAsync(null as byte[]);
         var httpContext = new DefaultHttpContext
@@ -122,7 +122,7 @@ public class UserOrganizationServiceTests
     public async Task GetUserOrganization_Ok_UserNotFound()
     {
         // Arrange
-        var userId = ObjectId.GenerateNewId().ToString();
+        var userId = Identifier.GenerateString();
         var cache = new Mock<IDistributedCache>();
         cache.Setup(x => x.GetAsync($"organization-{userId}", CancellationToken.None)).ReturnsAsync(null as byte[]);
         var httpContext = new DefaultHttpContext

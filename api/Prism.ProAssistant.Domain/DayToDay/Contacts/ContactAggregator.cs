@@ -23,13 +23,13 @@ public class ContactAggregator : IDomainAggregator<Contact>
         switch (@event.Type)
         {
             case nameof(ContactCreated):
-                Apply(@event.ToObject<ContactCreated>());
+                Apply(@event.ToEvent<ContactCreated>());
                 break;
             case nameof(ContactUpdated):
-                Apply(@event.ToObject<ContactUpdated>());
+                Apply(@event.ToEvent<ContactUpdated>());
                 break;
             default:
-                throw new NotImplementedException($"The event type {@event.Type} is not implemented");
+                throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
     }
 

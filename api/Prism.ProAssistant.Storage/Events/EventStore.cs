@@ -1,5 +1,5 @@
-﻿using System.Text.Json;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Prism.Core;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Domain;
@@ -14,9 +14,9 @@ public interface IEventStore
 
 public class EventStore : IEventStore
 {
+    private readonly ILogger<EventStore> _logger;
     private readonly IStateProvider _stateProvider;
     private readonly UserOrganization _userOrganization;
-    private readonly ILogger<EventStore> _logger;
 
     public EventStore(ILogger<EventStore> logger, IStateProvider stateProvider, UserOrganization userOrganization)
     {
@@ -27,17 +27,10 @@ public class EventStore : IEventStore
 
     public async Task Raise(IDomainEvent eventData)
     {
-        var eventId = _stateProvider.GenerateUniqueIdentifier();
+        var eventId = Identifier.GenerateString();
         _logger.LogInformation("Raising event {EventId} of type {EventType} for stream {StreamId}", eventId, eventData.GetType().Name, eventData.StreamId);
-        
-        var @event = new DomainEvent
-        {
-            Id = eventId,
-            Type = eventData.GetType().Name ?? throw new InvalidOperationException(),
-            StreamId = eventData.StreamId,
-            Data = JsonSerializer.Serialize(eventData as object),
-            UserId = _userOrganization.Id
-        };
+
+        var @event = DomainEvent.FromEvent(eventData.StreamId, _userOrganization.Id, eventData);
 
         await Store(@event);
     }
@@ -52,7 +45,7 @@ public class EventStore : IEventStore
         var events = await GetEvents(eventData.StreamId);
 
         aggregator.Init(eventData.StreamId);
-        
+
         foreach (var @event in events)
         {
             aggregator.When(@event);

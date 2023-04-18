@@ -18,6 +18,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Infrastructure.Tests"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Storage.Tests", "Prism.ProAssistant.Storage.Tests\Prism.ProAssistant.Storage.Tests.csproj", "{7C467EB3-C2BE-4D46-9810-6506F8CEC051}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Domain.Tests", "Prism.ProAssistant.Domain.Tests\Prism.ProAssistant.Domain.Tests.csproj", "{19F58A5D-7BFB-4E00-B961-8A9A777E6542}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -60,5 +62,9 @@ Global
 		{7C467EB3-C2BE-4D46-9810-6506F8CEC051}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7C467EB3-C2BE-4D46-9810-6506F8CEC051}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7C467EB3-C2BE-4D46-9810-6506F8CEC051}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19F58A5D-7BFB-4E00-B961-8A9A777E6542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19F58A5D-7BFB-4E00-B961-8A9A777E6542}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19F58A5D-7BFB-4E00-B961-8A9A777E6542}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19F58A5D-7BFB-4E00-B961-8A9A777E6542}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
