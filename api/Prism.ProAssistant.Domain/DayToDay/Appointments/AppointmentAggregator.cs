@@ -40,9 +40,23 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
             case nameof(AppointmentContactUpdated):
                 Apply(@event.ToEvent<AppointmentContactUpdated>());
                 break;
+            case nameof(AppointmentColorUpdated):
+                Apply(@event.ToEvent<AppointmentColorUpdated>());
+                break;
             default:
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
+    }
+    
+    private void Apply(AppointmentColorUpdated @event)
+    {
+        if (_state == null)
+        {
+            throw new InvalidOperationException("The state has not been initialized");
+        }
+
+        _state.ForeColor = @event.ForeColor;
+        _state.BackgroundColor = @event.BackgroundColor;
     }
 
     private void Apply(AppointmentContactUpdated @event)

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Domain.Configuration.Tariffs;
 using Prism.ProAssistant.Domain.Configuration.Tariffs.Events;
+using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
 using Prism.ProAssistant.Storage;
 using Prism.ProAssistant.Storage.Events;
 
@@ -52,7 +54,32 @@ public class TariffController : Controller
     [Route("api/data/tariffs/update")]
     public async Task<UpsertResult> Update([FromBody] Tariff request)
     {
+        var previous = await _queryService.SingleOrDefaultAsync<Tariff>(request.Id);
         var updated = await _eventStore.RaiseAndPersist<Tariff>(new TariffUpdated { Tariff = request });
+
+        if (previous == null)
+        {
+            return updated;
+        }
+
+        if (previous.ForeColor != request.ForeColor || previous.BackgroundColor != request.BackgroundColor)
+        {
+            var filter = new Filter(nameof(Appointment.TypeId), request.Id);
+            var appointments = await _queryService.SearchAsync<Appointment>(filter);
+
+            foreach (var appointment in appointments)
+            {
+                appointment.ForeColor = request.ForeColor;
+                appointment.BackgroundColor = request.BackgroundColor;
+                await _eventStore.RaiseAndPersist<Appointment>(new AppointmentColorUpdated
+                    {
+                        StreamId = appointment.Id,
+                        ForeColor = request.ForeColor,
+                        BackgroundColor = request.BackgroundColor
+                    }
+                );
+            }
+        }
 
         // TODO
         // var filter = new FieldValue(nameof(Appointment.TypeId), request.Id);
