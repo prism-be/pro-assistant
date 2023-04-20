@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Microsoft.ApplicationInsights.DataContracts;
+using Prism.Core;
 using Prism.ProAssistant.Api.Insights;
 using Prism.ProAssistant.Api.Services;
 

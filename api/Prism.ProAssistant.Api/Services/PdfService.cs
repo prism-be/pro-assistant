@@ -2,7 +2,9 @@
 using Acme.Core.Extensions;
 using DotLiquid;
 using Microsoft.AspNetCore.Mvc;
+using Prism.Core;
 using Prism.Core.Exceptions;
+using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Api.Helpers;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Domain.Configuration.DocumentConfiguration;
@@ -26,17 +28,17 @@ public interface IPdfService
 
 public class PdfService : IPdfService
 {
+    private readonly IDataStorage _dataStorage;
     private readonly IEventStore _eventStore;
-    private readonly IFileService _fileService;
     private readonly ILogger<PdfService> _logger;
     private readonly IQueryService _queryService;
 
-    public PdfService(IQueryService queryService, IEventStore eventStore, ILogger<PdfService> logger, IFileService fileService)
+    public PdfService(IEventStore eventStore, IDataStorage dataStorage, ILogger<PdfService> logger, IQueryService queryService)
     {
-        _queryService = queryService;
         _eventStore = eventStore;
+        _dataStorage = dataStorage;
         _logger = logger;
-        _fileService = fileService;
+        _queryService = queryService;
     }
 
     public async Task GenerateDocument([FromBody] DocumentRequest request)
@@ -52,8 +54,13 @@ public class PdfService : IPdfService
         var (title, content) = ReplaceContent(documentConfiguration, appointment, contact);
 
         var document = CreateDocument(appointment, contact, title, content);
-        var bytes = document.GeneratePdf();
-        await SaveDocument(appointment, title, bytes);
+
+        var fileId = Identifier.GenerateString();
+        var fileName = title.ReplaceSpecialChars(true) + ".pdf";
+        await using var fileStream = await _dataStorage.CreateFileStreamAsync("documents", fileName, fileId);
+        document.GeneratePdf(fileStream);
+
+        await SaveDocument(appointment, title, fileId, fileName);
     }
 
     private Document CreateDocument(Appointment appointment, Contact? contact, string title, string content)
@@ -134,12 +141,9 @@ public class PdfService : IPdfService
         return template.Render(Hash.FromAnonymousObject(data));
     }
 
-    private async Task SaveDocument(Appointment appointment, string title, byte[] bytes)
+    private async Task SaveDocument(Appointment appointment, string title, string fileId, string fileName)
     {
         var documentTitle = $"{appointment.StartDate:yyyy-MM-dd HH:mm} - {appointment.LastName} {appointment.FirstName} - {title}";
-        var fileName = documentTitle.ReplaceSpecialChars(true) + ".pdf";
-
-        var fileId = await _fileService.UploadFromBytesAsync(fileName, bytes);
 
         var document = new BinaryDocument
         {

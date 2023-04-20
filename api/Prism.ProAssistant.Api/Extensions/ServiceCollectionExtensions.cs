@@ -6,6 +6,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using Prism.Core;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
+using Prism.Infrastructure.Providers.Local;
 using Prism.Infrastructure.Providers.Mongo;
 using Prism.ProAssistant.Api.Config;
 using Prism.ProAssistant.Api.Services;
@@ -55,7 +56,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IQueryService, QueryService>();
         services.AddScoped<IPdfService, PdfService>();
-        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IDataStorage, LocalStorage>();
 
         services.AddScoped<IUserOrganizationService, UserOrganizationService>();
         services.AddScoped<UserOrganization>(serviceProvider =>
