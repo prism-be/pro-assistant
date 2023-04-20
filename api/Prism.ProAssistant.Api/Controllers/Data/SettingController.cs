@@ -38,7 +38,7 @@ public class SettingController : Controller
     [Route("api/data/settings/search")]
     public async Task<IEnumerable<Setting>> Search([FromBody] IEnumerable<Filter> request)
     {
-        return await _queryService.SearchAsync<Setting>(request);
+        return await _queryService.SearchAsync<Setting>(request.ToArray());
     }
 
     [HttpGet]

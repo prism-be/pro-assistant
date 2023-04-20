@@ -46,7 +46,7 @@ public class AppointmentController : Controller
     [Route("api/data/appointments/search")]
     public async Task<IEnumerable<Appointment>> Search([FromBody] IEnumerable<Filter> request)
     {
-        return await _queryService.SearchAsync<Appointment>(request);
+        return await _queryService.SearchAsync<Appointment>(request.ToArray());
     }
 
     [HttpGet]

@@ -45,7 +45,7 @@ public class DocumentConfigurationController : Controller
     [Route("api/data/document-configurations/search")]
     public async Task<IEnumerable<DocumentConfiguration>> Search([FromBody] IEnumerable<Filter> request)
     {
-        return await _queryService.SearchAsync<DocumentConfiguration>(request);
+        return await _queryService.SearchAsync<DocumentConfiguration>(request.ToArray());
     }
 
     [HttpGet]

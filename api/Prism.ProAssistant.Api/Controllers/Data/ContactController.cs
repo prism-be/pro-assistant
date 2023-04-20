@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Prism.Core;
 using Prism.Infrastructure.Providers;
+using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
 using Prism.ProAssistant.Domain.DayToDay.Contacts;
 using Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
 using Prism.ProAssistant.Storage;
@@ -44,7 +46,7 @@ public class ContactController : Controller
     [Route("api/data/contacts/search")]
     public async Task<IEnumerable<Contact>> Search([FromBody] List<Filter> request)
     {
-        return await _queryService.SearchAsync<Contact>(request);
+        return await _queryService.SearchAsync<Contact>(request.ToArray());
     }
 
     [HttpGet]
@@ -58,10 +60,39 @@ public class ContactController : Controller
     [Route("api/data/contacts/update")]
     public async Task<UpsertResult> Update([FromBody] Contact request)
     {
-        return await _eventStore.RaiseAndPersist<Contact>(new ContactUpdated
+        var previous = await _queryService.SingleAsync<Contact>(request.Id);
+        
+        var result = await _eventStore.RaiseAndPersist<Contact>(new ContactUpdated
         {
             Contact = request
         });
+        
+        if (previous.FirstName != request.FirstName 
+            || previous.LastName != request.LastName
+            || previous.BirthDate != request.BirthDate
+            || previous.PhoneNumber != request.PhoneNumber)
+        {
+            var appointmentContactUpdated = new AppointmentContactUpdated
+            {
+                StreamId = string.Empty,
+                FirstName = request.FirstName ?? string.Empty,
+                LastName = request.LastName ?? string.Empty,
+                BirthDate = request.BirthDate,
+                PhoneNumber = request.PhoneNumber,
+                Title = $"{request.LastName} {request.FirstName}"
+            };
+            
+            var filter = new Filter(nameof(Appointment.ContactId), request.Id);
+            var appointments = await _queryService.SearchAsync<Appointment>(filter);
+            
+            foreach (var appointment in appointments)
+            {
+                appointmentContactUpdated.StreamId = appointment.Id;
+                await _eventStore.RaiseAndPersist<Appointment>(appointmentContactUpdated);
+            }
+        }
+        
+        return result;
 
         // TODO
         /*

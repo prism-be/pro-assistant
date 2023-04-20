@@ -38,7 +38,7 @@ public class TariffController : Controller
     [Route("api/data/tariffs/search")]
     public async Task<IEnumerable<Tariff>> Search([FromBody] IEnumerable<Filter> request)
     {
-        return await _queryService.SearchAsync<Tariff>(request);
+        return await _queryService.SearchAsync<Tariff>(request.ToArray());
     }
 
     [HttpGet]

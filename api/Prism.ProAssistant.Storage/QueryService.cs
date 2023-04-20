@@ -8,7 +8,7 @@ namespace Prism.ProAssistant.Storage;
 public interface IQueryService
 {
     Task<IEnumerable<T>> ListAsync<T>();
-    Task<IEnumerable<T>> SearchAsync<T>(IEnumerable<Filter> request);
+    Task<IEnumerable<T>> SearchAsync<T>(params Filter[] request);
     Task<T> SingleAsync<T>(string id);
     Task<T?> SingleOrDefaultAsync<T>(string id);
 }
@@ -56,7 +56,7 @@ public class QueryService : IQueryService
         return await container.ReadAsync(id);
     }
 
-    public async Task<IEnumerable<T>> SearchAsync<T>(IEnumerable<Filter> request)
+    public async Task<IEnumerable<T>> SearchAsync<T>(params Filter[] request)
     {
         _logger.LogInformation("SearchAsync - {Type} - {UserId}", typeof(T).Name, _userOrganization.Id);
 
