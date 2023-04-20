@@ -153,7 +153,7 @@ public class PdfService : IPdfService
             FileName = fileName
         };
 
-        await _eventStore.RaiseAndPersist<Contact>(new AttachAppointmentDocument
+        await _eventStore.RaiseAndPersist<Appointment>(new AttachAppointmentDocument
         {
             Document = document,
             StreamId = appointment.Id

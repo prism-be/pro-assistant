@@ -57,22 +57,29 @@ public class MongoStateContainer<T> : IStateContainer<T>
 
         return Builders<T>.Filter.And(filters.Select(f =>
         {
+            var filterValue = f.Value;
+            
+            if (DateTime.TryParse(f.Value.ToString(), out var date))
+            {
+                filterValue = date;
+            }
+            
             switch (f.Operator)
             {
                 case FilterOperator.Equal:
-                    return Builders<T>.Filter.Eq(f.Field, f.Value);
+                    return Builders<T>.Filter.Eq(f.Field, filterValue);
                 case FilterOperator.NotEqual:
-                    return Builders<T>.Filter.Ne(f.Field, f.Value);
+                    return Builders<T>.Filter.Ne(f.Field, filterValue);
                 case FilterOperator.GreaterThan:
-                    return Builders<T>.Filter.Gt(f.Field, f.Value);
+                    return Builders<T>.Filter.Gt(f.Field, filterValue);
                 case FilterOperator.GreaterThanOrEqual:
-                    return Builders<T>.Filter.Gte(f.Field, f.Value);
+                    return Builders<T>.Filter.Gte(f.Field, filterValue);
                 case FilterOperator.LessThan:
-                    return Builders<T>.Filter.Lt(f.Field, f.Value);
+                    return Builders<T>.Filter.Lt(f.Field, filterValue);
                 case FilterOperator.LessThanOrEqual:
-                    return Builders<T>.Filter.Lte(f.Field, f.Value);
+                    return Builders<T>.Filter.Lte(f.Field, filterValue);
                 case FilterOperator.Regex:
-                    return Builders<T>.Filter.Regex(f.Field, new BsonRegularExpression(f.Value.ToString()));
+                    return Builders<T>.Filter.Regex(f.Field, new BsonRegularExpression(filterValue.ToString()));
             }
 
             throw new NotSupportedException($"Filter operator {f.Operator} not supported");

@@ -58,7 +58,7 @@ public class DocumentController : Controller
             return BadRequest();
         }
 
-        await using var stream = await _dataStorage.OpenFileStreamAsync("documents", id);
+        var stream = await _dataStorage.OpenFileStreamAsync("documents", id);
         var content = new FileStreamResult(stream, "application/pdf");
 
         if (download)

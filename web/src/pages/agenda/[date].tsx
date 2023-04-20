@@ -15,7 +15,7 @@ import {AppointmentStateIcon} from "@/components/appointments/AppointmentStateIc
 
 const Agenda: NextPage = () => {
     const router = useRouter();
-    const day = parse(router.query.date as string, "yyyy-MM-dd", new Date());
+    const day: Date = parse(router.query.date as string, "yyyy-MM-dd", new Date());
     const {t} = useTranslation("common");
 
     const {data: appointments} = useSWR(router.asPath, loadAppointments);
@@ -27,13 +27,13 @@ const Agenda: NextPage = () => {
             {
                 field: "StartDate",
                 operator: "gte",
-                value: day
+                value:  formatISO(day)
             }
             ,
             {
                 field: "StartDate",
                 operator: "lt",
-                value: add(day, {days: 1})
+                value: formatISO(add(day, {days: 1}))
             }
         ]);
     }
