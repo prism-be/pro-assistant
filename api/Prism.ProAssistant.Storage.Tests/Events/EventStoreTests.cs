@@ -64,6 +64,7 @@ public class EventStoreTests
                 Type = nameof(ContactCreated),
                 Id = Identifier.GenerateString(),
                 StreamId = Identifier.GenerateString(),
+                StreamType = "contacts",
                 UserId = Identifier.GenerateString()
             }
         });

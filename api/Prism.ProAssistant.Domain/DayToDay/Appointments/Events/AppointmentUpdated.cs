@@ -4,4 +4,5 @@ public class AppointmentUpdated : IDomainEvent
 {
     required public Appointment Appointment { get; set; }
     public string StreamId => Appointment.Id;
+    public string StreamType => "appointments";
 }

@@ -4,4 +4,5 @@ public class ContactCreated : IDomainEvent
 {
     required public Contact Contact { get; set; }
     public string StreamId => Contact.Id;
+    public string StreamType => "contacts";
 }
