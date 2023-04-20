@@ -85,7 +85,8 @@ public class EventStore : IEventStore
     private async Task<IEnumerable<DomainEvent>> GetEvents(string streamId)
     {
         var container = await _stateProvider.GetContainerAsync<DomainEvent>();
-        return await container.FetchAsync(new Filter(nameof(DomainEvent.StreamId), streamId));
+        var events = await container.FetchAsync(new Filter(nameof(DomainEvent.StreamId), streamId));
+        return events.OrderBy(x => x.CreatedAt);
     }
 
     private async Task Store(DomainEvent @event)
