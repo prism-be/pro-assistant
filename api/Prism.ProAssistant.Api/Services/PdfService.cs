@@ -2,9 +2,18 @@
 using Acme.Core.Extensions;
 using DotLiquid;
 using Microsoft.AspNetCore.Mvc;
-using Prism.ProAssistant.Api.Exceptions;
+using Prism.Core;
+using Prism.Core.Exceptions;
+using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Api.Helpers;
 using Prism.ProAssistant.Api.Models;
+using Prism.ProAssistant.Domain.Configuration.DocumentConfiguration;
+using Prism.ProAssistant.Domain.Configuration.Settings;
+using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
+using Prism.ProAssistant.Domain.DayToDay.Contacts;
+using Prism.ProAssistant.Storage;
+using Prism.ProAssistant.Storage.Events;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -19,17 +28,17 @@ public interface IPdfService
 
 public class PdfService : IPdfService
 {
-    private readonly IQueryService _queryService;
-    private readonly IEventService _eventService;
+    private readonly IDataStorage _dataStorage;
+    private readonly IEventStore _eventStore;
     private readonly ILogger<PdfService> _logger;
-    private readonly IFileService _fileService;
+    private readonly IQueryService _queryService;
 
-    public PdfService(IQueryService queryService, ILogger<PdfService> logger, IEventService eventService, IFileService fileService)
+    public PdfService(IEventStore eventStore, IDataStorage dataStorage, ILogger<PdfService> logger, IQueryService queryService)
     {
-        _queryService = queryService;
+        _eventStore = eventStore;
+        _dataStorage = dataStorage;
         _logger = logger;
-        _eventService = eventService;
-        _fileService = fileService;
+        _queryService = queryService;
     }
 
     public async Task GenerateDocument([FromBody] DocumentRequest request)
@@ -45,8 +54,13 @@ public class PdfService : IPdfService
         var (title, content) = ReplaceContent(documentConfiguration, appointment, contact);
 
         var document = CreateDocument(appointment, contact, title, content);
-        var bytes = document.GeneratePdf();
-        await SaveDocument(appointment, title, bytes);
+
+        var fileId = Identifier.GenerateString();
+        var fileName = title.ReplaceSpecialChars(true) + ".pdf";
+        await using var fileStream = await _dataStorage.CreateFileStreamAsync("documents", fileName, fileId);
+        document.GeneratePdf(fileStream);
+
+        await SaveDocument(appointment, title, fileId, fileName);
     }
 
     private Document CreateDocument(Appointment appointment, Contact? contact, string title, string content)
@@ -127,12 +141,9 @@ public class PdfService : IPdfService
         return template.Render(Hash.FromAnonymousObject(data));
     }
 
-    private async Task SaveDocument(Appointment appointment, string title, byte[] bytes)
+    private async Task SaveDocument(Appointment appointment, string title, string fileId, string fileName)
     {
         var documentTitle = $"{appointment.StartDate:yyyy-MM-dd HH:mm} - {appointment.LastName} {appointment.FirstName} - {title}";
-        var fileName = documentTitle.ReplaceSpecialChars(true) + ".pdf";
-
-        var fileId = await _fileService.UploadFromBytesAsync(fileName, bytes);
 
         var document = new BinaryDocument
         {
@@ -142,9 +153,11 @@ public class PdfService : IPdfService
             FileName = fileName
         };
 
-        appointment.Documents.Insert(0, document);
-
-        await _eventService.UpdateAsync<Appointment>(appointment.Id, new FieldValue(nameof(appointment.Documents), appointment.Documents));
+        await _eventStore.RaiseAndPersist<Appointment>(new AttachAppointmentDocument
+        {
+            Document = document,
+            StreamId = appointment.Id
+        });
 
         _logger.LogInformation("Document {itemId} was saved for Appointment {appointmentId}", document.Id, appointment.Id);
     }

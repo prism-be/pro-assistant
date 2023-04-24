@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Prism.ProAssistant.Api.Config;
 using Prism.ProAssistant.Api.Extensions;
 using Prism.ProAssistant.Api.Services;
+using Prism.ProAssistant.Storage;
 
 namespace Prism.ProAssistant.Api.Tests.Extensions;
 

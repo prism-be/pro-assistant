@@ -14,7 +14,8 @@
         "AZURE_AD_TENANT_NAME":"byprism",
         "ENVIRONMENT": "proassistant-dev",
         "APPLICATIONINSIGHTS_CONNECTION_STRING": "InstrumentationKey=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/",
-        "MONGODB_CONNECTION_STRING": "mongodb://proassistant:Toto123Toto123@localhost:27017/?authSource=admin"
+        "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017/?authSource=admin",
+        "STORAGE_DIRECTORY": "C:\\dev\\tmp\\pro-assistant"
       }
     }
   }

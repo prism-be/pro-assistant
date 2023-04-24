@@ -1,54 +1,101 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Prism.ProAssistant.Api.Models;
-using Prism.ProAssistant.Api.Services;
+using Prism.Core;
+using Prism.Infrastructure.Providers;
+using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
+using Prism.ProAssistant.Domain.DayToDay.Contacts;
+using Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
+using Prism.ProAssistant.Storage;
+using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 [Authorize]
-public class ContactController : Controller, IDataController<Contact>
+public class ContactController : Controller
 {
+    private readonly IEventStore _eventStore;
     private readonly IQueryService _queryService;
-    private readonly IEventService _eventService;
 
-    public ContactController(IQueryService queryService, IEventService eventService)
+    public ContactController(IEventStore eventStore, IQueryService queryService)
     {
+        _eventStore = eventStore;
         _queryService = queryService;
-        _eventService = eventService;
     }
 
     [HttpPost]
     [Route("api/data/contacts/insert")]
     public async Task<UpsertResult> Insert([FromBody] Contact request)
     {
-        return await _eventService.CreateAsync(request);
+        request.Id = Identifier.GenerateString();
+
+        return await _eventStore.RaiseAndPersist<Contact>(new ContactCreated
+        {
+            Contact = request
+        });
     }
 
     [HttpGet]
     [Route("api/data/contacts")]
-    public async Task<List<Contact>> List()
+    public async Task<IEnumerable<Contact>> List()
     {
         return await _queryService.ListAsync<Contact>();
     }
 
     [HttpPost]
     [Route("api/data/contacts/search")]
-    public async Task<List<Contact>> Search([FromBody] List<SearchFilter> request)
+    public async Task<IEnumerable<Contact>> Search([FromBody] List<Filter> request)
     {
-        return await _queryService.SearchAsync<Contact>(request);
+        return await _queryService.SearchAsync<Contact>(request.ToArray());
     }
 
     [HttpGet]
     [Route("api/data/contacts/{id}")]
     public async Task<Contact?> Single(string id)
     {
-        return await _queryService.SingleOrDefaultAsync<Contact>(id);
+        return await _queryService.SingleAsync<Contact>(id);
     }
 
     [HttpPost]
     [Route("api/data/contacts/update")]
     public async Task<UpsertResult> Update([FromBody] Contact request)
     {
+        var previous = await _queryService.SingleAsync<Contact>(request.Id);
+        
+        var result = await _eventStore.RaiseAndPersist<Contact>(new ContactUpdated
+        {
+            Contact = request
+        });
+        
+        if (previous.FirstName != request.FirstName 
+            || previous.LastName != request.LastName
+            || previous.BirthDate != request.BirthDate
+            || previous.PhoneNumber != request.PhoneNumber)
+        {
+            var appointmentContactUpdated = new AppointmentContactUpdated
+            {
+                StreamId = string.Empty,
+                FirstName = request.FirstName ?? string.Empty,
+                LastName = request.LastName ?? string.Empty,
+                BirthDate = request.BirthDate,
+                PhoneNumber = request.PhoneNumber,
+                Title = $"{request.LastName} {request.FirstName}"
+            };
+            
+            var filter = new Filter(nameof(Appointment.ContactId), request.Id);
+            var appointments = await _queryService.SearchAsync<Appointment>(filter);
+            
+            foreach (var appointment in appointments)
+            {
+                appointmentContactUpdated.StreamId = appointment.Id;
+                await _eventStore.RaiseAndPersist<Appointment>(appointmentContactUpdated);
+            }
+        }
+        
+        return result;
+
+        // TODO
+        /*
         var result = await _eventService.ReplaceAsync(request);
 
         var filter = new FieldValue(nameof(Appointment.ContactId), request.Id);
@@ -61,6 +108,6 @@ public class ContactController : Controller, IDataController<Contact>
             new FieldValue(nameof(Appointment.Title), $"{request.LastName} {request.FirstName}")
         );
 
-        return result;
+        return result;*/
     }
 }

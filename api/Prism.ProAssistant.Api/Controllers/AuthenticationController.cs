@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Prism.Infrastructure.Authentication;
 using Prism.ProAssistant.Api.Models;
-using Prism.ProAssistant.Api.Services;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
@@ -9,24 +9,23 @@ namespace Prism.ProAssistant.Api.Controllers;
 public class AuthenticationController
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
-    private readonly IUserOrganizationService _userOrganizationService;
+    private readonly UserOrganization _userOrganization;
 
-    public AuthenticationController(IHttpContextAccessor httpContextAccessor, IUserOrganizationService userOrganizationService)
+    public AuthenticationController(IHttpContextAccessor httpContextAccessor, UserOrganization userOrganization)
     {
         _httpContextAccessor = httpContextAccessor;
-        _userOrganizationService = userOrganizationService;
+        _userOrganization = userOrganization;
     }
 
     [HttpGet]
     [Route("api/authentication/user")]
-    public async Task<UserInformation> GetUser()
+    public UserInformation GetUser()
     {
         return new UserInformation
         {
             IsAuthenticated = true,
             Name = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value ?? string.Empty,
-            Organization = await _userOrganizationService.GetUserOrganization()
+            Organization = _userOrganization.Organization
         };
     }
 }
-

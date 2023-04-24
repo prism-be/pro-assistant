@@ -1,39 +1,42 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
-using Prism.ProAssistant.Api.Exceptions;
+using Prism.Core;
+using Prism.Core.Exceptions;
+using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
+using Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
+using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
 public class DocumentController : Controller
 {
     private readonly IDistributedCache _cache;
-    private readonly IQueryService _queryService;
-    private readonly IEventService _eventService;
+    private readonly IDataStorage _dataStorage;
+    private readonly IEventStore _eventStore;
     private readonly IPdfService _pdfService;
-    private readonly IFileService _fileService;
 
-    public DocumentController(IPdfService pdfService, IQueryService queryService, IDistributedCache cache, IEventService eventService, IFileService fileService)
+    public DocumentController(IDistributedCache cache, IEventStore eventStore, IPdfService pdfService, IDataStorage dataStorage)
     {
-        _pdfService = pdfService;
-        _queryService = queryService;
         _cache = cache;
-        _eventService = eventService;
-        _fileService = fileService;
+        _eventStore = eventStore;
+        _pdfService = pdfService;
+        _dataStorage = dataStorage;
     }
 
     [HttpDelete]
     [Route("api/document/{appointmentId}/{documentId}")]
     public async Task Delete(string appointmentId, string documentId)
     {
-        var appointment = await _queryService.SingleAsync<Appointment>(appointmentId);
-
-        appointment.Documents.Remove(appointment.Documents.Single(x => x.Id == documentId));
-        await _eventService.UpdateAsync<Appointment>(appointment.Id, new FieldValue(nameof(appointment.Documents), appointment.Documents));
-
-        await _fileService.DeleteFileAsync(documentId);
+        await _eventStore.RaiseAndPersist<Appointment>(new DetachAppointmentDocument
+        {
+            StreamId = appointmentId,
+            DocumentId = documentId
+        });
     }
 
     [AllowAnonymous]
@@ -41,18 +44,26 @@ public class DocumentController : Controller
     [Route("api/document/download/{id}/{downloadKey}")]
     public async Task<IActionResult> Download(string id, string downloadKey, [FromQuery] bool download)
     {
-        var pdfBytes = await _cache.GetAsync(downloadKey);
+        var idBytes = await _cache.GetAsync(downloadKey);
 
-        if (pdfBytes == null)
+        if (idBytes == null)
         {
             return NotFound();
         }
 
-        var content = new FileContentResult(pdfBytes, "application/pdf");
+        var fileId = Encoding.Default.GetString(idBytes);
+
+        if (id != fileId)
+        {
+            return BadRequest();
+        }
+
+        var stream = await _dataStorage.OpenFileStreamAsync("documents", id);
+        var content = new FileStreamResult(stream, "application/pdf");
 
         if (download)
         {
-            content.FileDownloadName = await _fileService.GetFileNameAsync(id);
+            content.FileDownloadName = await _dataStorage.GetFileNameAsync("documents", id);
         }
 
         return content;
@@ -62,14 +73,13 @@ public class DocumentController : Controller
     [Route("api/document/download/{id}")]
     public async Task<DownloadReference> DownloadDocument(string id)
     {
-        var data = await _fileService.GetFileAsync(id);
-
-        if (data == null)
+        if (await _dataStorage.ExistsAsync("documents", id) == false)
         {
             throw new NotFoundException("Document not found.");
         }
 
-        var downloadKey = Guid.NewGuid().ToString();
+        var downloadKey = Identifier.GenerateString();
+        var data = Encoding.Default.GetBytes(id);
 
         await _cache.SetAsync(downloadKey, data, new DistributedCacheEntryOptions
         {
