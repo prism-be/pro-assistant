@@ -58,7 +58,18 @@ public class PdfService : IPdfService
         var fileId = Identifier.GenerateString();
         var fileName = title.ReplaceSpecialChars(true) + ".pdf";
         await using var fileStream = await _dataStorage.CreateFileStreamAsync("documents", fileName, fileId);
-        document.GeneratePdf(fileStream);
+
+        if (fileStream.CanSeek)
+        {
+            document.GeneratePdf(fileStream);
+        }
+        else
+        {
+            using var memoryStream = new MemoryStream();
+            document.GeneratePdf(memoryStream);
+            memoryStream.Seek(0, SeekOrigin.Begin);
+            await memoryStream.CopyToAsync(fileStream);
+        }
 
         await SaveDocument(appointment, title, fileId, fileName);
     }
