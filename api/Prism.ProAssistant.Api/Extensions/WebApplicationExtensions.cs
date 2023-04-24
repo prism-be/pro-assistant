@@ -8,6 +8,12 @@ public static class WebApplicationExtensions
     {
         app.Logger.LogInformation("Replacing environment variables in JavaScript files...");
 
+        if (string.IsNullOrWhiteSpace(app.Environment.WebRootPath))
+        {
+            app.Logger.LogWarning("The environment variable WebRootPath is not set.");
+            return;
+        }
+
         foreach (var file in Directory.GetFiles(app.Environment.WebRootPath, "*.js", SearchOption.AllDirectories))
         {
             app.Logger.LogInformation("Replacing environment variables in {file}...", file);
