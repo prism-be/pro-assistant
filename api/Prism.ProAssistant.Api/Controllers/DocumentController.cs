@@ -1,9 +1,11 @@
 ﻿using System.Text;
+using System.Text.Json;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Prism.Core;
 using Prism.Core.Exceptions;
+using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
@@ -19,13 +21,15 @@ public class DocumentController : Controller
     private readonly IDataStorage _dataStorage;
     private readonly IEventStore _eventStore;
     private readonly IPdfService _pdfService;
+    private readonly UserOrganization _userOrganization;
 
-    public DocumentController(IDistributedCache cache, IEventStore eventStore, IPdfService pdfService, IDataStorage dataStorage)
+    public DocumentController(IDistributedCache cache, IEventStore eventStore, IPdfService pdfService, IDataStorage dataStorage, UserOrganization userOrganization)
     {
         _cache = cache;
         _eventStore = eventStore;
         _pdfService = pdfService;
         _dataStorage = dataStorage;
+        _userOrganization = userOrganization;
     }
 
     [HttpDelete]
@@ -51,19 +55,19 @@ public class DocumentController : Controller
             return NotFound();
         }
 
-        var fileId = Encoding.Default.GetString(idBytes);
+        var reference = JsonSerializer.Deserialize<FileReference>(Encoding.Default.GetString(idBytes));
 
-        if (id != fileId)
+        if (reference == null || id != reference.Id)
         {
             return BadRequest();
         }
 
-        var stream = await _dataStorage.OpenFileStreamAsync("documents", id);
+        var stream = await _dataStorage.OpenFileStreamAsync(reference.Organization, "documents", id);
         var content = new FileStreamResult(stream, "application/pdf");
 
         if (download)
         {
-            content.FileDownloadName = await _dataStorage.GetFileNameAsync("documents", id);
+            content.FileDownloadName = await _dataStorage.GetFileNameAsync(reference.Organization, "documents", id);
         }
 
         return content;
@@ -73,13 +77,14 @@ public class DocumentController : Controller
     [Route("api/document/download/{id}")]
     public async Task<DownloadReference> DownloadDocument(string id)
     {
-        if (await _dataStorage.ExistsAsync("documents", id) == false)
+        if (await _dataStorage.ExistsAsync(_userOrganization.Organization, "documents", id) == false)
         {
             throw new NotFoundException("Document not found.");
         }
 
         var downloadKey = Identifier.GenerateString();
-        var data = Encoding.Default.GetBytes(id);
+        var reference = new FileReference(id, _userOrganization.Organization);
+        var data = Encoding.Default.GetBytes(JsonSerializer.Serialize(reference));
 
         await _cache.SetAsync(downloadKey, data, new DistributedCacheEntryOptions
         {
@@ -98,4 +103,6 @@ public class DocumentController : Controller
     {
         await _pdfService.GenerateDocument(request);
     }
+
+    private record FileReference(string Id, string Organization);
 }

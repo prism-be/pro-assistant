@@ -7,12 +7,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Prism.Core\Prism.Core.csproj" />
+        <ProjectReference Include="..\Prism.Core\Prism.Core.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-      <PackageReference Include="Azure.Storage.Blobs" Version="12.16.0" />
-      <PackageReference Include="MongoDB.Driver" Version="2.19.1" />
+        <PackageReference Include="Azure.Storage.Blobs" Version="12.16.0"/>
+        <PackageReference Include="MongoDB.Driver" Version="2.19.1"/>
     </ItemGroup>
 
 </Project>

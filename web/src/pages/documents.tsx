@@ -1,16 +1,16 @@
-﻿import React, { useState } from "react";
-import { NextPage } from "next";
+﻿import React, {useState} from "react";
+import {NextPage} from "next";
 import ContentContainer from "../components/design/ContentContainer";
 import {useTranslation} from "react-i18next";
 import Section from "../components/design/Section";
 import useSWR from "swr";
-import { useForm } from "react-hook-form";
+import {useForm} from "react-hook-form";
 import InputText from "../components/forms/InputText";
 import TextArea from "../components/forms/TextArea";
-import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { HeaderWithAction } from "@/components/design/HeaderWithAction";
-import { DocumentConfiguration } from "@/libs/models";
-import { deleteData, postData } from "@/libs/http";
+import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
+import {HeaderWithAction} from "@/components/design/HeaderWithAction";
+import {DocumentConfiguration} from "@/libs/models";
+import {deleteData, postData} from "@/libs/http";
 
 const Documents: NextPage = () => {
     const { t } = useTranslation("documents");

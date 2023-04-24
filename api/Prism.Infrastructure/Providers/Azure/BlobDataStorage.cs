@@ -7,10 +7,11 @@ namespace Prism.Infrastructure.Providers.Azure;
 public class BlobDataStorage: IDataStorage
 {
 
-    public Task<Stream> CreateFileStreamAsync(string container, string fileName, string id)
+    public Task<Stream> CreateFileStreamAsync(string organization, string container, string fileName, string id)
     {
-        var azureBlobClient = GetBlobClient(container);
-        var blobClient = azureBlobClient.GetBlobClient(id);
+        var azureBlobClient = GetBlobClient(organization);
+        var fqId = $"{container}/{id}";
+        var blobClient = azureBlobClient.GetBlobClient(fqId);
         
         var options = new BlobOpenWriteOptions
         {
@@ -23,30 +24,33 @@ public class BlobDataStorage: IDataStorage
         return blobClient.OpenWriteAsync(true, options);
     }
 
-    private static BlobContainerClient GetBlobClient(string container)
+    private static BlobContainerClient GetBlobClient(string organization)
     {
-        return new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_STORAGE_CONNECTION_STRING"), container);
+        return new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_STORAGE_CONNECTION_STRING"), organization);
     }
 
-    public async Task<bool> ExistsAsync(string container, string id)
+    public async Task<bool> ExistsAsync(string organization, string container, string id)
     {
-        var azureBlobClient = GetBlobClient(container);
-        var blobClient = azureBlobClient.GetBlobClient(id);
+        var azureBlobClient = GetBlobClient(organization);
+        var fqId = $"{container}/{id}";
+        var blobClient = azureBlobClient.GetBlobClient(fqId);
         var response = await blobClient.ExistsAsync();
         return response.Value;
     }
 
-    public Task<string> GetFileNameAsync(string container, string id)
+    public Task<string> GetFileNameAsync(string organization, string container, string id)
     {
-        var azureBlobClient = GetBlobClient(container);
-        var blobClient = azureBlobClient.GetBlobClient(id);
+        var azureBlobClient = GetBlobClient(organization);
+        var fqId = $"{container}/{id}";
+        var blobClient = azureBlobClient.GetBlobClient(fqId);
         return blobClient.GetPropertiesAsync().ContinueWith(x => x.Result.Value.Metadata["FileName"]);
     }
 
-    public Task<Stream> OpenFileStreamAsync(string container, string id)
+    public Task<Stream> OpenFileStreamAsync(string organization, string container, string id)
     {
-        var azureBlobClient = GetBlobClient(container);
-        var blobClient = azureBlobClient.GetBlobClient(id);
+        var azureBlobClient = GetBlobClient(organization);
+        var fqId = $"{container}/{id}";
+        var blobClient = azureBlobClient.GetBlobClient(fqId);
         return blobClient.OpenReadAsync();
     }
 }

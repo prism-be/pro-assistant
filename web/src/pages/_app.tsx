@@ -8,7 +8,7 @@ import {getData} from "@/libs/http";
 import Insights from "@/components/Insights";
 import {MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "@/libs/msal";
-import {I18nProvider, languages, defaultLanguage, namespaces, defaultNamespace,} from "next-i18next-static-site";
+import {defaultLanguage, defaultNamespace, I18nProvider, languages, namespaces,} from "next-i18next-static-site";
 
 import locales from "@/libs/localization";
 

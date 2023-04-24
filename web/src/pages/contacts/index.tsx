@@ -2,15 +2,15 @@
 import InputText from "../../components/forms/InputText";
 import InputDate from "../../components/forms/InputDate";
 import Button from "../../components/forms/Button";
-import { NextPage } from "next";
+import {NextPage} from "next";
 import {useTranslation} from "react-i18next";
-import { useForm } from "react-hook-form";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import {useForm} from "react-hook-form";
+import {useEffect, useState} from "react";
+import {useRouter} from "next/router";
 import Section from "../../components/design/Section";
-import { Contact } from "@/libs/models";
+import {Contact} from "@/libs/models";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
+import {yupResolver} from "@hookform/resolvers/yup";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {searchContacts} from "@/libs/search";
 

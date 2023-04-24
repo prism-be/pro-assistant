@@ -1,12 +1,12 @@
 ﻿import Section from "../design/Section";
-import useSWR, { mutate } from "swr";
-import { useCallback, useState } from "react";
+import useSWR, {mutate} from "swr";
+import {useCallback, useState} from "react";
 import {useTranslation} from "react-i18next";
-import { format, parseISO } from "date-fns";
-import { ArrowDownTrayIcon, CheckIcon, TrashIcon } from "@heroicons/react/24/outline";
-import {Appointment, DocumentConfiguration, DocumentRequest, DownloadReference} from "@/libs/models";
-import {deleteData, deleteDataWithBody, generateDocument, postData} from "@/libs/http";
-import { getLocale } from "@/libs/localization";
+import {format, parseISO} from "date-fns";
+import {ArrowDownTrayIcon, CheckIcon, TrashIcon} from "@heroicons/react/24/outline";
+import {Appointment, DocumentConfiguration, DownloadReference} from "@/libs/models";
+import {deleteData, generateDocument, postData} from "@/libs/http";
+import {getLocale} from "@/libs/localization";
 
 interface Props {
     appointment: Appointment;
