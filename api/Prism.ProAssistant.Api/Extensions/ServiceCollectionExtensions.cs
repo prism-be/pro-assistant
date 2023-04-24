@@ -6,6 +6,7 @@ using MongoDB.Bson.Serialization.Serializers;
 using Prism.Core;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
+using Prism.Infrastructure.Providers.Azure;
 using Prism.Infrastructure.Providers.Local;
 using Prism.Infrastructure.Providers.Mongo;
 using Prism.ProAssistant.Api.Config;
@@ -56,8 +57,16 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IQueryService, QueryService>();
         services.AddScoped<IPdfService, PdfService>();
-        services.AddScoped<IDataStorage, LocalStorage>();
-
+        
+        if (!string.IsNullOrWhiteSpace(EnvironmentConfiguration.GetConfiguration("AZURE_STORAGE_CONNECTION_STRING")))
+        {
+            services.AddScoped<IDataStorage, BlobDataStorage>();
+        }
+        else
+        {
+            services.AddScoped<IDataStorage, LocalStorage>();
+        }
+        
         services.AddScoped<IUserOrganizationService, UserOrganizationService>();
         services.AddScoped<UserOrganization>(serviceProvider =>
         {
