@@ -1,5 +1,5 @@
-﻿import { ApplicationInsights } from "@microsoft/applicationinsights-web";
-import { ReactPlugin, withAITracking, AppInsightsContext } from "@microsoft/applicationinsights-react-js";
+﻿import {ApplicationInsights} from "@microsoft/applicationinsights-web";
+import {AppInsightsContext, ReactPlugin, withAITracking} from "@microsoft/applicationinsights-react-js";
 
 let reactPlugin = new ReactPlugin();
 let appInsights = new ApplicationInsights({

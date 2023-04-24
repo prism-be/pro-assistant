@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using Moq;
 using Prism.Core;
+using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Api.Models;
 using Prism.ProAssistant.Api.Services;
@@ -40,19 +41,25 @@ public class PdfServiceTests
             Name = Identifier.GenerateString()
         });
 
+        var userOrganization = new UserOrganization
+        {
+            Id = Identifier.GenerateString(),
+            Organization = Identifier.GenerateString()
+        };
+
         SetupSettings(queryService);
 
         var eventStore = new Mock<IEventStore>();
         var dataStorage = new Mock<IDataStorage>();
-        dataStorage.Setup(x => x.CreateFileStreamAsync("documents", It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new MemoryStream());
+        dataStorage.Setup(x => x.CreateFileStreamAsync(userOrganization.Organization, "documents", It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new MemoryStream());
 
         // Act
-        var service = new PdfService(eventStore.Object, dataStorage.Object, new Mock<ILogger<PdfService>>().Object, queryService.Object);
+        var service = new PdfService(eventStore.Object, dataStorage.Object, new Mock<ILogger<PdfService>>().Object, queryService.Object, userOrganization);
         await service.GenerateDocument(new DocumentRequest
             { AppointmentId = id, DocumentId = documentId });
 
         // Assert
-        dataStorage.Verify(x => x.CreateFileStreamAsync("documents", It.IsAny<string>() , It.IsAny<string>()), Times.Once);
+        dataStorage.Verify(x => x.CreateFileStreamAsync(userOrganization.Organization, "documents", It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
@@ -85,19 +92,25 @@ public class PdfServiceTests
             Name = Identifier.GenerateString()
         });
 
+        var userOrganization = new UserOrganization
+        {
+            Id = Identifier.GenerateString(),
+            Organization = Identifier.GenerateString()
+        };
+
         SetupSettings(queryService);
 
         var eventStore = new Mock<IEventStore>();
         var dataStorage = new Mock<IDataStorage>();
-        dataStorage.Setup(x => x.CreateFileStreamAsync("documents", It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new MemoryStream());
+        dataStorage.Setup(x => x.CreateFileStreamAsync(userOrganization.Organization, "documents", It.IsAny<string>(), It.IsAny<string>())).ReturnsAsync(new MemoryStream());
 
         // Act
-        var service = new PdfService(eventStore.Object, dataStorage.Object, new Mock<ILogger<PdfService>>().Object, queryService.Object);
+        var service = new PdfService(eventStore.Object, dataStorage.Object, new Mock<ILogger<PdfService>>().Object, queryService.Object, userOrganization);
         await service.GenerateDocument(new DocumentRequest
             { AppointmentId = id, DocumentId = documentId });
 
         // Assert
-        dataStorage.Verify(x => x.CreateFileStreamAsync("documents", It.IsAny<string>() , It.IsAny<string>()), Times.Once);
+        dataStorage.Verify(x => x.CreateFileStreamAsync(userOrganization.Organization, "documents", It.IsAny<string>(), It.IsAny<string>()), Times.Once);
     }
 
     private static void SetupSettings(Mock<IQueryService> dataService)

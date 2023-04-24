@@ -1,18 +1,18 @@
-﻿import { NextPage } from "next";
+﻿import {NextPage} from "next";
 import ContentContainer from "../../components/design/ContentContainer";
-import { add, format, formatISO, parse, parseISO, startOfWeek } from "date-fns";
+import {add, format, formatISO, parse, parseISO, startOfWeek} from "date-fns";
 import {useTranslation} from "react-i18next";
 import React from "react";
-import { useKeyPressEvent } from "react-use";
-import { useSwipeable } from "react-swipeable";
+import {useKeyPressEvent} from "react-use";
+import {useSwipeable} from "react-swipeable";
 import Section from "../../components/design/Section";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 import useSWR from "swr";
-import { ArrowSmallLeftIcon, ArrowSmallRightIcon } from "@heroicons/react/24/solid";
-import { Appointment } from "@/libs/models";
-import { postData } from "@/libs/http";
-import { getLocale } from "@/libs/localization";
-import { AppointmentStateIcon } from "@/components/appointments/AppointmentStateIcon";
+import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
+import {Appointment} from "@/libs/models";
+import {postData} from "@/libs/http";
+import {getLocale} from "@/libs/localization";
+import {AppointmentStateIcon} from "@/components/appointments/AppointmentStateIcon";
 
 const Calendar: NextPage = () => {
     const router = useRouter();

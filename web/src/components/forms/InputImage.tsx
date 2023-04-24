@@ -1,6 +1,6 @@
-﻿import { FieldValues, UseFormRegister } from "react-hook-form";
-import { UseFormSetValue } from "react-hook-form/dist/types/form";
-import { useEffect, useState } from "react";
+﻿import {FieldValues, UseFormRegister} from "react-hook-form";
+import {UseFormSetValue} from "react-hook-form/dist/types/form";
+import {useEffect, useState} from "react";
 
 interface Props {
     label: string;

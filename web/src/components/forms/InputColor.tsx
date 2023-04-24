@@ -1,8 +1,8 @@
-﻿import { FieldValues } from "react-hook-form";
-import { UseFormSetValue } from "react-hook-form/dist/types/form";
-import { useEffect, useState } from "react";
+﻿import {FieldValues} from "react-hook-form";
+import {UseFormSetValue} from "react-hook-form/dist/types/form";
+import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import {PencilSquareIcon} from "@heroicons/react/24/outline";
 
 interface Props {
     label: string;

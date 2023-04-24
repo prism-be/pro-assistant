@@ -1,5 +1,5 @@
-﻿import { Subject } from "rxjs";
-import { filter } from "rxjs/operators";
+﻿import {Subject} from "rxjs";
+import {filter} from "rxjs/operators";
 
 export const AlertType = {
     Success: "Success",

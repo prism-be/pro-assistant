@@ -9,7 +9,7 @@ import {useRouter} from "next/router";
 import useSWR from "swr";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
 import {postData} from "@/libs/http";
-import {Appointment, SearchFilter} from "@/libs/models";
+import {Appointment} from "@/libs/models";
 import {getLocale} from "@/libs/localization";
 import {AppointmentStateIcon} from "@/components/appointments/AppointmentStateIcon";
 

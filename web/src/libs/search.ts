@@ -1,5 +1,5 @@
 ﻿import {Contact, SearchFilter} from "@/libs/models";
-import { postData } from "@/libs/http";
+import {postData} from "@/libs/http";
 
 export async function searchContacts(filter: any): Promise<Contact[]> {
     let filters : SearchFilter[] = [];

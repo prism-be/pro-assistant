@@ -1,6 +1,6 @@
-﻿import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/router";
-import { XCircleIcon } from "@heroicons/react/24/outline";
+﻿import {useEffect, useRef, useState} from "react";
+import {useRouter} from "next/router";
+import {XCircleIcon} from "@heroicons/react/24/outline";
 import {AlertType, clear, onAlert} from "@/libs/events/alert";
 
 interface Props {

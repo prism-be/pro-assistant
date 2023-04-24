@@ -1,10 +1,10 @@
 ﻿import useSWR from "swr";
 import Section from "../design/Section";
 import {useTranslation} from "react-i18next";
-import { useRouter } from "next/router";
-import { AppointmentsList } from "../appointments/AppointmentsList";
+import {useRouter} from "next/router";
+import {AppointmentsList} from "../appointments/AppointmentsList";
 import {Appointment, SearchFilter} from "@/libs/models";
-import { postData } from "@/libs/http";
+import {postData} from "@/libs/http";
 
 export interface Props {
     contactId: string;

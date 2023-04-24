@@ -4,6 +4,7 @@ using DotLiquid;
 using Microsoft.AspNetCore.Mvc;
 using Prism.Core;
 using Prism.Core.Exceptions;
+using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.ProAssistant.Api.Helpers;
 using Prism.ProAssistant.Api.Models;
@@ -32,13 +33,15 @@ public class PdfService : IPdfService
     private readonly IEventStore _eventStore;
     private readonly ILogger<PdfService> _logger;
     private readonly IQueryService _queryService;
+    private readonly UserOrganization _userOrganization;
 
-    public PdfService(IEventStore eventStore, IDataStorage dataStorage, ILogger<PdfService> logger, IQueryService queryService)
+    public PdfService(IEventStore eventStore, IDataStorage dataStorage, ILogger<PdfService> logger, IQueryService queryService, UserOrganization userOrganization)
     {
         _eventStore = eventStore;
         _dataStorage = dataStorage;
         _logger = logger;
         _queryService = queryService;
+        _userOrganization = userOrganization;
     }
 
     public async Task GenerateDocument([FromBody] DocumentRequest request)
@@ -57,7 +60,7 @@ public class PdfService : IPdfService
 
         var fileId = Identifier.GenerateString();
         var fileName = title.ReplaceSpecialChars(true) + ".pdf";
-        await using var fileStream = await _dataStorage.CreateFileStreamAsync("documents", fileName, fileId);
+        await using var fileStream = await _dataStorage.CreateFileStreamAsync(_userOrganization.Organization, "documents", fileName, fileId);
 
         if (fileStream.CanSeek)
         {
