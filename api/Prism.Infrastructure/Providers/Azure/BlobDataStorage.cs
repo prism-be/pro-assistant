@@ -56,7 +56,7 @@ public class BlobDataStorage : IDataStorage
         return blobClient.DeleteAsync();
     }
 
-    private static BlobContainerClient GetBlobClient(string organization)
+    protected virtual BlobContainerClient GetBlobClient(string organization)
     {
         return new BlobContainerClient(
             EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_STORAGE_CONNECTION_STRING"), organization);
