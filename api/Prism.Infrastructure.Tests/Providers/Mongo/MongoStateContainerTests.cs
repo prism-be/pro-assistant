@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Globalization;
+using FluentAssertions;
 using MongoDB.Driver;
 using Moq;
 using Prism.Core;
@@ -10,7 +11,6 @@ namespace Prism.Infrastructure.Tests.Providers.Mongo;
 
 public class MongoStateContainerTests
 {
-
     [Fact]
     public async Task FetchAsync_Ok()
     {
@@ -65,6 +65,120 @@ public class MongoStateContainerTests
         var userOrganizations = result as UserOrganization[] ?? result.ToArray();
         userOrganizations.Should().NotBeNull();
         userOrganizations.Should().BeEquivalentTo(new[] { userOrganization1, userOrganization2 });
+    }
+
+    [Fact]
+    public async Task FetchAsync_WithAllFilters()
+    {
+        // Arrange
+        var userOrganization1 = new UserOrganization
+        {
+            Id = Identifier.GenerateString()
+        };
+        
+        var userOrganization2 = new UserOrganization
+        {
+            Id = Identifier.GenerateString()
+        };
+        
+        var collection = new Mock<IMongoCollection<UserOrganization>>();
+        collection.SetupCollection(userOrganization1, userOrganization2);
+        
+        // Act
+        var mongoStateContainer = new MongoStateContainer<UserOrganization>(collection.Object);
+        var result = await mongoStateContainer.FetchAsync(
+            new Filter(nameof(UserOrganization.Id), userOrganization1.Id, FilterOperator.Equal),
+            new Filter(nameof(UserOrganization.Id), userOrganization2.Id, FilterOperator.NotEqual),
+            new Filter(nameof(UserOrganization.Id), userOrganization1.Id, FilterOperator.GreaterThan),
+            new Filter(nameof(UserOrganization.Id), userOrganization2.Id, FilterOperator.GreaterThanOrEqual),
+            new Filter(nameof(UserOrganization.Id), userOrganization1.Id, FilterOperator.LessThan),
+            new Filter(nameof(UserOrganization.Id), userOrganization2.Id, FilterOperator.LessThanOrEqual),
+            new Filter(nameof(UserOrganization.Id), userOrganization1.Id, FilterOperator.Regex),
+            new Filter(nameof(UserOrganization.Id), DateTime.Now.ToString(CultureInfo.InvariantCulture))
+        );
+
+        // Assert
+        var userOrganizations = result as UserOrganization[] ?? result.ToArray();
+        userOrganizations.Should().NotBeNull();
+        userOrganizations.Should().BeEquivalentTo(new[] { userOrganization1, userOrganization2 });
+    }
+
+    [Fact]
+    public async Task SearchAsync_Ok()
+    {
+        // Arrange
+        var userOrganization1 = new UserOrganization
+        {
+            Id = Identifier.GenerateString()
+        };
+        
+        var userOrganization2 = new UserOrganization
+        {
+            Id = Identifier.GenerateString()
+        };
+        
+        var collection = new Mock<IMongoCollection<UserOrganization>>();
+        collection.SetupCollection(userOrganization1, userOrganization2);
+        
+        // Act
+        var mongoStateContainer = new MongoStateContainer<UserOrganization>(collection.Object);
+        var result = await mongoStateContainer.SearchAsync(
+            new Filter(nameof(UserOrganization.Id), userOrganization1.Id)
+        );
+
+        // Assert
+        var userOrganizations = result as UserOrganization[] ?? result.ToArray();
+        userOrganizations.Should().NotBeNull();
+        userOrganizations.Should().BeEquivalentTo(new[] { userOrganization1, userOrganization2 });
+    }
+
+    [Fact]
+    public async Task DeleteAsync_Ok()
+    {
+        // Arrange
+        var userOrganization = new UserOrganization
+        {
+            Id = Identifier.GenerateString()
+        };
+
+        var collection = new Mock<IMongoCollection<UserOrganization>>();
+        collection.SetupCollection(userOrganization);
+
+        // Act
+        var mongoStateContainer = new MongoStateContainer<UserOrganization>(collection.Object);
+        await mongoStateContainer.DeleteAsync(userOrganization.Id);
+
+        // Assert
+        collection.Verify(c => c.DeleteOneAsync(It.IsAny<FilterDefinition<UserOrganization>>(), CancellationToken.None),
+            Times.Once);
+    }
+
+    [Fact]
+    public async Task ListAsync_Ok()
+    {
+        // Arrange
+        var userOrganization1 = new UserOrganization
+        {
+            Id = Identifier.GenerateString()
+        };
+
+        var userOrganization2 = new UserOrganization
+        {
+            Id = Identifier.GenerateString()
+        };
+
+        var collection = new Mock<IMongoCollection<UserOrganization>>();
+        collection.SetupCollection(userOrganization1, userOrganization2);
+
+        // Act
+        var mongoStateContainer = new MongoStateContainer<UserOrganization>(collection.Object);
+        var result = await mongoStateContainer.ListAsync();
+
+
+        // Assert
+        var organizations = result.ToList();
+        organizations.Should().NotBeNull();
+        organizations.Should().BeEquivalentTo(new[] { userOrganization1, userOrganization2 });
     }
 
     [Fact]

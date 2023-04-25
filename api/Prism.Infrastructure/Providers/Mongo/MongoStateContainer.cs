@@ -34,7 +34,7 @@ public class MongoStateContainer<T> : IStateContainer<T>
         return _collection.DeleteOneAsync(Builders<T>.Filter.Eq("Id", id));
     }
 
-    public async Task<IEnumerable<T>> SearchAsync(IEnumerable<Filter> request)
+    public async Task<IEnumerable<T>> SearchAsync(params Filter[] request)
     {
         var filter = BuildFilter(request.ToArray());
         var results = await _collection.FindAsync(filter);
