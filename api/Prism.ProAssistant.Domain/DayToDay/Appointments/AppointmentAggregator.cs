@@ -5,7 +5,7 @@ namespace Prism.ProAssistant.Domain.DayToDay.Appointments;
 public class AppointmentAggregator : IDomainAggregator<Appointment>
 {
     private string? _id;
-    private Appointment? _state;
+    private Appointment _state = null!;
 
     public void Init(string id)
     {
@@ -47,24 +47,23 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
     }
-    
+
     private void Apply(AppointmentColorUpdated @event)
     {
-        if (_state == null)
-        {
-            throw new InvalidOperationException("The state has not been initialized");
-        }
+        EnsureState();
 
         _state.ForeColor = @event.ForeColor;
         _state.BackgroundColor = @event.BackgroundColor;
     }
 
+    private void EnsureState()
+    {
+        if (_state == null) throw new InvalidOperationException("The state has not been initialized");
+    }
+
     private void Apply(AppointmentContactUpdated @event)
     {
-        if (_state == null)
-        {
-            throw new InvalidOperationException("The state has not been initialized");
-        }
+        EnsureState();
 
         _state.FirstName = @event.FirstName;
         _state.LastName = @event.LastName;
@@ -75,20 +74,14 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 
     private void Apply(DetachAppointmentDocument @event)
     {
-        if (_state == null)
-        {
-            throw new InvalidOperationException("The state has not been initialized");
-        }
+        EnsureState();
 
         _state.Documents.Remove(_state.Documents.Single(x => x.Id == @event.DocumentId));
     }
 
     private void Apply(AttachAppointmentDocument @event)
     {
-        if (_state == null)
-        {
-            throw new InvalidOperationException("The state has not been initialized");
-        }
+        EnsureState();
 
         _state.Documents.Insert(0, @event.Document);
     }
