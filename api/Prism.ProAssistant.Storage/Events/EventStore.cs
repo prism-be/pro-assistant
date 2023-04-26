@@ -13,9 +13,10 @@ using Microsoft.Extensions.Logging;
 
 public interface IEventStore
 {
+    Task<T?> Hydrate<T>(string streamId);
+    Task<UpsertResult> Persist<T>(string streamId);
     Task Raise(IDomainEvent eventData);
     Task<UpsertResult> RaiseAndPersist<T>(IDomainEvent eventData);
-    Task<UpsertResult> Persist<T>(string streamId);
 }
 
 public class EventStore : IEventStore
@@ -50,6 +51,26 @@ public class EventStore : IEventStore
     public async Task<UpsertResult> Persist<T>(string streamId)
     {
         _logger.LogInformation("Persisting state for stream {StreamId}", streamId);
+
+        var state = await Hydrate<T>(streamId);
+
+        var stateContainer = await _stateProvider.GetContainerAsync<T>();
+
+        if (state == null)
+        {
+            await stateContainer.DeleteAsync(streamId);
+        }
+        else
+        {
+            await stateContainer.WriteAsync(streamId, state);
+        }
+
+        return new UpsertResult(streamId);
+    }
+
+    public async Task<T?> Hydrate<T>(string streamId)
+    {
+        _logger.LogDebug("Hydrating state for stream {StreamId}", streamId);
         var aggregator = GetAggregator<T>();
         var events = await GetEvents(streamId);
 
@@ -60,18 +81,7 @@ public class EventStore : IEventStore
             aggregator.When(@event);
         }
 
-        var stateContainer = await _stateProvider.GetContainerAsync<T>();
-
-        if (aggregator.State == null)
-        {
-            await stateContainer.DeleteAsync(streamId);
-        }
-        else
-        {
-            await stateContainer.WriteAsync(streamId, aggregator.State);
-        }
-
-        return new UpsertResult(streamId);
+        return aggregator.State;
     }
 
     private static IDomainAggregator<T> GetAggregator<T>()
