@@ -8,4 +8,5 @@ public class UserOrganization
 {
     public string Id { get; set; } = Guid.Empty.ToString();
     public string Organization { get; set; } = "demo";
+    public string Name { get; set; } = "demo";
 }

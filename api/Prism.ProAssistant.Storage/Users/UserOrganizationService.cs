@@ -13,6 +13,7 @@ public interface IUserOrganizationService
 {
     string? GetUserId();
     Task<string> GetUserOrganization();
+    string? GetName();
 }
 
 public class UserOrganizationService : IUserOrganizationService
@@ -73,6 +74,16 @@ public class UserOrganizationService : IUserOrganizationService
         });
 
         return "demo";
+    }
+
+    public string? GetName()
+    {
+        if (_httpContextAccessor.HttpContext?.User.Identity?.IsAuthenticated != true)
+        {
+            return null;
+        }
+
+        return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value;
     }
 
     public string? GetUserId()

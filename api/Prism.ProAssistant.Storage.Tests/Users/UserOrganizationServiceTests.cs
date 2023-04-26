@@ -58,9 +58,11 @@ public class UserOrganizationServiceTests
         // Act
         var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object, globalStateProvider.Object);
         var result = service.GetUserId();
+        var name = service.GetName();
 
         // Assert
         result.Should().Be(userId);
+        name.Should().Be("Test User");
     }
 
     [Fact]
@@ -78,9 +80,11 @@ public class UserOrganizationServiceTests
         // Act
         var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object, globalStateProvider.Object);
         var result = service.GetUserId();
+        var name = service.GetName();
 
         // Assert
         result.Should().BeNull();
+        name.Should().BeNull();
     }
     
     [Fact]

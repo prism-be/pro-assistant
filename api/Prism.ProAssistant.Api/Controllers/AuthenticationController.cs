@@ -8,12 +8,10 @@ namespace Prism.ProAssistant.Api.Controllers;
 [Authorize]
 public class AuthenticationController
 {
-    private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly UserOrganization _userOrganization;
 
-    public AuthenticationController(IHttpContextAccessor httpContextAccessor, UserOrganization userOrganization)
+    public AuthenticationController(UserOrganization userOrganization)
     {
-        _httpContextAccessor = httpContextAccessor;
         _userOrganization = userOrganization;
     }
 
@@ -24,7 +22,7 @@ public class AuthenticationController
         return new UserInformation
         {
             IsAuthenticated = true,
-            Name = _httpContextAccessor.HttpContext?.User.Claims.FirstOrDefault(x => x.Type == "name")?.Value ?? string.Empty,
+            Name = _userOrganization.Name,
             Organization = _userOrganization.Organization
         };
     }
