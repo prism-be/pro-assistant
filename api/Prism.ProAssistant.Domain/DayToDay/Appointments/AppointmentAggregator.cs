@@ -1,6 +1,6 @@
-﻿using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
+﻿namespace Prism.ProAssistant.Domain.DayToDay.Appointments;
 
-namespace Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Events;
 
 public class AppointmentAggregator : IDomainAggregator<Appointment>
 {
@@ -56,11 +56,6 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
         _state.BackgroundColor = @event.BackgroundColor;
     }
 
-    private void EnsureState()
-    {
-        if (_state == null) throw new InvalidOperationException("The state has not been initialized");
-    }
-
     private void Apply(AppointmentContactUpdated @event)
     {
         EnsureState();
@@ -96,5 +91,13 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
     {
         _state = @event.Appointment;
         _state.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
+    }
+
+    private void EnsureState()
+    {
+        if (_state == null)
+        {
+            throw new InvalidOperationException("The state has not been initialized");
+        }
     }
 }
