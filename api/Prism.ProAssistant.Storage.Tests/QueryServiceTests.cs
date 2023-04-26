@@ -85,6 +85,7 @@ public class QueryServiceTests
         var stateProvider = new Mock<IStateProvider>();
         var container = new Mock<IStateContainer<Contact>>();
         container.Setup(x => x.SearchAsync()).ReturnsAsync(new List<Contact>());
+        stateProvider.Setup(x => x.GetContainerAsync<Contact>()).ReturnsAsync(container.Object);
 
         // Act
         var queryService = new QueryService(logger.Object, userOrganization, stateProvider.Object);
