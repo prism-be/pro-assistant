@@ -1,20 +1,21 @@
-﻿using Microsoft.Extensions.Logging;
-using Prism.Core;
-using Prism.Infrastructure.Authentication;
-using Prism.Infrastructure.Providers;
-using Prism.ProAssistant.Domain;
-using Prism.ProAssistant.Domain.Configuration.DocumentConfiguration;
-using Prism.ProAssistant.Domain.Configuration.Settings;
-using Prism.ProAssistant.Domain.Configuration.Tariffs;
-using Prism.ProAssistant.Domain.DayToDay.Appointments;
-using Prism.ProAssistant.Domain.DayToDay.Contacts;
+﻿namespace Prism.ProAssistant.Storage.Events;
 
-namespace Prism.ProAssistant.Storage.Events;
+using Core;
+using Domain;
+using Domain.Configuration.DocumentConfiguration;
+using Domain.Configuration.Settings;
+using Domain.Configuration.Tariffs;
+using Domain.DayToDay.Appointments;
+using Domain.DayToDay.Contacts;
+using Infrastructure.Authentication;
+using Infrastructure.Providers;
+using Microsoft.Extensions.Logging;
 
 public interface IEventStore
 {
     Task Raise(IDomainEvent eventData);
     Task<UpsertResult> RaiseAndPersist<T>(IDomainEvent eventData);
+    Task<UpsertResult> Persist<T>(string streamId);
 }
 
 public class EventStore : IEventStore
@@ -22,19 +23,6 @@ public class EventStore : IEventStore
     private readonly ILogger<EventStore> _logger;
     private readonly IStateProvider _stateProvider;
     private readonly UserOrganization _userOrganization;
-
-    private static IDomainAggregator<T> GetAggregator<T>()
-    {
-        return typeof(T).Name switch
-        {
-            nameof(Appointment) => (IDomainAggregator<T>)new AppointmentAggregator(),
-            nameof(Contact) => (IDomainAggregator<T>)new ContactAggregator(),
-            nameof(DocumentConfiguration) => (IDomainAggregator<T>)new DocumentConfigurationAggregator(),
-            nameof(Setting) => (IDomainAggregator<T>)new SettingAggregator(),
-            nameof(Tariff) => (IDomainAggregator<T>)new TariffAggregator(),
-            _ => throw new NotSupportedException($"No aggregator found for type {typeof(T).Name}")
-        };
-    }
 
     public EventStore(ILogger<EventStore> logger, IStateProvider stateProvider, UserOrganization userOrganization)
     {
@@ -56,12 +44,16 @@ public class EventStore : IEventStore
     public async Task<UpsertResult> RaiseAndPersist<T>(IDomainEvent eventData)
     {
         await Raise(eventData);
+        return await Persist<T>(eventData.StreamId);
+    }
 
-        _logger.LogInformation("Persisting state for stream {StreamId}", eventData.StreamId);
+    public async Task<UpsertResult> Persist<T>(string streamId)
+    {
+        _logger.LogInformation("Persisting state for stream {StreamId}", streamId);
         var aggregator = GetAggregator<T>();
-        var events = await GetEvents(eventData.StreamId);
+        var events = await GetEvents(streamId);
 
-        aggregator.Init(eventData.StreamId);
+        aggregator.Init(streamId);
 
         foreach (var @event in events)
         {
@@ -72,14 +64,27 @@ public class EventStore : IEventStore
 
         if (aggregator.State == null)
         {
-            await stateContainer.DeleteAsync(eventData.StreamId);
+            await stateContainer.DeleteAsync(streamId);
         }
         else
         {
-            await stateContainer.WriteAsync(eventData.StreamId, aggregator.State);
+            await stateContainer.WriteAsync(streamId, aggregator.State);
         }
 
-        return new UpsertResult(eventData.StreamId);
+        return new UpsertResult(streamId);
+    }
+
+    private static IDomainAggregator<T> GetAggregator<T>()
+    {
+        return typeof(T).Name switch
+        {
+            nameof(Appointment) => (IDomainAggregator<T>)new AppointmentAggregator(),
+            nameof(Contact) => (IDomainAggregator<T>)new ContactAggregator(),
+            nameof(DocumentConfiguration) => (IDomainAggregator<T>)new DocumentConfigurationAggregator(),
+            nameof(Setting) => (IDomainAggregator<T>)new SettingAggregator(),
+            nameof(Tariff) => (IDomainAggregator<T>)new TariffAggregator(),
+            _ => throw new NotSupportedException($"No aggregator found for type {typeof(T).Name}")
+        };
     }
 
     private async Task<IEnumerable<DomainEvent>> GetEvents(string streamId)
