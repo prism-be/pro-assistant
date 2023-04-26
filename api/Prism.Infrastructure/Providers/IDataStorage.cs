@@ -9,4 +9,6 @@ public interface IDataStorage
     Task<string> GetFileNameAsync(string organization, string container, string id);
 
     Task<Stream> OpenFileStreamAsync(string organization, string container, string id);
+    
+    Task DeleteAsync(string organization, string container, string id);
 }

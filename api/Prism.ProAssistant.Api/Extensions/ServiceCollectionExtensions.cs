@@ -83,7 +83,8 @@ public static class ServiceCollectionExtensions
             return new UserOrganization
             {
                 Id = userOrganisationService.GetUserId() ?? Guid.Empty.ToString(),
-                Organization = organisation.Result
+                Organization = organisation.Result,
+                Name = userOrganisationService.GetName() ?? string.Empty
             };
         });
 

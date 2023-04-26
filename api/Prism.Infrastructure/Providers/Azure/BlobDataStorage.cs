@@ -4,29 +4,23 @@ using Prism.Core;
 
 namespace Prism.Infrastructure.Providers.Azure;
 
-public class BlobDataStorage: IDataStorage
+public class BlobDataStorage : IDataStorage
 {
-
     public Task<Stream> CreateFileStreamAsync(string organization, string container, string fileName, string id)
     {
         var azureBlobClient = GetBlobClient(organization);
         var fqId = $"{container}/{id}";
         var blobClient = azureBlobClient.GetBlobClient(fqId);
-        
+
         var options = new BlobOpenWriteOptions
         {
             Metadata = new Dictionary<string, string>
             {
-                {"FileName", fileName}
+                { "FileName", fileName }
             }
         };
 
         return blobClient.OpenWriteAsync(true, options);
-    }
-
-    private static BlobContainerClient GetBlobClient(string organization)
-    {
-        return new BlobContainerClient(EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_STORAGE_CONNECTION_STRING"), organization);
     }
 
     public async Task<bool> ExistsAsync(string organization, string container, string id)
@@ -52,5 +46,19 @@ public class BlobDataStorage: IDataStorage
         var fqId = $"{container}/{id}";
         var blobClient = azureBlobClient.GetBlobClient(fqId);
         return blobClient.OpenReadAsync();
+    }
+
+    public Task DeleteAsync(string organization, string container, string id)
+    {
+        var azureBlobClient = GetBlobClient(organization);
+        var fqId = $"{container}/{id}";
+        var blobClient = azureBlobClient.GetBlobClient(fqId);
+        return blobClient.DeleteAsync();
+    }
+
+    protected virtual BlobContainerClient GetBlobClient(string organization)
+    {
+        return new BlobContainerClient(
+            EnvironmentConfiguration.GetMandatoryConfiguration("AZURE_STORAGE_CONNECTION_STRING"), organization);
     }
 }

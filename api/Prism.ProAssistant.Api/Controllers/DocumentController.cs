@@ -104,5 +104,5 @@ public class DocumentController : Controller
         await _pdfService.GenerateDocument(request);
     }
 
-    private record FileReference(string Id, string Organization);
+    public record FileReference(string Id, string Organization);
 }

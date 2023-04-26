@@ -14,10 +14,10 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 [Authorize]
 public class ContactController : Controller
 {
-    private readonly IEventStore _eventStore;
     private readonly IQueryService _queryService;
+    private readonly IEventStore _eventStore;
 
-    public ContactController(IEventStore eventStore, IQueryService queryService)
+    public ContactController(IQueryService queryService, IEventStore eventStore)
     {
         _eventStore = eventStore;
         _queryService = queryService;
@@ -44,9 +44,9 @@ public class ContactController : Controller
 
     [HttpPost]
     [Route("api/data/contacts/search")]
-    public async Task<IEnumerable<Contact>> Search([FromBody] List<Filter> request)
+    public async Task<IEnumerable<Contact>> Search([FromBody] Filter[] request)
     {
-        return await _queryService.SearchAsync<Contact>(request.ToArray());
+        return await _queryService.SearchAsync<Contact>(request);
     }
 
     [HttpGet]
