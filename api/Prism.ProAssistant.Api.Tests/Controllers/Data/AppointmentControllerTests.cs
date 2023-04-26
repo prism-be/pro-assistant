@@ -61,10 +61,10 @@ public class AppointmentControllerTests
         
         // Act
         var controller = new AppointmentController(queryService.Object, eventStore.Object);
-        await controller.Search(new Filter[] {});
+        await controller.Search(Array.Empty<Filter>());
 
         // Assert
-        queryService.Verify(x => x.SearchAsync<Appointment>(It.IsAny<Filter[]>()), Times.Once);
+        queryService.Verify(x => x.SearchAsync<Appointment>(Array.Empty<Filter>()), Times.Once);
     }
 
     [Fact]
@@ -104,6 +104,6 @@ public class AppointmentControllerTests
         await controller.Update(appointment);
 
         // Assert
-        eventStore.Verify(x => x.RaiseAndPersist<Appointment>(It.Is<AppointmentUpdated>(x => x.Appointment == appointment)), Times.Once);
+        eventStore.Verify(x => x.RaiseAndPersist<Appointment>(It.Is<AppointmentUpdated>(y => y.Appointment == appointment)), Times.Once);
     }
 }
