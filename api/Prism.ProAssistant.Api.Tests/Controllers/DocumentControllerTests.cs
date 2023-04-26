@@ -18,6 +18,8 @@ using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Tests.Controllers;
 
+using Domain;
+
 public class DocumentControllerTests
 {
     [Fact]

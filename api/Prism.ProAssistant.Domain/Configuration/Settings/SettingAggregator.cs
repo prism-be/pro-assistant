@@ -12,7 +12,7 @@ public class SettingAggregator : IDomainAggregator<Setting>
 
     public Setting? State { get; private set; }
 
-    public void When(DomainEvent @event)
+    public Task When(DomainEvent @event)
     {
         switch (@event.Type)
         {
@@ -23,6 +23,8 @@ public class SettingAggregator : IDomainAggregator<Setting>
                 Apply(@event.ToEvent<SettingUpdated>());
                 break;
         }
+        
+        return Task.CompletedTask;
     }
 
     private void Apply(SettingCreated @event)

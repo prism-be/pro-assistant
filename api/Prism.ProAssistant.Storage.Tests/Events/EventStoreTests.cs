@@ -15,6 +15,16 @@ using Storage.Events;
 
 public class EventStoreTests
 {
+    private IServiceProvider GetServiceProvider()
+    {
+        var provider = new Mock<IServiceProvider>();
+        
+        provider.Setup(x => x.GetService(typeof(IDomainAggregator<Contact>))).Returns(new ContactAggregator());
+        provider.Setup(x => x.GetService(typeof(IDomainAggregator<DocumentConfiguration>))).Returns(new DocumentConfigurationAggregator());
+
+        return provider.Object;
+    }
+
     [Fact]
     public async Task Hydrate_Ok()
     {
@@ -47,7 +57,7 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider());
         await eventStore.Hydrate<Contact>(@event.StreamId);
 
         // Assert
@@ -87,7 +97,7 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider());
         await eventStore.Persist<Contact>(@event.StreamId);
 
         // Assert
@@ -114,7 +124,7 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider());
         await eventStore.Raise(@event);
 
         // Assert
@@ -154,7 +164,7 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider());
         await eventStore.RaiseAndPersist<Contact>(@event);
 
         // Assert
@@ -194,7 +204,7 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider());
         await eventStore.RaiseAndPersist<DocumentConfiguration>(@event);
 
         // Assert

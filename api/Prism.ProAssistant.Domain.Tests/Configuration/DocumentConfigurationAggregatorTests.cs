@@ -9,7 +9,7 @@ namespace Prism.ProAssistant.Domain.Tests.Configuration;
 public class DocumentConfigurationAggregatorTests
 {
     [Fact]
-    public void Happy()
+    public async Task Happy()
     {
         // Arrange
         var streamId = Identifier.GenerateString();
@@ -43,19 +43,19 @@ public class DocumentConfigurationAggregatorTests
         };
         
         // Act and assert events
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, documentConfigurationCreated));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, documentConfigurationCreated));
         Debug.Assert(aggregator.State != null, "aggregator.State != null");
         aggregator.State.Name.Should().Be("Name");
         
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, documentConfigurationUpdated));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, documentConfigurationUpdated));
         Debug.Assert(aggregator.State != null, "aggregator.State != null");
         aggregator.State.Name.Should().Be("NameUpdated");
         
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, documentConfigurationDeleted));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, documentConfigurationDeleted));
         aggregator.State.Should().BeNull();
 
         // Assert unknown events
-        aggregator.Invoking(x => x.When(DomainEvent.FromEvent(streamId, userId, new DummyEvent())))
-            .Should().Throw<NotSupportedException>();
+        await aggregator.Invoking(x => x.When(DomainEvent.FromEvent(streamId, userId, new DummyEvent())))
+            .Should().ThrowAsync<NotSupportedException>();
     }
 }

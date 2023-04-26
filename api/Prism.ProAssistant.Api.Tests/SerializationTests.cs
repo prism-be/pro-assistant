@@ -11,6 +11,8 @@ using Prism.ProAssistant.Storage;
 
 namespace Prism.ProAssistant.Api.Tests;
 
+using Domain;
+
 public class SerializationTests
 {
     private readonly Random _dice = new();

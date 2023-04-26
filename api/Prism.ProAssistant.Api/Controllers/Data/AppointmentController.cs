@@ -11,6 +11,8 @@ using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
+using Domain;
+
 [Authorize]
 public class AppointmentController : Controller
 {

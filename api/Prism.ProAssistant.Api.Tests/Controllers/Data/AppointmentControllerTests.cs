@@ -12,6 +12,8 @@ using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Tests.Controllers.Data;
 
+using Domain;
+
 public class AppointmentControllerTests
 {
     [Fact]

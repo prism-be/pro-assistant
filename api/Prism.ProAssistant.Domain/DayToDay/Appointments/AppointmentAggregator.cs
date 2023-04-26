@@ -1,11 +1,21 @@
 ﻿namespace Prism.ProAssistant.Domain.DayToDay.Appointments;
 
+using Configuration.Tariffs;
 using Events;
 
 public class AppointmentAggregator : IDomainAggregator<Appointment>
 {
+    private readonly IHydrator _hydrator;
     private string? _id;
     private Appointment _state = null!;
+
+    private Tariff? _tariff;
+
+    public AppointmentAggregator(IHydrator hydrator)
+    {
+        _hydrator = hydrator;
+    }
+
 
     public void Init(string id)
     {
@@ -21,7 +31,7 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 
     public Appointment State => _state ?? throw new InvalidOperationException("The state has not been initialized");
 
-    public void When(DomainEvent @event)
+    public async Task When(DomainEvent @event)
     {
         switch (@event.Type)
         {
@@ -40,20 +50,11 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
             case nameof(AppointmentContactUpdated):
                 Apply(@event.ToEvent<AppointmentContactUpdated>());
                 break;
-            case nameof(AppointmentColorUpdated):
-                Apply(@event.ToEvent<AppointmentColorUpdated>());
-                break;
             default:
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
-    }
 
-    private void Apply(AppointmentColorUpdated @event)
-    {
-        EnsureState();
-
-        _state.ForeColor = @event.ForeColor;
-        _state.BackgroundColor = @event.BackgroundColor;
+        await EnsureReferences();
     }
 
     private void Apply(AppointmentContactUpdated @event)
@@ -91,6 +92,17 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
     {
         _state = @event.Appointment;
         _state.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
+    }
+
+    private async Task EnsureReferences()
+    {
+        if (_state.Type != _tariff?.Id)
+        {
+            _tariff = await _hydrator.Hydrate<Tariff>(_state.Type);
+
+            State.ForeColor = _tariff?.ForeColor;
+            State.BackgroundColor = _tariff?.BackgroundColor;
+        }
     }
 
     private void EnsureState()

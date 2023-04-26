@@ -15,7 +15,7 @@ public class DocumentConfigurationAggregator: IDomainAggregator<DocumentConfigur
 
     public DocumentConfiguration? State { get; set; }
     
-    public void When(DomainEvent @event)
+    public Task When(DomainEvent @event)
     {
         switch (@event.Type)
         {
@@ -31,5 +31,7 @@ public class DocumentConfigurationAggregator: IDomainAggregator<DocumentConfigur
             default:
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
+        
+        return Task.CompletedTask;
     }
 }

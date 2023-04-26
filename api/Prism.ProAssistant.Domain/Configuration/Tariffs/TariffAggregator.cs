@@ -12,7 +12,7 @@ public class TariffAggregator : IDomainAggregator<Tariff>
 
     public Tariff? State { get; private set; }
 
-    public void When(DomainEvent @event)
+    public Task When(DomainEvent @event)
     {
         switch (@event.Type)
         {
@@ -23,6 +23,8 @@ public class TariffAggregator : IDomainAggregator<Tariff>
                 Apply(@event.ToEvent<TariffUpdated>());
                 break;
         }
+        
+        return Task.CompletedTask;
     }
 
     private void Apply(TariffCreated @event)

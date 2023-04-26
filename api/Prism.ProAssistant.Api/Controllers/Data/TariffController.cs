@@ -1,14 +1,15 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Prism.Infrastructure.Providers;
-using Prism.ProAssistant.Domain.Configuration.Tariffs;
-using Prism.ProAssistant.Domain.Configuration.Tariffs.Events;
-using Prism.ProAssistant.Domain.DayToDay.Appointments;
-using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
-using Prism.ProAssistant.Storage;
-using Prism.ProAssistant.Storage.Events;
+﻿namespace Prism.ProAssistant.Api.Controllers.Data;
 
-namespace Prism.ProAssistant.Api.Controllers.Data;
+using Core;
+using Domain;
+using Domain.Configuration.Tariffs;
+using Domain.Configuration.Tariffs.Events;
+using Domain.DayToDay.Appointments;
+using Infrastructure.Providers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Storage;
+using Storage.Events;
 
 [Authorize]
 public class TariffController : Controller
@@ -26,6 +27,7 @@ public class TariffController : Controller
     [Route("api/data/tariffs/insert")]
     public async Task<UpsertResult> Insert([FromBody] Tariff request)
     {
+        request.Id = Identifier.GenerateString();
         return await _eventStore.RaiseAndPersist<Tariff>(new TariffCreated { Tariff = request });
     }
 
@@ -62,32 +64,13 @@ public class TariffController : Controller
             return updated;
         }
 
-        if (previous.ForeColor != request.ForeColor || previous.BackgroundColor != request.BackgroundColor)
+        var filter = new Filter(nameof(Appointment.TypeId), request.Id);
+        var appointments = await _queryService.SearchAsync<Appointment>(filter);
+
+        foreach (var appointment in appointments)
         {
-            var filter = new Filter(nameof(Appointment.TypeId), request.Id);
-            var appointments = await _queryService.SearchAsync<Appointment>(filter);
-
-            foreach (var appointment in appointments)
-            {
-                appointment.ForeColor = request.ForeColor;
-                appointment.BackgroundColor = request.BackgroundColor;
-                await _eventStore.RaiseAndPersist<Appointment>(new AppointmentColorUpdated
-                    {
-                        StreamId = appointment.Id,
-                        ForeColor = request.ForeColor,
-                        BackgroundColor = request.BackgroundColor
-                    }
-                );
-            }
+            await _eventStore.Persist<Appointment>(appointment.Id);
         }
-
-        // TODO
-        // var filter = new FieldValue(nameof(Appointment.TypeId), request.Id);
-        //
-        // await _eventStore.UpdateManyAsync<Appointment>(filter,
-        //     new FieldValue(nameof(Appointment.ForeColor), request.ForeColor),
-        //     new FieldValue(nameof(Appointment.BackgroundColor), request.BackgroundColor)
-        // );
 
         return updated;
     }
