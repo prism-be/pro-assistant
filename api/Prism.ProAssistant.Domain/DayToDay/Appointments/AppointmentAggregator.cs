@@ -1,11 +1,24 @@
-﻿using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
+﻿namespace Prism.ProAssistant.Domain.DayToDay.Appointments;
 
-namespace Prism.ProAssistant.Domain.DayToDay.Appointments;
+using Configuration.Tariffs;
+using Contacts;
+using Events;
 
 public class AppointmentAggregator : IDomainAggregator<Appointment>
 {
+    private readonly IHydrator _hydrator;
+
+    private Contact? _contact;
     private string? _id;
     private Appointment _state = null!;
+
+    private Tariff? _tariff;
+
+    public AppointmentAggregator(IHydrator hydrator)
+    {
+        _hydrator = hydrator;
+    }
+
 
     public void Init(string id)
     {
@@ -21,7 +34,7 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 
     public Appointment State => _state ?? throw new InvalidOperationException("The state has not been initialized");
 
-    public void When(DomainEvent @event)
+    public async Task When(DomainEvent @event)
     {
         switch (@event.Type)
         {
@@ -37,39 +50,11 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
             case nameof(DetachAppointmentDocument):
                 Apply(@event.ToEvent<DetachAppointmentDocument>());
                 break;
-            case nameof(AppointmentContactUpdated):
-                Apply(@event.ToEvent<AppointmentContactUpdated>());
-                break;
-            case nameof(AppointmentColorUpdated):
-                Apply(@event.ToEvent<AppointmentColorUpdated>());
-                break;
             default:
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
-    }
 
-    private void Apply(AppointmentColorUpdated @event)
-    {
-        EnsureState();
-
-        _state.ForeColor = @event.ForeColor;
-        _state.BackgroundColor = @event.BackgroundColor;
-    }
-
-    private void EnsureState()
-    {
-        if (_state == null) throw new InvalidOperationException("The state has not been initialized");
-    }
-
-    private void Apply(AppointmentContactUpdated @event)
-    {
-        EnsureState();
-
-        _state.FirstName = @event.FirstName;
-        _state.LastName = @event.LastName;
-        _state.Title = @event.Title;
-        _state.PhoneNumber = @event.PhoneNumber;
-        _state.BirthDate = @event.BirthDate;
+        await EnsureReferences();
     }
 
     private void Apply(DetachAppointmentDocument @event)
@@ -96,5 +81,35 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
     {
         _state = @event.Appointment;
         _state.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
+    }
+
+    private async Task EnsureReferences()
+    {
+        if (_state.TypeId != _tariff?.Id)
+        {
+            _tariff = await _hydrator.Hydrate<Tariff>(_state.TypeId);
+
+            State.ForeColor = _tariff?.ForeColor;
+            State.BackgroundColor = _tariff?.BackgroundColor;
+        }
+
+        if (_state.ContactId != _contact?.Id)
+        {
+            _contact = await _hydrator.Hydrate<Contact>(_state.ContactId);
+
+            State.FirstName = _contact?.FirstName ?? string.Empty;
+            State.LastName = _contact?.LastName ?? string.Empty;
+            State.BirthDate = _contact?.BirthDate;
+            State.PhoneNumber = _contact?.PhoneNumber;
+            State.Title = $"{_contact?.LastName} {_contact?.FirstName}";
+        }
+    }
+
+    private void EnsureState()
+    {
+        if (_state == null)
+        {
+            throw new InvalidOperationException("The state has not been initialized");
+        }
     }
 }

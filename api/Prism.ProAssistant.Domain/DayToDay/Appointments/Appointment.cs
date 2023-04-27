@@ -28,16 +28,16 @@ public class Appointment
     public List<BinaryDocument> Documents { get; set; } = new();
 
     [JsonPropertyName("firstName")]
-    required public string FirstName { get; set; }
+    public string? FirstName { get; set; }
 
     [JsonPropertyName("id")]
     required public string Id { get; set; }
 
     [JsonPropertyName("lastName")]
-    required public string LastName { get; set; }
+    public string? LastName { get; set; }
 
     [JsonPropertyName("title")]
-    required public string Title { get; set; }
+    public string? Title { get; set; }
 
     [JsonPropertyName("backgroundColor")]
     public string? BackgroundColor { get; set; }

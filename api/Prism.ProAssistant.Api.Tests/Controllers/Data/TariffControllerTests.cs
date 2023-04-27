@@ -1,13 +1,14 @@
-﻿using Moq;
-using Prism.Core;
-using Prism.Infrastructure.Providers;
-using Prism.ProAssistant.Api.Controllers.Data;
-using Prism.ProAssistant.Domain.Configuration.Tariffs;
-using Prism.ProAssistant.Domain.Configuration.Tariffs.Events;
-using Prism.ProAssistant.Storage;
-using Prism.ProAssistant.Storage.Events;
+﻿namespace Prism.ProAssistant.Api.Tests.Controllers.Data;
 
-namespace Prism.ProAssistant.Api.Tests.Controllers.Data;
+using Api.Controllers.Data;
+using Core;
+using Domain.Configuration.Tariffs;
+using Domain.Configuration.Tariffs.Events;
+using Domain.DayToDay.Appointments;
+using Infrastructure.Providers;
+using Moq;
+using Storage;
+using Storage.Events;
 
 public class TariffControllerTests
 {
@@ -98,5 +99,39 @@ public class TariffControllerTests
 
         // Assert
         eventStore.Verify(x => x.RaiseAndPersist<Tariff>(It.Is<TariffUpdated>(y => y.Tariff == tariff)), Times.Once);
+    }
+
+    [Fact]
+    public async Task Update_Ok_Updated()
+    {
+        // Arrange
+        var queryService = new Mock<IQueryService>();
+        var eventStore = new Mock<IEventStore>();
+
+        var tariff = new Tariff
+        {
+            Id = Identifier.GenerateString(),
+            Name = Identifier.GenerateString(),
+            BackgroundColor = Identifier.GenerateString()
+        };
+        
+        var previousTariff = new Tariff
+        {
+            Id = tariff.Id,
+            Name = Identifier.GenerateString(),
+            BackgroundColor = Identifier.GenerateString()
+        };
+
+        queryService.Setup(x => x.SingleOrDefaultAsync<Tariff>(tariff.Id)).ReturnsAsync(previousTariff);
+        queryService.Setup(x => x.DistinctAsync<Appointment, string>("Id", It.IsAny<Filter[]>()))
+            .ReturnsAsync(new List<string> { Identifier.GenerateString(), Identifier.GenerateString() });
+
+        // Act
+        var controller = new TariffController(queryService.Object, eventStore.Object);
+        await controller.Update(tariff);
+
+        // Assert
+        eventStore.Verify(x => x.RaiseAndPersist<Tariff>(It.Is<TariffUpdated>(y => y.Tariff == tariff)), Times.Once);
+        eventStore.Verify(x => x.Persist<Appointment>(It.IsAny<string>()), Times.Exactly(2));
     }
 }

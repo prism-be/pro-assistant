@@ -5,17 +5,40 @@ using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
 
 namespace Prism.ProAssistant.Domain.Tests.DayToDay;
 
+using Domain.DayToDay.Contacts;
+using Moq;
+
 public class AppointmentAggregatorTests
 {
     [Fact]
-    public void Happy()
+    public async Task Happy()
     {
         // Arrange
         var streamId = Identifier.GenerateString();
         var userId = Identifier.GenerateString();
+        
+        var hydrator = new Mock<IHydrator>();
+        var contact1 = new Contact
+        {
+            Id = Identifier.GenerateString(),
+            FirstName = "John",
+            LastName = "Doe",
+            Title = "Title"
+        };
+        
+        var contact2 = new Contact
+        {
+            Id = Identifier.GenerateString(),
+            FirstName = "Jane",
+            LastName = "Doe",
+            Title = "Title"
+        };
+        
+        hydrator.Setup(x => x.Hydrate<Contact>(contact1.Id)).ReturnsAsync(contact1);
+        hydrator.Setup(x => x.Hydrate<Contact>(contact2.Id)).ReturnsAsync(contact2);
 
         // Act
-        var aggregator = new AppointmentAggregator();
+        var aggregator = new AppointmentAggregator(hydrator.Object);
         aggregator.Init(streamId);
 
         var appointmentCreated = new AppointmentCreated
@@ -23,9 +46,7 @@ public class AppointmentAggregatorTests
             Appointment = new Appointment
             {
                 Id = streamId,
-                FirstName = "John",
-                LastName = "Doe",
-                Title = "Title"
+                ContactId = contact1.Id,
             }
         };
 
@@ -34,9 +55,7 @@ public class AppointmentAggregatorTests
             Appointment = new Appointment
             {
                 Id = streamId,
-                FirstName = "Jane",
-                LastName = "Doe",
-                Title = "Title"
+                ContactId = contact2.Id,
             }
         };
 
@@ -58,54 +77,28 @@ public class AppointmentAggregatorTests
             StreamId = streamId
         };
 
-        var appointmentColorUpdated = new AppointmentColorUpdated
-        {
-            BackgroundColor = Identifier.GenerateString(),
-            ForeColor = Identifier.GenerateString(),
-            StreamId = streamId
-        };
-
-        var appointmentContactUpdated = new AppointmentContactUpdated
-        {
-            Title = Identifier.GenerateString(),
-            FirstName = Identifier.GenerateString(),
-            LastName = Identifier.GenerateString(),
-            BirthDate = Identifier.GenerateString(),
-            PhoneNumber = Identifier.GenerateString(),
-            StreamId = streamId
-        };
+        
 
         // Act and assert events
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentCreated));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentCreated));
         aggregator.State.FirstName.Should().Be("John");
         aggregator.State.LastName.Should().Be("Doe");
 
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentUpdated));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentUpdated));
         aggregator.State.FirstName.Should().Be("Jane");
         aggregator.State.LastName.Should().Be("Doe");
 
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, attachAppointmentDocument));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, attachAppointmentDocument));
         aggregator.State.Documents.Should().HaveCount(1);
 
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, detachAppointmentDocument));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, detachAppointmentDocument));
         aggregator.State.Documents.Should().BeEmpty();
-
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentColorUpdated));
-        aggregator.State.BackgroundColor.Should().Be(appointmentColorUpdated.BackgroundColor);
-        aggregator.State.ForeColor.Should().Be(appointmentColorUpdated.ForeColor);
-
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentContactUpdated));
-        aggregator.State.Title.Should().Be(appointmentContactUpdated.Title);
-        aggregator.State.FirstName.Should().Be(appointmentContactUpdated.FirstName);
-        aggregator.State.LastName.Should().Be(appointmentContactUpdated.LastName);
-        aggregator.State.BirthDate.Should().Be(appointmentContactUpdated.BirthDate);
-        aggregator.State.PhoneNumber.Should().Be(appointmentContactUpdated.PhoneNumber);
 
         // Assert
         aggregator.State.Id.Should().Be(streamId);
 
         // Assert unknown events
-        aggregator.Invoking(x => x.When(DomainEvent.FromEvent(streamId, userId, new DummyEvent())))
-            .Should().Throw<NotSupportedException>();
+        await aggregator.Invoking(x => x.When(DomainEvent.FromEvent(streamId, userId, new DummyEvent())))
+            .Should().ThrowAsync<NotSupportedException>();
     }
 }

@@ -17,6 +17,13 @@ using Prism.ProAssistant.Storage.Users;
 
 namespace Prism.ProAssistant.Api.Extensions;
 
+using Domain;
+using Domain.Configuration.DocumentConfiguration;
+using Domain.Configuration.Settings;
+using Domain.Configuration.Tariffs;
+using Domain.DayToDay.Appointments;
+using Domain.DayToDay.Contacts;
+
 public static class ServiceCollectionExtensions
 {
     public static void AddBearer(this IServiceCollection services)
@@ -89,6 +96,7 @@ public static class ServiceCollectionExtensions
         });
 
         services.AddScoped<IEventStore, EventStore>();
+        services.AddScoped<IHydrator, EventStore>();
 
         services.AddMediatR(cfg =>
         {
@@ -97,5 +105,12 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IGlobalStateProvider, MongoGlobalStateProvider>();
         services.AddScoped<IStateProvider, MongoStateProvider>();
+
+        services.AddTransient<IDomainAggregator<Appointment>, AppointmentAggregator>();
+        services.AddTransient<IDomainAggregator<Contact>, ContactAggregator>();
+        services.AddTransient<IDomainAggregator<DocumentConfiguration>, DocumentConfigurationAggregator>();
+        services.AddTransient<IDomainAggregator<Setting>, SettingAggregator>();
+        services.AddTransient<IDomainAggregator<Tariff>, TariffAggregator>();
+        
     }
 }

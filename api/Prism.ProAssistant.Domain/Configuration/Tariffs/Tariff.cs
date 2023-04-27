@@ -3,6 +3,8 @@ using Prism.Core.Attributes;
 
 namespace Prism.ProAssistant.Domain.Configuration.Tariffs;
 
+using Core;
+
 [Collection("tariffs")]
 public class Tariff
 {
@@ -14,7 +16,7 @@ public class Tariff
     public int DefaultDuration { get; set; } = 60;
 
     [JsonPropertyName("id")]
-    required public string Id { get; set; }
+    public string Id { get; set; } = Identifier.GenerateString();
 
     [JsonPropertyName("name")]
     required public string Name { get; set; }

@@ -8,7 +8,7 @@ namespace Prism.ProAssistant.Domain.Tests.DayToDay;
 public class ContactAggregatorTests
 {
     [Fact]
-    public void Happy()
+    public async Task Happy()
     {
         // Arrange
         var streamId = Identifier.GenerateString();
@@ -39,11 +39,11 @@ public class ContactAggregatorTests
         };
         
         // Act and assert events
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, contactCreated));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, contactCreated));
         aggregator.State.FirstName.Should().Be("John");
         aggregator.State.LastName.Should().Be("Doe");
         
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, contactUpdated));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, contactUpdated));
         aggregator.State.FirstName.Should().Be("Jane");
         aggregator.State.LastName.Should().Be("Doe");
 
@@ -51,7 +51,7 @@ public class ContactAggregatorTests
         aggregator.State.Id.Should().Be(streamId);
         
         // Assert unknown events
-        aggregator.Invoking(x => x.When(DomainEvent.FromEvent(streamId, userId, new DummyEvent())))
-            .Should().Throw<NotSupportedException>();
+        await aggregator.Invoking(x => x.When(DomainEvent.FromEvent(streamId, userId, new DummyEvent())))
+            .Should().ThrowAsync<NotSupportedException>();
     }
 }

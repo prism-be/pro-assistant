@@ -15,6 +15,8 @@ using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Controllers;
 
+using Domain;
+
 public class DocumentController : Controller
 {
     private readonly IDistributedCache _cache;

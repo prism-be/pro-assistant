@@ -22,6 +22,8 @@ using Document = QuestPDF.Fluent.Document;
 
 namespace Prism.ProAssistant.Api.Services;
 
+using Domain;
+
 public interface IPdfService
 {
     Task GenerateDocument([FromBody] DocumentRequest request);

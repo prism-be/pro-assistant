@@ -8,6 +8,9 @@ using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
+using Core;
+using Domain;
+
 [Authorize]
 public class DocumentConfigurationController : Controller
 {
@@ -31,6 +34,8 @@ public class DocumentConfigurationController : Controller
     [Route("api/data/document-configurations/insert")]
     public async Task<UpsertResult> Insert([FromBody] DocumentConfiguration request)
     {
+        request.Id = Identifier.GenerateString();
+        
         return await _eventStore.RaiseAndPersist<DocumentConfiguration>(new DocumentConfigurationCreated { DocumentConfiguration = request });
     }
 

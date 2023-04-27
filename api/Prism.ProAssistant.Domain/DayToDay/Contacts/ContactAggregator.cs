@@ -18,7 +18,7 @@ public class ContactAggregator : IDomainAggregator<Contact>
 
     public Contact State => _state ?? throw new InvalidOperationException("The state has not been initialized");
 
-    public void When(DomainEvent @event)
+    public Task When(DomainEvent @event)
     {
         switch (@event.Type)
         {
@@ -31,6 +31,8 @@ public class ContactAggregator : IDomainAggregator<Contact>
             default:
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
+        
+        return Task.CompletedTask;
     }
 
     private void Apply(ContactCreated @event)

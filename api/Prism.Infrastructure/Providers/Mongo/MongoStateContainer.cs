@@ -1,7 +1,7 @@
-﻿using MongoDB.Bson;
-using MongoDB.Driver;
+﻿namespace Prism.Infrastructure.Providers.Mongo;
 
-namespace Prism.Infrastructure.Providers.Mongo;
+using MongoDB.Bson;
+using MongoDB.Driver;
 
 public class MongoStateContainer<T> : IStateContainer<T>
 {
@@ -34,6 +34,13 @@ public class MongoStateContainer<T> : IStateContainer<T>
         return _collection.DeleteOneAsync(Builders<T>.Filter.Eq("Id", id));
     }
 
+    public async Task<IEnumerable<TField>> Distinct<TField>(string field, params Filter[] filters)
+    {
+        var filter = BuildFilter(filters);
+        var result = await _collection.DistinctAsync<TField>(field, filter);
+        return result.ToEnumerable();
+    }
+
     public async Task<IEnumerable<T>> SearchAsync(params Filter[] request)
     {
         var filter = BuildFilter(request.ToArray());
@@ -58,12 +65,12 @@ public class MongoStateContainer<T> : IStateContainer<T>
         return Builders<T>.Filter.And(filters.Select(f =>
         {
             var filterValue = f.Value;
-            
+
             if (DateTime.TryParse(f.Value.ToString(), out var date))
             {
                 filterValue = date;
             }
-            
+
             switch (f.Operator)
             {
                 case FilterOperator.Equal:

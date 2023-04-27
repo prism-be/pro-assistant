@@ -14,6 +14,8 @@ using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Tests.Services;
 
+using Domain;
+
 public class PdfServiceTests
 {
     [Fact]
