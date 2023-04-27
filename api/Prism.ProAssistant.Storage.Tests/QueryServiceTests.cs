@@ -1,15 +1,35 @@
-﻿using FluentAssertions;
+﻿namespace Prism.ProAssistant.Storage.Tests;
+
+using Core;
+using Domain.DayToDay.Contacts;
+using FluentAssertions;
+using Infrastructure.Authentication;
+using Infrastructure.Providers;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Prism.Core;
-using Prism.Infrastructure.Authentication;
-using Prism.Infrastructure.Providers;
-using Prism.ProAssistant.Domain.DayToDay.Contacts;
-
-namespace Prism.ProAssistant.Storage.Tests;
 
 public class QueryServiceTests
 {
+    [Fact]
+    public async Task DistinctAsync_Ok()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<QueryService>>();
+        var userOrganization = new UserOrganization();
+        var stateProvider = new Mock<IStateProvider>();
+        var container = new Mock<IStateContainer<Contact>>();
+        container.Setup(x => x.Distinct<string>(It.IsAny<string>())).ReturnsAsync(new List<string>());
+        stateProvider.Setup(x => x.GetContainerAsync<Contact>()).ReturnsAsync(container.Object);
+
+        // Act
+        var queryService = new QueryService(logger.Object, userOrganization, stateProvider.Object);
+        var result = await queryService.DistinctAsync<Contact, string>(nameof(Contact.FirstName));
+
+        // Assert
+        result.Should().BeEmpty();
+        container.Verify(x => x.Distinct<string>(It.IsAny<string>()), Times.Once);
+    }
+
     [Fact]
     public async Task ListAsync_Ok()
     {
@@ -31,6 +51,26 @@ public class QueryServiceTests
     }
 
     [Fact]
+    public async Task SearchAsync_Ok()
+    {
+        // Arrange
+        var logger = new Mock<ILogger<QueryService>>();
+        var userOrganization = new UserOrganization();
+        var stateProvider = new Mock<IStateProvider>();
+        var container = new Mock<IStateContainer<Contact>>();
+        container.Setup(x => x.SearchAsync()).ReturnsAsync(new List<Contact>());
+        stateProvider.Setup(x => x.GetContainerAsync<Contact>()).ReturnsAsync(container.Object);
+
+        // Act
+        var queryService = new QueryService(logger.Object, userOrganization, stateProvider.Object);
+        var result = await queryService.SearchAsync<Contact>();
+
+        // Assert
+        result.Should().BeEmpty();
+        container.Verify(x => x.SearchAsync(), Times.Once);
+    }
+
+    [Fact]
     public async Task SingleAsync_Ok()
     {
         // Arrange
@@ -38,10 +78,11 @@ public class QueryServiceTests
         var userOrganization = new UserOrganization();
         var stateProvider = new Mock<IStateProvider>();
         var container = new Mock<IStateContainer<Contact>>();
-        container.Setup(x => x.ReadAsync(It.IsAny<string>())).ReturnsAsync(new Contact
-        {
-            Id = Identifier.GenerateString()
-        });
+        container.Setup(x => x.ReadAsync(It.IsAny<string>()))
+            .ReturnsAsync(new Contact
+            {
+                Id = Identifier.GenerateString()
+            });
         stateProvider.Setup(x => x.GetContainerAsync<Contact>()).ReturnsAsync(container.Object);
 
         // Act
@@ -61,10 +102,11 @@ public class QueryServiceTests
         var userOrganization = new UserOrganization();
         var stateProvider = new Mock<IStateProvider>();
         var container = new Mock<IStateContainer<Contact>>();
-        container.Setup(x => x.ReadAsync(It.IsAny<string>())).ReturnsAsync(new Contact
-        {
-            Id = Identifier.GenerateString()
-        });
+        container.Setup(x => x.ReadAsync(It.IsAny<string>()))
+            .ReturnsAsync(new Contact
+            {
+                Id = Identifier.GenerateString()
+            });
         stateProvider.Setup(x => x.GetContainerAsync<Contact>()).ReturnsAsync(container.Object);
 
         // Act
@@ -74,25 +116,5 @@ public class QueryServiceTests
         // Assert
         result.Should().NotBeNull();
         container.Verify(x => x.ReadAsync(It.IsAny<string>()), Times.Once);
-    }
-
-    [Fact]
-    public async Task SearchAsync_Ok()
-    {
-        // Arrange
-        var logger = new Mock<ILogger<QueryService>>();
-        var userOrganization = new UserOrganization();
-        var stateProvider = new Mock<IStateProvider>();
-        var container = new Mock<IStateContainer<Contact>>();
-        container.Setup(x => x.SearchAsync()).ReturnsAsync(new List<Contact>());
-        stateProvider.Setup(x => x.GetContainerAsync<Contact>()).ReturnsAsync(container.Object);
-
-        // Act
-        var queryService = new QueryService(logger.Object, userOrganization, stateProvider.Object);
-        var result = await queryService.SearchAsync<Contact>();
-
-        // Assert
-        result.Should().BeEmpty();
-        container.Verify(x => x.SearchAsync(), Times.Once);
     }
 }
