@@ -12,13 +12,15 @@ public class EventStore : IEventStore, IHydrator
     private readonly IServiceProvider _serviceProvider;
     private readonly IStateProvider _stateProvider;
     private readonly UserOrganization _userOrganization;
+    private readonly IPublisher _publisher;
 
-    public EventStore(ILogger<EventStore> logger, IStateProvider stateProvider, UserOrganization userOrganization, IServiceProvider serviceProvider)
+    public EventStore(ILogger<EventStore> logger, IStateProvider stateProvider, UserOrganization userOrganization, IServiceProvider serviceProvider, IPublisher publisher)
     {
         _logger = logger;
         _stateProvider = stateProvider;
         _userOrganization = userOrganization;
         _serviceProvider = serviceProvider;
+        _publisher = publisher;
     }
 
     public async Task Raise(IDomainEvent eventData)
@@ -27,6 +29,14 @@ public class EventStore : IEventStore, IHydrator
         _logger.LogInformation("Raising event {EventId} of type {EventType} for stream {StreamId}", eventId, eventData.GetType().Name, eventData.StreamId);
 
         var @event = DomainEvent.FromEvent(eventData.StreamId, _userOrganization.Id, eventData);
+
+        var context = new EventContext
+        {
+            Context = _userOrganization,
+            Event = @event
+        };
+        
+        await _publisher.PublishAsync("domain/events", context);
 
         await Store(@event);
     }

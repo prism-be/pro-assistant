@@ -42,16 +42,6 @@ public class ContactController : Controller
         return await _queryService.ListAsync<Contact>();
     }
 
-    private async Task RebuildAppointments(string id)
-    {
-        var appointments = await _queryService.DistinctAsync<Appointment, string>(nameof(Appointment.Id), new Filter(nameof(Appointment.ContactId), id));
-
-        foreach (var appointment in appointments)
-        {
-            await _eventStore.Persist<Appointment>(appointment);
-        }
-    }
-
     [HttpPost]
     [Route("api/data/contacts/search")]
     public async Task<IEnumerable<Contact>> Search([FromBody] Filter[] request)
@@ -70,17 +60,10 @@ public class ContactController : Controller
     [Route("api/data/contacts/update")]
     public async Task<UpsertResult> Update([FromBody] Contact request)
     {
-        var previous = await _queryService.SingleAsync<Contact>(request.Id);
-
         var result = await _eventStore.RaiseAndPersist<Contact>(new ContactUpdated
         {
             Contact = request
         });
-
-        if (previous.FirstName != request.FirstName || previous.LastName != request.LastName || previous.BirthDate != request.BirthDate || previous.PhoneNumber != request.PhoneNumber)
-        {
-            await RebuildAppointments(request.Id);
-        }
 
         return result;
     }

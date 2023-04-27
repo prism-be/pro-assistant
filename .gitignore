@@ -442,3 +442,4 @@ local.settings.json
 .env.development
 
 api/**/wwwroot/**
+/api/Prism.ProAssistant.Api/Properties/launchSettings.json

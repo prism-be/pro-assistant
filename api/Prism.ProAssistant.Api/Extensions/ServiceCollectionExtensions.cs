@@ -23,6 +23,8 @@ using Domain.Configuration.Settings;
 using Domain.Configuration.Tariffs;
 using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Contacts;
+using Microsoft.Extensions.Azure;
+using Storage.Effects;
 
 public static class ServiceCollectionExtensions
 {
@@ -105,12 +107,23 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IGlobalStateProvider, MongoGlobalStateProvider>();
         services.AddScoped<IStateProvider, MongoStateProvider>();
+        
+        var serviceBusConnectionString = EnvironmentConfiguration.GetConfiguration("AZURE_SERVICE_BUS_CONNECTION_STRING");
+
+        if (!string.IsNullOrWhiteSpace(serviceBusConnectionString))
+        {
+            services.AddAzureClients(builder => { builder.AddServiceBusClient(serviceBusConnectionString); });
+            services.AddScoped<IPublisher, ServiceBusPublisher>();
+        }
 
         services.AddTransient<IDomainAggregator<Appointment>, AppointmentAggregator>();
         services.AddTransient<IDomainAggregator<Contact>, ContactAggregator>();
         services.AddTransient<IDomainAggregator<DocumentConfiguration>, DocumentConfigurationAggregator>();
         services.AddTransient<IDomainAggregator<Setting>, SettingAggregator>();
         services.AddTransient<IDomainAggregator<Tariff>, TariffAggregator>();
-        
+
+        services.AddHostedService<DomainEventServiceBusListener>();
+        services.AddTransient<RefreshAppointmentWhenContactChange>();
+        services.AddTransient<RefreshAppointmentWhenTariffChange>();
     }
 }
