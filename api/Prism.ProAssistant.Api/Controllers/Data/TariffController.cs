@@ -28,6 +28,7 @@ public class TariffController : Controller
     public async Task<UpsertResult> Insert([FromBody] Tariff request)
     {
         request.Id = Identifier.GenerateString();
+        
         return await _eventStore.RaiseAndPersist<Tariff>(new TariffCreated { Tariff = request });
     }
 

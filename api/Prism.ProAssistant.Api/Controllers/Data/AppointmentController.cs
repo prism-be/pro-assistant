@@ -29,6 +29,8 @@ public class AppointmentController : Controller
     [Route("api/data/appointments/insert")]
     public async Task<UpsertResult> Insert([FromBody] Appointment request)
     {
+        request.Id = Identifier.GenerateString();
+        
         await EnsureContact(request);
 
         return await _eventStore.RaiseAndPersist<Appointment>(new AppointmentCreated

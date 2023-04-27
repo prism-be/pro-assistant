@@ -96,9 +96,9 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 
     private async Task EnsureReferences()
     {
-        if (_state.Type != _tariff?.Id)
+        if (_state.TypeId != _tariff?.Id)
         {
-            _tariff = await _hydrator.Hydrate<Tariff>(_state.Type);
+            _tariff = await _hydrator.Hydrate<Tariff>(_state.TypeId);
 
             State.ForeColor = _tariff?.ForeColor;
             State.BackgroundColor = _tariff?.BackgroundColor;
