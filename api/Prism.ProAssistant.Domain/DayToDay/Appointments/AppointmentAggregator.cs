@@ -1,11 +1,14 @@
 ﻿namespace Prism.ProAssistant.Domain.DayToDay.Appointments;
 
 using Configuration.Tariffs;
+using Contacts;
 using Events;
 
 public class AppointmentAggregator : IDomainAggregator<Appointment>
 {
     private readonly IHydrator _hydrator;
+
+    private Contact? _contact;
     private string? _id;
     private Appointment _state = null!;
 
@@ -47,25 +50,11 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
             case nameof(DetachAppointmentDocument):
                 Apply(@event.ToEvent<DetachAppointmentDocument>());
                 break;
-            case nameof(AppointmentContactUpdated):
-                Apply(@event.ToEvent<AppointmentContactUpdated>());
-                break;
             default:
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
 
         await EnsureReferences();
-    }
-
-    private void Apply(AppointmentContactUpdated @event)
-    {
-        EnsureState();
-
-        _state.FirstName = @event.FirstName;
-        _state.LastName = @event.LastName;
-        _state.Title = @event.Title;
-        _state.PhoneNumber = @event.PhoneNumber;
-        _state.BirthDate = @event.BirthDate;
     }
 
     private void Apply(DetachAppointmentDocument @event)
@@ -102,6 +91,17 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 
             State.ForeColor = _tariff?.ForeColor;
             State.BackgroundColor = _tariff?.BackgroundColor;
+        }
+
+        if (_state.ContactId != _contact?.Id)
+        {
+            _contact = await _hydrator.Hydrate<Contact>(_state.ContactId);
+
+            State.FirstName = _contact?.FirstName ?? string.Empty;
+            State.LastName = _contact?.LastName ?? string.Empty;
+            State.BirthDate = _contact?.BirthDate;
+            State.PhoneNumber = _contact?.PhoneNumber;
+            State.Title = $"{_contact?.LastName} {_contact?.FirstName}";
         }
     }
 

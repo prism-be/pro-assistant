@@ -5,6 +5,7 @@ using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
 
 namespace Prism.ProAssistant.Domain.Tests.DayToDay;
 
+using Domain.DayToDay.Contacts;
 using Moq;
 
 public class AppointmentAggregatorTests
@@ -17,6 +18,24 @@ public class AppointmentAggregatorTests
         var userId = Identifier.GenerateString();
         
         var hydrator = new Mock<IHydrator>();
+        var contact1 = new Contact
+        {
+            Id = Identifier.GenerateString(),
+            FirstName = "John",
+            LastName = "Doe",
+            Title = "Title"
+        };
+        
+        var contact2 = new Contact
+        {
+            Id = Identifier.GenerateString(),
+            FirstName = "Jane",
+            LastName = "Doe",
+            Title = "Title"
+        };
+        
+        hydrator.Setup(x => x.Hydrate<Contact>(contact1.Id)).ReturnsAsync(contact1);
+        hydrator.Setup(x => x.Hydrate<Contact>(contact2.Id)).ReturnsAsync(contact2);
 
         // Act
         var aggregator = new AppointmentAggregator(hydrator.Object);
@@ -27,9 +46,7 @@ public class AppointmentAggregatorTests
             Appointment = new Appointment
             {
                 Id = streamId,
-                FirstName = "John",
-                LastName = "Doe",
-                Title = "Title"
+                ContactId = contact1.Id,
             }
         };
 
@@ -38,9 +55,7 @@ public class AppointmentAggregatorTests
             Appointment = new Appointment
             {
                 Id = streamId,
-                FirstName = "Jane",
-                LastName = "Doe",
-                Title = "Title"
+                ContactId = contact2.Id,
             }
         };
 
@@ -62,15 +77,7 @@ public class AppointmentAggregatorTests
             StreamId = streamId
         };
 
-        var appointmentContactUpdated = new AppointmentContactUpdated
-        {
-            Title = Identifier.GenerateString(),
-            FirstName = Identifier.GenerateString(),
-            LastName = Identifier.GenerateString(),
-            BirthDate = Identifier.GenerateString(),
-            PhoneNumber = Identifier.GenerateString(),
-            StreamId = streamId
-        };
+        
 
         // Act and assert events
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentCreated));
@@ -86,13 +93,6 @@ public class AppointmentAggregatorTests
 
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, detachAppointmentDocument));
         aggregator.State.Documents.Should().BeEmpty();
-
-        await aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentContactUpdated));
-        aggregator.State.Title.Should().Be(appointmentContactUpdated.Title);
-        aggregator.State.FirstName.Should().Be(appointmentContactUpdated.FirstName);
-        aggregator.State.LastName.Should().Be(appointmentContactUpdated.LastName);
-        aggregator.State.BirthDate.Should().Be(appointmentContactUpdated.BirthDate);
-        aggregator.State.PhoneNumber.Should().Be(appointmentContactUpdated.PhoneNumber);
 
         // Assert
         aggregator.State.Id.Should().Be(streamId);
