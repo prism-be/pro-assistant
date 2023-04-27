@@ -27,7 +27,7 @@ public class AppointmentController : Controller
 
     [HttpPost]
     [Route("api/data/appointments/insert")]
-    public async Task<UpsertResult> Insert([FromBody] Appointment request)
+    public async Task<UpsertResult> Insert([FromBody] AppointmentInformation request)
     {
         request.Id = Identifier.GenerateString();
         
@@ -62,7 +62,7 @@ public class AppointmentController : Controller
 
     [HttpPost]
     [Route("api/data/appointments/update")]
-    public async Task<UpsertResult> Update([FromBody] Appointment request)
+    public async Task<UpsertResult> Update([FromBody] AppointmentInformation request)
     {
         await EnsureContact(request);
 
@@ -72,7 +72,7 @@ public class AppointmentController : Controller
         });
     }
 
-    private async Task EnsureContact(Appointment request)
+    private async Task EnsureContact(AppointmentInformation request)
     {
         if (request.ContactId == null)
         {

@@ -70,13 +70,15 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 
     private void Apply(AppointmentCreated @event)
     {
-        State = @event.Appointment;
+        State = @event.Appointment.ToAppointment();
         State.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
     }
 
     private void Apply(AppointmentUpdated @event)
     {
-        State = @event.Appointment;
+        State = EnsureState();
+        
+        @event.Appointment.ToAppointment(State);
         State.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
 
         if (State.State == (int)AppointmentState.Canceled)

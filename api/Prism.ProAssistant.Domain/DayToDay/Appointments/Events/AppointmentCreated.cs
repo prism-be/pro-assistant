@@ -2,7 +2,7 @@
 
 public class AppointmentCreated : IDomainEvent
 {
-    required public Appointment Appointment { get; set; }
+    required public AppointmentInformation Appointment { get; set; }
     public string StreamId => Appointment.Id;
     public string StreamType => "appointments";
 }
