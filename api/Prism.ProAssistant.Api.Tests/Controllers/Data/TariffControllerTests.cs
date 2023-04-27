@@ -111,28 +111,20 @@ public class TariffControllerTests
         var tariff = new Tariff
         {
             Id = Identifier.GenerateString(),
-            Name = Identifier.GenerateString()
+            Name = Identifier.GenerateString(),
+            BackgroundColor = Identifier.GenerateString()
+        };
+        
+        var previousTariff = new Tariff
+        {
+            Id = tariff.Id,
+            Name = Identifier.GenerateString(),
+            BackgroundColor = Identifier.GenerateString()
         };
 
-        queryService.Setup(x => x.SingleOrDefaultAsync<Tariff>(tariff.Id)).ReturnsAsync(tariff);
-        queryService.Setup(x => x.SearchAsync<Appointment>(It.IsAny<Filter[]>()))
-            .ReturnsAsync(new List<Appointment>
-            {
-                new()
-                {
-                    Id = Identifier.GenerateString(),
-                    Title = Identifier.GenerateString(),
-                    FirstName = Identifier.GenerateString(),
-                    LastName = Identifier.GenerateString()
-                },
-                new()
-                {
-                    Id = Identifier.GenerateString(),
-                    Title = Identifier.GenerateString(),
-                    FirstName = Identifier.GenerateString(),
-                    LastName = Identifier.GenerateString()
-                }
-            });
+        queryService.Setup(x => x.SingleOrDefaultAsync<Tariff>(tariff.Id)).ReturnsAsync(previousTariff);
+        queryService.Setup(x => x.DistinctAsync<Appointment, string>("Id", It.IsAny<Filter[]>()))
+            .ReturnsAsync(new List<string> { Identifier.GenerateString(), Identifier.GenerateString() });
 
         // Act
         var controller = new TariffController(queryService.Object, eventStore.Object);
