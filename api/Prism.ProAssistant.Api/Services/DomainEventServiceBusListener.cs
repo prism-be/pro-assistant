@@ -51,28 +51,33 @@ public class DomainEventServiceBusListener : BackgroundService
 
             var data = message.Body.ToObjectFromJson<EventContext>();
 
-            var key = $"{data.Event.StreamType}:{data.Event.Type}";
-
-            if (_effects.TryGetValue(key, out var effectType))
-            {
-                using var scope = _serviceProvider.CreateScope();
-
-                var userOrganization = scope.ServiceProvider.GetRequiredService<UserOrganization>();
-                userOrganization.Id = data.Context.Id;
-                userOrganization.Organization = data.Context.Organization;
-
-                var effect = scope.ServiceProvider.GetRequiredService(effectType);
-                var method = effectType.GetMethod("Handle");
-
-                if (method == null)
-                {
-                    throw new Exception($"Effect {effectType.Name} does not have a Handle method");
-                }
-
-                await (Task)method.Invoke(effect, new object[] { data.Event })!;
-            }
+            await ProcessMessage(data);
 
             await _receiver.CompleteMessageAsync(message, stoppingToken);
+        }
+    }
+
+    public async Task ProcessMessage(EventContext data)
+    {
+        var key = $"{data.Event.StreamType}:{data.Event.Type}";
+
+        if (_effects.TryGetValue(key, out var effectType))
+        {
+            using var scope = _serviceProvider.CreateScope();
+
+            var userOrganization = scope.ServiceProvider.GetRequiredService<UserOrganization>();
+            userOrganization.Id = data.Context.Id;
+            userOrganization.Organization = data.Context.Organization;
+
+            var effect = scope.ServiceProvider.GetRequiredService(effectType);
+            var method = effectType.GetMethod("Handle");
+
+            if (method == null)
+            {
+                throw new NotSupportedException($"Effect {effectType.Name} does not have a Handle method");
+            }
+
+            await (Task)method.Invoke(effect, new object[] { data.Event })!;
         }
     }
 }
