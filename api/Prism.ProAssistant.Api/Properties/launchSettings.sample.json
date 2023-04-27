@@ -15,7 +15,8 @@
         "ENVIRONMENT": "proassistant-dev",
         "APPLICATIONINSIGHTS_CONNECTION_STRING": "InstrumentationKey=aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa;IngestionEndpoint=https://westeurope-5.in.applicationinsights.azure.com/;LiveEndpoint=https://westeurope.livediagnostics.monitor.azure.com/",
         "MONGODB_CONNECTION_STRING": "mongodb://localhost:27017/?authSource=admin",
-        "STORAGE_DIRECTORY": "C:\\dev\\tmp\\pro-assistant"
+        "STORAGE_DIRECTORY": "C:\\dev\\tmp\\pro-assistant",
+        
       }
     }
   }
