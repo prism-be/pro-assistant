@@ -29,7 +29,14 @@ public class EventStore : IEventStore, IHydrator
         _logger.LogInformation("Raising event {EventId} of type {EventType} for stream {StreamId}", eventId, eventData.GetType().Name, eventData.StreamId);
 
         var @event = DomainEvent.FromEvent(eventData.StreamId, _userOrganization.Id, eventData);
-        await _publisher.PublishAsync("domain/events", @event);
+
+        var context = new EventContext
+        {
+            Context = _userOrganization,
+            Event = @event
+        };
+        
+        await _publisher.PublishAsync("domain/events", context);
 
         await Store(@event);
     }

@@ -77,7 +77,7 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
     private void Apply(AppointmentUpdated @event)
     {
         State = EnsureState();
-        
+
         @event.Appointment.ToAppointment(State);
         State.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
 
@@ -97,21 +97,21 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
         if (State.TypeId != _tariff?.Id)
         {
             _tariff = await _hydrator.Hydrate<Tariff>(State.TypeId);
-
-            State.ForeColor = _tariff?.ForeColor;
-            State.BackgroundColor = _tariff?.BackgroundColor;
         }
+
+        State.ForeColor = _tariff?.ForeColor;
+        State.BackgroundColor = _tariff?.BackgroundColor;
 
         if (State.ContactId != _contact?.Id)
         {
             _contact = await _hydrator.Hydrate<Contact>(State.ContactId);
-
-            State.FirstName = _contact?.FirstName ?? string.Empty;
-            State.LastName = _contact?.LastName ?? string.Empty;
-            State.BirthDate = _contact?.BirthDate;
-            State.PhoneNumber = _contact?.PhoneNumber;
-            State.Title = $"{_contact?.LastName} {_contact?.FirstName}";
         }
+
+        State.FirstName = _contact?.FirstName ?? string.Empty;
+        State.LastName = _contact?.LastName ?? string.Empty;
+        State.BirthDate = _contact?.BirthDate;
+        State.PhoneNumber = _contact?.PhoneNumber;
+        State.Title = $"{_contact?.LastName} {_contact?.FirstName}";
     }
 
     private Appointment EnsureState()

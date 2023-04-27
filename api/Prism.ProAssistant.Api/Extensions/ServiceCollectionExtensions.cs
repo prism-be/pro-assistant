@@ -24,6 +24,7 @@ using Domain.Configuration.Tariffs;
 using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Contacts;
 using Microsoft.Extensions.Azure;
+using Storage.Effects;
 
 public static class ServiceCollectionExtensions
 {
@@ -120,6 +121,9 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDomainAggregator<DocumentConfiguration>, DocumentConfigurationAggregator>();
         services.AddTransient<IDomainAggregator<Setting>, SettingAggregator>();
         services.AddTransient<IDomainAggregator<Tariff>, TariffAggregator>();
-        
+
+        services.AddHostedService<DomainEventServiceBusListener>();
+        services.AddTransient<RefreshAppointmentWhenContactChange>();
+        services.AddTransient<RefreshAppointmentWhenTariffChange>();
     }
 }
