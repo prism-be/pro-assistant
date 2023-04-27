@@ -66,11 +66,11 @@ public class TariffController : Controller
         }
 
         var filter = new Filter(nameof(Appointment.TypeId), request.Id);
-        var appointments = await _queryService.SearchAsync<Appointment>(filter);
+        var appointments = await _queryService.DistinctAsync<Appointment, string>(nameof(Appointment.Id), filter);
 
         foreach (var appointment in appointments)
         {
-            await _eventStore.Persist<Appointment>(appointment.Id);
+            await _eventStore.Persist<Appointment>(appointment);
         }
 
         return updated;
