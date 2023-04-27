@@ -3,7 +3,6 @@
 using System.Reflection;
 using Azure.Messaging.ServiceBus;
 using Core.Attributes;
-using Domain;
 using Infrastructure.Authentication;
 using Storage;
 using Storage.Events;
@@ -57,11 +56,11 @@ public class DomainEventServiceBusListener : BackgroundService
             if (_effects.TryGetValue(key, out var effectType))
             {
                 using var scope = _serviceProvider.CreateScope();
-                
+
                 var userOrganization = scope.ServiceProvider.GetRequiredService<UserOrganization>();
                 userOrganization.Id = data.Context.Id;
                 userOrganization.Organization = data.Context.Organization;
-                
+
                 var effect = scope.ServiceProvider.GetRequiredService(effectType);
                 var method = effectType.GetMethod("Handle");
 

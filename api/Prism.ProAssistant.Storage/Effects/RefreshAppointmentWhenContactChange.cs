@@ -2,7 +2,6 @@
 
 using Core.Attributes;
 using Domain;
-using Domain.Configuration.Tariffs.Events;
 using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Contacts.Events;
 using Events;

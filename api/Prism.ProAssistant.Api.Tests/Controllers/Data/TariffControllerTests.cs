@@ -115,23 +115,11 @@ public class TariffControllerTests
             BackgroundColor = Identifier.GenerateString()
         };
         
-        var previousTariff = new Tariff
-        {
-            Id = tariff.Id,
-            Name = Identifier.GenerateString(),
-            BackgroundColor = Identifier.GenerateString()
-        };
-
-        queryService.Setup(x => x.SingleOrDefaultAsync<Tariff>(tariff.Id)).ReturnsAsync(previousTariff);
-        queryService.Setup(x => x.DistinctAsync<Appointment, string>("Id", It.IsAny<Filter[]>()))
-            .ReturnsAsync(new List<string> { Identifier.GenerateString(), Identifier.GenerateString() });
-
         // Act
         var controller = new TariffController(queryService.Object, eventStore.Object);
         await controller.Update(tariff);
 
         // Assert
         eventStore.Verify(x => x.RaiseAndPersist<Tariff>(It.Is<TariffUpdated>(y => y.Tariff == tariff)), Times.Once);
-        eventStore.Verify(x => x.Persist<Appointment>(It.IsAny<string>()), Times.Exactly(2));
     }
 }
