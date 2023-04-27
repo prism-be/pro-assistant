@@ -65,14 +65,22 @@ public class TariffController : Controller
             return updated;
         }
 
-        var filter = new Filter(nameof(Appointment.TypeId), request.Id);
+        if (previous.BackgroundColor != request.BackgroundColor)
+        {
+            await RebuildAppointments(request.Id);
+        }
+
+        return updated;
+    }
+
+    private async Task RebuildAppointments(string id)
+    {
+        var filter = new Filter(nameof(Appointment.TypeId), id);
         var appointments = await _queryService.DistinctAsync<Appointment, string>(nameof(Appointment.Id), filter);
 
         foreach (var appointment in appointments)
         {
             await _eventStore.Persist<Appointment>(appointment);
         }
-
-        return updated;
     }
 }
