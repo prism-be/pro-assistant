@@ -10,7 +10,6 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 
     private Contact? _contact;
     private string? _id;
-    private Appointment _state = null!;
 
     private Tariff? _tariff;
 
@@ -23,7 +22,7 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
     public void Init(string id)
     {
         _id = id;
-        _state = new Appointment
+        State = new Appointment
         {
             Id = id,
             FirstName = string.Empty,
@@ -32,7 +31,7 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
         };
     }
 
-    public Appointment State => _state ?? throw new InvalidOperationException("The state has not been initialized");
+    public Appointment? State { get; private set; }
 
     public async Task When(DomainEvent @event)
     {
@@ -59,43 +58,51 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 
     private void Apply(DetachAppointmentDocument @event)
     {
-        EnsureState();
-
-        _state.Documents.Remove(_state.Documents.Single(x => x.Id == @event.DocumentId));
+        State = EnsureState();
+        State.Documents.Remove(State.Documents.Single(x => x.Id == @event.DocumentId));
     }
 
     private void Apply(AttachAppointmentDocument @event)
     {
-        EnsureState();
-
-        _state.Documents.Insert(0, @event.Document);
+        State = EnsureState();
+        State.Documents.Insert(0, @event.Document);
     }
 
     private void Apply(AppointmentCreated @event)
     {
-        _state = @event.Appointment;
-        _state.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
+        State = @event.Appointment;
+        State.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
     }
 
     private void Apply(AppointmentUpdated @event)
     {
-        _state = @event.Appointment;
-        _state.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
+        State = @event.Appointment;
+        State.Id = _id ?? throw new InvalidOperationException("The id has not been initialized");
+
+        if (State.State == (int)AppointmentState.Canceled)
+        {
+            State = null;
+        }
     }
 
     private async Task EnsureReferences()
     {
-        if (_state.TypeId != _tariff?.Id)
+        if (State == null)
         {
-            _tariff = await _hydrator.Hydrate<Tariff>(_state.TypeId);
+            return;
+        }
+
+        if (State.TypeId != _tariff?.Id)
+        {
+            _tariff = await _hydrator.Hydrate<Tariff>(State.TypeId);
 
             State.ForeColor = _tariff?.ForeColor;
             State.BackgroundColor = _tariff?.BackgroundColor;
         }
 
-        if (_state.ContactId != _contact?.Id)
+        if (State.ContactId != _contact?.Id)
         {
-            _contact = await _hydrator.Hydrate<Contact>(_state.ContactId);
+            _contact = await _hydrator.Hydrate<Contact>(State.ContactId);
 
             State.FirstName = _contact?.FirstName ?? string.Empty;
             State.LastName = _contact?.LastName ?? string.Empty;
@@ -105,11 +112,13 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
         }
     }
 
-    private void EnsureState()
+    private Appointment EnsureState()
     {
-        if (_state == null)
+        if (State == null)
         {
             throw new InvalidOperationException("The state has not been initialized");
         }
+
+        return State;
     }
 }

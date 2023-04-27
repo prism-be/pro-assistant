@@ -5,6 +5,7 @@ using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
 
 namespace Prism.ProAssistant.Domain.Tests.DayToDay;
 
+using System.Diagnostics;
 using Domain.DayToDay.Contacts;
 using Moq;
 
@@ -77,10 +78,19 @@ public class AppointmentAggregatorTests
             StreamId = streamId
         };
 
-        
+        var cancelAppointment = new AppointmentUpdated
+        {
+            Appointment = new Appointment
+            {
+                Id = streamId,
+                ContactId = contact2.Id,
+                State = (int)AppointmentState.Canceled
+            }
+        };
 
         // Act and assert events
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentCreated));
+        Debug.Assert(aggregator.State != null, "aggregator.State != null");
         aggregator.State.FirstName.Should().Be("John");
         aggregator.State.LastName.Should().Be("Doe");
 
@@ -94,8 +104,10 @@ public class AppointmentAggregatorTests
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, detachAppointmentDocument));
         aggregator.State.Documents.Should().BeEmpty();
 
-        // Assert
         aggregator.State.Id.Should().Be(streamId);
+        
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, cancelAppointment));
+        aggregator.State.Should().BeNull();
 
         // Assert unknown events
         await aggregator.Invoking(x => x.When(DomainEvent.FromEvent(streamId, userId, new DummyEvent())))
