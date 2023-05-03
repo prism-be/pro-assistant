@@ -1,6 +1,6 @@
 ﻿namespace Prism.ProAssistant.Domain;
 
-public interface IDomainAggregator<T>
+public interface IDomainAggregator<out T>
 {
     public void Init(string id);
     public T? State { get; }
