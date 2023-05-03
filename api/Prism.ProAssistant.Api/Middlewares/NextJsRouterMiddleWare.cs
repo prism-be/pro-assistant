@@ -32,12 +32,16 @@ public class NextJsRouterMiddleWare
         
         // Complex case: a catch-all route exists
         var directory = $"wwwroot{path.Substring(0, path.LastIndexOf("/", StringComparison.Ordinal))}/";
-        var catchAll = Directory.GetFiles(directory, "[*].html").FirstOrDefault();
-        if (catchAll != null)
+
+        if (Directory.Exists(directory))
         {
-            _logger.LogInformation("Serving file: {file} for path {path}", catchAll, path);
-            await context.Response.SendFileAsync(catchAll);
-            return;
+            var catchAll = Directory.GetFiles(directory, "[*].html").FirstOrDefault();
+            if (catchAll != null)
+            {
+                _logger.LogInformation("Serving file: {file} for path {path}", catchAll, path);
+                await context.Response.SendFileAsync(catchAll);
+                return;
+            }
         }
 
         await _next(context);
