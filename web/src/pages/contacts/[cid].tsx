@@ -22,7 +22,7 @@ const Contacts: NextPage = () => {
     const { cid } = router.query;
 
     const loadContact = async (route: string) => {
-        if (route === "/contact/000000000000000000000000") {
+        if (route === "/data/contacts/000000000000000000000000") {
             return null;
         }
 

@@ -12,6 +12,9 @@ export interface Props {
 
 export const ContactAppointments = (props: Props) => {
     async function loadAppointments(): Promise<Appointment[]> {
+
+        if (props.contactId === "000000000000000000000000") return Promise.resolve([]);
+
         const data = await postData<Appointment[]>("/data/appointments/search", [{
             field: "ContactId",
             operator: "eq",
@@ -21,12 +24,12 @@ export const ContactAppointments = (props: Props) => {
         return data ?? [];
     }
 
-    const { data: appointments } = useSWR<Appointment[]>(
+    const {data: appointments} = useSWR<Appointment[]>(
         "/api/contacts/" + props.contactId + "/appointments",
         loadAppointments
     );
 
-    const { t } = useTranslation("common");
+    const {t} = useTranslation("common");
     const router = useRouter();
 
     async function displayAppointment(id: string | null) {
@@ -37,7 +40,7 @@ export const ContactAppointments = (props: Props) => {
         <Section>
             <h2>{t("pages.contacts.details.appointments.title")}</h2>
             <div>
-                <AppointmentsList appointments={appointments ?? []} onClick={(m) => displayAppointment(m.id)} />
+                <AppointmentsList appointments={appointments ?? []} onClick={(m) => displayAppointment(m.id)}/>
             </div>
             <>
                 {appointments?.length === 0 && (
