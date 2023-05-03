@@ -1,7 +1,8 @@
 ﻿namespace Prism.ProAssistant.Domain.Configuration.DocumentConfiguration.Events;
 
-public class DocumentConfigurationDeleted: IDomainEvent
+using Core.Attributes;
+
+[StreamType(Streams.DocumentsConfiguration)]
+public class DocumentConfigurationDeleted: BaseEvent
 {
-    required public string StreamId { get; set; }
-    public string StreamType => "documents-configuration";
 }

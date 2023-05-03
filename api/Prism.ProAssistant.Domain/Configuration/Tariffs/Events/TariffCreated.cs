@@ -1,8 +1,10 @@
 ﻿namespace Prism.ProAssistant.Domain.Configuration.Tariffs.Events;
 
-public class TariffCreated: IDomainEvent
+using Core.Attributes;
+
+[StreamType(Streams.Tariffs)]
+public class TariffCreated: BaseEvent
 {
     required public Tariff Tariff { get; set; }
-    public string StreamId => Tariff.Id;
-    public string StreamType => "tariffs";
+    public override string StreamId => Tariff.Id;
 }

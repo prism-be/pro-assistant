@@ -1,8 +1,10 @@
 ﻿namespace Prism.ProAssistant.Domain.Configuration.Settings.Events;
 
-public class SettingUpdated : IDomainEvent
+using Core.Attributes;
+
+[StreamType(Streams.Settings)]
+public class SettingUpdated : BaseEvent
 {
     required public Setting Setting { get; set; }
-    public string StreamId => Setting.Id;
-    public string StreamType => "settings";
+    public override string StreamId => Setting.Id;
 }

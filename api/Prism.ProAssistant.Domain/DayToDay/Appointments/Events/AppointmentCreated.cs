@@ -1,8 +1,10 @@
 ﻿namespace Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
 
-public class AppointmentCreated : IDomainEvent
+using Core.Attributes;
+
+[StreamType(Streams.Appointments)]
+public class AppointmentCreated : BaseEvent
 {
     required public AppointmentInformation Appointment { get; set; }
-    public string StreamId => Appointment.Id;
-    public string StreamType => "appointments";
+    public override string StreamId => Appointment.Id;
 }

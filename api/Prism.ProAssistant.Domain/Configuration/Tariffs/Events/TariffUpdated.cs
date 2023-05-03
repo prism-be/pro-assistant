@@ -2,10 +2,9 @@
 
 using Core.Attributes;
 
-[StreamType("tariffs")]
-public class TariffUpdated : IDomainEvent
+[StreamType(Streams.Tariffs)]
+public class TariffUpdated : BaseEvent
 {
     required public Tariff Tariff { get; set; }
-    public string StreamId => Tariff.Id;
-    public string StreamType => StreamTypeAttribute.GetStreamType(this.GetType());
+    public override string StreamId => Tariff.Id;
 }

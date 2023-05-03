@@ -1,8 +1,9 @@
 ﻿namespace Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
 
-public class DetachAppointmentDocument : IDomainEvent
+using Core.Attributes;
+
+[StreamType(Streams.Appointments)]
+public class DetachAppointmentDocument : BaseEvent
 {
     required public string DocumentId { get; set; }
-    required public string StreamId { get; set; }
-    public string StreamType => "appointments";
 }
