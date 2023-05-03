@@ -34,4 +34,9 @@ public class DocumentConfigurationAggregator: IDomainAggregator<DocumentConfigur
         
         return Task.CompletedTask;
     }
+
+    public Task Complete()
+    {
+        return Task.CompletedTask;
+    }
 }

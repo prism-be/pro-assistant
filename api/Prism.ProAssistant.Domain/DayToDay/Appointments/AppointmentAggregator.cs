@@ -8,10 +8,7 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 {
     private readonly IHydrator _hydrator;
 
-    private Contact? _contact;
     private string? _id;
-
-    private Tariff? _tariff;
 
     public AppointmentAggregator(IHydrator hydrator)
     {
@@ -33,7 +30,7 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
 
     public Appointment? State { get; private set; }
 
-    public async Task When(DomainEvent @event)
+    public Task When(DomainEvent @event)
     {
         switch (@event.Type)
         {
@@ -53,7 +50,28 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
 
-        await EnsureReferences();
+        return Task.CompletedTask;
+    }
+
+    public async Task Complete()
+    {
+        if (State == null)
+        {
+            return;
+        }
+
+        var tariff = await _hydrator.Hydrate<Tariff>(State.TypeId);
+
+        State.ForeColor = tariff?.ForeColor;
+        State.BackgroundColor = tariff?.BackgroundColor;
+
+        var contact = await _hydrator.Hydrate<Contact>(State.ContactId);
+
+        State.FirstName = contact?.FirstName ?? string.Empty;
+        State.LastName = contact?.LastName ?? string.Empty;
+        State.BirthDate = contact?.BirthDate;
+        State.PhoneNumber = contact?.PhoneNumber;
+        State.Title = $"{contact?.LastName} {contact?.FirstName}";
     }
 
     private void Apply(DetachAppointmentDocument @event)
@@ -85,33 +103,6 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
         {
             State = null;
         }
-    }
-
-    private async Task EnsureReferences()
-    {
-        if (State == null)
-        {
-            return;
-        }
-
-        if (State.TypeId != _tariff?.Id)
-        {
-            _tariff = await _hydrator.Hydrate<Tariff>(State.TypeId);
-        }
-
-        State.ForeColor = _tariff?.ForeColor;
-        State.BackgroundColor = _tariff?.BackgroundColor;
-
-        if (State.ContactId != _contact?.Id)
-        {
-            _contact = await _hydrator.Hydrate<Contact>(State.ContactId);
-        }
-
-        State.FirstName = _contact?.FirstName ?? string.Empty;
-        State.LastName = _contact?.LastName ?? string.Empty;
-        State.BirthDate = _contact?.BirthDate;
-        State.PhoneNumber = _contact?.PhoneNumber;
-        State.Title = $"{_contact?.LastName} {_contact?.FirstName}";
     }
 
     private Appointment EnsureState()

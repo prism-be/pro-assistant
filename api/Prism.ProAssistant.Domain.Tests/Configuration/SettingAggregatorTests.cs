@@ -9,7 +9,7 @@ namespace Prism.ProAssistant.Domain.Tests.Configuration;
 public class SettingAggregatorTests
 {
     [Fact]
-    public void Happy()
+    public async Task Happy()
     {
         // Arrange
         var streamId = Identifier.GenerateString();
@@ -38,11 +38,12 @@ public class SettingAggregatorTests
         };
 
         // Act and assert events
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, settingCreated));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, settingCreated));
+        await aggregator.Complete();
         Debug.Assert(aggregator.State != null, "aggregator.State != null");
         aggregator.State.Value.Should().Be("Value");
 
-        aggregator.When(DomainEvent.FromEvent(streamId, userId, settingUpdated));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, settingUpdated));
         Debug.Assert(aggregator.State != null, "aggregator.State != null");
         aggregator.State.Value.Should().Be("ValueUpdated");
     }

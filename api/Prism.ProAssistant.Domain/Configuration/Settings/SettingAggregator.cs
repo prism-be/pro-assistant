@@ -27,6 +27,11 @@ public class SettingAggregator : IDomainAggregator<Setting>
         return Task.CompletedTask;
     }
 
+    public Task Complete()
+    {
+        return Task.CompletedTask;
+    }
+
     private void Apply(SettingCreated @event)
     {
         State = @event.Setting;

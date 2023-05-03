@@ -35,6 +35,11 @@ public class ContactAggregator : IDomainAggregator<Contact>
         return Task.CompletedTask;
     }
 
+    public Task Complete()
+    {
+        return Task.CompletedTask;
+    }
+
     private void Apply(ContactCreated @event)
     {
         _state = @event.Contact;
