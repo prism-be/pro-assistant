@@ -23,7 +23,7 @@ public class EventStore : IEventStore, IHydrator
         _publisher = publisher;
     }
 
-    public async Task Raise(IDomainEvent eventData)
+    public async Task Raise(BaseEvent eventData)
     {
         var eventId = Identifier.GenerateString();
         _logger.LogInformation("Raising event {EventId} of type {EventType} for stream {StreamId}", eventId, eventData.GetType().Name, eventData.StreamId);
@@ -41,7 +41,7 @@ public class EventStore : IEventStore, IHydrator
         await Store(@event);
     }
 
-    public async Task<UpsertResult> RaiseAndPersist<T>(IDomainEvent eventData)
+    public async Task<UpsertResult> RaiseAndPersist<T>(BaseEvent eventData)
     {
         await Raise(eventData);
         return await Persist<T>(eventData.StreamId);

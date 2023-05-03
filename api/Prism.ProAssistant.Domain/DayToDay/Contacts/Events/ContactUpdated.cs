@@ -2,10 +2,9 @@
 
 using Core.Attributes;
 
-[StreamType("contacts")]
-public class ContactUpdated : IDomainEvent
+[StreamType(Streams.Contacts)]
+public class ContactUpdated : BaseEvent
 {
     required public Contact Contact { get; set; }
-    public string StreamId => Contact.Id;
-    public string StreamType => StreamTypeAttribute.GetStreamType<ContactUpdated>();
+    public override string StreamId => Contact.Id;
 }

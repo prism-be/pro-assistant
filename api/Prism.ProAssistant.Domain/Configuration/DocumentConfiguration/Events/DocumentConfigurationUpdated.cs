@@ -1,8 +1,10 @@
 ﻿namespace Prism.ProAssistant.Domain.Configuration.DocumentConfiguration.Events;
 
-public class DocumentConfigurationUpdated: IDomainEvent
+using Core.Attributes;
+
+[StreamType(Streams.DocumentsConfiguration)]
+public class DocumentConfigurationUpdated: BaseEvent
 {
     required public DocumentConfiguration DocumentConfiguration { get; set; }
-    public string StreamId => DocumentConfiguration.Id;
-    public string StreamType => "documents-configuration";
+    public override string StreamId => DocumentConfiguration.Id;
 }

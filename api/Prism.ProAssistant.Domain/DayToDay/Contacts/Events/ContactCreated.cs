@@ -1,8 +1,10 @@
 ﻿namespace Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
 
-public class ContactCreated : IDomainEvent
+using Core.Attributes;
+
+[StreamType(Streams.Contacts)]
+public class ContactCreated : BaseEvent
 {
     required public Contact Contact { get; set; }
-    public string StreamId => Contact.Id;
-    public string StreamType => "contacts";
+    public override string StreamId => Contact.Id;
 }

@@ -28,7 +28,7 @@ public class DomainEvent
     public static DomainEvent FromEvent(string streamId, string userId, object e)
     {
         var streamType = "unknown";
-        if (e is IDomainEvent domainEvent)
+        if (e is BaseEvent domainEvent)
         {
             streamType = domainEvent.StreamType;
         }

@@ -1,0 +1,10 @@
+﻿namespace Prism.ProAssistant.Domain;
+
+public static class Streams
+{
+    public const string Appointments = "appointments";
+    public const string Contacts = "contacts";
+    public const string DocumentsConfiguration = "documents-configuration";
+    public const string Settings = "settings";
+    public const string Tariffs = "tariffs";
+}

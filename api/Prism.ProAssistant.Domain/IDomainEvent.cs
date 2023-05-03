@@ -1,7 +1,9 @@
 ﻿namespace Prism.ProAssistant.Domain;
 
-public interface IDomainEvent
+using Core.Attributes;
+
+public abstract class BaseEvent
 {
-    public string StreamId { get; }
-    public string StreamType { get; }
+    public virtual string StreamId { get; set; } = "unknown";
+    public string StreamType => StreamTypeAttribute.GetStreamType(GetType());
 }
