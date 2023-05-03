@@ -41,7 +41,7 @@ jobs:
         run: |
           corepack enable
           corepack prepare yarn@stable --activate
-          yarn install --immutable
+          yarn install
       - name: Build the application
         working-directory: ./web
         run: |
