@@ -9,6 +9,8 @@ using Prism.Core.Attributes;
 
 namespace Prism.ProAssistant.Domain.Configuration.DocumentConfiguration;
 
+using Core;
+
 [Collection("documents-configuration")]
 public class DocumentConfiguration
 {
@@ -23,5 +25,5 @@ public class DocumentConfiguration
     public string? Title { get; set; }
 
     [JsonPropertyName("id")]
-    required public string Id { get; set; }
+    public string Id { get; set; } = Identifier.GenerateString();
 }
