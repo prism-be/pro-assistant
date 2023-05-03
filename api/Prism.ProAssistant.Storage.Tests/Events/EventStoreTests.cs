@@ -65,6 +65,7 @@ public class EventStoreTests
         // Assert
         eventContainer.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<DomainEvent>()), Times.Never);
         container.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<Contact>()), Times.Never);
+        
     }
 
     [Fact]

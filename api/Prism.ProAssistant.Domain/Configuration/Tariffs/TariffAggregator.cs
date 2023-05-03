@@ -27,6 +27,11 @@ public class TariffAggregator : IDomainAggregator<Tariff>
         return Task.CompletedTask;
     }
 
+    public Task Complete()
+    {
+        return Task.CompletedTask;
+    }
+
     private void Apply(TariffCreated @event)
     {
         State = @event.Tariff;

@@ -48,6 +48,7 @@ public class ContactAggregatorTests
         aggregator.State.LastName.Should().Be("Doe");
 
         // Assert
+        await aggregator.Complete();
         aggregator.State.Id.Should().Be(streamId);
         
         // Assert unknown events

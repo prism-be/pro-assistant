@@ -90,11 +90,13 @@ public class AppointmentAggregatorTests
 
         // Act and assert events
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentCreated));
+        await aggregator.Complete();
         Debug.Assert(aggregator.State != null, "aggregator.State != null");
         aggregator.State.FirstName.Should().Be("John");
         aggregator.State.LastName.Should().Be("Doe");
 
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, appointmentUpdated));
+        await aggregator.Complete();
         aggregator.State.FirstName.Should().Be("Jane");
         aggregator.State.LastName.Should().Be("Doe");
 

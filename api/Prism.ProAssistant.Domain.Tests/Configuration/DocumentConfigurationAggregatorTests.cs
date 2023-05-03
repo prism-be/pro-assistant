@@ -48,6 +48,7 @@ public class DocumentConfigurationAggregatorTests
         aggregator.State.Name.Should().Be("Name");
         
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, documentConfigurationUpdated));
+        await aggregator.Complete();
         Debug.Assert(aggregator.State != null, "aggregator.State != null");
         aggregator.State.Name.Should().Be("NameUpdated");
         

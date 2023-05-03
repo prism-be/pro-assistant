@@ -84,6 +84,8 @@ public class EventStore : IEventStore, IHydrator
         {
             await aggregator.When(@event);
         }
+        
+        await aggregator.Complete();
 
         return aggregator.State;
     }
