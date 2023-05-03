@@ -24,7 +24,7 @@ jobs:
         name: Checkout Sources
         with:
           fetch-depth: 0
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         name: Setup Node
         with:
           node-version: '18'
@@ -41,7 +41,7 @@ jobs:
         run: |
           corepack enable
           corepack prepare yarn@stable --activate
-          yarn install --immutable
+          yarn install
       - name: Build the application
         working-directory: ./web
         run: |
