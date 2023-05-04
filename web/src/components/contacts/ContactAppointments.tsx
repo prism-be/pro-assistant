@@ -3,7 +3,7 @@ import Section from "../design/Section";
 import {useTranslation} from "react-i18next";
 import {useRouter} from "next/router";
 import {AppointmentsList} from "../appointments/AppointmentsList";
-import {Appointment, SearchFilter} from "@/libs/models";
+import {Appointment, Filter} from "@/libs/models";
 import {postData} from "@/libs/http";
 
 export interface Props {
@@ -19,7 +19,7 @@ export const ContactAppointments = (props: Props) => {
             field: "ContactId",
             operator: "eq",
             value: props.contactId,
-        }] as SearchFilter[]);
+        }] as Filter[]);
         data?.reverse();
         return data ?? [];
     }

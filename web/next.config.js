@@ -14,7 +14,7 @@ const nextConfig = {
         i18n: {
             languages: ["fr"],
             defaultLanguage: "fr",
-            namespaces: ["common", "configuration", "documents", "login"],
+            namespaces: ["accounting", "common", "configuration", "documents", "login"],
             defaultNamespace: "common",
         },
     },

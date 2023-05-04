@@ -72,9 +72,9 @@ const Menu = () => {
                 </div>
 
                 <li className={"px-4 pt-4 font-bold"}>{t("menu.accounting")}</li>
-                <li className={getActiveLinkClass("/accounting/closing")}>
-                    <Link className={itemClassName} href={"/accounting/closing"}>
-                        {t("menu.accounting-closing")}
+                <li className={getActiveLinkClass("/accounting/forecast")}>
+                    <Link className={itemClassName} href={"/accounting/forecast"}>
+                        {t("menu.accounting-forecast")}
                     </Link>
                 </li>
             </ul>

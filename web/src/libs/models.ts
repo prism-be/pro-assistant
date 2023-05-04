@@ -11,24 +11,42 @@
 
 
 export interface Appointment {
-    startDate: string;
-    paymentDate?: string | null;
-    price: number;
-    duration: number;
-    payment: number;
-    state: number;
-    documents: BinaryDocument[];
-    firstName: string;
-    lastName: string;
     birthDate?: string | null;
-    phoneNumber?: string | null;
-    title: string;
-    backgroundColor?: string | null;
     contactId?: string | null;
-    foreColor?: string | null;
+    duration: number;
+    firstName?: string | null;
+    id: string;
+    lastName?: string | null;
+    payment: number;
+    paymentDate?: string | null;
+    phoneNumber?: string | null;
+    price: number;
+    startDate: string;
+    state: number;
+    title?: string | null;
     type?: string | null;
     typeId?: string | null;
+    backgroundColor?: string | null;
+    documents: BinaryDocument[];
+    foreColor?: string | null;
+}
+
+export interface AppointmentInformation {
+    birthDate?: string | null;
+    contactId?: string | null;
+    duration: number;
+    firstName?: string | null;
     id: string;
+    lastName?: string | null;
+    payment: number;
+    paymentDate?: string | null;
+    phoneNumber?: string | null;
+    price: number;
+    startDate: string;
+    state: number;
+    title?: string | null;
+    type?: string | null;
+    typeId?: string | null;
 }
 
 export interface BinaryDocument {
@@ -58,7 +76,7 @@ export interface DocumentConfiguration {
     body?: string | null;
     name?: string | null;
     title?: string | null;
-    id?: string | null;
+    id: string;
 }
 
 export interface DocumentRequest {
@@ -70,28 +88,34 @@ export interface DownloadReference {
     id: string;
 }
 
-export interface OperationResult {
-    success: boolean;
+export interface Filter {
+    field: string;
+    value: any;
+    operator: string;
 }
 
-export interface SearchFilter {
-    operator: string;
-    value: any;
-    field: string;
+export interface Forecast {
+    title?: string | null;
+    id: string;
+}
+
+export interface ForecastInformation {
+    id: string;
+    title: string;
 }
 
 export interface Setting {
-    value: string;
     id: string;
+    value: string;
 }
 
 export interface Tariff {
     price: number;
     defaultDuration: number;
+    id: string;
     name: string;
     backgroundColor?: string | null;
     foreColor?: string | null;
-    id: string;
 }
 
 export interface UpsertResult {

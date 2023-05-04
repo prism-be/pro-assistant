@@ -11,7 +11,7 @@ export const HeaderWithAction = ({ title, action, actionText }: Props) => {
     return (
         <header className={"flex"}>
             <h1 className={"grow"}>{title}</h1>
-            <div className={"w-64"}>
+            <div className={"w-32 md:w-64"}>
                 <Button secondary={true} onClick={() => action()} text={actionText} />
             </div>
         </header>
