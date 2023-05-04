@@ -59,7 +59,7 @@ const Forecast: NextPage = () => {
                 </>
                 <HeaderWithAction title={t("forecast.title")} action={() => createNew()} actionText={t("common:actions.new")} />
                 <div>
-                    {forecasts && forecasts.map((item) => <ListItem key={item.id} item={item} title={item.title ?? ""} onEdit={startEdit} onDelete={deleteForecast} />)}
+                    {forecasts?.map((item) => <ListItem key={item.id} item={item} title={item.title ?? ""} onEdit={startEdit} onDelete={deleteForecast} />)}
                     {(!forecasts || forecasts.length === 0) && <div className="italic pt-2 text-center">{t("forecast.noForecasts")}</div>}
                 </div>
             </Section>
