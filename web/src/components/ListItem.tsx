@@ -7,6 +7,7 @@ interface Props {
     onDelete?: (item: any) => void;
     onClick?: (item: any) => void;
     title: string;
+    selected?: boolean;
 }
 
 export const ListItem = ({ item, onEdit, onDelete, onClick, title }: Props) => {
