@@ -3,7 +3,6 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import Button from "../forms/Button";
-import InputColor from "../forms/InputColor";
 import InputText from "../forms/InputText";
 import { Popup } from "../Pops";
 
