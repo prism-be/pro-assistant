@@ -22,12 +22,9 @@ const Forecast: NextPage = () => {
     }
 
     async function create(forecast: Forecast) {
-        if (forecast.id === "")
-        {
+        if (forecast.id === "") {
             await postData("/data/accounting/forecast/insert", forecast);
-        }
-        else
-        {
+        } else {
             await postData("/data/accounting/forecast/update", forecast);
         }
 
@@ -40,9 +37,10 @@ const Forecast: NextPage = () => {
         setEditForecast(true);
     }
 
-    async function deleteForecast(forecast: Forecast) {
-        await postData("/data/accounting/forecast/delete", forecast);
-        mutateForecasts();
+    function deleteForecast(forecast: Forecast) {
+        postData("/data/accounting/forecast/delete", forecast).then(() => {
+            mutateForecasts();
+        });
     }
 
     return (
@@ -52,8 +50,8 @@ const Forecast: NextPage = () => {
                     {editForecast && (
                         <ForecastPopup
                             forecast={forecast}
-                            onSave={(data) => {
-                                create(data);
+                            onSave={async (data) => {
+                                await create(data);
                             }}
                             onCancel={() => setEditForecast(false)}
                         />
