@@ -1,0 +1,14 @@
+{
+  "title": "Comptabilité",
+  "closing": {
+    "title": "Clôture des rendez-vous",
+    "noUnclosed": "Félicitations : il n'y a pas de rendez-vous à clôturer, tout les rendez-vous sont notés comme payés ou annulés."
+  },
+  "forecast": {
+    "title": "Budgets prévisionnels",
+    "noForecasts": "Vous n'avez pas encore ajouté de prévisionnel.",
+    "popup": {
+      "title": "Nom du prévisionnel"
+    }
+  }
+}

@@ -18,6 +18,7 @@ using Prism.ProAssistant.Storage.Users;
 namespace Prism.ProAssistant.Api.Extensions;
 
 using Domain;
+using Domain.Accounting.Forecast;
 using Domain.Configuration.DocumentConfiguration;
 using Domain.Configuration.Settings;
 using Domain.Configuration.Tariffs;
@@ -121,6 +122,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDomainAggregator<DocumentConfiguration>, DocumentConfigurationAggregator>();
         services.AddTransient<IDomainAggregator<Setting>, SettingAggregator>();
         services.AddTransient<IDomainAggregator<Tariff>, TariffAggregator>();
+        services.AddTransient<IDomainAggregator<Forecast>, ForecastAggregator>();
 
         services.AddHostedService<DomainEventServiceBusListener>();
         services.AddTransient<RefreshAppointmentWhenContactChange>();

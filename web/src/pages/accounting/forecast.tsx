@@ -1,31 +1,72 @@
+import { ForecastPopup } from "@/components/accounting/ForecastPopup";
 import ContentContainer from "@/components/design/ContentContainer";
 import { HeaderWithAction } from "@/components/design/HeaderWithAction";
 import Section from "@/components/design/Section";
 import { ListItem } from "@/components/ListItem";
+import { postData } from "@/libs/http";
 import { Forecast } from "@/libs/models";
 import { NextPage } from "next";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 
 const Forecast: NextPage = () => {
-    const { t } = useTranslation("common");
-
+    const { t } = useTranslation("accounting");
     const { data: forecasts, mutate: mutateForecasts } = useSWR<Forecast[]>("/data/accounting/forecast");
+    const [forecast, setForecast] = useState<Forecast | undefined>(undefined);
+    const [editForecast, setEditForecast] = useState(false);
 
     function createNew(): void {
-        throw new Error("Function not implemented.");
+        setForecast(undefined);
+        setEditForecast(true);
     }
 
-    return <ContentContainer>
-        <Section>
-            <HeaderWithAction title={t("pages.accounting.forecast.title")} action={() => createNew()} actionText={t("common:actions.new")}
-            />
-            <div>
-                {forecasts && forecasts.map((item) => <ListItem key={item.id} item={item} title={item.title ?? ''} />)}
-                {(!forecasts || forecasts.length === 0) && <div className="italic">{t("pages.accounting.forecast.noForecasts")}</div>}
-            </div>
-        </Section>
-    </ContentContainer>
-}
+    async function create(forecast: Forecast) {
+        if (forecast.id === "")
+        {
+            await postData("/data/accounting/forecast/insert", forecast);
+        }
+        else
+        {
+            await postData("/data/accounting/forecast/update", forecast);
+        }
+
+        mutateForecasts();
+        setEditForecast(false);
+    }
+
+    function startEdit(forecast: Forecast) {
+        setForecast(forecast);
+        setEditForecast(true);
+    }
+
+    async function deleteForecast(forecast: Forecast) {
+        await postData("/data/accounting/forecast/delete", forecast);
+        mutateForecasts();
+    }
+
+    return (
+        <ContentContainer>
+            <Section>
+                <>
+                    {editForecast && (
+                        <ForecastPopup
+                            forecast={forecast}
+                            onSave={(data) => {
+                                create(data);
+                            }}
+                            onCancel={() => setEditForecast(false)}
+                        />
+                    )}
+                </>
+                <HeaderWithAction title={t("forecast.title")} action={() => createNew()} actionText={t("common:actions.new")} />
+                <div>
+                    {forecasts && forecasts.map((item) => <ListItem key={item.id} item={item} title={item.title ?? ""} onEdit={startEdit} onDelete={deleteForecast} />)}
+                    {(!forecasts || forecasts.length === 0) && <div className="italic pt-2 text-center">{t("forecast.noForecasts")}</div>}
+                </div>
+            </Section>
+        </ContentContainer>
+    );
+};
 
 export default Forecast;
