@@ -29,6 +29,10 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2022-09-01' = {
   }
 }
 
+var storageKeys = storageAccount.listKeys()
+#disable-next-line no-hardcoded-env-urls
+var storageConnectionString = format('DefaultEndpointsProtocol=https;AccountName={0};AccountKey={1};EndpointSuffix=core.windows.net', storageAccount.name, storageKeys.keys[0].value)
+
 resource cosmosDb 'Microsoft.DocumentDB/databaseAccounts@2023-03-01-preview' = {
   name: cosmosDbName
   location: location
@@ -158,7 +162,7 @@ resource containerAppWeb 'Microsoft.App/containerApps@2022-11-01-preview' = {
         }
         {
           name: 'storage'
-          value: storageAccount.listKeys().keys[0].value
+          value: storageConnectionString
         }
       ]
       ingress: {
