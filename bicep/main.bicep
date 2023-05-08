@@ -112,7 +112,7 @@ resource serviceBusQueue 'Microsoft.ServiceBus/namespaces/queues@2022-01-01-prev
   }
 }
 
-resource serviceBusAuthroization 'Microsoft.ServiceBus/namespaces/AuthorizationRules@2022-10-01-preview' = {
+resource serviceBusAuthorization 'Microsoft.ServiceBus/namespaces/AuthorizationRules@2022-10-01-preview' = {
   parent: serviceBus
   name: 'web'
   properties: {
@@ -154,7 +154,7 @@ resource containerAppWeb 'Microsoft.App/containerApps@2022-11-01-preview' = {
         }
         {
           name: 'servicebus'
-          value: serviceBus.listKeys().primaryConnectionString
+          value: serviceBusAuthorization.listKeys().primaryConnectionString
         }
         {
           name: 'storage'
