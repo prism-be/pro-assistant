@@ -127,7 +127,7 @@ resource serviceBusAuthorization 'Microsoft.ServiceBus/namespaces/AuthorizationR
   }
 }
 
-resource containerAppEnvironemnt 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
+resource containerAppEnvironnement 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
   name: containerAppEnvironmentName
   location: location
   properties: {
@@ -141,11 +141,16 @@ resource containerAppEnvironemnt 'Microsoft.App/managedEnvironments@2022-11-01-p
   }
 }
 
+resource certificate 'Microsoft.App/managedEnvironments/certificates@2022-11-01-preview' existing = {
+  name: 'cloudflare'
+  parent: containerAppEnvironnement
+}
+
 resource containerAppWeb 'Microsoft.App/containerApps@2022-11-01-preview' = {
   name: containerAppWebName
   location: location
   properties: {
-    environmentId: containerAppEnvironemnt.id
+    environmentId: containerAppEnvironnement.id
     configuration: {
       secrets: [
         {
@@ -168,6 +173,13 @@ resource containerAppWeb 'Microsoft.App/containerApps@2022-11-01-preview' = {
       ingress: {
         external: true
         targetPort: 80
+        customDomains: [
+          {
+            name: 'web.pro-assistant.eu'
+            bindingType: 'SniEnabled'
+            certificateId: certificate.id
+          }
+        ]
       }
     }
     template: {
