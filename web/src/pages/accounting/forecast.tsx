@@ -1,6 +1,8 @@
 import { ForecastPopup } from "@/components/accounting/ForecastPopup";
 import ContentContainer from "@/components/design/ContentContainer";
-import { HeaderWithAction } from "@/components/design/HeaderWithAction";
+import Header from "@/components/design/Header";
+import { HeaderTitle } from "@/components/design/HeaderTitle";
+import { HeaderTitleWithAction } from "@/components/design/HeaderTitleWithAction";
 import Section from "@/components/design/Section";
 import { ListItem } from "@/components/ListItem";
 import { postData } from "@/libs/http";
@@ -57,7 +59,7 @@ const Forecast: NextPage = () => {
         <ContentContainer>
             <Section>
                 <>{editForecast && <ForecastPopup forecast={editingForecast} onSave={create} onCancel={() => setEditForecast(false)} />}</>
-                <HeaderWithAction title={t("forecast.title")} action={() => createNew()} actionText={t("common:actions.new")} />
+                <HeaderTitleWithAction title={t("forecast.title")} action={() => createNew()} actionText={t("common:actions.new")} />
                 <div>
                     {forecasts?.map((item) => (
                         <ListItem key={item.id} item={item} title={item.title ?? ""} onEdit={startEdit} onDelete={deleteForecast} selected={forecast?.id === item.id} onClick={selectForecast} />
@@ -65,6 +67,13 @@ const Forecast: NextPage = () => {
                     {(!forecasts || forecasts.length === 0) && <div className="italic pt-2 text-center">{t("forecast.noForecasts")}</div>}
                 </div>
             </Section>
+
+            <>
+                {forecast && <Section>
+                    <HeaderTitle title={forecast.title ?? ''} />
+                </Section>}
+            </>
+
         </ContentContainer>
     );
 };

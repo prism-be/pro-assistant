@@ -8,7 +8,7 @@ import {useForm} from "react-hook-form";
 import InputText from "../components/forms/InputText";
 import TextArea from "../components/forms/TextArea";
 import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
-import {HeaderWithAction} from "@/components/design/HeaderWithAction";
+import {HeaderTitleWithAction} from "@/components/design/HeaderTitleWithAction";
 import {DocumentConfiguration} from "@/libs/models";
 import {deleteData, postData} from "@/libs/http";
 
@@ -64,7 +64,7 @@ const Documents: NextPage = () => {
             <>
                 <Section>
                     <>
-                        <HeaderWithAction
+                        <HeaderTitleWithAction
                             title={t("title")}
                             action={() => createNew()}
                             actionText={t("common:actions.new")}
@@ -100,7 +100,7 @@ const Documents: NextPage = () => {
                 {currentDocument && (
                     <Section>
                         <>
-                            <HeaderWithAction
+                            <HeaderTitleWithAction
                                 title={t("edit.title")}
                                 action={() => saveDocument()}
                                 actionText={t("common:actions.save")}
