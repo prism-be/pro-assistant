@@ -146,7 +146,7 @@ resource containerAppWeb 'Microsoft.App/containerApps@2022-11-01-preview' = {
       secrets: [
         {
           name: 'insights'
-          value: insights.listKeys().instrumentationKey
+          value: insights.properties.ConnectionString
         }
         {
           name: 'mongo'
@@ -158,7 +158,7 @@ resource containerAppWeb 'Microsoft.App/containerApps@2022-11-01-preview' = {
         }
         {
           name: 'storage'
-          value: storageAccount.listConnectionStrings().connectionStrings[0].connectionString
+          value: storageAccount.listKeys().keys[0].value
         }
       ]
       ingress: {
