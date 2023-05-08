@@ -123,29 +123,105 @@ resource serviceBusAuthroization 'Microsoft.ServiceBus/namespaces/AuthorizationR
   }
 }
 
+resource containerAppEnvironemnt 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
+  name: containerAppEnvironmentName
+  location: location
+  properties: {
+    appLogsConfiguration: {
+      destination: 'log-analytics'
+      logAnalyticsConfiguration: {
+        customerId: logWorkspace.properties.customerId
+        sharedKey: logWorkspace.listKeys().primarySharedKey
+      }
+    }
+  }
+}
 
-// resource containerAppEnvironemnt 'Microsoft.App/managedEnvironments@2022-11-01-preview' = {
-//   name: containerAppEnvironmentName
-//   location: location
-//   properties: {
-//     appLogsConfiguration: {
-//       destination: 'LogAnalytics'
-//       logAnalyticsConfiguration: {
-//         customerId: logWorkspace.properties.customerId
-//         sharedKey: listKeys(logWorkspace.id, '2020-08-01').primarySharedKey
-//       }
-//     }
-//   }
-// }
-
-// resource containerAppWeb 'Microsoft.App/containerApps@2022-11-01-preview' = {
-//   name: containerAppWebName
-//   location: location
-//   properties: {
-//     environmentId: containerAppEnvironemnt.id
-//     configuration: {
-
-//     }
-//   }
-
-// }
+resource containerAppWeb 'Microsoft.App/containerApps@2022-11-01-preview' = {
+  name: containerAppWebName
+  location: location
+  properties: {
+    environmentId: containerAppEnvironemnt.id
+    configuration: {
+      secrets: [
+        {
+          name: 'insights'
+          value: insights.listKeys().instrumentationKey
+        }
+        {
+          name: 'mongo'
+          value: cosmosDb.listConnectionStrings().connectionStrings[0].connectionString
+        }
+        {
+          name: 'servicebus'
+          value: serviceBus.listKeys().primaryConnectionString
+        }
+        {
+          name: 'storage'
+          value: storageAccount.listConnectionStrings().connectionStrings[0].connectionString
+        }
+      ]
+      ingress: {
+        external: true
+        targetPort: 80
+      }
+    }
+    template: {
+      containers: [
+        {
+          name: 'web'
+          image: 'ghcr.io/prism-be/pro-assistant:5.3.0'
+          resources: {
+            cpu: json('0.25')
+            memory: '.5Gi'
+          }
+          env: [
+            {
+              name: 'AZURE_AD_AUTHORITY'
+              value: 'https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/'
+            }
+            {
+              name: 'AZURE_AD_CLIENT_ID'
+              value: 'b210005a-b610-43e2-9dd5-824e50b9f692'
+            }
+            {
+              name: 'AZURE_AD_TENANT_ID'
+              value: '220d6f01-1195-4f61-b59d-83046933e9b7'
+            }
+            {
+              name: 'AZURE_AD_USER_FLOW'
+              value: 'B2C_1_PRO_ASSISTANT'
+            }
+            {
+              name: 'AZURE_AD_TENANT_NAME'
+              value: 'byprism'
+            }
+            {
+              name: 'ENVIRONMENT'
+              value: resourceGroup().name
+            }
+            {
+              name: 'APPLICATIONINSIGHTS_CONNECTION_STRING'
+              secretRef: 'insights'
+            }
+            {
+              name: 'MONGODB_CONNECTION_STRING'
+              secretRef: 'mongo'
+            }
+            {
+              name: 'AZURE_STORAGE_CONNECTION_STRING'
+              secretRef: 'storage'
+            }
+            {
+              name: 'AZURE_SERVICE_BUS_CONNECTION_STRING'
+              secretRef: 'servicebus'
+            }
+          ]
+        }
+      ]
+      scale: {
+        minReplicas: 0
+      }
+    }
+  }
+}
