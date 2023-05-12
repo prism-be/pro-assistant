@@ -11,4 +11,7 @@ public class Forecast
 
     [JsonPropertyName("id")]
     required public string Id { get; set; }
+
+    [JsonPropertyName("previsions")]
+    public List<ForecastPrevision> Previsions { get; set; } = new ();
 }

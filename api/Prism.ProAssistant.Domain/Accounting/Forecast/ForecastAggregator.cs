@@ -31,6 +31,15 @@ public class ForecastAggregator : IDomainAggregator<Forecast>
             case nameof(ForecastDeleted):
                 Apply(@event.ToEvent<ForecastDeleted>());
                 break;
+            case nameof(ForecastPrevisionCreated):
+                Apply(@event.ToEvent<ForecastPrevisionCreated>());
+                break;
+            case nameof(ForecastPrevisionUpdated):
+                Apply(@event.ToEvent<ForecastPrevisionUpdated>());
+                break;
+            case nameof(ForecastPrevisionDeleted):
+                Apply(@event.ToEvent<ForecastPrevisionDeleted>());
+                break;
             default:
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
@@ -41,6 +50,37 @@ public class ForecastAggregator : IDomainAggregator<Forecast>
     public Task Complete()
     {
         return Task.CompletedTask;
+    }
+
+    private void Apply(ForecastPrevisionCreated e)
+    {
+        State = EnsureState();
+        State.Previsions.Add(e.Prevision);
+    }
+
+    private void Apply(ForecastPrevisionUpdated e)
+    {
+        State = EnsureState();
+        var prevision = State.Previsions.FirstOrDefault(x => x.Id == e.Prevision.Id);
+        if (prevision == null)
+        {
+            throw new InvalidOperationException($"The prevision {e.Prevision.Id} does not exist");
+        }
+
+        State.Previsions.Remove(prevision);
+        State.Previsions.Add(e.Prevision);
+    }
+
+    private void Apply(ForecastPrevisionDeleted e)
+    {
+        State = EnsureState();
+        var prevision = State.Previsions.FirstOrDefault(x => x.Id == e.Id);
+        if (prevision == null)
+        {
+            throw new InvalidOperationException($"The prevision {e.Id} does not exist");
+        }
+
+        State.Previsions.Remove(prevision);
     }
 
     private void Apply(ForecastCreated e)
