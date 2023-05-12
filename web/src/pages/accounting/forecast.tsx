@@ -1,6 +1,5 @@
 import { ForecastPopup } from "@/components/accounting/ForecastPopup";
 import ContentContainer from "@/components/design/ContentContainer";
-import Header from "@/components/design/Header";
 import { HeaderTitle } from "@/components/design/HeaderTitle";
 import { HeaderTitleWithAction } from "@/components/design/HeaderTitleWithAction";
 import Section from "@/components/design/Section";
@@ -11,6 +10,7 @@ import { NextPage } from "next";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useSWR from "swr";
+import sortArray from "sort-array";
 
 const Forecast: NextPage = () => {
     const { t } = useTranslation("accounting");
@@ -61,7 +61,7 @@ const Forecast: NextPage = () => {
                 <>{editForecast && <ForecastPopup forecast={editingForecast} onSave={create} onCancel={() => setEditForecast(false)} />}</>
                 <HeaderTitleWithAction title={t("forecast.title")} action={() => createNew()} actionText={t("common:actions.new")} />
                 <div>
-                    {forecasts?.map((item) => (
+                    {sortArray(forecasts ?? [], { by: "title"} ).map((item) => (
                         <ListItem key={item.id} item={item} title={item.title ?? ""} onEdit={startEdit} onDelete={deleteForecast} selected={forecast?.id === item.id} onClick={selectForecast} />
                     ))}
                     {(!forecasts || forecasts.length === 0) && <div className="italic pt-2 text-center">{t("forecast.noForecasts")}</div>}
