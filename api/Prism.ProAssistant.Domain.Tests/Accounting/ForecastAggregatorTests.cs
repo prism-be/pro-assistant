@@ -55,6 +55,55 @@ public class ForecastAggregatorTests
         aggregator.State.Should().NotBeNull();
         aggregator.State!.Previsions.Should().HaveCount(0);
     }
+
+    [Fact]
+    public async Task ComputeBudget_Daily()
+    {
+        // Arrange
+        var streamId = Identifier.GenerateString();
+        var userId = Identifier.GenerateString();
+        
+        var dailyPrevisionExpense = new ForecastPrevision
+        {
+            Id = Identifier.GenerateString(),
+            Amount = 10,
+            Type = ForecastPrevisionType.Expense,
+            RecurringCount = 1,
+            RecurringType = RecurringType.Daily,
+            Name = "Daily from 5",
+            StartDate = new DateTime(2023, 1, 5),
+            EndDate = new DateTime(2023, 5, 14)
+        };
+        
+        var dailyPrevisionIncome = new ForecastPrevision
+        {
+            Id = Identifier.GenerateString(),
+            Amount = 50,
+            Type = ForecastPrevisionType.Income,
+            RecurringCount = 1,
+            RecurringType = RecurringType.Daily,
+            Name = "Daily from 1",
+            StartDate = new DateTime(2023, 1, 1),
+            EndDate = new DateTime(2023, 5, 14)
+        };
+        
+        // Act
+        var aggregator = new ForecastAggregator();
+        aggregator.Init(streamId);
+        aggregator.State!.Year = 2023;
+        
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, new ForecastPrevisionCreated { Prevision = dailyPrevisionExpense }));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, new ForecastPrevisionCreated { Prevision = dailyPrevisionIncome }));
+        await aggregator.Complete();
+        
+        // Assert
+        aggregator.State.Should().NotBeNull();
+        aggregator.State!.WeeklyBudgets.Should().HaveCount(53);
+        aggregator.State!.WeeklyBudgets[0].Amount.Should().Be(50);
+        aggregator.State!.WeeklyBudgets[1].Amount.Should().Be(7 * 50 - 4 * 10);
+        aggregator.State!.WeeklyBudgets[2].Amount.Should().Be(7 * 50 - 7 * 10);
+        aggregator.State!.WeeklyBudgets.Sum(x => x.Amount).Should().Be(134 * 50 - 130 * 10);
+    }
     
     [Fact]
     public async Task Happy_Ok()

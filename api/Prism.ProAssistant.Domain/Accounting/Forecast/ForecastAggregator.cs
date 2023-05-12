@@ -49,6 +49,9 @@ public class ForecastAggregator : IDomainAggregator<Forecast>
 
     public Task Complete()
     {
+        var calculator = new ForecastWeeklyBudgetCalculator(EnsureState());
+        calculator.Compute();
+        
         return Task.CompletedTask;
     }
 
@@ -88,7 +91,8 @@ public class ForecastAggregator : IDomainAggregator<Forecast>
         State = new Forecast
         {
             Id = e.StreamId,
-            Title = e.Title
+            Title = e.Title,
+            Year = e.Year
         };
     }
 
@@ -96,6 +100,7 @@ public class ForecastAggregator : IDomainAggregator<Forecast>
     {
         State = EnsureState();
         State.Title = e.Title;
+        State.Year = e.Year;
     }
 
     private void Apply(ForecastDeleted _)

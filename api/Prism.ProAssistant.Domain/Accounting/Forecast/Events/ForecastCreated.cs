@@ -6,4 +6,6 @@ using Core.Attributes;
 public class ForecastCreated: BaseEvent
 {
     public string Title { get; set; } = string.Empty;
+
+    public int Year { get; set; } = DateTime.Today.Year;
 }

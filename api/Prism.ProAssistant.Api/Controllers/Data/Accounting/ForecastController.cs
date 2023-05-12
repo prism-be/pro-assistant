@@ -73,7 +73,8 @@ public class ForecastController : Controller
         return await _eventStore.RaiseAndPersist<Forecast>(new ForecastCreated
         {
             StreamId = Identifier.GenerateString(),
-            Title = request.Title
+            Title = request.Title,
+            Year = request.Year
         });
     }
 
@@ -91,9 +92,10 @@ public class ForecastController : Controller
         return await _eventStore.RaiseAndPersist<Forecast>(new ForecastUpdated
         {
             StreamId = request.Id,
-            Title = request.Title
+            Title = request.Title,
+            Year = request.Year
         });
     }
 
-    public record ForecastInformation(string Id, string Title);
+    public record ForecastInformation(string Id, string Title, int Year);
 }

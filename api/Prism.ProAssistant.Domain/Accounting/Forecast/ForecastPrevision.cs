@@ -22,6 +22,9 @@ public class ForecastPrevision
     [JsonPropertyName("amount")]
     public decimal Amount { get; set; }
 
+    [JsonPropertyName("endDate")]
+    public DateTime EndDate { get; set; }
+
     [JsonPropertyName("id")]
     public string Id { get; set; } = Identifier.GenerateString();
 
