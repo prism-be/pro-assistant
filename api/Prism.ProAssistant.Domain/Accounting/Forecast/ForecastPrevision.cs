@@ -12,9 +12,10 @@ public enum ForecastPrevisionType
 public enum RecurringType
 {
     Daily = 0,
-    Weekly = 1,
-    Monthly = 2,
-    Yearly = 3
+    WorkDaily = 1,
+    Weekly = 2,
+    Monthly = 3,
+    Yearly = 4
 }
 
 public class ForecastPrevision

@@ -20,10 +20,34 @@ public class ForecastWeeklyBudgetCalculator
                 case RecurringType.Daily:
                     ComputeBudgetDailyPrevision(prevision);
                     break;
+                case RecurringType.WorkDaily:
+                    ComputeBudgetWorkDailyPrevision(prevision);
+                    break;
             }
         }
     }
-    
+
+    private void ComputeBudgetWorkDailyPrevision(ForecastPrevision prevision)
+    {
+        var currentDay = prevision.StartDate;
+        
+        while (currentDay <= prevision.EndDate)
+        {
+            if (currentDay.DayOfWeek != DayOfWeek.Saturday && currentDay.DayOfWeek != DayOfWeek.Sunday)
+            {
+                var budget = _forecast.WeeklyBudgets.FirstOrDefault(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
+                if (budget == null)
+                {
+                    throw new InvalidOperationException($"The budget for the week of {currentDay} does not exist");
+                }
+
+                budget.Amount += (prevision.Type == ForecastPrevisionType.Income ? 1 : -1) * prevision.Amount;
+            }
+            
+            currentDay = currentDay.AddDays(1);
+        }
+    }
+
     private void ComputeBudgetDailyPrevision(ForecastPrevision prevision)
     {
         var currentDay = prevision.StartDate;
