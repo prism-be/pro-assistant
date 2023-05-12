@@ -10,7 +10,7 @@ interface Props {
     selected?: boolean;
 }
 
-export const ListItem = ({ item, onEdit, onDelete, onClick, title }: Props) => {
+export const ListItem = ({ item, onEdit, onDelete, onClick, title, selected }: Props) => {
     const { t } = useTranslation("common");
 
     function deleteItem() {
@@ -20,7 +20,7 @@ export const ListItem = ({ item, onEdit, onDelete, onClick, title }: Props) => {
     }
 
     return (
-        <div className={"flex"}>
+        <div className={"flex p-2 mt-1 border" + (selected ? " bg-gray-100" : " border-white")}>
             {onEdit && (
                 <a className={"w-6 cursor-pointer"} onClick={() => onEdit(item)}>
                     {" "}
@@ -33,7 +33,14 @@ export const ListItem = ({ item, onEdit, onDelete, onClick, title }: Props) => {
                     <TrashIcon />{" "}
                 </a>
             )}
-            <div className={"pl-2" + (onclick ? " pointer" : "")}>{title}</div>
+            <div
+                className={"pl-2" + (onclick ? " pointer" : "")}
+                onClick={() => {
+                    if (onClick) onClick(item);
+                }}
+            >
+                {title}
+            </div>
         </div>
     );
 };

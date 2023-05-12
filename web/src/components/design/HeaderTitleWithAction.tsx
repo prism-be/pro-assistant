@@ -7,7 +7,7 @@ interface Props {
     actionText: string;
 }
 
-export const HeaderWithAction = ({ title, action, actionText }: Props) => {
+export const HeaderTitleWithAction = ({ title, action, actionText }: Props) => {
     return (
         <header className={"flex"}>
             <h1 className={"grow"}>{title}</h1>

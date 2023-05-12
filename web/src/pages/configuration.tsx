@@ -14,7 +14,7 @@ import InputColor from "../components/forms/InputColor";
 import {PencilSquareIcon} from "@heroicons/react/24/outline";
 import {Setting, Tariff} from "@/libs/models";
 import {postData, putData} from "@/libs/http";
-import {HeaderWithAction} from "@/components/design/HeaderWithAction";
+import {HeaderTitleWithAction} from "@/components/design/HeaderTitleWithAction";
 import {Popup} from "@/components/Pops";
 import {alertSuccess} from "@/libs/events/alert";
 
@@ -69,7 +69,7 @@ const Tariffs = () => {
     return (
             <Section>
                 <>
-                    <HeaderWithAction
+                    <HeaderTitleWithAction
                             title={t("tariffs.title")}
                             action={() => addTariff()}
                             actionText={t("common:actions.add")}
@@ -201,7 +201,7 @@ const Documents = () => {
     return (
             <Section>
                 <>
-                    <HeaderWithAction
+                    <HeaderTitleWithAction
                             title={t("documents.header.title")}
                             action={() => saveDocumentHeaders()}
                             actionText={t("common:actions.save")}
