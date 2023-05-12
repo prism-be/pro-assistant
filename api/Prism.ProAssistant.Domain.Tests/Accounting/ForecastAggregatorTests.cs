@@ -57,6 +57,55 @@ public class ForecastAggregatorTests
     }
 
     [Fact]
+    public async Task ComputeBudget_Weekly()
+    {
+        // Arrange
+        var streamId = Identifier.GenerateString();
+        var userId = Identifier.GenerateString();
+
+        var dailyPrevisionExpense = new ForecastPrevision
+        {
+            Id = Identifier.GenerateString(),
+            Amount = 10,
+            Type = ForecastPrevisionType.Expense,
+            RecurringCount = 1,
+            RecurringType = RecurringType.Weekly,
+            Name = "Daily week 5",
+            StartDate = new DateTime(2023, 1, 23),
+            EndDate = new DateTime(2024, 1, 1)
+        };
+
+        var dailyPrevisionIncome = new ForecastPrevision
+        {
+            Id = Identifier.GenerateString(),
+            Amount = 50,
+            Type = ForecastPrevisionType.Income,
+            RecurringCount = 1,
+            RecurringType = RecurringType.Weekly,
+            Name = "Daily week 1",
+            StartDate = new DateTime(2023, 1, 1),
+            EndDate = new DateTime(2024, 1, 1)
+        };
+
+        // Act
+        var aggregator = new ForecastAggregator();
+        aggregator.Init(streamId);
+        aggregator.State!.Year = 2023;
+
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, new ForecastPrevisionCreated { Prevision = dailyPrevisionExpense }));
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, new ForecastPrevisionCreated { Prevision = dailyPrevisionIncome }));
+        await aggregator.Complete();
+
+        // Assert
+        aggregator.State.Should().NotBeNull();
+        aggregator.State!.WeeklyBudgets.Should().HaveCount(53);
+        aggregator.State!.WeeklyBudgets[0].Amount.Should().Be(50);
+        aggregator.State!.WeeklyBudgets[1].Amount.Should().Be(50);
+        aggregator.State!.WeeklyBudgets[5].Amount.Should().Be(50 - 10);
+        aggregator.State!.WeeklyBudgets.Sum(x => x.Amount).Should().Be(53 * 50 - 49 * 10);
+    }
+
+    [Fact]
     public async Task ComputeBudget_WorkDaily()
     {
         // Arrange

@@ -23,7 +23,29 @@ public class ForecastWeeklyBudgetCalculator
                 case RecurringType.WorkDaily:
                     ComputeBudgetWorkDailyPrevision(prevision);
                     break;
+                case RecurringType.Weekly:
+                    ComputeBudgetWeeklyPrevision(prevision);
+                    break;
             }
+        }
+    }
+
+    private void ComputeBudgetWeeklyPrevision(ForecastPrevision prevision)
+    {
+        var currentDay = prevision.StartDate;
+        
+        while (currentDay <= prevision.EndDate)
+        {
+            var budget = _forecast.WeeklyBudgets.FirstOrDefault(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
+            if (budget == null)
+            {
+                currentDay = currentDay.AddDays(7);
+                continue;
+            }
+
+            budget.Amount += (prevision.Type == ForecastPrevisionType.Income ? 1 : -1) * prevision.Amount;
+            
+            currentDay = currentDay.AddDays(7);
         }
     }
 
@@ -38,7 +60,8 @@ public class ForecastWeeklyBudgetCalculator
                 var budget = _forecast.WeeklyBudgets.FirstOrDefault(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
                 if (budget == null)
                 {
-                    throw new InvalidOperationException($"The budget for the week of {currentDay} does not exist");
+                    currentDay = currentDay.AddDays(1);
+                    continue;
                 }
 
                 budget.Amount += (prevision.Type == ForecastPrevisionType.Income ? 1 : -1) * prevision.Amount;
@@ -57,7 +80,8 @@ public class ForecastWeeklyBudgetCalculator
             var budget = _forecast.WeeklyBudgets.FirstOrDefault(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
             if (budget == null)
             {
-                throw new InvalidOperationException($"The budget for the week of {currentDay} does not exist");
+                currentDay = currentDay.AddDays(1);
+                continue;
             }
 
             budget.Amount += (prevision.Type == ForecastPrevisionType.Income ? 1 : -1) * prevision.Amount;
