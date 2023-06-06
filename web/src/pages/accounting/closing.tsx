@@ -12,9 +12,11 @@ import sortArray from "sort-array";
 import InputSelect from "@/components/forms/InputSelect";
 import {useForm} from "react-hook-form";
 import {postData} from "@/libs/http";
+import {useRouter} from "next/router";
 
 const Closing: NextPage = () => {
 
+    const router = useRouter();
     const {t} = useTranslation("accounting");
     const {data: unclosed, mutate: mutateUnclosed} = useSWR<Appointment[]>("/data/accounting/closing/unclosed");
 
@@ -80,14 +82,20 @@ const Closing: NextPage = () => {
                         <InputSelect className={"col-span-2 mb-3"} label={t("common:fields.payment")} name={"payment"}
                                      required={false} register={register} error={errors.payment}
                                      options={paymentOptions} onChange={() => updateState()}/>
+                        
                         <InputSelect className={"col-span-2 mb-3"} label={t("common:fields.appointmentState")}
                                      name={"state"} required={false} register={register} error={errors.payment}
                                      options={stateOptions}/>
 
-                        <div className={"grid grid-cols-2 gap-2"}>
+                        <div className={"grid grid-cols-3 gap-2"}>
                             <Button
                                 text={t("common:actions.cancel")}
                                 onClick={() => setCurrentEdit(null)}
+                                secondary={true}
+                            />
+                            <Button
+                                text={t("common:actions.details")}
+                                onClick={() => router.push(`/appointments/${currentEdit.id}`)}
                                 secondary={true}
                             />
                             <Button text={t("common:actions.save")} onClick={handleSubmit(onSubmit)}/>
