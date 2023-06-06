@@ -31,6 +31,13 @@ export interface Appointment {
     foreColor?: string | null;
 }
 
+export interface AppointmentClosing {
+    id: string;
+    payment: number;
+    paymentDate?: string | null;
+    state: number;
+}
+
 export interface AppointmentInformation {
     birthDate?: string | null;
     contactId?: string | null;
@@ -97,11 +104,45 @@ export interface Filter {
 export interface Forecast {
     title?: string | null;
     id: string;
+    year: number;
+    previsions: ForecastPrevision[];
+    weeklyBudgets: ForecastWeeklyBudget[];
 }
 
 export interface ForecastInformation {
     id: string;
     title: string;
+    year: number;
+}
+
+export interface ForecastPrevision {
+    amount: number;
+    endDate: string;
+    id: string;
+    name: string;
+    recurringCount: number;
+    recurringType: RecurringType;
+    startDate: string;
+    type: ForecastPrevisionType;
+}
+
+export enum ForecastPrevisionType {
+    _0 = 0,
+    _1 = 1,
+}
+
+export interface ForecastWeeklyBudget {
+    amount: number;
+    monday: string;
+    weekOfYear: number;
+}
+
+export enum RecurringType {
+    _0 = 0,
+    _1 = 1,
+    _2 = 2,
+    _3 = 3,
+    _4 = 4,
 }
 
 export interface Setting {

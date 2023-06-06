@@ -17,6 +17,7 @@ import {postData, putData} from "@/libs/http";
 import {HeaderTitleWithAction} from "@/components/design/HeaderTitleWithAction";
 import {Popup} from "@/components/Pops";
 import {alertSuccess} from "@/libs/events/alert";
+import {defaultColor} from "@/libs/constants";
 
 const Tariffs = () => {
     const {t} = useTranslation("configuration");
@@ -39,7 +40,7 @@ const Tariffs = () => {
         setValue("id", "");
         setValue("name", "");
         setValue("price", 0);
-        setValue("backgroundColor", "#31859c");
+        setValue("backgroundColor", defaultColor);
         setEditing(true);
     };
 

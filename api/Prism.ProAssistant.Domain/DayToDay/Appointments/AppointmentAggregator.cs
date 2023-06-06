@@ -46,6 +46,9 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
             case nameof(DetachAppointmentDocument):
                 Apply(@event.ToEvent<DetachAppointmentDocument>());
                 break;
+            case nameof(AppointmentClosed):
+                Apply(@event.ToEvent<AppointmentClosed>());
+                break;
             default:
                 throw new NotSupportedException($"The event type {@event.Type} is not implemented");
         }
@@ -72,6 +75,14 @@ public class AppointmentAggregator : IDomainAggregator<Appointment>
         State.BirthDate = contact?.BirthDate;
         State.PhoneNumber = contact?.PhoneNumber;
         State.Title = $"{contact?.LastName} {contact?.FirstName}";
+    }
+    
+    private void Apply(AppointmentClosed @event)
+    {
+        State = EnsureState();
+        State.State = @event.State;
+        State.Payment = @event.Payment;
+        State.PaymentDate = @event.Payment != (int)PaymentTypes.Unpayed ? @event.PaymentDate : null;
     }
 
     private void Apply(DetachAppointmentDocument @event)
