@@ -72,7 +72,7 @@ const Menu = () => {
                 </div>
 
                 <li className={"px-4 pt-4 font-bold"}>{t("menu.accounting")}</li>
-                <li className={getActiveLinkClass("/accounting/forecast")}>
+                <li className={"hidden " + getActiveLinkClass("/accounting/forecast")}>
                     <Link className={itemClassName} href={"/accounting/forecast"}>
                         {t("menu.accounting-forecast")}
                     </Link>
