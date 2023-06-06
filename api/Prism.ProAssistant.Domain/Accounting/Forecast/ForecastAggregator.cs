@@ -64,7 +64,7 @@ public class ForecastAggregator : IDomainAggregator<Forecast>
     private void Apply(ForecastPrevisionUpdated e)
     {
         State = EnsureState();
-        var prevision = State.Previsions.FirstOrDefault(x => x.Id == e.Prevision.Id);
+        var prevision = State.Previsions.Find(x => x.Id == e.Prevision.Id);
         if (prevision == null)
         {
             throw new InvalidOperationException($"The prevision {e.Prevision.Id} does not exist");
@@ -77,7 +77,7 @@ public class ForecastAggregator : IDomainAggregator<Forecast>
     private void Apply(ForecastPrevisionDeleted e)
     {
         State = EnsureState();
-        var prevision = State.Previsions.FirstOrDefault(x => x.Id == e.Id);
+        var prevision = State.Previsions.Find(x => x.Id == e.Id);
         if (prevision == null)
         {
             throw new InvalidOperationException($"The prevision {e.Id} does not exist");

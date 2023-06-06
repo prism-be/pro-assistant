@@ -36,7 +36,7 @@ public class ForecastWeeklyBudgetCalculator
         
         while (currentDay <= prevision.EndDate)
         {
-            var budget = _forecast.WeeklyBudgets.FirstOrDefault(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
+            var budget = _forecast.WeeklyBudgets.Find(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
             if (budget == null)
             {
                 currentDay = currentDay.AddDays(7);
@@ -57,7 +57,7 @@ public class ForecastWeeklyBudgetCalculator
         {
             if (currentDay.DayOfWeek != DayOfWeek.Saturday && currentDay.DayOfWeek != DayOfWeek.Sunday)
             {
-                var budget = _forecast.WeeklyBudgets.FirstOrDefault(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
+                var budget = _forecast.WeeklyBudgets.Find(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
                 if (budget == null)
                 {
                     currentDay = currentDay.AddDays(1);
@@ -77,7 +77,7 @@ public class ForecastWeeklyBudgetCalculator
         
         while (currentDay <= prevision.EndDate)
         {
-            var budget = _forecast.WeeklyBudgets.FirstOrDefault(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
+            var budget = _forecast.WeeklyBudgets.Find(x => x.Monday <= currentDay && x.Monday.AddDays(7) > currentDay);
             if (budget == null)
             {
                 currentDay = currentDay.AddDays(1);
