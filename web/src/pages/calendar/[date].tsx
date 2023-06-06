@@ -13,6 +13,7 @@ import {Appointment} from "@/libs/models";
 import {postData} from "@/libs/http";
 import {getLocale} from "@/libs/localization";
 import {AppointmentStateIcon} from "@/components/appointments/AppointmentStateIcon";
+import {defaultColor} from "@/libs/constants";
 
 const Calendar: NextPage = () => {
     const router = useRouter();
@@ -180,7 +181,7 @@ const Calendar: NextPage = () => {
                                                 parseISO(a.startDate).getHours(),
                                                 parseISO(a.startDate).getMinutes()
                                         ),
-                                        backgroundColor: a.backgroundColor ?? "",
+                                        backgroundColor: a.backgroundColor ?? defaultColor,
                                         gridRowEnd: getDurationClassName(a.duration),
                                     }}
                                     key={a.id}

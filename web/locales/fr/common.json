@@ -29,7 +29,8 @@
     "next": "Suivant",
     "prev": "Préc.",
     "nex": "Suiv.",
-    "close": "Fermer"
+    "close": "Fermer",
+    "details": "Détails"
   },
   "confirmations": {
     "deleteDocument": "Etes-vous sûr de vouloir supprimer ce document ?",
@@ -54,6 +55,7 @@
     "fromHour": "à",
     "toHour": "jusque",
     "payment": "Mode de paiement",
+    "paymentDate": "Date de paiement",
     "appointmentState": "Etat du rendez-vous"
   },
   "results": {

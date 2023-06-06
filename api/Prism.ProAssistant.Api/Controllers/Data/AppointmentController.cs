@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Prism.Core;
-using Prism.Infrastructure.Providers;
-using Prism.ProAssistant.Domain.DayToDay.Appointments;
-using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
-using Prism.ProAssistant.Domain.DayToDay.Contacts;
-using Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
-using Prism.ProAssistant.Storage;
-using Prism.ProAssistant.Storage.Events;
+﻿namespace Prism.ProAssistant.Api.Controllers.Data;
 
-namespace Prism.ProAssistant.Api.Controllers.Data;
-
+using Core;
 using Domain;
+using Domain.DayToDay.Appointments;
+using Domain.DayToDay.Appointments.Events;
+using Domain.DayToDay.Contacts;
+using Domain.DayToDay.Contacts.Events;
+using Infrastructure.Providers;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Models;
+using Storage;
+using Storage.Events;
 
 [Authorize]
 public class AppointmentController : Controller
@@ -26,11 +26,51 @@ public class AppointmentController : Controller
     }
 
     [HttpPost]
+    [Route("api/data/appointments/close")]
+    public async Task<UpsertResult> Close([FromBody] AppointmentClosing request)
+    {
+        if (request.Payment != (int)PaymentTypes.Unpayed)
+        {
+            request.PaymentDate = DateTime.UtcNow;
+        }
+
+        return await _eventStore.RaiseAndPersist<Appointment>(new AppointmentClosed
+        {
+            Id = request.Id,
+            Payment = request.Payment,
+            PaymentDate = request.PaymentDate,
+            State = request.State
+        });
+    }
+
+    private async Task EnsureContact(AppointmentInformation request)
+    {
+        if (request.ContactId == null)
+        {
+            var contact = new Contact
+            {
+                Id = Identifier.GenerateString(),
+                FirstName = request.FirstName,
+                LastName = request.LastName,
+                BirthDate = request.BirthDate,
+                PhoneNumber = request.PhoneNumber
+            };
+
+            var result = await _eventStore.RaiseAndPersist<Contact>(new ContactCreated
+            {
+                Contact = contact
+            });
+
+            request.ContactId = result.Id;
+        }
+    }
+
+    [HttpPost]
     [Route("api/data/appointments/insert")]
     public async Task<UpsertResult> Insert([FromBody] AppointmentInformation request)
     {
         request.Id = Identifier.GenerateString();
-        
+
         await EnsureContact(request);
 
         return await _eventStore.RaiseAndPersist<Appointment>(new AppointmentCreated
@@ -70,27 +110,5 @@ public class AppointmentController : Controller
         {
             Appointment = request
         });
-    }
-
-    private async Task EnsureContact(AppointmentInformation request)
-    {
-        if (request.ContactId == null)
-        {
-            var contact = new Contact
-            {
-                Id = Identifier.GenerateString(),
-                FirstName = request.FirstName,
-                LastName = request.LastName,
-                BirthDate = request.BirthDate,
-                PhoneNumber = request.PhoneNumber
-            };
-
-            var result = await _eventStore.RaiseAndPersist<Contact>(new ContactCreated
-            {
-                Contact = contact
-            });
-
-            request.ContactId = result.Id;
-        }
     }
 }

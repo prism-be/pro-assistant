@@ -77,6 +77,22 @@ public class AppointmentAggregatorTests
             DocumentId = documentId,
             StreamId = streamId
         };
+        
+        var closeAppointment = new AppointmentClosed
+        {
+            Id = streamId,
+            Payment = (int)PaymentTypes.Wire,
+            State = (int)AppointmentState.Done,
+            PaymentDate = DateTime.UtcNow
+        };
+        
+        var undoCloseAppointment = new AppointmentClosed
+        {
+            Id = streamId,
+            Payment = (int)PaymentTypes.Unpayed,
+            State = (int)AppointmentState.Confirmed,
+            PaymentDate = DateTime.UtcNow
+        };
 
         var cancelAppointment = new AppointmentUpdated
         {
@@ -107,6 +123,16 @@ public class AppointmentAggregatorTests
         aggregator.State.Documents.Should().BeEmpty();
 
         aggregator.State.Id.Should().Be(streamId);
+        
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, closeAppointment));
+        aggregator.State.State.Should().Be((int)AppointmentState.Done);
+        aggregator.State.Payment.Should().Be((int)PaymentTypes.Wire);
+        aggregator.State.PaymentDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(1));
+        
+        await aggregator.When(DomainEvent.FromEvent(streamId, userId, undoCloseAppointment));
+        aggregator.State.State.Should().Be((int)AppointmentState.Confirmed);
+        aggregator.State.Payment.Should().Be((int)PaymentTypes.Unpayed);
+        aggregator.State.PaymentDate.Should().BeNull();
         
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, cancelAppointment));
         aggregator.State.Should().BeNull();

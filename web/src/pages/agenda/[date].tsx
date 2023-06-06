@@ -12,6 +12,7 @@ import {postData} from "@/libs/http";
 import {Appointment} from "@/libs/models";
 import {getLocale} from "@/libs/localization";
 import {AppointmentStateIcon} from "@/components/appointments/AppointmentStateIcon";
+import {defaultColor} from "@/libs/constants";
 
 const Agenda: NextPage = () => {
     const router = useRouter();
@@ -135,7 +136,7 @@ const Agenda: NextPage = () => {
                                             key={a.id}
                                             onClick={() => router.push("/appointments/" + a.id)}
                                             style={{
-                                                backgroundColor: a.backgroundColor ?? "",
+                                                backgroundColor: a.backgroundColor ?? defaultColor,
                                                 gridRowStart: getHourRowStart(
                                                         parseISO(a.startDate).getHours(),
                                                         parseISO(a.startDate).getMinutes()

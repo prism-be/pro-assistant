@@ -33,6 +33,9 @@ export const ForecastPopup = ({ forecast, onCancel, onSave }: Props) => {
         const data: Forecast = {
             id: forecast?.id ?? "",
             title: getValues()["title"],
+            previsions: [],
+            year: new Date().getFullYear(),
+            weeklyBudgets: [],
         };
 
         onSave(data);

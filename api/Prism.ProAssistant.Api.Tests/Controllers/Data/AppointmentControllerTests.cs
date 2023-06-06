@@ -13,9 +13,33 @@ using Prism.ProAssistant.Storage.Events;
 namespace Prism.ProAssistant.Api.Tests.Controllers.Data;
 
 using Domain;
+using Models;
 
 public class AppointmentControllerTests
 {
+    [Fact]
+    public void Close_Ok()
+    {
+        // Arrange
+        var queryService = new Mock<IQueryService>();
+        var eventStore = new Mock<IEventStore>();
+
+        var id = Identifier.GenerateString();
+
+        // Act
+        var controller = new AppointmentController(queryService.Object, eventStore.Object);
+        var result = controller.Close(new AppointmentClosing
+        {
+            Id = Identifier.GenerateString(),
+            Payment = (int)PaymentTypes.Cash,
+            State = (int)AppointmentState.Done
+        });
+
+        // Assert
+        result.Should().NotBeNull();
+        eventStore.Verify(x => x.RaiseAndPersist<Appointment>(It.Is<AppointmentClosed>(ac => ac.PaymentDate != null && ac.Payment == (int)PaymentTypes.Cash && ac.State == (int)AppointmentState.Done)), Times.Once);
+    }
+
     [Fact]
     public async Task Insert_Ok()
     {
@@ -24,7 +48,7 @@ public class AppointmentControllerTests
         var eventStore = new Mock<IEventStore>();
 
         eventStore.Setup(x => x.RaiseAndPersist<Contact>(It.IsAny<ContactCreated>())).ReturnsAsync(new UpsertResult(Identifier.GenerateString()));
-        
+
         // Act
         var controller = new AppointmentController(queryService.Object, eventStore.Object);
         await controller.Insert(new Appointment
@@ -45,7 +69,7 @@ public class AppointmentControllerTests
         // Arrange
         var queryService = new Mock<IQueryService>();
         var eventStore = new Mock<IEventStore>();
-        
+
         // Act
         var controller = new AppointmentController(queryService.Object, eventStore.Object);
         await controller.List();
@@ -60,7 +84,7 @@ public class AppointmentControllerTests
         // Arrange
         var queryService = new Mock<IQueryService>();
         var eventStore = new Mock<IEventStore>();
-        
+
         // Act
         var controller = new AppointmentController(queryService.Object, eventStore.Object);
         await controller.Search(Array.Empty<Filter>());
@@ -76,7 +100,7 @@ public class AppointmentControllerTests
         var queryService = new Mock<IQueryService>();
         var eventStore = new Mock<IEventStore>();
         var id = Identifier.GenerateString();
-        
+
         // Act
         var controller = new AppointmentController(queryService.Object, eventStore.Object);
         await controller.Single(id);
@@ -91,7 +115,7 @@ public class AppointmentControllerTests
         // Arrange
         var queryService = new Mock<IQueryService>();
         var eventStore = new Mock<IEventStore>();
-        
+
         var appointment = new Appointment
         {
             FirstName = Identifier.GenerateString(),
@@ -100,7 +124,7 @@ public class AppointmentControllerTests
             Title = Identifier.GenerateString(),
             ContactId = Identifier.GenerateString()
         };
-        
+
         // Act
         var controller = new AppointmentController(queryService.Object, eventStore.Object);
         await controller.Update(appointment);
