@@ -15,6 +15,7 @@ import {postData} from "@/libs/http";
 import {useRouter} from "next/router";
 import InputDate from "@/components/forms/InputDate";
 import {format, formatISO, parse, parseISO} from "date-fns";
+import {HandThumbUpIcon} from "@heroicons/react/24/solid";
 
 const Closing: NextPage = () => {
 
@@ -61,7 +62,7 @@ const Closing: NextPage = () => {
         setCurrentEdit(appointment);
         setValue("payment", appointment.payment);
         setValue("state", appointment.state);
-        
+
         if (appointment.paymentDate && appointment.paymentDate !== "") {
             setValue("paymentDate", format(parseISO(appointment.startDate), "dd/MM/yyyy"));
         }
@@ -77,7 +78,7 @@ const Closing: NextPage = () => {
             payment: getValues()["payment"],
             state: getValues()["state"],
         };
-        
+
         if (getValues()["paymentDate"] && getValues()["paymentDate"] !== "") {
             appointmentClosing.paymentDate = formatISO(parse(getValues()["paymentDate"], "dd/MM/yyyy", new Date()));
         }
@@ -123,8 +124,11 @@ const Closing: NextPage = () => {
                 </Popup>}
             </>
 
-            <>{unclosed?.length === 0 && <div className={"p-2 border rounded border-green-700 text-green-700"}>
-                <p>{t("closing.noUnclosed")}</p>
+            <>{unclosed?.length === 0 && <div className={"p-2 text-green-700 text-center"}>
+                <HandThumbUpIcon className={"inline-block w-10 mr-2"}/>
+                <p>
+                    {t("closing.noUnclosed")}
+                </p>
             </div>}
             </>
 
