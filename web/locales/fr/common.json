@@ -55,6 +55,7 @@
     "fromHour": "à",
     "toHour": "jusque",
     "payment": "Mode de paiement",
+    "paymentDate": "Date de paiement",
     "appointmentState": "Etat du rendez-vous"
   },
   "results": {

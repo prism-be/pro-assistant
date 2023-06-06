@@ -13,6 +13,8 @@ import InputSelect from "@/components/forms/InputSelect";
 import {useForm} from "react-hook-form";
 import {postData} from "@/libs/http";
 import {useRouter} from "next/router";
+import InputDate from "@/components/forms/InputDate";
+import {format, formatISO, parse, parseISO} from "date-fns";
 
 const Closing: NextPage = () => {
 
@@ -47,6 +49,11 @@ const Closing: NextPage = () => {
     function updateState() {
         if (getValues()["payment"] > 0) {
             setValue("state", "10");
+            if (currentEdit?.startDate) {
+                setValue("paymentDate", format(parseISO(currentEdit.startDate), "dd/MM/yyyy"));
+            } else {
+                setValue("paymentDate", format(new Date(), "dd/MM/yyyy"));
+            }
         }
     }
 
@@ -54,6 +61,10 @@ const Closing: NextPage = () => {
         setCurrentEdit(appointment);
         setValue("payment", appointment.payment);
         setValue("state", appointment.state);
+        
+        if (appointment.paymentDate && appointment.paymentDate !== "") {
+            setValue("paymentDate", format(parseISO(appointment.startDate), "dd/MM/yyyy"));
+        }
     }
 
     async function onSubmit() {
@@ -61,11 +72,15 @@ const Closing: NextPage = () => {
         if (!currentEdit)
             return;
 
-        const appointmentClosing: AppointmentClosing = {
+        let appointmentClosing: AppointmentClosing = {
             id: currentEdit.id,
             payment: getValues()["payment"],
             state: getValues()["state"],
         };
+        
+        if (getValues()["paymentDate"] && getValues()["paymentDate"] !== "") {
+            appointmentClosing.paymentDate = formatISO(parse(getValues()["paymentDate"], "dd/MM/yyyy", new Date()));
+        }
 
         await postData("/data/appointments/close", appointmentClosing);
         setCurrentEdit(null);
@@ -79,11 +94,15 @@ const Closing: NextPage = () => {
                 {currentEdit && <Popup>
                     <h2>Modifier {currentEdit.title}</h2>
                     <form onSubmit={handleSubmit(onSubmit)}>
-                        <InputSelect className={"col-span-2 mb-3"} label={t("common:fields.payment")} name={"payment"}
+                        <InputSelect className={"mb-3"} label={t("common:fields.payment")} name={"payment"}
                                      required={false} register={register} error={errors.payment}
                                      options={paymentOptions} onChange={() => updateState()}/>
-                        
-                        <InputSelect className={"col-span-2 mb-3"} label={t("common:fields.appointmentState")}
+
+                        <InputDate className={"mb-3"} label={t("common:fields.paymentDate")} name={"paymentDate"}
+                                   required={false} type={"text"} register={register} setValue={setValue}
+                                   error={errors.paymentDate}/>
+
+                        <InputSelect className={"mb-3"} label={t("common:fields.appointmentState")}
                                      name={"state"} required={false} register={register} error={errors.payment}
                                      options={stateOptions}/>
 
