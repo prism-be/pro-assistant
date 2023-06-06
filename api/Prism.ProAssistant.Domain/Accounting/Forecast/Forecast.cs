@@ -11,4 +11,15 @@ public class Forecast
 
     [JsonPropertyName("id")]
     required public string Id { get; set; }
+
+    [JsonPropertyName("year")]
+    public int Year { get; set; }
+
+    [JsonPropertyName("previsions")]
+    public List<ForecastPrevision> Previsions { get; set; } = new ();
+
+    [JsonPropertyName("weeklyBudgets")]
+    public List<ForecastWeeklyBudget> WeeklyBudgets { get; set; } = new();
+
+
 }
