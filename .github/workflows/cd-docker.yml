@@ -30,6 +30,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: 
-            - ghcr.io/prism-be/pro-assistant:${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}
-            - ghcr.io/prism-be/pro-assistant:latest
+          tags: ghcr.io/prism-be/pro-assistant:${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }},ghcr.io/prism-be/pro-assistant:latest
