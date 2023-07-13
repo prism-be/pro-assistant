@@ -30,7 +30,7 @@ const Menu = () => {
     return (
         <div
             className={
-                "bg-white w-64 border-r h-100 fixed top-14 h-full " + (displayMobileMenu ? "block" : "hidden md:block")
+                "bg-white w-64 border-r h-100 fixed top-14 h-full z-50 " + (displayMobileMenu ? "block" : "hidden md:block")
             }
             onClick={() => toggledMobileMenu()}
         >

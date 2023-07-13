@@ -12,6 +12,8 @@
     }
   },
   "reporting": {
-    "title": "Rapports"
+    "title": "Rapports",
+    "income": "Revenus",
+    "expenses": "Frais"
   }
 }
