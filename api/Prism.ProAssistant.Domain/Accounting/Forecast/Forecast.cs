@@ -10,7 +10,7 @@ public class Forecast
     public string? Title { get; set; }
 
     [JsonPropertyName("id")]
-    required public string Id { get; set; }
+    public required string Id { get; set; }
 
     [JsonPropertyName("year")]
     public int Year { get; set; }
