@@ -10,5 +10,8 @@
     "popup": {
       "title": "Nom du prévisionnel"
     }
+  },
+  "reporting": {
+    "title": "Rapports"
   }
 }

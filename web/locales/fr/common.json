@@ -14,7 +14,8 @@
     "appointments": "Rendez-vous",
     "accounting": "Comptabilité",
     "accounting-closing": "Clôture",
-    "accounting-forecast": "Prévisionnel"
+    "accounting-forecast": "Prévisionnel",
+    "accounting-reporting": "Rapports"
   },
   "actions": {
     "back": "Retour",

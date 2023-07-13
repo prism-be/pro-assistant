@@ -82,6 +82,11 @@ const Menu = () => {
                         {t("menu.accounting-closing")}
                     </Link>
                 </li>
+                <li className={getActiveLinkClass("/accounting/reporting")}>
+                    <Link className={itemClassName} href={"/accounting/reporting"}>
+                        {t("menu.accounting-reporting")}
+                    </Link>
+                </li>
             </ul>
         </div>
     );
