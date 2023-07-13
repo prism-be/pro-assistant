@@ -9,10 +9,10 @@ using Microsoft.Extensions.Logging;
 public class EventStore : IEventStore, IHydrator
 {
     private readonly ILogger<EventStore> _logger;
+    private readonly IPublisher _publisher;
     private readonly IServiceProvider _serviceProvider;
     private readonly IStateProvider _stateProvider;
     private readonly UserOrganization _userOrganization;
-    private readonly IPublisher _publisher;
 
     public EventStore(ILogger<EventStore> logger, IStateProvider stateProvider, UserOrganization userOrganization, IServiceProvider serviceProvider, IPublisher publisher)
     {
@@ -30,20 +30,23 @@ public class EventStore : IEventStore, IHydrator
 
         var @event = DomainEvent.FromEvent(eventData.StreamId, _userOrganization.Id, eventData);
 
-        var context = new EventContext
-        {
-            Context = _userOrganization,
-            Event = @event
-        };
-        
         await Store(@event);
-        await _publisher.PublishAsync("domain/events", context);
     }
 
     public async Task<UpsertResult> RaiseAndPersist<T>(BaseEvent eventData)
     {
         await Raise(eventData);
-        return await Persist<T>(eventData.StreamId);
+        var item = await Persist<T>(eventData.StreamId);
+
+        var context = new EventContext
+        {
+            Context = _userOrganization,
+            Event = DomainEvent.FromEvent(eventData.StreamId, _userOrganization.Id, eventData)
+        };
+        
+        await _publisher.PublishAsync("domain/events", context);
+
+        return item;
     }
 
     public async Task<UpsertResult> Persist<T>(string streamId)
@@ -83,7 +86,7 @@ public class EventStore : IEventStore, IHydrator
         {
             await aggregator.When(@event);
         }
-        
+
         await aggregator.Complete();
 
         return aggregator.State;
