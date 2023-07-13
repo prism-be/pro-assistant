@@ -127,5 +127,6 @@ public static class ServiceCollectionExtensions
         services.AddHostedService<DomainEventServiceBusListener>();
         services.AddTransient<RefreshAppointmentWhenContactChange>();
         services.AddTransient<RefreshAppointmentWhenTariffChange>();
+        services.AddTransient<ProjectAccountingPeriodWhenAppointmentUpdated>();
     }
 }
