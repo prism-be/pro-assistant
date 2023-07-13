@@ -36,9 +36,8 @@ public class EventStore : IEventStore, IHydrator
             Event = @event
         };
         
-        await _publisher.PublishAsync("domain/events", context);
-
         await Store(@event);
+        await _publisher.PublishAsync("domain/events", context);
     }
 
     public async Task<UpsertResult> RaiseAndPersist<T>(BaseEvent eventData)
