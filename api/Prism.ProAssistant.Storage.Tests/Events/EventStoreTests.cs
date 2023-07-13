@@ -137,7 +137,7 @@ public class EventStoreTests
         // Assert
         eventContainer.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<DomainEvent>()), Times.Once);
         container.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<Contact>()), Times.Never);
-        publisher.Verify(x => x.PublishAsync("domain/events", It.IsAny<EventContext>()), Times.Once);
+        publisher.Verify(x => x.PublishAsync("domain/events", It.IsAny<EventContext>()), Times.Never);
     }
 
     [Fact]
