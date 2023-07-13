@@ -13,8 +13,7 @@ public class AccountingReportingPeriodProjectionTests
         // Arrange
 
         // Act
-        var projection = new AccountingReportingPeriodProjection();
-        var action = new Action(() => projection.Project(42, new List<Appointment>()));
+        var action = new Action(() => AccountingReportingPeriodProjection.Project(42, new List<Appointment>()));
 
         // Assert
         action.Should().Throw<NotSupportedException>();
@@ -53,8 +52,7 @@ public class AccountingReportingPeriodProjectionTests
         };
 
         // Act
-        var projection = new AccountingReportingPeriodProjection();
-        var reportingPeriod = projection.Project(12, appointments);
+        var reportingPeriod = AccountingReportingPeriodProjection.Project(12, appointments);
 
         // Assert
         reportingPeriod.Id.Should().Be("2023-07-01-12");
@@ -71,8 +69,7 @@ public class AccountingReportingPeriodProjectionTests
     public void Project_Ok_Period(int periodType, string expectedId)
     {
         // Act
-        var projection = new AccountingReportingPeriodProjection();
-        var reportingPeriod = projection.Project(periodType, new List<Appointment>());
+        var reportingPeriod = AccountingReportingPeriodProjection.Project(periodType, new List<Appointment>());
 
         // Assert
         reportingPeriod.Id.Should().Be(expectedId);

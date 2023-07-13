@@ -2,9 +2,9 @@
 
 using DayToDay.Appointments;
 
-public class AccountingReportingPeriodProjection
+public static class AccountingReportingPeriodProjection
 {
-    public AccountingReportingPeriod Project(int periodType, IEnumerable<Appointment> appointments)
+    public static AccountingReportingPeriod Project(int periodType, IEnumerable<Appointment> appointments)
     {
         var appointmentsEnumerated = appointments.ToList();
         var firstAppointmentDate = appointmentsEnumerated.MinBy(x => x.StartDate)?.StartDate ?? DateTime.Now;
