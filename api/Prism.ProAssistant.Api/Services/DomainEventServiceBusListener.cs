@@ -9,7 +9,7 @@ using Storage.Events;
 
 public class DomainEventServiceBusListener : BackgroundService
 {
-    private readonly Dictionary<string, Type> _effects = new();
+    private readonly Dictionary<string, List<Type>> _effects = new();
 
     private readonly ServiceBusReceiver _receiver;
     private readonly IServiceProvider _serviceProvider;
@@ -33,7 +33,9 @@ public class DomainEventServiceBusListener : BackgroundService
             var effectAttributes = type.GetCustomAttributes<SideEffectAttribute>();
             foreach (var effectAttribute in effectAttributes)
             {
-                _effects.Add(effectAttribute.Key, type);
+                var effects = _effects.TryGetValue(effectAttribute.Key, out var effect) ? effect : new List<Type>();
+                effects.Add(type);
+                _effects.Add(effectAttribute.Key, effects);
             }
         }
     }
@@ -61,7 +63,7 @@ public class DomainEventServiceBusListener : BackgroundService
     {
         var key = $"{data.Event.StreamType}:{data.Event.Type}";
 
-        if (_effects.TryGetValue(key, out var effectType))
+        if (_effects.TryGetValue(key, out var effectTypes))
         {
             using var scope = _serviceProvider.CreateScope();
 
@@ -69,15 +71,21 @@ public class DomainEventServiceBusListener : BackgroundService
             userOrganization.Id = data.Context.Id;
             userOrganization.Organization = data.Context.Organization;
 
-            var effect = scope.ServiceProvider.GetRequiredService(effectType);
-            var method = effectType.GetMethod("Handle");
-
-            if (method == null)
+            var tasks = new List<Task>();
+            foreach (var effectType in effectTypes)
             {
-                throw new NotSupportedException($"Effect {effectType.Name} does not have a Handle method");
+                var effect = scope.ServiceProvider.GetRequiredService(effectType);
+                var method = effectType.GetMethod("Handle");
+
+                if (method == null)
+                {
+                    throw new NotSupportedException($"Effect {effectType.Name} does not have a Handle method");
+                }
+
+                tasks.Add((Task)method.Invoke(effect, new object[] { data.Event })!);
             }
 
-            await (Task)method.Invoke(effect, new object[] { data.Event })!;
+            await Task.WhenAll(tasks);
         }
     }
 }

@@ -10,5 +10,10 @@
     "popup": {
       "title": "Nom du prévisionnel"
     }
+  },
+  "reporting": {
+    "title": "Rapports",
+    "income": "Revenus",
+    "expenses": "Frais"
   }
 }

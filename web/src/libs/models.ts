@@ -10,6 +10,14 @@
 
 
 
+export interface AccountingReportingPeriod {
+    id: string;
+    startDate: string;
+    endDate: string;
+    type: number;
+    income: number;
+}
+
 export interface Appointment {
     birthDate?: string | null;
     contactId?: string | null;
