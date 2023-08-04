@@ -69,7 +69,14 @@ public class AccountingReportingPeriodProjectionTests
     public void Project_Ok_Period(int periodType, string expectedId)
     {
         // Act
-        var reportingPeriod = AccountingReportingPeriodProjection.Project(periodType, new List<Appointment>());
+        var reportingPeriod = AccountingReportingPeriodProjection.Project(periodType, new List<Appointment>()
+        {
+            new Appointment
+            {
+                Id = Identifier.GenerateString(),
+                StartDate = new DateTime(2023, 7, 21)
+            }
+        });
 
         // Assert
         reportingPeriod.Id.Should().Be(expectedId);

@@ -25,6 +25,7 @@ using Domain.Configuration.Tariffs;
 using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Contacts;
 using Microsoft.Extensions.Azure;
+using QuestPDF.Infrastructure;
 using Storage.Effects;
 
 public static class ServiceCollectionExtensions
@@ -128,5 +129,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<RefreshAppointmentWhenContactChange>();
         services.AddTransient<RefreshAppointmentWhenTariffChange>();
         services.AddTransient<ProjectAccountingPeriodWhenAppointmentUpdated>();
+
+        QuestPDF.Settings.License = LicenseType.Community;
     }
 }

@@ -32,7 +32,6 @@ public static class HostBuilderExtensions
                 .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {CorrelationId} {Level:u3}] {Message} (at {Caller}){NewLine}{Exception}")
                 .Enrich.FromLogContext()
                 .Enrich.WithClientIp()
-                .Enrich.WithClientAgent()
                 .Enrich.WithProperty("environment", Environment.GetEnvironmentVariable("ENVIRONMENT") ?? "proassistant");
 
             var aiConnectionString = Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING");
