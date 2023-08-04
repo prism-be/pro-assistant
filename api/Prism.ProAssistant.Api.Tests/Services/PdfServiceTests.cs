@@ -14,10 +14,15 @@ using Prism.ProAssistant.Storage.Events;
 
 namespace Prism.ProAssistant.Api.Tests.Services;
 
-using Domain;
+using QuestPDF.Infrastructure;
 
 public class PdfServiceTests
 {
+    public PdfServiceTests()
+    {
+        QuestPDF.Settings.License = LicenseType.Community;
+    }
+    
     [Fact]
     public async Task Generate_NoContact()
     {
