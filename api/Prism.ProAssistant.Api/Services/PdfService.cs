@@ -22,8 +22,6 @@ using Document = QuestPDF.Fluent.Document;
 
 namespace Prism.ProAssistant.Api.Services;
 
-using Domain;
-
 public interface IPdfService
 {
     Task GenerateDocument([FromBody] DocumentRequest request);
@@ -235,7 +233,7 @@ public class PdfService : IPdfService
             {
                 var signatureBytes = Convert.FromBase64String(signature);
                 signatureBytes = ImageProcessor.Resize(signatureBytes, 400, 200);
-                c.Item().AlignRight().Element(e => e.Height(2, Unit.Centimetre)).Image(signatureBytes, ImageScaling.FitHeight);
+                c.Item().AlignRight().Element(e => e.Height(2, Unit.Centimetre)).Image(signatureBytes).FitHeight();
             }
 
             c.Item().AlignRight().Text(GetSettingValue("document-header-your-name"));
