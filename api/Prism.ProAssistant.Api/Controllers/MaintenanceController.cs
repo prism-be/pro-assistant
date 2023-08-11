@@ -56,8 +56,8 @@ public class MaintenanceController: Controller
 
         while (startPeriod <= end)
         {
-            var endPeriod = startPeriod.AddMonths(1).AddDays(-1);
-            var periodAppointments = appointments.Where(x => x.StartDate >= startPeriod && x.StartDate <= endPeriod).ToList();
+            var endPeriod = startPeriod.AddMonths(1);
+            var periodAppointments = appointments.Where(x => x.StartDate >= startPeriod && x.StartDate < endPeriod).ToList();
             
             var accountingPeriod = AccountingReportingPeriodProjection.Project(12, periodAppointments);
             await container.WriteAsync(accountingPeriod.Id, accountingPeriod);

@@ -27,10 +27,13 @@ public static class AccountingReportingPeriodProjection
             Income = 0
         };
 
-        foreach (var appointment in appointmentsEnumerated
-                     .Where(appointment => appointment.StartDate >= period.StartDate && appointment.StartDate <= period.EndDate)
-                     .Where(appointment => appointment.State == (int)AppointmentState.Done))
+        foreach (var appointment in appointmentsEnumerated)
         {
+            if (appointment.Payment == (int)PaymentTypes.Unpayed || appointment.State == (int)AppointmentState.Canceled)
+            {
+                continue;
+            }
+            
             period.Income += appointment.Price;
         }
 

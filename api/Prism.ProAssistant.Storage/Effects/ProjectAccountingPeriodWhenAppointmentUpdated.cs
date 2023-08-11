@@ -29,11 +29,11 @@ public class ProjectAccountingPeriodWhenAppointmentUpdated
         _logger.LogInformation("Projecting accounting period from change on appointment {AppointmentId}", appointment.Id);
 
         var startPeriod = new DateTime(appointment.StartDate.Year, appointment.StartDate.Month, 1);
-        var endPeriod = startPeriod.AddMonths(1).AddDays(-1);
+        var endPeriod = startPeriod.AddMonths(1);
 
         var appointments = await _queryService.SearchAsync<Appointment>(
             new Filter(nameof(Appointment.StartDate), startPeriod, FilterOperator.GreaterThanOrEqual),
-            new Filter(nameof(Appointment.StartDate), endPeriod, FilterOperator.LessThanOrEqual)
+            new Filter(nameof(Appointment.StartDate), endPeriod, FilterOperator.LessThan)
         );
 
         var accountingPeriod = AccountingReportingPeriodProjection.Project(12, appointments);
