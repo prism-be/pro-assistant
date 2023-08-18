@@ -11,11 +11,12 @@
 
 
 export interface AccountingReportingPeriod {
-    id: string;
-    startDate: string;
+    details: IncomeDetail[];
     endDate: string;
-    type: number;
+    id: string;
     income: number;
+    startDate: string;
+    type: number;
 }
 
 export interface Appointment {
@@ -143,6 +144,13 @@ export interface ForecastWeeklyBudget {
     amount: number;
     monday: string;
     weekOfYear: number;
+}
+
+export interface IncomeDetail {
+    count: number;
+    subTotal: number;
+    type: string;
+    unitPrice: number;
 }
 
 export enum RecurringType {

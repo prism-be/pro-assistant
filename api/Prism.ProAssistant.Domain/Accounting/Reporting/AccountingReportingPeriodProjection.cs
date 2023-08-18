@@ -9,7 +9,7 @@ public static class AccountingReportingPeriodProjection
         var appointmentsEnumerated = appointments.ToList();
         var firstAppointmentDate = appointmentsEnumerated.MinBy(x => x.StartDate)?.StartDate ?? DateTime.Now;
         var startDate = new DateTime(firstAppointmentDate.Year, firstAppointmentDate.Month, 1);
-
+        
         var endDate = periodType switch
         {
             1 => startDate.AddYears(1).AddDays(-1),
@@ -24,7 +24,8 @@ public static class AccountingReportingPeriodProjection
             StartDate = startDate,
             EndDate = endDate,
             Type = periodType,
-            Income = 0
+            Income = 0,
+            Details = new List<IncomeDetail>()
         };
 
         foreach (var appointment in appointmentsEnumerated)
@@ -33,6 +34,22 @@ public static class AccountingReportingPeriodProjection
             {
                 continue;
             }
+            
+            var detail = period.Details.FirstOrDefault(x => x.Type == "appointment" && x.UnitPrice == appointment.Price);
+            if (detail == null)
+            {
+                detail = new IncomeDetail
+                {
+                    Type = "appointment",
+                    UnitPrice = appointment.Price,
+                    Count = 0,
+                    SubTotal = 0
+                };
+                period.Details.Add(detail);
+            }
+            
+            detail.Count++;
+            detail.SubTotal += appointment.Price;
             
             period.Income += appointment.Price;
         }

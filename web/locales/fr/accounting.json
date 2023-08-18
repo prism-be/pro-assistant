@@ -14,6 +14,15 @@
   "reporting": {
     "title": "Rapports",
     "income": "Revenus",
-    "expenses": "Frais"
+    "expenses": "Frais",
+    "details": {
+      "title": "Détails des périodes",
+      "appointments": "Rendez-vous",
+      "type": "Type",
+      "count": "Nombre",
+      "total": "Total",
+      "unitPrice": "Prix unitaire"
+    },
+    "period": "Période"
   }
 }
