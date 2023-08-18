@@ -15,4 +15,6 @@
       <ProjectReference Include="..\Prism.Core\Prism.Core.csproj" />
     </ItemGroup>
 
+
+
 </Project>
