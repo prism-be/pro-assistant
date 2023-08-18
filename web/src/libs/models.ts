@@ -10,11 +10,19 @@
 
 
 
+export interface AccountingDocument {
+    amount: number;
+    date: string;
+    id: string;
+    title: string;
+}
+
 export interface AccountingReportingPeriod {
     details: IncomeDetail[];
     endDate: string;
     id: string;
     income: number;
+    expense: number;
     startDate: string;
     type: number;
 }

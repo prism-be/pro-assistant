@@ -1,6 +1,7 @@
 ﻿namespace Prism.ProAssistant.Api.Controllers;
 
 using Domain;
+using Domain.Accounting.Document;
 using Domain.Accounting.Reporting;
 using Domain.Configuration.DocumentConfiguration;
 using Domain.Configuration.Settings;
@@ -48,6 +49,7 @@ public class MaintenanceController: Controller
         var container = await _stateProvider.GetContainerAsync<AccountingReportingPeriod>();
         
         var appointments = (await _queryService.ListAsync<Appointment>()).ToList();
+        var documents = (await _queryService.ListAsync<AccountingDocument>()).ToList();
         
         var start = appointments.MinBy(x => x.StartDate)?.StartDate ?? DateTime.Now;
         var end = appointments.MaxBy(x => x.StartDate)?.StartDate ?? DateTime.Now;
@@ -58,8 +60,9 @@ public class MaintenanceController: Controller
         {
             var endPeriod = startPeriod.AddMonths(1);
             var periodAppointments = appointments.Where(x => x.StartDate >= startPeriod && x.StartDate < endPeriod).ToList();
+            var periodDocuments = documents.Where(x => x.Date >= startPeriod && x.Date < endPeriod).ToList();
             
-            var accountingPeriod = AccountingReportingPeriodProjection.Project(12, periodAppointments);
+            var accountingPeriod = AccountingReportingPeriodProjection.Project(12, periodAppointments, periodDocuments);
             await container.WriteAsync(accountingPeriod.Id, accountingPeriod);
             
             startPeriod = startPeriod.AddMonths(1);

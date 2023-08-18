@@ -15,7 +15,8 @@
     "accounting": "Comptabilité",
     "accounting-closing": "Clôture",
     "accounting-forecast": "Prévisionnel",
-    "accounting-reporting": "Rapports"
+    "accounting-reporting": "Rapports",
+    "accounting-documents": "Entrées / Sorties"
   },
   "actions": {
     "back": "Retour",

@@ -18,6 +18,9 @@ public class AccountingReportingPeriod
 
     [JsonPropertyName("income")]
     public decimal Income { get; set; }
+    
+    [JsonPropertyName("expense")]
+    public decimal Expense { get; set; }
 
     [JsonPropertyName("startDate")]
     public DateTime StartDate { get; set; }

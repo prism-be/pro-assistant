@@ -3,22 +3,23 @@
 using Core.Attributes;
 using Domain;
 using Domain.Accounting.Document;
+using Domain.Accounting.Document.Events;
 using Domain.Accounting.Reporting;
 using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Appointments.Events;
 using Infrastructure.Providers;
 using Microsoft.Extensions.Logging;
 
-[SideEffect(typeof(AppointmentCreated))]
-[SideEffect(typeof(AppointmentUpdated))]
-[SideEffect(typeof(AppointmentClosed))]
-public class ProjectAccountingPeriodWhenAppointmentUpdated
+[SideEffect(typeof(AccountingDocumentCreated))]
+[SideEffect(typeof(AccountingDocumentUpdated))]
+[SideEffect(typeof(AccountingDocumentDeleted))]
+public class ProjectAccountingPeriodWhenAccountingDocumentUpdated
 {
-    private readonly ILogger<ProjectAccountingPeriodWhenAppointmentUpdated> _logger;
+    private readonly ILogger<ProjectAccountingPeriodWhenAccountingDocumentUpdated> _logger;
     private readonly IQueryService _queryService;
     private readonly IStateProvider _stateProvider;
 
-    public ProjectAccountingPeriodWhenAppointmentUpdated(ILogger<ProjectAccountingPeriodWhenAppointmentUpdated> logger, IQueryService queryService, IStateProvider stateProvider)
+    public ProjectAccountingPeriodWhenAccountingDocumentUpdated(ILogger<ProjectAccountingPeriodWhenAccountingDocumentUpdated> logger, IQueryService queryService, IStateProvider stateProvider)
     {
         _logger = logger;
         _queryService = queryService;
@@ -27,17 +28,18 @@ public class ProjectAccountingPeriodWhenAppointmentUpdated
 
     public async Task Handle(DomainEvent @event)
     {
-        var appointment = await _queryService.SingleAsync<Appointment>(@event.StreamId);
-        _logger.LogInformation("Projecting accounting period from change on appointment {AppointmentId}", appointment.Id);
+        _logger.LogInformation("Projecting accounting period from change on document {AccountingDocumentId}", @event.StreamId);
 
-        var startPeriod = new DateTime(appointment.StartDate.Year, appointment.StartDate.Month, 1);
+        var document = @event.ToEvent<AccountingDocumentUpdated>();
+        
+        var startPeriod = new DateTime(document.Date.Year, document.Date.Month, 1);
         var endPeriod = startPeriod.AddMonths(1);
 
         var appointments = await _queryService.SearchAsync<Appointment>(
             new Filter(nameof(Appointment.StartDate), startPeriod, FilterOperator.GreaterThanOrEqual),
             new Filter(nameof(Appointment.StartDate), endPeriod, FilterOperator.LessThan)
         );
-        
+
         var documents = await _queryService.SearchAsync<AccountingDocument>(
             new Filter(nameof(AccountingDocument.Date), startPeriod, FilterOperator.GreaterThanOrEqual),
             new Filter(nameof(AccountingDocument.Date), endPeriod, FilterOperator.LessThan)

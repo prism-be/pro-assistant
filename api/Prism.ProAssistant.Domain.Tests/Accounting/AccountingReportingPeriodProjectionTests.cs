@@ -1,6 +1,7 @@
 ﻿namespace Prism.ProAssistant.Domain.Tests.Accounting;
 
 using Core;
+using Domain.Accounting.Document;
 using Domain.Accounting.Reporting;
 using Domain.DayToDay.Appointments;
 using FluentAssertions;
@@ -13,7 +14,7 @@ public class AccountingReportingPeriodProjectionTests
         // Arrange
 
         // Act
-        var action = new Action(() => AccountingReportingPeriodProjection.Project(42, new List<Appointment>()));
+        var action = new Action(() => AccountingReportingPeriodProjection.Project(42, new List<Appointment>(), new List<AccountingDocument>()));
 
         // Assert
         action.Should().Throw<NotSupportedException>();
@@ -51,8 +52,24 @@ public class AccountingReportingPeriodProjectionTests
             }
         };
 
+        var documents = new List<AccountingDocument>
+        {
+            new()
+            {
+                Id = Identifier.GenerateString(),
+                Amount = -43,
+                Date = new DateTime(2023, 07, 1)
+            },
+            new()
+            {
+                Id = Identifier.GenerateString(),
+                Amount = -43,
+                Date = new DateTime(2023, 07, 25)
+            }
+        };
+
         // Act
-        var reportingPeriod = AccountingReportingPeriodProjection.Project(12, appointments);
+        var reportingPeriod = AccountingReportingPeriodProjection.Project(12, appointments, documents);
 
         // Assert
         reportingPeriod.Id.Should().Be("2023-07-01-12");
@@ -60,7 +77,8 @@ public class AccountingReportingPeriodProjectionTests
         reportingPeriod.EndDate.Should().Be(new DateTime(2023, 07, 31));
         reportingPeriod.Type.Should().Be(12);
         reportingPeriod.Income.Should().Be(84);
-        reportingPeriod.Details.Should().HaveCount(1);
+        reportingPeriod.Expense.Should().Be(86);
+        reportingPeriod.Details.Should().HaveCount(2);
         reportingPeriod.Details.Should().Contain(x => x.Type == "appointment" && x.UnitPrice == 42 && x.Count == 2 && x.SubTotal == 84);
     }
 
@@ -71,14 +89,23 @@ public class AccountingReportingPeriodProjectionTests
     public void Project_Ok_Period(int periodType, string expectedId)
     {
         // Act
-        var reportingPeriod = AccountingReportingPeriodProjection.Project(periodType, new List<Appointment>()
-        {
-            new Appointment
+        var reportingPeriod = AccountingReportingPeriodProjection.Project(periodType, new List<Appointment>
             {
-                Id = Identifier.GenerateString(),
-                StartDate = new DateTime(2023, 7, 21)
-            }
-        });
+                new()
+                {
+                    Id = Identifier.GenerateString(),
+                    StartDate = new DateTime(2023, 7, 21)
+                }
+            },
+            new List<AccountingDocument>
+            {
+                new()
+                {
+                    Id = Identifier.GenerateString(),
+                    Date = new DateTime(2023, 7, 21),
+                    Amount = 42
+                }
+            });
 
         // Assert
         reportingPeriod.Id.Should().Be(expectedId);
