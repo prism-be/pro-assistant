@@ -4,7 +4,6 @@ using Api.Controllers.Data.Accounting;
 using Core;
 using Domain.Accounting.Document;
 using Domain.Accounting.Document.Events;
-using FluentAssertions;
 using Infrastructure.Providers;
 using Moq;
 using Storage;
@@ -29,7 +28,7 @@ public class DocumentControllerTests
 
         // Act
         var controller = new DocumentController(eventStore.Object, queryService.Object);
-        var result = await controller.Delete(document);
+        await controller.Delete(document);
 
         // Assert
         eventStore.Verify(x => x.RaiseAndPersist<AccountingDocument>(It.IsAny<AccountingDocumentDeleted>()), Times.Once);
@@ -52,7 +51,7 @@ public class DocumentControllerTests
 
         // Act
         var controller = new DocumentController(eventStore.Object, queryService.Object);
-        var result = await controller.Insert(document);
+        await controller.Insert(document);
 
         // Assert
         eventStore.Verify(x => x.RaiseAndPersist<AccountingDocument>(It.IsAny<AccountingDocumentCreated>()), Times.Once);
@@ -67,7 +66,7 @@ public class DocumentControllerTests
 
         // Act
         var controller = new DocumentController(eventStore.Object, queryService.Object);
-        var result = await controller.List();
+        await controller.List();
 
         // Assert
         queryService.Verify(x => x.ListAsync<AccountingDocument>(), Times.Once);
@@ -83,7 +82,7 @@ public class DocumentControllerTests
 
         // Act
         var controller = new DocumentController(eventStore.Object, queryService.Object);
-        var result = await controller.List(period);
+        await controller.List(period);
 
         // Assert
         queryService.Verify(x => x.SearchAsync<AccountingDocument>(It.IsAny<Filter[]>()), Times.Once);
@@ -106,7 +105,7 @@ public class DocumentControllerTests
 
         // Act
         var controller = new DocumentController(eventStore.Object, queryService.Object);
-        var result = await controller.Update(document);
+        await controller.Update(document);
 
         // Assert
         eventStore.Verify(x => x.RaiseAndPersist<AccountingDocument>(It.IsAny<AccountingDocumentUpdated>()), Times.Once);
