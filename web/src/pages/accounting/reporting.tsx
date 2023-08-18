@@ -5,7 +5,7 @@ import Section from "@/components/design/Section";
 import useSWR from "swr";
 import React, {useMemo, useState} from "react";
 import {AccountingReportingPeriod} from "@/libs/models";
-import {formatIsoMonth} from "@/libs/formats";
+import {formatAmount, formatIsoMonth} from "@/libs/formats";
 import {parseISO} from "date-fns";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
 
@@ -19,18 +19,28 @@ const Reporting: NextPage = () => {
     const periods = useSWR<AccountingReportingPeriod[]>("/data/accounting/reporting/periods");
     const [year, setYear] = useState<number>(new Date().getFullYear());
 
-    const graphData = useMemo(() => {
+    const currentPeriod = useMemo(() => {
         let datas = periods.data ?? [];
 
         datas = datas.filter((period) => parseISO(period.startDate).getFullYear() === year);
         datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
+        
+        for (let i = 0; i < datas.length; i++) {
+            const period = datas[i];
+            period.details = period.details.sort((a, b) => a.type.localeCompare(b.type) || a.unitPrice - b.unitPrice);
+        }
+
+        return datas;
+    }, [periods.data, year]);
+
+    const graphData = useMemo(() => {
 
         return {
             chart: {
                 id: "income-reporting",
             },
             xaxis: {
-                categories: datas.map((period) => formatIsoMonth(period.startDate)),
+                categories: currentPeriod.map((period) => formatIsoMonth(period.startDate)),
             },
             plotOptions: {
                 bar: {
@@ -50,20 +60,29 @@ const Reporting: NextPage = () => {
             series: [
                 {
                     name: t("reporting.income"),
-                    data: datas.map((period) => period.income),
+                    data: currentPeriod.map((period) => period.income),
                     color: "#00b74a",
 
                 },
                 {
                     name: t("reporting.expenses"),
-                    data: datas.map((period) => 0),
+                    data: currentPeriod.map((period) => 0),
                     color: "#ff5252",
 
                 },
             ]
         } as ApexCharts.ApexOptions;
 
-    }, [periods.data, year]);
+    }, [currentPeriod]);
+    
+    function getType(type: string) {
+        switch (type) {
+            case "appointment":
+                return t("reporting.details.appointments");
+        }
+
+        return type;
+    }
 
     return <ContentContainer>
         <Section>
@@ -86,6 +105,34 @@ const Reporting: NextPage = () => {
                                 height={500}/>
             </>
         </Section>
+        {graphData &&
+            <Section>
+                <h2>{t("reporting.details.title")}</h2>
+                {currentPeriod.map((period) => <div key={period.id} className={"pb-3"}>
+                    <h3>{t("reporting.period")} : {formatIsoMonth(period.startDate)}</h3>
+                    <div className={"grid grid-cols-4"}>
+                        <div className={"underline"}>{t("reporting.details.type")}</div>
+                        <div className={"underline text-right"}>{t("reporting.details.unitPrice")}</div>
+                        <div className={"underline text-right"}>{t("reporting.details.count")}</div>
+                        <div className={"underline text-right"}>{t("reporting.details.total")}</div>
+                        {period.details.map((detail) => <React.Fragment key={detail.id}>
+                            <div>
+                                {getType(detail.type)}
+                            </div>
+                            <div className={"text-right"}>
+                                {formatAmount(detail.unitPrice)} &euro;
+                            </div>
+                            <div className={"text-right"}>
+                                {detail.count}
+                            </div>
+                            <div className={"text-right"}>
+                                {formatAmount(detail.subTotal)} &euro;
+                            </div>
+                        </React.Fragment>)}
+                    </div>
+                </div>)}
+            </Section>
+        }
     </ContentContainer>;
 }
 

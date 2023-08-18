@@ -60,6 +60,8 @@ public class AccountingReportingPeriodProjectionTests
         reportingPeriod.EndDate.Should().Be(new DateTime(2023, 07, 31));
         reportingPeriod.Type.Should().Be(12);
         reportingPeriod.Income.Should().Be(84);
+        reportingPeriod.Details.Should().HaveCount(1);
+        reportingPeriod.Details.Should().Contain(x => x.Type == "appointment" && x.UnitPrice == 42 && x.Count == 2 && x.SubTotal == 84);
     }
 
     [Theory]
