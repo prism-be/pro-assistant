@@ -75,7 +75,7 @@ public static class ServiceCollectionExtensions
         }
         else
         {
-            services.AddScoped<IDataStorage, LocalStorage>();
+            services.AddScoped<IDataStorage, MongoDataStorage>();
         }
         
         services.AddScoped<IUserOrganizationService, UserOrganizationService>();

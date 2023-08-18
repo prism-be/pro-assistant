@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import ContentContainer from "@/components/design/ContentContainer";
 import Section from "@/components/design/Section";
 import useSWR from "swr";
-import React, {ReactNode, useMemo, useState} from "react";
+import React, {useMemo, useState} from "react";
 import {AccountingReportingPeriod} from "@/libs/models";
 import {formatAmount, formatIsoMonth} from "@/libs/formats";
 import {parseISO} from "date-fns";
