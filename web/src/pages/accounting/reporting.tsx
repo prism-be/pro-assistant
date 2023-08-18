@@ -62,13 +62,11 @@ const Reporting: NextPage = () => {
                     name: t("reporting.income"),
                     data: currentPeriod.map((period) => period.income),
                     color: "#00b74a",
-
                 },
                 {
                     name: t("reporting.expenses"),
-                    data: currentPeriod.map((period) => 0),
+                    data: currentPeriod.map((period) => period.expense),
                     color: "#ff5252",
-
                 },
             ]
         } as ApexCharts.ApexOptions;
@@ -79,6 +77,11 @@ const Reporting: NextPage = () => {
         switch (type) {
             case "appointment":
                 return t("reporting.details.appointments");
+            case "document-expense":
+                return t("reporting.details.document-expense");
+            case "document-income":
+                return t("reporting.details.document-income");
+                
         }
 
         return type;

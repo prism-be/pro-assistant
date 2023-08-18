@@ -18,11 +18,28 @@
     "details": {
       "title": "Détails des périodes",
       "appointments": "Rendez-vous",
+      "document-expense": "Frais",
+      "document-income": "Autres revenus",
       "type": "Type",
       "count": "Nombre",
       "total": "Total",
       "unitPrice": "Prix unitaire"
     },
     "period": "Période"
+  },
+  "documents": {
+    "title": "Entrées et sorties",
+    "noDocuments": "Vous n'avez pas encore ajouté de document pour cette période.",
+    "headers": {
+      "date": "Date",
+      "type": "Type",
+      "title": "Titre",
+      "amount": "Montant"
+    },
+    "types": {
+      "income": "Entrée",
+      "expense": "Sortie"
+    },
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer le document suivant : "
   }
 }

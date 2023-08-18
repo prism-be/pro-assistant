@@ -2,6 +2,7 @@
 
 using Core.Attributes;
 using Domain;
+using Domain.Accounting.Document;
 using Domain.Accounting.Reporting;
 using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Appointments.Events;
@@ -32,13 +33,6 @@ public class ProjectAccountingPeriodWhenAppointmentUpdated
         var startPeriod = new DateTime(appointment.StartDate.Year, appointment.StartDate.Month, 1);
         var endPeriod = startPeriod.AddMonths(1);
 
-        var appointments = await _queryService.SearchAsync<Appointment>(
-            new Filter(nameof(Appointment.StartDate), startPeriod, FilterOperator.GreaterThanOrEqual),
-            new Filter(nameof(Appointment.StartDate), endPeriod, FilterOperator.LessThan)
-        );
-
-        var accountingPeriod = AccountingReportingPeriodProjection.Project(12, appointments);
-        var container = await _stateProvider.GetContainerAsync<AccountingReportingPeriod>();
-        await container.WriteAsync(accountingPeriod.Id, accountingPeriod);
+        ProjectAccountingPeriodBase.Project(startPeriod, endPeriod, _queryService, _stateProvider);
     }
 }

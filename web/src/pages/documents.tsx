@@ -80,15 +80,15 @@ const Documents: NextPage = () => {
                                 <>
                                     {documents.map((d) => (
                                         <div className={"flex"} key={d.id}>
-                                            <a className={"w-6 cursor-pointer"} onClick={() => editDocument(d)}>
-                                                {" "}
-                                                <PencilSquareIcon />{" "}
-                                            </a>
-                                            <a className={"w-6 ml-2 cursor-pointer"} onClick={() => deleteDocument(d)}>
-                                                {" "}
-                                                <TrashIcon />{" "}
-                                            </a>
-                                            <div className={"pl-2"}>{d.name}</div>
+                                                <a className={"w-6 cursor-pointer"} onClick={() => editDocument(d)}>
+                                                    {" "}
+                                                    <PencilSquareIcon />{" "}
+                                                </a>
+                                                <a className={"w-6 ml-2 cursor-pointer"} onClick={() => deleteDocument(d)}>
+                                                    {" "}
+                                                    <TrashIcon />{" "}
+                                                </a>
+                                                <div className={"pl-2"}>{d.name}</div>
                                         </div>
                                     ))}
                                 </>

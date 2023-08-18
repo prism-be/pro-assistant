@@ -130,6 +130,7 @@ public static class ServiceCollectionExtensions
         services.AddHostedService<DomainEventServiceBusListener>();
         services.AddTransient<RefreshAppointmentWhenContactChange>();
         services.AddTransient<RefreshAppointmentWhenTariffChange>();
+        services.AddTransient<ProjectAccountingPeriodWhenAccountingDocumentUpdated>();
         services.AddTransient<ProjectAccountingPeriodWhenAppointmentUpdated>();
 
         QuestPDF.Settings.License = LicenseType.Community;
