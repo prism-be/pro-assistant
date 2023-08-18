@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import ContentContainer from "@/components/design/ContentContainer";
 import Section from "@/components/design/Section";
 import useSWR from "swr";
-import React, {useMemo, useState} from "react";
+import React, {ReactNode, useMemo, useState} from "react";
 import {AccountingReportingPeriod} from "@/libs/models";
 import {formatAmount, formatIsoMonth} from "@/libs/formats";
 import {parseISO} from "date-fns";
@@ -24,7 +24,7 @@ const Reporting: NextPage = () => {
 
         datas = datas.filter((period) => parseISO(period.startDate).getFullYear() === year);
         datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
-        
+
         for (let i = 0; i < datas.length; i++) {
             const period = datas[i];
             period.details = period.details.sort((a, b) => a.type.localeCompare(b.type) || a.unitPrice - b.unitPrice);
@@ -74,7 +74,7 @@ const Reporting: NextPage = () => {
         } as ApexCharts.ApexOptions;
 
     }, [currentPeriod]);
-    
+
     function getType(type: string) {
         switch (type) {
             case "appointment":
@@ -108,29 +108,33 @@ const Reporting: NextPage = () => {
         {graphData &&
             <Section>
                 <h2>{t("reporting.details.title")}</h2>
-                {currentPeriod.map((period) => <div key={period.id} className={"pb-3"}>
-                    <h3>{t("reporting.period")} : {formatIsoMonth(period.startDate)}</h3>
-                    <div className={"grid grid-cols-4"}>
-                        <div className={"underline"}>{t("reporting.details.type")}</div>
-                        <div className={"underline text-right"}>{t("reporting.details.unitPrice")}</div>
-                        <div className={"underline text-right"}>{t("reporting.details.count")}</div>
-                        <div className={"underline text-right"}>{t("reporting.details.total")}</div>
-                        {period.details.map((detail) => <React.Fragment key={detail.id}>
-                            <div>
-                                {getType(detail.type)}
-                            </div>
-                            <div className={"text-right"}>
-                                {formatAmount(detail.unitPrice)} &euro;
-                            </div>
-                            <div className={"text-right"}>
-                                {detail.count}
-                            </div>
-                            <div className={"text-right"}>
-                                {formatAmount(detail.subTotal)} &euro;
-                            </div>
-                        </React.Fragment>)}
-                    </div>
-                </div>)}
+                <>
+                    {currentPeriod.map((period) => <div key={period.id} className={"pb-3"}>
+                        <h3>{t("reporting.period")} : {formatIsoMonth(period.startDate)}</h3>
+                        <div className={"grid grid-cols-4"}>
+                            <div className={"underline"}>{t("reporting.details.type")}</div>
+                            <div className={"underline text-right"}>{t("reporting.details.unitPrice")}</div>
+                            <div className={"underline text-right"}>{t("reporting.details.count")}</div>
+                            <div className={"underline text-right"}>{t("reporting.details.total")}</div>
+                            <>
+                                {period.details.map((detail) => <React.Fragment key={detail.type + "-" + detail.unitPrice}>
+                                    <div>
+                                        {getType(detail.type)}
+                                    </div>
+                                    <div className={"text-right"}>
+                                        {formatAmount(detail.unitPrice)} &euro;
+                                    </div>
+                                    <div className={"text-right"}>
+                                        {detail.count}
+                                    </div>
+                                    <div className={"text-right"}>
+                                        {formatAmount(detail.subTotal)} &euro;
+                                    </div>
+                                </React.Fragment>)}
+                            </>
+                        </div>
+                    </div>)}
+                </>
             </Section>
         }
     </ContentContainer>;
