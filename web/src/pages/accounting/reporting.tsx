@@ -23,6 +23,7 @@ const Reporting: NextPage = () => {
         let datas = periods.data ?? [];
 
         datas = datas.filter((period) => parseISO(period.startDate).getFullYear() === year);
+        datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
 
         return {
             chart: {
