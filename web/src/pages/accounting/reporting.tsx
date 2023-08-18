@@ -117,7 +117,7 @@ const Reporting: NextPage = () => {
                             <div className={"underline text-right"}>{t("reporting.details.count")}</div>
                             <div className={"underline text-right"}>{t("reporting.details.total")}</div>
                             <>
-                                {period.details.map((detail) => <React.Fragment key={detail.type + "-" + detail.unitPrice}>
+                                {period.details.map((detail) => <React.Fragment key={detail.id}>
                                     <div>
                                         {getType(detail.type)}
                                     </div>
