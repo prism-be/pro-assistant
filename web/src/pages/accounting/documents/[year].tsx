@@ -158,10 +158,9 @@ const Documents: NextPage = () => {
             </div>
 
             <div className={"grid grid-cols-8 gap-2 mt-4"}>
-                <div className={"font-bold col-span-1"}>{t("documents.headers.date")}</div>
+                <div className={"font-bold col-span-6"}>{t("documents.headers.title")}</div>
                 <div className={"font-bold col-span-1"}>{t("documents.headers.type")}</div>
-                <div className={"font-bold col-span-4"}>{t("documents.headers.title")}</div>
-                <div className={"font-bold col-span-2 text-right"}>{t("documents.headers.amount")}</div>
+                <div className={"font-bold col-span-1 text-right"}>{t("documents.headers.amount")}</div>
             </div>
 
             {documents?.length === 0 && <div className={"text-center p-3 italic"}>
@@ -171,7 +170,7 @@ const Documents: NextPage = () => {
             <>
                 {sortedDocuments?.map((document) => <div key={document.id}
                                                          className={"grid grid-cols-8 gap-2" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
-                    <div className={"col-span-1 flex"}>
+                    <div className={"col-span-6 flex"}>
                         <a className={"w-6 cursor-pointer"} onClick={() => startEditing(document)}>
                             {" "}
                             <PencilSquareIcon />{" "}
@@ -180,11 +179,10 @@ const Documents: NextPage = () => {
                             {" "}
                             <TrashIcon />{" "}
                         </a>
-                        <div className={"pl-2"}>{format(new Date(document.date), "dd/MM/yyyy")}</div>
+                        <div className={"pl-2"}>{format(new Date(document.date), "dd/MM/yyyy")} - {document.title}</div>
                     </div>
                     <div className={"col-span-1"}>{getDocumentType(document)}</div>
-                    <div className={"col-span-4"}>{document.title}</div>
-                    <div className={"col-span-2 text-right"}>{formatAmount(document.amount)} &euro;</div>
+                    <div className={"col-span-1 text-right"}>{formatAmount(document.amount)} &euro;</div>
                 </div>)}
             </>
 
