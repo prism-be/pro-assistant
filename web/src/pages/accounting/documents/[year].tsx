@@ -71,6 +71,14 @@ const Documents: NextPage = () => {
         
         return t("documents.types.expense");
     }
+    
+    function startEditing(document: AccountingDocument) {
+        setSelectedDocument(document);
+        setValue("date", format(parseISO(document.date), "dd/MM/yyyy"));
+        setValue("title", document.title);
+        setValue("amount", formatAmount(document.amount));
+        setEditing(true);
+    }
 
     return <ContentContainer>
         <Section>
@@ -152,7 +160,9 @@ const Documents: NextPage = () => {
             </div>}
 
             <>
-                {sortedDocuments?.map((document) => <div key={document.id} className={"grid grid-cols-8 gap-2" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
+                {sortedDocuments?.map((document) => <div key={document.id} className={"grid grid-cols-8 gap-2 cursor-pointer" + (document.amount < 0 ? " text-red-700" : " text-green-700")}
+                onClick={() => { startEditing(document) }}
+                >
                     <div className={"col-span-1"}>{format(new Date(document.date), "dd/MM/yyyy")}</div>
                     <div className={"col-span-1"}>{getDocumentType(document)}</div>
                     <div className={"col-span-4"}>{document.title}</div>
