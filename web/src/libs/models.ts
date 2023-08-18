@@ -147,6 +147,7 @@ export interface ForecastWeeklyBudget {
 }
 
 export interface IncomeDetail {
+    id: string;
     count: number;
     subTotal: number;
     type: string;

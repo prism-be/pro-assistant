@@ -1,6 +1,7 @@
 ﻿namespace Prism.ProAssistant.Domain.Accounting.Reporting;
 
 using System.Text.Json.Serialization;
+using Core;
 using Core.Attributes;
 
 [Collection(Streams.AccountingReportingPeriod)]
@@ -27,6 +28,9 @@ public class AccountingReportingPeriod
 
 public class IncomeDetail
 {
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = Identifier.GenerateString();
+    
     [JsonPropertyName("count")]
     public int Count { get; set; }
 
