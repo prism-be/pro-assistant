@@ -17,13 +17,11 @@ import Button from "@/components/forms/Button";
 import {postData} from "@/libs/http";
 import {formatAmount} from "@/libs/formats";
 import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
-import {ST} from "next/dist/shared/lib/utils";
 
 const Documents: NextPage = () => {
     const {t} = useTranslation("accounting");
     const router = useRouter();
 
-    const year = useMemo(() => parseInt(router.query.year), [router.query.year]);
     const {
         data: documents,
         mutate: mutateDocuments
@@ -38,7 +36,10 @@ const Documents: NextPage = () => {
 
     const {register, setValue, getValues, handleSubmit, formState: {errors}} = useForm();
 
-    async function setYear(year: number) {
+    async function setYear(delta: number) {
+        let year = parseInt(router.query.year as string);
+        year += delta;
+
         await router.push("/accounting/documents/" + year);
     }
 
@@ -81,7 +82,7 @@ const Documents: NextPage = () => {
         setValue("amount", formatAmount(document.amount));
         setEditing(true);
     }
-    
+
     async function deleteDocument(document: AccountingDocument) {
         if (confirm(t("documents.confirmDelete") + document.title)) {
             await postData("/data/accounting/documents/delete", document);
@@ -97,62 +98,66 @@ const Documents: NextPage = () => {
                 actionText={t("common:actions.add")}
             />
 
-            {editing && <Popup>
-                <form>
-                    <div className={"grid grid-cols-2 gap-2"}>
-                        <div className={"col-span-2"}>
-                            <InputDate
-                                label={t("documents.headers.date")}
-                                name={"date"}
-                                type={"text"}
-                                required={true}
-                                register={register}
-                                setValue={setValue}
-                                error={errors.date}
+            <>
+                {editing && <Popup>
+                    <form>
+                        <div className={"grid grid-cols-2 gap-2"}>
+                            <div className={"col-span-2"}>
+                                <InputDate
+                                    label={t("documents.headers.date")}
+                                    name={"date"}
+                                    type={"text"}
+                                    required={true}
+                                    register={register}
+                                    setValue={setValue}
+                                    error={errors.date}
+                                />
+                            </div>
+                            <div className={"col-span-2"}>
+                                <InputText
+                                    label={t("documents.headers.title")}
+                                    name={"title"}
+                                    type={"text"}
+                                    required={true}
+                                    register={register}
+                                    setValue={setValue}
+                                    error={errors.title}
+                                />
+                            </div>
+                            <div className={"col-span-2"}>
+                                <InputText
+                                    label={t("documents.headers.amount")}
+                                    name={"amount"}
+                                    type={"text"}
+                                    required={true}
+                                    register={register}
+                                    setValue={setValue}
+                                    error={errors.amount}
+                                />
+                            </div>
+                            <Button
+                                text={t("common:actions.cancel")}
+                                onClick={() => setEditing(false)}
+                                secondary={true}
                             />
+                            <Button text={t("common:actions.save")} onClick={handleSubmit(onSaveDocument)}/>
                         </div>
-                        <div className={"col-span-2"}>
-                            <InputText
-                                label={t("documents.headers.title")}
-                                name={"title"}
-                                type={"text"}
-                                required={true}
-                                register={register}
-                                setValue={setValue}
-                                error={errors.title}
-                            />
-                        </div>
-                        <div className={"col-span-2"}>
-                            <InputText
-                                label={t("documents.headers.amount")}
-                                name={"amount"}
-                                type={"text"}
-                                required={true}
-                                register={register}
-                                setValue={setValue}
-                                error={errors.amount}
-                            />
-                        </div>
-                        <Button
-                            text={t("common:actions.cancel")}
-                            onClick={() => setEditing(false)}
-                            secondary={true}
-                        />
-                        <Button text={t("common:actions.save")} onClick={handleSubmit(onSaveDocument)}/>
-                    </div>
-                </form>
-            </Popup>}
+                    </form>
+                </Popup>}
+            </>
 
             <div className={"grid grid-cols-8 cursor-pointer"}>
-                <div className={"col-start-1 w-8 m-auto text-primary"} onClick={() => setYear(year - 1)}>
+                <div className={"col-start-1 w-8 m-auto text-primary"}
+                     onClick={() => setYear(-1)}>
                     <ArrowSmallLeftIcon/>
                 </div>
 
                 <h1 className={"text-center col-span-6"}>
-                    {year}
+                    {router.query.year}
                 </h1>
 
-                <div className={"col-start-8 1 w-8 m-auto text-primary"} onClick={() => setYear(year + 1)}>
+                <div className={"col-start-8 1 w-8 m-auto text-primary"}
+                     onClick={() => setYear(1)}>
                     <ArrowSmallRightIcon/>
                 </div>
             </div>
@@ -163,21 +168,23 @@ const Documents: NextPage = () => {
                 <div className={"font-bold col-span-1 text-right"}>{t("documents.headers.amount")}</div>
             </div>
 
-            {documents?.length === 0 && <div className={"text-center p-3 italic"}>
-                {t("documents.noDocuments")}
-            </div>}
-
+            <>
+                {documents?.length === 0 && <div className={"text-center p-3 italic"}>
+                    {t("documents.noDocuments")}
+                </div>}
+            </>
+            
             <>
                 {sortedDocuments?.map((document) => <div key={document.id}
                                                          className={"grid grid-cols-8 gap-2" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
                     <div className={"col-span-6 flex"}>
                         <a className={"w-6 cursor-pointer"} onClick={() => startEditing(document)}>
                             {" "}
-                            <PencilSquareIcon />{" "}
+                            <PencilSquareIcon/>{" "}
                         </a>
                         <a className={"w-6 ml-2 cursor-pointer"} onClick={() => deleteDocument(document)}>
                             {" "}
-                            <TrashIcon />{" "}
+                            <TrashIcon/>{" "}
                         </a>
                         <div className={"pl-2"}>{format(new Date(document.date), "dd/MM/yyyy")} - {document.title}</div>
                     </div>
