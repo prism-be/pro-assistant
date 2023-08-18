@@ -34,7 +34,7 @@ const Documents: NextPage = () => {
     const [selectedDocument, setSelectedDocument] = useState<AccountingDocument | null>(null);
     const [editing, setEditing] = useState<boolean>(false);
 
-    const {register, setValue, getValues, handleSubmit, formState: {errors}} = useForm();
+    const {register, setValue, handleSubmit, formState: {errors}} = useForm();
 
     async function setYear(delta: number) {
         let year = parseInt(router.query.year as string);
