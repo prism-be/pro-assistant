@@ -28,7 +28,8 @@ public class DocumentController : Controller
     {
         return await _eventStore.RaiseAndPersist<AccountingDocument>(new AccountingDocumentDeleted
         {
-            StreamId = request.Id
+            StreamId = request.Id,
+            Date = request.Date
         });
     }
 
@@ -53,9 +54,14 @@ public class DocumentController : Controller
     }
 
     [HttpGet]
-    [Route("api/data/accounting/documents/{year}")]
+    [Route("api/data/accounting/documents/{year:int}")]
     public async Task<IEnumerable<AccountingDocument>> List(int year)
     {
+        if (year == 0)
+        {
+            return Array.Empty<AccountingDocument>();
+        }
+
         var start = new DateTime(year, 1, 1);
         var end = start.AddYears(1);
 

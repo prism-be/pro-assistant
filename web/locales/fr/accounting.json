@@ -39,6 +39,7 @@
     "types": {
       "income": "Entrée",
       "expense": "Sortie"
-    }
+    },
+    "confirmDelete": "Êtes-vous sûr de vouloir supprimer le document suivant : "
   }
 }

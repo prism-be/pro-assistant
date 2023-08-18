@@ -16,6 +16,8 @@ import {format, parse, parseISO} from "date-fns";
 import Button from "@/components/forms/Button";
 import {postData} from "@/libs/http";
 import {formatAmount} from "@/libs/formats";
+import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
+import {ST} from "next/dist/shared/lib/utils";
 
 const Documents: NextPage = () => {
     const {t} = useTranslation("accounting");
@@ -25,8 +27,8 @@ const Documents: NextPage = () => {
     const {
         data: documents,
         mutate: mutateDocuments
-    } = useSWR<AccountingDocument[]>("/data/accounting/documents/" + router.query.year ?? new Date().getFullYear());
-    
+    } = useSWR<AccountingDocument[]>("/data/accounting/documents/" + (router.query.year ?? new Date().getFullYear()));
+
     const sortedDocuments = useMemo(() => {
         return documents ? documents.sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime()) : [];
     }, [documents]);
@@ -63,21 +65,28 @@ const Documents: NextPage = () => {
         setEditing(false);
         setSelectedDocument(null);
     }
-    
+
     function getDocumentType(document: AccountingDocument) {
         if (document.amount > 0) {
             return t("documents.types.income");
         }
-        
+
         return t("documents.types.expense");
     }
-    
+
     function startEditing(document: AccountingDocument) {
         setSelectedDocument(document);
         setValue("date", format(parseISO(document.date), "dd/MM/yyyy"));
         setValue("title", document.title);
         setValue("amount", formatAmount(document.amount));
         setEditing(true);
+    }
+    
+    async function deleteDocument(document: AccountingDocument) {
+        if (confirm(t("documents.confirmDelete") + document.title)) {
+            await postData("/data/accounting/documents/delete", document);
+            await mutateDocuments();
+        }
     }
 
     return <ContentContainer>
@@ -160,10 +169,19 @@ const Documents: NextPage = () => {
             </div>}
 
             <>
-                {sortedDocuments?.map((document) => <div key={document.id} className={"grid grid-cols-8 gap-2 cursor-pointer" + (document.amount < 0 ? " text-red-700" : " text-green-700")}
-                onClick={() => { startEditing(document) }}
-                >
-                    <div className={"col-span-1"}>{format(new Date(document.date), "dd/MM/yyyy")}</div>
+                {sortedDocuments?.map((document) => <div key={document.id}
+                                                         className={"grid grid-cols-8 gap-2" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
+                    <div className={"col-span-1 flex"}>
+                        <a className={"w-6 cursor-pointer"} onClick={() => startEditing(document)}>
+                            {" "}
+                            <PencilSquareIcon />{" "}
+                        </a>
+                        <a className={"w-6 ml-2 cursor-pointer"} onClick={() => deleteDocument(document)}>
+                            {" "}
+                            <TrashIcon />{" "}
+                        </a>
+                        <div className={"pl-2"}>{format(new Date(document.date), "dd/MM/yyyy")}</div>
+                    </div>
                     <div className={"col-span-1"}>{getDocumentType(document)}</div>
                     <div className={"col-span-4"}>{document.title}</div>
                     <div className={"col-span-2 text-right"}>{formatAmount(document.amount)} &euro;</div>
