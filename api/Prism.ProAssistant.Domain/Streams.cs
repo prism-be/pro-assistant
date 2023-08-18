@@ -2,6 +2,7 @@
 
 public static class Streams
 {
+    public const string AccountingDocument = "accounting-document";
     public const string AccountingForecast = "accounting-forecast";
     public const string AccountingReportingPeriod = "accounting-reporting-period";
     public const string Appointments = "appointments";
