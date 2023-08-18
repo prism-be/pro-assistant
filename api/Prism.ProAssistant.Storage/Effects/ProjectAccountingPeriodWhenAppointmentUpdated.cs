@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 
 [SideEffect(typeof(AppointmentCreated))]
 [SideEffect(typeof(AppointmentUpdated))]
+[SideEffect(typeof(AppointmentClosed))]
 public class ProjectAccountingPeriodWhenAppointmentUpdated
 {
     private readonly ILogger<ProjectAccountingPeriodWhenAppointmentUpdated> _logger;
