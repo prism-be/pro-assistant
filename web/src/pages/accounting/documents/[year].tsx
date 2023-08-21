@@ -34,7 +34,7 @@ const Documents: NextPage = () => {
     } = useSWR<NextNumber>("/data/accounting/documents/next-number/" + (router.query.year ?? new Date().getFullYear()));
 
     const sortedDocuments = useMemo(() => {
-        return documents ? documents.sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime()) : [];
+        return documents ? documents.sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime() || (a.documentNumber ?? 0) - (b.documentNumber ?? 0)) : [];
     }, [documents]);
 
     const [selectedDocument, setSelectedDocument] = useState<AccountingDocument | null>(null);
@@ -68,6 +68,10 @@ const Documents: NextPage = () => {
         
         if (data.type === "expense") {
             data.amount *= -1;
+        }
+
+        if (data.documentNumberChoice === "noGenerate") {
+            data.documentNumber = null;
         }
         
         data.date = parse(data.date, "dd/MM/yyyy", new Date());
@@ -257,9 +261,11 @@ const Documents: NextPage = () => {
                 </div>
             </div>
 
-            <div className={"grid grid-cols-8 gap-2 mt-4"}>
-                <div className={"font-bold col-span-6"}>{t("documents.headers.title")}</div>
+            <div className={"grid grid-cols-12 gap-2 mt-4"}>
+                <div className={"font-bold col-span-8"}>{t("documents.headers.title")}</div>
                 <div className={"font-bold col-span-1"}>{t("documents.headers.type")}</div>
+                <div className={"font-bold col-span-1 text-center"}>{t("documents.headers.reference")}</div>
+                <div className={"font-bold col-span-1 text-center"}>{t("documents.headers.number")}</div>
                 <div className={"font-bold col-span-1 text-right"}>{t("documents.headers.amount")}</div>
             </div>
 
@@ -271,8 +277,8 @@ const Documents: NextPage = () => {
             
             <>
                 {sortedDocuments?.map((document) => <div key={document.id}
-                                                         className={"grid grid-cols-8 gap-2" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
-                    <div className={"col-span-6 flex"}>
+                                                         className={"grid grid-cols-12 gap-2" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
+                    <div className={"col-span-8 flex"}>
                         <a className={"w-6 cursor-pointer"} onClick={() => startEditing(document)}>
                             {" "}
                             <PencilSquareIcon/>{" "}
@@ -281,12 +287,14 @@ const Documents: NextPage = () => {
                             {" "}
                             <TrashIcon/>{" "}
                         </a>
+
                         <div className={"pl-2"}>
                             {format(new Date(document.date), "dd/MM/yyyy")} - {document.title}
-                            <>{document.reference?.length > 0 && <span className={"italic pl-2"}>({document.reference})</span>}</>
                         </div>
                     </div>
                     <div className={"col-span-1"}>{getDocumentType(document)}</div>
+                    <div className={"col-span-1 text-center"}>{document.reference}</div>
+                    <div className={"col-span-1 text-center"}>{document.documentNumber}</div>
                     <div className={"col-span-1 text-right"}>{formatAmount(document.amount)} &euro;</div>
                 </div>)}
             </>
