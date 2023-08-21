@@ -44,22 +44,14 @@ public class AccountingDocumentAggregator : IDomainAggregator<AccountingDocument
     private void Apply(AccountingDocumentUpdated @event)
     {
         State = EnsureState();
-        State.Amount = @event.Amount;
-        State.Date = @event.Date;
-        State.Title = @event.Title;
-        State.Reference = @event.Reference;
+        State = @event.Document;
+        State.Id = @event.StreamId;
     }
 
     private void Apply(AccountingDocumentCreated @event)
     {
-        State = new AccountingDocument
-        {
-            Id = @event.StreamId,
-            Amount = @event.Amount,
-            Date = @event.Date,
-            Title = @event.Title,
-            Reference = @event.Reference
-        };
+        State = @event.Document;
+        State.Id = @event.StreamId;
     }
 
     private void ApplyDelete()

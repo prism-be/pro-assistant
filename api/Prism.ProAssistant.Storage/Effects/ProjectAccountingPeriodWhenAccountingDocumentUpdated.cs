@@ -2,11 +2,7 @@
 
 using Core.Attributes;
 using Domain;
-using Domain.Accounting.Document;
 using Domain.Accounting.Document.Events;
-using Domain.Accounting.Reporting;
-using Domain.DayToDay.Appointments;
-using Domain.DayToDay.Appointments.Events;
 using Infrastructure.Providers;
 using Microsoft.Extensions.Logging;
 
@@ -30,9 +26,9 @@ public class ProjectAccountingPeriodWhenAccountingDocumentUpdated
     {
         _logger.LogInformation("Projecting accounting period from change on document {AccountingDocumentId}", @event.StreamId);
 
-        var document = @event.ToEvent<AccountingDocumentUpdated>();
+        var document = @event.ToEvent<AccountingDocumentUpdated>().Document;
         
-        var startPeriod = new DateTime(document.Date.Year, document.Date.Month, 1);
+        var startPeriod = new DateTime(document.Date.Year, document.Date.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var endPeriod = startPeriod.AddMonths(1);
 
         ProjectAccountingPeriodBase.Project(startPeriod, endPeriod, _queryService, _stateProvider);

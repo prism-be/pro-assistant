@@ -20,17 +20,25 @@ public class AccountingDocumentAggregatorTests
         var accountingDocumentCreated = new AccountingDocumentCreated
         {
             StreamId = streamId,
-            Amount = 100,
-            Date = DateTime.UtcNow,
-            Title = "Title"
+            Document = new AccountingDocument()
+            {
+                Id = streamId,
+                Amount = 100,
+                Date = DateTime.UtcNow,
+                Title = "Title"
+            }
         };
 
         var accountingDocumentUpdated = new AccountingDocumentUpdated
         {
             StreamId = streamId,
-            Amount = 200,
-            Date = DateTime.UtcNow,
-            Title = "Title"
+            Document = new AccountingDocument()
+            {
+                Id = streamId,
+                Amount = 200,
+                Date = DateTime.UtcNow,
+                Title = "Title"
+            }
         };
 
         var accountingDocumentDeleted = new AccountingDocumentDeleted
@@ -40,12 +48,12 @@ public class AccountingDocumentAggregatorTests
 
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, accountingDocumentCreated));
         Assert.NotNull(aggregator.State);
-        Assert.Equal(accountingDocumentCreated.Amount, aggregator.State!.Amount);
-        Assert.Equal(accountingDocumentCreated.Date, aggregator.State!.Date);
+        Assert.Equal(accountingDocumentCreated.Document.Amount, aggregator.State!.Amount);
+        Assert.Equal(accountingDocumentCreated.Document.Date, aggregator.State!.Date);
 
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, accountingDocumentUpdated));
         Assert.NotNull(aggregator.State);
-        Assert.Equal(accountingDocumentUpdated.Amount, aggregator.State!.Amount);
+        Assert.Equal(accountingDocumentUpdated.Document.Amount, aggregator.State!.Amount);
 
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, accountingDocumentDeleted));
         Assert.Null(aggregator.State);
