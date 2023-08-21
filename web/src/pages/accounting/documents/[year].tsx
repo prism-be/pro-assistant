@@ -2,11 +2,11 @@
 import ContentContainer from "@/components/design/ContentContainer";
 import Section from "@/components/design/Section";
 import {useTranslation} from "react-i18next";
-import {useMemo, useState} from "react";
+import { useMemo, useState} from "react";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
 import {useRouter} from "next/router";
 import useSWR from "swr";
-import {AccountingDocument} from "@/libs/models";
+import {AccountingDocument, NextNumber} from "@/libs/models";
 import {HeaderTitleWithAction} from "@/components/design/HeaderTitleWithAction";
 import {useForm} from "react-hook-form";
 import InputText from "@/components/forms/InputText";
@@ -28,13 +28,18 @@ const Documents: NextPage = () => {
         mutate: mutateDocuments
     } = useSWR<AccountingDocument[]>("/data/accounting/documents/" + (router.query.year ?? new Date().getFullYear()));
 
+    const {
+        data: nextNumber,
+        mutate: mutateNextNumber
+    } = useSWR<NextNumber>("/data/accounting/documents/next-number/" + (router.query.year ?? new Date().getFullYear()));
+
     const sortedDocuments = useMemo(() => {
         return documents ? documents.sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime()) : [];
     }, [documents]);
 
     const [selectedDocument, setSelectedDocument] = useState<AccountingDocument | null>(null);
     const [editing, setEditing] = useState<boolean>(false);
-    const [nextDocumentNumber, setNextDocumentNumber] = useState<number>(-1);
+    const [displayDocumentNumber, setDisplayDocumentNumber] = useState<boolean>(false);
 
     const {register, setValue, handleSubmit, formState: {errors}} = useForm();
 
@@ -52,6 +57,9 @@ const Documents: NextPage = () => {
         setValue("reference", "");
         setValue("type", "income");
         setValue("amount", 0);
+        setValue("documentNumberChoice", "generate")
+        setValue("documentNumber", nextNumber?.number);
+        setDisplayDocumentNumber(true);
         setEditing(true);
     }
 
@@ -71,6 +79,7 @@ const Documents: NextPage = () => {
             await postData("/data/accounting/documents/insert", data);
         }
 
+        await mutateNextNumber();
         await mutateDocuments();
         setEditing(false);
         setSelectedDocument(null);
@@ -89,12 +98,24 @@ const Documents: NextPage = () => {
         setValue("date", format(parseISO(document.date), "dd/MM/yyyy"));
         setValue("title", document.title);
         setValue("reference", document.reference);
+
         setValue("amount", formatAmount(Math.abs(document.amount)));
         if (document.amount > 0) {
             setValue("type", "income");
         } else {
             setValue("type", "expense");
         }
+
+        if(document.documentNumber) {
+            setValue("documentNumberChoice", "generate");
+            setValue("documentNumber", document.documentNumber);
+            setDisplayDocumentNumber(true);
+        } else {
+            setValue("documentNumberChoice", "noGenerate");
+            setValue("documentNumber", "");
+            setDisplayDocumentNumber(false);
+        }
+
         setEditing(true);
     }
 
@@ -102,6 +123,16 @@ const Documents: NextPage = () => {
         if (confirm(t("documents.confirmDelete") + document.title)) {
             await postData("/data/accounting/documents/delete", document);
             await mutateDocuments();
+        }
+    }
+
+    function switchDisplayDocumentNumber(action:string) {
+        if (action === "generate") {
+            setValue("documentNumber", nextNumber?.number);
+            setDisplayDocumentNumber(true);
+        } else {
+            setValue("documentNumber", "");
+            setDisplayDocumentNumber(false);
         }
     }
 
@@ -185,9 +216,20 @@ const Documents: NextPage = () => {
                                         {value: "generate", text: t("documents.documentNumber.generate")},
                                         {value: "noGenerate", text: t("documents.documentNumber.noGenerate")}
                                     ]}
-                                    onChange={(e) => { e === "generate" ? setNextDocumentNumber(0) : setNextDocumentNumber(-1) }}
+                                    onChange={(e) => { switchDisplayDocumentNumber(e); }}
                                 />
                             </div>
+                            {displayDocumentNumber && <div className={"col-span-2"}>
+                                <InputText
+                                    label={t("documents.documentNumber.title")}
+                                    name={"documentNumber"}
+                                    type={"text"}
+                                    required={false}
+                                    register={register}
+                                    setValue={setValue}
+                                    error={errors.documentNumber}
+                                />
+                            </div>}
                             <Button
                                 text={t("common:actions.cancel")}
                                 onClick={() => setEditing(false)}

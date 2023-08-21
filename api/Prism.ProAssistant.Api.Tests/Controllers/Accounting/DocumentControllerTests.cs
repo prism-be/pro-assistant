@@ -4,6 +4,7 @@ using Api.Controllers.Data.Accounting;
 using Core;
 using Domain.Accounting.Document;
 using Domain.Accounting.Document.Events;
+using FluentAssertions;
 using Infrastructure.Providers;
 using Moq;
 using Storage;
@@ -32,6 +33,39 @@ public class DocumentControllerTests
 
         // Assert
         eventStore.Verify(x => x.RaiseAndPersist<AccountingDocument>(It.IsAny<AccountingDocumentDeleted>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task GetNextNumber_OkFound()
+    {
+        // Arrange
+        var queryService = new Mock<IQueryService>();
+        var eventStore = new Mock<IEventStore>();
+
+        queryService.Setup(x => x.MaxAsync(It.IsAny<Func<AccountingDocument, int?>>(), It.IsAny<Filter[]>())).ReturnsAsync(2);
+
+        // Act
+        var controller = new DocumentController(eventStore.Object, queryService.Object);
+        var result = await controller.GetNextNumber(2023);
+
+        // Assert
+        result.Number.Should().Be(3);
+    }
+
+
+    [Fact]
+    public async Task GetNextNumber_OkNotFound()
+    {
+        // Arrange
+        var queryService = new Mock<IQueryService>();
+        var eventStore = new Mock<IEventStore>();
+
+        // Act
+        var controller = new DocumentController(eventStore.Object, queryService.Object);
+        var result = await controller.GetNextNumber(2023);
+
+        // Assert
+        result.Number.Should().Be(1);
     }
 
     [Fact]

@@ -33,6 +33,22 @@ public class DocumentController : Controller
         });
     }
 
+    [HttpGet]
+    [Route("api/data/accounting/documents/next-number/{year:int}")]
+    public async Task<NextNumber> GetNextNumber(int year)
+    {
+        var start = new DateTime(year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var end = start.AddYears(1);
+
+        var filters = new List<Filter>
+        {
+            new("Date", start, FilterOperator.GreaterThanOrEqual),
+            new("Date", end, FilterOperator.LessThan)
+        };
+
+        return new NextNumber((await _queryService.MaxAsync<AccountingDocument, int?>(x => x.DocumentNumber, filters.ToArray()) ?? 0) + 1);
+    }
+
     [HttpPost]
     [Route("api/data/accounting/documents/insert")]
     public async Task<UpsertResult> Insert([FromBody] AccountingDocument request)
@@ -82,4 +98,6 @@ public class DocumentController : Controller
             Document = request
         });
     }
+
+    public record NextNumber(int Number);
 }
