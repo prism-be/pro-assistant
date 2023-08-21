@@ -35,7 +35,8 @@
       "type": "Type",
       "title": "Titre",
       "amount": "Montant",
-      "reference": "Référence"
+      "reference": "Référence",
+      "number": "Numéro"
     },
     "types": {
       "income": "Entrée",
