@@ -17,6 +17,7 @@ import Button from "@/components/forms/Button";
 import {postData} from "@/libs/http";
 import {formatAmount} from "@/libs/formats";
 import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
+import InputSelect from "@/components/forms/InputSelect";
 
 const Documents: NextPage = () => {
     const {t} = useTranslation("accounting");
@@ -48,12 +49,18 @@ const Documents: NextPage = () => {
         setValue("date", format(new Date(), "dd/MM/yyyy"));
         setValue("title", "");
         setValue("reference", "");
+        setValue("type", "income");
         setValue("amount", 0);
         setEditing(true);
     }
 
     async function onSaveDocument(data: any) {
         data.amount = parseFloat(data.amount);
+        
+        if (data.type === "expense") {
+            data.amount *= -1;
+        }
+        
         data.date = parse(data.date, "dd/MM/yyyy", new Date());
         if (selectedDocument) {
             data.id = selectedDocument.id;
@@ -81,7 +88,12 @@ const Documents: NextPage = () => {
         setValue("date", format(parseISO(document.date), "dd/MM/yyyy"));
         setValue("title", document.title);
         setValue("reference", document.reference);
-        setValue("amount", formatAmount(document.amount));
+        setValue("amount", formatAmount(Math.abs(document.amount)));
+        if (document.amount > 0) {
+            setValue("type", "income");
+        } else {
+            setValue("type", "expense");
+        }
         setEditing(true);
     }
 
@@ -135,6 +147,21 @@ const Documents: NextPage = () => {
                                     register={register}
                                     setValue={setValue}
                                     error={errors.reference}
+                                />
+                            </div>
+                            <div className={"col-span-2"}>
+                                <InputSelect
+                                    label={t("documents.headers.type")}
+                                    name={"type"}
+                                    type={"text"}
+                                    required={true}
+                                    register={register}
+                                    setValue={setValue}
+                                    error={errors.type}
+                                    options={[
+                                        {value: "income", text: t("documents.types.income")},
+                                        {value: "expense", text: t("documents.types.expense")}
+                                    ]}
                                 />
                             </div>
                             <div className={"col-span-2"}>
