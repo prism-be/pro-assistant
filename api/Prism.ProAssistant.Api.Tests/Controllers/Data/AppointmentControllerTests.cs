@@ -1,19 +1,18 @@
-﻿using FluentAssertions;
-using Moq;
-using Prism.Core;
-using Prism.Infrastructure.Providers;
-using Prism.ProAssistant.Api.Controllers.Data;
-using Prism.ProAssistant.Domain.DayToDay.Appointments;
-using Prism.ProAssistant.Domain.DayToDay.Appointments.Events;
-using Prism.ProAssistant.Domain.DayToDay.Contacts;
-using Prism.ProAssistant.Domain.DayToDay.Contacts.Events;
-using Prism.ProAssistant.Storage;
-using Prism.ProAssistant.Storage.Events;
+﻿namespace Prism.ProAssistant.Api.Tests.Controllers.Data;
 
-namespace Prism.ProAssistant.Api.Tests.Controllers.Data;
-
+using Api.Controllers.Data;
+using Core;
 using Domain;
+using Domain.DayToDay.Appointments;
+using Domain.DayToDay.Appointments.Events;
+using Domain.DayToDay.Contacts;
+using Domain.DayToDay.Contacts.Events;
+using FluentAssertions;
+using Infrastructure.Providers;
 using Models;
+using Moq;
+using Storage;
+using Storage.Events;
 
 public class AppointmentControllerTests
 {
@@ -23,8 +22,6 @@ public class AppointmentControllerTests
         // Arrange
         var queryService = new Mock<IQueryService>();
         var eventStore = new Mock<IEventStore>();
-
-        var id = Identifier.GenerateString();
 
         // Act
         var controller = new AppointmentController(queryService.Object, eventStore.Object);
@@ -37,7 +34,8 @@ public class AppointmentControllerTests
 
         // Assert
         result.Should().NotBeNull();
-        eventStore.Verify(x => x.RaiseAndPersist<Appointment>(It.Is<AppointmentClosed>(ac => ac.PaymentDate != null && ac.Payment == (int)PaymentTypes.Cash && ac.State == (int)AppointmentState.Done)), Times.Once);
+        eventStore.Verify(x => x.RaiseAndPersist<Appointment>(It.Is<AppointmentClosed>(ac => ac.PaymentDate != null && ac.Payment == (int)PaymentTypes.Cash && ac.State == (int)AppointmentState.Done)),
+            Times.Once);
     }
 
     [Fact]

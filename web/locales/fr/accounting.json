@@ -41,6 +41,11 @@
       "income": "Entrée",
       "expense": "Sortie"
     },
+    "documentNumber" : {
+      "title": "Numéro de document",
+      "generate": "Générer un numéro de document",
+      "noGenerate": "Ne pas générer de numéro de document"
+    },
     "confirmDelete": "Êtes-vous sûr de vouloir supprimer le document suivant : "
   }
 }

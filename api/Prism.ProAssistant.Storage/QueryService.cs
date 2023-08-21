@@ -9,6 +9,7 @@ public interface IQueryService
 {
     Task<IEnumerable<TField>> DistinctAsync<T, TField>(string field, params Filter[] filters);
     Task<IEnumerable<T>> ListAsync<T>();
+    Task<TField?> MaxAsync<T, TField>(Func<T, TField> selector, params Filter[] filters);
     Task<IEnumerable<T>> SearchAsync<T>(params Filter[] request);
     Task<T> SingleAsync<T>(string id);
     Task<T?> SingleOrDefaultAsync<T>(string id);
@@ -63,6 +64,16 @@ public class QueryService : IQueryService
 
         var container = await _stateProvider.GetContainerAsync<T>();
         return await container.ReadAsync(id);
+    }
+
+    public async Task<TField?> MaxAsync<T, TField>(Func<T, TField> selector, params Filter[] filters)
+    {
+        _logger.LogDebug("Max - {Type} - {UserId}", typeof(T).Name, _userOrganization.Id);
+
+        var container = await _stateProvider.GetContainerAsync<T>();
+        var results = await container.SearchAsync(filters);
+
+        return results.Max(selector);
     }
 
     public async Task<IEnumerable<T>> SearchAsync<T>(params Filter[] request)

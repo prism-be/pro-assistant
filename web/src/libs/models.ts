@@ -16,6 +16,7 @@ export interface AccountingDocument {
     id: string;
     reference: string;
     title: string;
+    documentNumber?: number | null;
 }
 
 export interface AccountingReportingPeriod {
@@ -161,6 +162,10 @@ export interface IncomeDetail {
     subTotal: number;
     type: string;
     unitPrice: number;
+}
+
+export interface NextNumber {
+    number: number;
 }
 
 export enum RecurringType {
