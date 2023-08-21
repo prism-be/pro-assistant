@@ -42,7 +42,8 @@ public class DocumentController : Controller
             StreamId = Identifier.GenerateString(),
             Amount = request.Amount,
             Date = request.Date,
-            Title = request.Title
+            Title = request.Title,
+            Reference = request.Reference
         });
     }
 
@@ -62,7 +63,7 @@ public class DocumentController : Controller
             return Array.Empty<AccountingDocument>();
         }
 
-        var start = new DateTime(year, 1, 1);
+        var start = new DateTime(year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var end = start.AddYears(1);
 
         var filters = new List<Filter>
@@ -83,7 +84,8 @@ public class DocumentController : Controller
             StreamId = request.Id,
             Amount = request.Amount,
             Date = request.Date,
-            Title = request.Title
+            Title = request.Title,
+            Reference = request.Reference
         });
     }
 }
