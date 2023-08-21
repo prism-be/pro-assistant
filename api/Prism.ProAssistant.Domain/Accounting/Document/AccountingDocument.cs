@@ -20,4 +20,7 @@ public class AccountingDocument
 
     [JsonPropertyName("title")]
     public string Title { get; set; }
+
+    [JsonPropertyName("documentNumber")]
+    public int? DocumentNumber { get; set; }
 }

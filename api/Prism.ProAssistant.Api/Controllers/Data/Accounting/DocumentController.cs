@@ -40,10 +40,7 @@ public class DocumentController : Controller
         return await _eventStore.RaiseAndPersist<AccountingDocument>(new AccountingDocumentCreated
         {
             StreamId = Identifier.GenerateString(),
-            Amount = request.Amount,
-            Date = request.Date,
-            Title = request.Title,
-            Reference = request.Reference
+            Document = request
         });
     }
 
@@ -82,10 +79,7 @@ public class DocumentController : Controller
         return await _eventStore.RaiseAndPersist<AccountingDocument>(new AccountingDocumentUpdated
         {
             StreamId = request.Id,
-            Amount = request.Amount,
-            Date = request.Date,
-            Title = request.Title,
-            Reference = request.Reference
+            Document = request
         });
     }
 }

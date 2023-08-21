@@ -224,7 +224,10 @@ const Documents: NextPage = () => {
                             {" "}
                             <TrashIcon/>{" "}
                         </a>
-                        <div className={"pl-2"}>{format(new Date(document.date), "dd/MM/yyyy")} - {document.title}</div>
+                        <div className={"pl-2"}>
+                            {format(new Date(document.date), "dd/MM/yyyy")} - {document.title}
+                            <>{document.reference?.length > 0 && <span className={"italic pl-2"}>({document.reference})</span>}</>
+                        </div>
                     </div>
                     <div className={"col-span-1"}>{getDocumentType(document)}</div>
                     <div className={"col-span-1 text-right"}>{formatAmount(document.amount)} &euro;</div>
