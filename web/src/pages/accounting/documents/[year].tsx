@@ -264,8 +264,8 @@ const Documents: NextPage = () => {
             <div className={"grid grid-cols-12 gap-2 mt-4"}>
                 <div className={"font-bold col-span-8"}>{t("documents.headers.title")}</div>
                 <div className={"font-bold col-span-1"}>{t("documents.headers.type")}</div>
-                <div className={"font-bold col-span-1"}>{t("documents.headers.reference")}</div>
-                <div className={"font-bold col-span-1"}>{t("documents.headers.number")}</div>
+                <div className={"font-bold col-span-1 text-center"}>{t("documents.headers.reference")}</div>
+                <div className={"font-bold col-span-1 text-center"}>{t("documents.headers.number")}</div>
                 <div className={"font-bold col-span-1 text-right"}>{t("documents.headers.amount")}</div>
             </div>
 
@@ -293,8 +293,8 @@ const Documents: NextPage = () => {
                         </div>
                     </div>
                     <div className={"col-span-1"}>{getDocumentType(document)}</div>
-                    <div className={"col-span-1"}>{document.reference}</div>
-                    <div className={"col-span-1"}>{document.documentNumber}</div>
+                    <div className={"col-span-1 text-center"}>{document.reference}</div>
+                    <div className={"col-span-1 text-center"}>{document.documentNumber}</div>
                     <div className={"col-span-1 text-right"}>{formatAmount(document.amount)} &euro;</div>
                 </div>)}
             </>
