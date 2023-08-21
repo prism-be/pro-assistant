@@ -47,6 +47,7 @@ const Documents: NextPage = () => {
         setSelectedDocument(null);
         setValue("date", format(new Date(), "dd/MM/yyyy"));
         setValue("title", "");
+        setValue("reference", "");
         setValue("amount", 0);
         setEditing(true);
     }
@@ -79,6 +80,7 @@ const Documents: NextPage = () => {
         setSelectedDocument(document);
         setValue("date", format(parseISO(document.date), "dd/MM/yyyy"));
         setValue("title", document.title);
+        setValue("reference", document.reference);
         setValue("amount", formatAmount(document.amount));
         setEditing(true);
     }
@@ -122,6 +124,17 @@ const Documents: NextPage = () => {
                                     register={register}
                                     setValue={setValue}
                                     error={errors.title}
+                                />
+                            </div>
+                            <div className={"col-span-2"}>
+                                <InputText
+                                    label={t("documents.headers.reference")}
+                                    name={"reference"}
+                                    type={"text"}
+                                    required={false}
+                                    register={register}
+                                    setValue={setValue}
+                                    error={errors.reference}
                                 />
                             </div>
                             <div className={"col-span-2"}>

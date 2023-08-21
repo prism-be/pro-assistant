@@ -34,7 +34,8 @@
       "date": "Date",
       "type": "Type",
       "title": "Titre",
-      "amount": "Montant"
+      "amount": "Montant",
+      "reference": "Référence"
     },
     "types": {
       "income": "Entrée",

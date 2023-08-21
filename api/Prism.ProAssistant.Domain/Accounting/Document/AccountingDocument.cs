@@ -15,6 +15,9 @@ public class AccountingDocument
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 
+    [JsonPropertyName("reference")]
+    public string Reference { get; set; }
+
     [JsonPropertyName("title")]
     public string Title { get; set; }
 }

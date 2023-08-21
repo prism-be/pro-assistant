@@ -29,7 +29,7 @@ public class AccountingDocumentAggregator : IDomainAggregator<AccountingDocument
                 Apply(@event.ToEvent<AccountingDocumentUpdated>());
                 break;
             case nameof(AccountingDocumentDeleted):
-                Apply(@event.ToEvent<AccountingDocumentDeleted>());
+                ApplyDelete();
                 break;
         }
 
@@ -41,17 +41,13 @@ public class AccountingDocumentAggregator : IDomainAggregator<AccountingDocument
         return Task.CompletedTask;
     }
 
-    private void Apply(AccountingDocumentDeleted _)
-    {
-        State = null;
-    }
-
     private void Apply(AccountingDocumentUpdated @event)
     {
         State = EnsureState();
         State.Amount = @event.Amount;
         State.Date = @event.Date;
         State.Title = @event.Title;
+        State.Reference = @event.Reference;
     }
 
     private void Apply(AccountingDocumentCreated @event)
@@ -61,8 +57,14 @@ public class AccountingDocumentAggregator : IDomainAggregator<AccountingDocument
             Id = @event.StreamId,
             Amount = @event.Amount,
             Date = @event.Date,
-            Title = @event.Title
+            Title = @event.Title,
+            Reference = @event.Reference
         };
+    }
+
+    private void ApplyDelete()
+    {
+        State = null;
     }
 
     private AccountingDocument EnsureState()
