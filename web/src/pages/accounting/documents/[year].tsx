@@ -153,10 +153,8 @@ const Documents: NextPage = () => {
                                 <InputSelect
                                     label={t("documents.headers.type")}
                                     name={"type"}
-                                    type={"text"}
                                     required={true}
                                     register={register}
-                                    setValue={setValue}
                                     error={errors.type}
                                     options={[
                                         {value: "income", text: t("documents.types.income")},
