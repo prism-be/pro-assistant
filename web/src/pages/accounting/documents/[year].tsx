@@ -34,6 +34,7 @@ const Documents: NextPage = () => {
 
     const [selectedDocument, setSelectedDocument] = useState<AccountingDocument | null>(null);
     const [editing, setEditing] = useState<boolean>(false);
+    const [nextDocumentNumber, setNextDocumentNumber] = useState<number>(-1);
 
     const {register, setValue, handleSubmit, formState: {errors}} = useForm();
 
@@ -171,6 +172,20 @@ const Documents: NextPage = () => {
                                     register={register}
                                     setValue={setValue}
                                     error={errors.amount}
+                                />
+                            </div>
+                            <div className={"col-span-2"}>
+                                <InputSelect
+                                    label={t("documents.documentNumber.title")}
+                                    name={"documentNumberChoice"}
+                                    required={true}
+                                    register={register}
+                                    error={errors.documentNumberChoice}
+                                    options={[
+                                        {value: "generate", text: t("documents.documentNumber.generate")},
+                                        {value: "noGenerate", text: t("documents.documentNumber.noGenerate")}
+                                    ]}
+                                    onChange={(e) => { e === "generate" ? setNextDocumentNumber(0) : setNextDocumentNumber(-1) }}
                                 />
                             </div>
                             <Button
