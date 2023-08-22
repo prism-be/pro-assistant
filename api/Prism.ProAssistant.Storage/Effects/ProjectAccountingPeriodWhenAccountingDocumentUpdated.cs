@@ -26,11 +26,23 @@ public class ProjectAccountingPeriodWhenAccountingDocumentUpdated
     {
         _logger.LogInformation("Projecting accounting period from change on document {AccountingDocumentId}", @event.StreamId);
 
+        DateTime startPeriod;
         var document = @event.ToEvent<AccountingDocumentUpdated>().Document;
+
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (document != null)
+        {
+            startPeriod = new DateTime(document.Date.Year, document.Date.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        }
+        else
+        {
+            var date = @event.ToEvent<AccountingDocumentDeleted>().Date;
+            startPeriod = new DateTime(date.Year, date.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        }
         
-        var startPeriod = new DateTime(document.Date.Year, document.Date.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+        
         var endPeriod = startPeriod.AddMonths(1);
 
-        ProjectAccountingPeriodBase.Project(startPeriod, endPeriod, _queryService, _stateProvider);
+        await ProjectAccountingPeriodBase.Project(startPeriod, endPeriod, _queryService, _stateProvider);
     }
 }
