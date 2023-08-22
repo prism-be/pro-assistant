@@ -12,7 +12,7 @@ import {useForm} from "react-hook-form";
 import InputText from "@/components/forms/InputText";
 import {Popup} from "@/components/Pops";
 import InputDate from "@/components/forms/InputDate";
-import {format, parse, parseISO} from "date-fns";
+import {format, formatISO, parse, parseISO} from "date-fns";
 import Button from "@/components/forms/Button";
 import {postData} from "@/libs/http";
 import {formatAmount} from "@/libs/formats";
@@ -74,7 +74,8 @@ const Documents: NextPage = () => {
             data.documentNumber = null;
         }
         
-        data.date = parse(data.date, "dd/MM/yyyy", new Date());
+        data.date = formatISO(parse(data.date, "dd/MM/yyyy", new Date()));
+        
         if (selectedDocument) {
             data.id = selectedDocument.id;
             await postData("/data/accounting/documents/update", data);
