@@ -74,8 +74,8 @@ const Documents: NextPage = () => {
             data.documentNumber = null;
         }
         
-        data.date = formatISO(parse(data.date, "dd/MM/yyyy", new Date()));
-        
+        data.date = formatISO(parse(data.date, "dd/MM/yyyy", new Date()), {representation: "date"} );
+
         if (selectedDocument) {
             data.id = selectedDocument.id;
             await postData("/data/accounting/documents/update", data);
