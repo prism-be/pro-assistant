@@ -1,13 +1,15 @@
 ﻿namespace Prism.ProAssistant.Api.Tests.Services;
 
 using System.Text.Json;
-using Api.Services;
+using Api.Services.Listeners;
 using Azure.Messaging.ServiceBus;
 using Core;
 using Domain;
+using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Contacts;
 using Domain.DayToDay.Contacts.Events;
 using Infrastructure.Authentication;
+using Infrastructure.Providers;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Storage;
@@ -28,17 +30,28 @@ public class DomainEventServiceBusListenerTests
         });
         services.AddTransient<RefreshAppointmentWhenContactChange>();
         services.AddLogging();
-        
+
         var queryService = new Mock<IQueryService>();
+
+        queryService.Setup(x => x.DistinctAsync<Appointment, string>(It.IsAny<string>(), It.IsAny<Filter[]>()))
+            .ReturnsAsync(new List<string>(
+                new[]
+                {
+                    Identifier.GenerateString()
+                }
+            ));
+
         services.AddSingleton(queryService.Object);
-        
+
         var eventStore = new Mock<IEventStore>();
         services.AddSingleton(eventStore.Object);
-        
+
+        var contactId = Identifier.GenerateString();
+
         var provider = services.BuildServiceProvider();
-        
+
         var serviceBusClient = new Mock<ServiceBusClient>();
-        
+
         var eventContext = new EventContext<Contact>
         {
             Event = new DomainEvent
@@ -50,7 +63,7 @@ public class DomainEventServiceBusListenerTests
                 {
                     Contact = new Contact
                     {
-                        Id = Identifier.GenerateString()
+                        Id = contactId
                     }
                 }),
                 StreamType = "contacts",
@@ -63,19 +76,19 @@ public class DomainEventServiceBusListenerTests
             },
             PreviousState = new Contact
             {
-                Id = Identifier.GenerateString()
+                Id = contactId
             },
             CurrentState = new Contact
             {
-                Id = Identifier.GenerateString()
+                Id = contactId
             }
         };
-        
+
         // Act
-        var listener = new DomainEventServiceBusListener<Contact>(serviceBusClient.Object, provider);
+        var listener = new ContactEventServiceBusListener(serviceBusClient.Object, provider);
         await listener.ProcessMessage(eventContext);
 
         // Assert
-        eventStore.Verify(x => x.RaiseAndPersist<ContactUpdated>(It.IsAny<ContactUpdated>()), Times.Once);
+        eventStore.Verify(x => x.Persist<Appointment>(It.IsAny<string>()), Times.Once);
     }
 }

@@ -10,5 +10,5 @@ public class SideEffectAttribute : Attribute
 
     public Type EventType { get; }
     
-    public string Key => $"{StreamTypeAttribute.GetStreamType(EventType)}:{EventType.Name}";
+    public string Key => CollectionAttribute.GetCollectionName(EventType);
 }

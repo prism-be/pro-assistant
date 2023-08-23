@@ -1,4 +1,4 @@
-﻿namespace Prism.ProAssistant.Api.Services;
+﻿namespace Prism.ProAssistant.Api.Services.Listeners;
 
 using System.Reflection;
 using Azure.Messaging.ServiceBus;
@@ -7,17 +7,20 @@ using Infrastructure.Authentication;
 using Storage;
 using Storage.Events;
 
-public class DomainEventServiceBusListener<T> : BackgroundService
+public class BaseDomainEventServiceBusListener<T> : BackgroundService
 {
     private readonly Dictionary<string, List<Type>> _effects = new();
 
     private readonly ServiceBusReceiver _receiver;
     private readonly IServiceProvider _serviceProvider;
 
-    public DomainEventServiceBusListener(ServiceBusClient serviceBusClient, IServiceProvider serviceProvider)
+    public BaseDomainEventServiceBusListener(ServiceBusClient serviceBusClient, IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
-        _receiver = serviceBusClient.CreateReceiver("domain/events");
+
+        var collectionName = CollectionAttribute.GetCollectionName<T>();
+
+        _receiver = serviceBusClient.CreateReceiver("domain/events/" + collectionName);
 
         BuildEffectList();
     }
@@ -31,7 +34,7 @@ public class DomainEventServiceBusListener<T> : BackgroundService
         foreach (var type in types)
         {
             var effectAttributes = type.GetCustomAttributes<SideEffectAttribute>();
-            
+
             foreach (var effectAttributeKey in effectAttributes.Select(k => k.Key))
             {
                 var effects = _effects.TryGetValue(effectAttributeKey, out var effect) ? effect : new List<Type>();
@@ -62,7 +65,7 @@ public class DomainEventServiceBusListener<T> : BackgroundService
 
     public async Task ProcessMessage(EventContext<T> data)
     {
-        var key = $"{data.Event.StreamType}:{data.Event.Type}";
+        var key = CollectionAttribute.GetCollectionName<T>();
 
         if (_effects.TryGetValue(key, out var effectTypes))
         {

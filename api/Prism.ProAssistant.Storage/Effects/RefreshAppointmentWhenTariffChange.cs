@@ -27,6 +27,11 @@ public class RefreshAppointmentWhenTariffChange
         {
             return;
         }
+        
+        if (context.CurrentState?.BackgroundColor == context.PreviousState?.BackgroundColor)
+        {
+            return;
+        }
 
         _logger.LogInformation("Refreshing appointments for tariff {TariffId}", context.Event.StreamId);
         var appointments = await _queryService.DistinctAsync<Appointment, string>(nameof(Appointment.Id), new Filter(nameof(Appointment.TypeId), context.CurrentState.Id));
