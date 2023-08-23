@@ -1,14 +1,13 @@
 ﻿namespace Prism.ProAssistant.Storage.Effects;
 
 using Core.Attributes;
-using Domain;
 using Domain.DayToDay.Appointments;
-using Domain.DayToDay.Contacts.Events;
+using Domain.DayToDay.Contacts;
 using Events;
 using Infrastructure.Providers;
 using Microsoft.Extensions.Logging;
 
-[SideEffect(typeof(ContactUpdated))]
+[SideEffect(typeof(Contact))]
 public class RefreshAppointmentWhenContactChange
 {
     private readonly IEventStore _eventStore;
@@ -22,10 +21,15 @@ public class RefreshAppointmentWhenContactChange
         _eventStore = eventStore;
     }
 
-    public async Task Handle(DomainEvent @event)
+    public async Task Handle(EventContext<Contact> context)
     {
-        _logger.LogInformation("Refreshing appointments for contact {ContactId}", @event.StreamId);
-        var appointments = await _queryService.DistinctAsync<Appointment, string>(nameof(Appointment.Id), new Filter(nameof(Appointment.ContactId), @event.StreamId));
+        if (context.CurrentState == null)
+        {
+            return;
+        }
+        
+        _logger.LogInformation("Refreshing appointments for contact {ContactId}", context.Event.StreamId);
+        var appointments = await _queryService.DistinctAsync<Appointment, string>(nameof(Appointment.Id), new Filter(nameof(Appointment.ContactId), context.CurrentState.Id));
 
         foreach (var appointment in appointments)
         {

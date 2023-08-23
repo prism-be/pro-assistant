@@ -1,15 +1,13 @@
 ﻿namespace Prism.ProAssistant.Storage.Effects;
 
 using Core.Attributes;
-using Domain;
-using Domain.Configuration.Tariffs.Events;
+using Domain.Configuration.Tariffs;
 using Domain.DayToDay.Appointments;
-using Domain.DayToDay.Contacts.Events;
 using Events;
 using Infrastructure.Providers;
 using Microsoft.Extensions.Logging;
 
-[SideEffect(typeof(TariffUpdated))]
+[SideEffect(typeof(Tariff))]
 public class RefreshAppointmentWhenTariffChange
 {
     private readonly IEventStore _eventStore;
@@ -23,10 +21,15 @@ public class RefreshAppointmentWhenTariffChange
         _eventStore = eventStore;
     }
 
-    public async Task Handle(DomainEvent @event)
+    public async Task Handle(EventContext<Tariff> context)
     {
-        _logger.LogInformation("Refreshing appointments for tariff {TariffId}", @event.StreamId);
-        var appointments = await _queryService.DistinctAsync<Appointment, string>(nameof(Appointment.Id), new Filter(nameof(Appointment.TypeId), @event.StreamId));
+        if (context.CurrentState == null)
+        {
+            return;
+        }
+
+        _logger.LogInformation("Refreshing appointments for tariff {TariffId}", context.Event.StreamId);
+        var appointments = await _queryService.DistinctAsync<Appointment, string>(nameof(Appointment.Id), new Filter(nameof(Appointment.TypeId), context.CurrentState.Id));
 
         foreach (var appointment in appointments)
         {
