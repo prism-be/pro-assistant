@@ -443,3 +443,4 @@ local.settings.json
 
 api/**/wwwroot/**
 /api/Prism.ProAssistant.Api/Properties/launchSettings.json
+/api/.idea/.idea.Prism.ProAssistant.Api/.idea/dataSources.xml

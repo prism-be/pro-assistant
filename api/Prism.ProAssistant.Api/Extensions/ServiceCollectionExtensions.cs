@@ -127,7 +127,7 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDomainAggregator<Forecast>, ForecastAggregator>();
         services.AddTransient<IDomainAggregator<AccountingDocument>, AccountingDocumentAggregator>();
 
-        services.AddHostedService<DomainEventServiceBusListener>();
+        services.AddHostedService<DomainEventServiceBusListener<Contact>>();
         services.AddTransient<RefreshAppointmentWhenContactChange>();
         services.AddTransient<RefreshAppointmentWhenTariffChange>();
         services.AddTransient<ProjectAccountingPeriodWhenAccountingDocumentUpdated>();

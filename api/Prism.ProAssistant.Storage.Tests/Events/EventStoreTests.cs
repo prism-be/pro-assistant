@@ -57,15 +57,15 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         var publisher = new Mock<IPublisher>();
+        var queryService = new Mock<IQueryService>();
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object, queryService.Object);
         await eventStore.Hydrate<Contact>(@event.StreamId);
 
         // Assert
         eventContainer.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<DomainEvent>()), Times.Never);
         container.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<Contact>()), Times.Never);
-        
     }
 
     [Fact]
@@ -100,9 +100,10 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         var publisher = new Mock<IPublisher>();
+        var queryService = new Mock<IQueryService>();
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object, queryService.Object);
         await eventStore.Persist<Contact>(@event.StreamId);
 
         // Assert
@@ -129,15 +130,16 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         var publisher = new Mock<IPublisher>();
+        var queryService = new Mock<IQueryService>();
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object, queryService.Object);
         await eventStore.Raise(@event);
 
         // Assert
         eventContainer.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<DomainEvent>()), Times.Once);
         container.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<Contact>()), Times.Never);
-        publisher.Verify(x => x.PublishAsync("domain/events", It.IsAny<EventContext>()), Times.Never);
+        publisher.Verify(x => x.PublishAsync("domain/events", It.IsAny<EventContext<Contact>>()), Times.Never);
     }
 
     [Fact]
@@ -172,15 +174,16 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         var publisher = new Mock<IPublisher>();
+        var queryService = new Mock<IQueryService>();
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object, queryService.Object);
         await eventStore.RaiseAndPersist<Contact>(@event);
 
         // Assert
         eventContainer.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<DomainEvent>()), Times.Once);
         container.Verify(x => x.WriteAsync(It.IsAny<string>(), It.IsAny<Contact>()), Times.Once);
-        publisher.Verify(x => x.PublishAsync("domain/events", It.IsAny<EventContext>()), Times.Once);
+        publisher.Verify(x => x.PublishAsync("domain/events", It.IsAny<EventContext<Contact>>()), Times.Once);
     }
 
     [Fact]
@@ -215,9 +218,10 @@ public class EventStoreTests
         stateProvider.Setup(x => x.GetContainerAsync<DomainEvent>()).ReturnsAsync(eventContainer.Object);
 
         var publisher = new Mock<IPublisher>();
+        var queryService = new Mock<IQueryService>();
 
         // Act
-        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object);
+        var eventStore = new EventStore(logger.Object, stateProvider.Object, userOrganization, GetServiceProvider(), publisher.Object, queryService.Object);
         await eventStore.RaiseAndPersist<DocumentConfiguration>(@event);
 
         // Assert

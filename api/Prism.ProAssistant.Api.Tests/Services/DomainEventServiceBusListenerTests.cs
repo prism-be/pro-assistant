@@ -1,7 +1,6 @@
 ﻿namespace Prism.ProAssistant.Api.Tests.Services;
 
 using System.Text.Json;
-using System.Text.Json.Nodes;
 using Api.Services;
 using Azure.Messaging.ServiceBus;
 using Core;
@@ -40,7 +39,7 @@ public class DomainEventServiceBusListenerTests
         
         var serviceBusClient = new Mock<ServiceBusClient>();
         
-        var eventContext = new EventContext
+        var eventContext = new EventContext<Contact>
         {
             Event = new DomainEvent
             {
@@ -61,14 +60,22 @@ public class DomainEventServiceBusListenerTests
             {
                 Id = Identifier.GenerateString(),
                 Organization = Identifier.GenerateString()
+            },
+            PreviousState = new Contact
+            {
+                Id = Identifier.GenerateString()
+            },
+            CurrentState = new Contact
+            {
+                Id = Identifier.GenerateString()
             }
         };
         
         // Act
-        var listener = new DomainEventServiceBusListener(serviceBusClient.Object, provider);
+        var listener = new DomainEventServiceBusListener<Contact>(serviceBusClient.Object, provider);
         await listener.ProcessMessage(eventContext);
 
         // Assert
-
+        eventStore.Verify(x => x.RaiseAndPersist<ContactUpdated>(It.IsAny<ContactUpdated>()), Times.Once);
     }
 }

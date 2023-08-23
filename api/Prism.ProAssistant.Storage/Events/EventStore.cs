@@ -13,14 +13,16 @@ public class EventStore : IEventStore, IHydrator
     private readonly IServiceProvider _serviceProvider;
     private readonly IStateProvider _stateProvider;
     private readonly UserOrganization _userOrganization;
+    private readonly IQueryService _queryService;
 
-    public EventStore(ILogger<EventStore> logger, IStateProvider stateProvider, UserOrganization userOrganization, IServiceProvider serviceProvider, IPublisher publisher)
+    public EventStore(ILogger<EventStore> logger, IStateProvider stateProvider, UserOrganization userOrganization, IServiceProvider serviceProvider, IPublisher publisher, IQueryService queryService)
     {
         _logger = logger;
         _stateProvider = stateProvider;
         _userOrganization = userOrganization;
         _serviceProvider = serviceProvider;
         _publisher = publisher;
+        _queryService = queryService;
     }
 
     public async Task Raise(BaseEvent eventData)
@@ -35,21 +37,25 @@ public class EventStore : IEventStore, IHydrator
 
     public async Task<UpsertResult> RaiseAndPersist<T>(BaseEvent eventData)
     {
+        var previousState = await _queryService.SingleOrDefaultAsync<T>(eventData.StreamId);
+        
         await Raise(eventData);
         var item = await Persist<T>(eventData.StreamId);
 
-        var context = new EventContext
+        var context = new EventContext<T>
         {
             Context = _userOrganization,
-            Event = DomainEvent.FromEvent(eventData.StreamId, _userOrganization.Id, eventData)
+            Event = DomainEvent.FromEvent(eventData.StreamId, _userOrganization.Id, eventData),
+            PreviousState = previousState,
+            CurrentState = item
         };
         
         await _publisher.PublishAsync("domain/events", context);
 
-        return item;
+        return new UpsertResult(eventData.StreamId);
     }
 
-    public async Task<UpsertResult> Persist<T>(string streamId)
+    public async Task<T?> Persist<T>(string streamId)
     {
         _logger.LogInformation("Persisting state for stream {StreamId}", streamId);
 
@@ -66,7 +72,7 @@ public class EventStore : IEventStore, IHydrator
             await stateContainer.WriteAsync(streamId, state);
         }
 
-        return new UpsertResult(streamId);
+        return state;
     }
 
     public async Task<T?> Hydrate<T>(string? streamId)
