@@ -12,7 +12,7 @@ import {useForm} from "react-hook-form";
 import InputText from "@/components/forms/InputText";
 import {Popup} from "@/components/Pops";
 import InputDate from "@/components/forms/InputDate";
-import {format, formatISO, parse, parseISO} from "date-fns";
+import {format, formatISO, parse, parseISO, set} from "date-fns";
 import Button from "@/components/forms/Button";
 import {postData} from "@/libs/http";
 import {formatAmount} from "@/libs/formats";
@@ -40,8 +40,9 @@ const Documents: NextPage = () => {
     const [selectedDocument, setSelectedDocument] = useState<AccountingDocument | null>(null);
     const [editing, setEditing] = useState<boolean>(false);
     const [displayDocumentNumber, setDisplayDocumentNumber] = useState<boolean>(false);
+    const [suggestions, setSuggestions] = useState<string[]>([]);
 
-    const {register, setValue, handleSubmit, formState: {errors}} = useForm();
+    const {register, getValues, setValue, handleSubmit, formState: {errors}} = useForm();
 
     async function setYear(delta: number) {
         let year = parseInt(router.query.year as string);
@@ -60,6 +61,7 @@ const Documents: NextPage = () => {
         setValue("documentNumberChoice", "generate")
         setValue("documentNumber", nextNumber?.number);
         setDisplayDocumentNumber(true);
+        setSuggestions([]);
         setEditing(true);
     }
 
@@ -121,6 +123,7 @@ const Documents: NextPage = () => {
             setDisplayDocumentNumber(false);
         }
 
+        setSuggestions([]);
         setEditing(true);
     }
 
@@ -139,6 +142,32 @@ const Documents: NextPage = () => {
             setValue("documentNumber", "");
             setDisplayDocumentNumber(false);
         }
+    }
+
+    function onlyUnique(value: any, index: any, array: string | any[]) {
+        return array.indexOf(value) === index;
+      }
+
+    function suggestTitle() {
+        const title = getValues().title;
+
+        if (title.length < 3) {
+            setSuggestions([]);
+            return;
+        }
+
+        let foundSuggestions = documents?.filter((document) => document.title.toUpperCase().startsWith(title.toUpperCase())).map((document) => document.title);
+            console.log(foundSuggestions);
+
+        foundSuggestions = foundSuggestions?.filter(onlyUnique);
+
+        if (foundSuggestions?.length == 1 && foundSuggestions[0].toUpperCase() === title.toUpperCase())
+        {
+            setSuggestions([]);
+            return;
+        }
+
+        setSuggestions(foundSuggestions ?? []);
     }
 
     return <ContentContainer>
@@ -173,8 +202,19 @@ const Documents: NextPage = () => {
                                     register={register}
                                     setValue={setValue}
                                     error={errors.title}
+                                    onChange={() => { suggestTitle(); }}
                                 />
                             </div>
+                            <>
+                                {suggestions.length > 0 && <div className={"col-span-2"}>
+                                    <div className={"bg-gray-100 p-1"}>
+                                        {suggestions.map((suggestion) => <div key={suggestion} className={"cursor-pointer hover:bg-gray-200 p-1"}
+                                                                               onClick={() => { setValue("title", suggestion); setSuggestions([]); }}>
+                                            {suggestion}
+                                        </div>)}
+                                    </div>
+                                </div>}
+                            </>
                             <div className={"col-span-2"}>
                                 <InputText
                                     label={t("documents.headers.reference")}
