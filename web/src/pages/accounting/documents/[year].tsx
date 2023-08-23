@@ -12,7 +12,7 @@ import {useForm} from "react-hook-form";
 import InputText from "@/components/forms/InputText";
 import {Popup} from "@/components/Pops";
 import InputDate from "@/components/forms/InputDate";
-import {format, formatISO, parse, parseISO, set} from "date-fns";
+import {format, formatISO, parse, parseISO } from "date-fns";
 import Button from "@/components/forms/Button";
 import {postData} from "@/libs/http";
 import {formatAmount} from "@/libs/formats";
