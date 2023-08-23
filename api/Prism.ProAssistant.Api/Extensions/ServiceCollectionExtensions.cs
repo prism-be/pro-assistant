@@ -127,11 +127,11 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDomainAggregator<Forecast>, ForecastAggregator>();
         services.AddTransient<IDomainAggregator<AccountingDocument>, AccountingDocumentAggregator>();
 
-        services.AddHostedService<DomainEventServiceBusListener<Contact>>();
-        services.AddTransient<RefreshAppointmentWhenContactChange>();
-        services.AddTransient<RefreshAppointmentWhenTariffChange>();
-        services.AddTransient<ProjectAccountingPeriodWhenAccountingDocumentUpdated>();
-        services.AddTransient<ProjectAccountingPeriodWhenAppointmentUpdated>();
+        // services.AddHostedService<DomainEventServiceBusListener<Contact>>();
+        // services.AddTransient<RefreshAppointmentWhenContactChange>();
+        // services.AddTransient<RefreshAppointmentWhenTariffChange>();
+        // services.AddTransient<ProjectAccountingPeriodWhenAccountingDocumentUpdated>();
+        // services.AddTransient<ProjectAccountingPeriodWhenAppointmentUpdated>();
 
         QuestPDF.Settings.License = LicenseType.Community;
     }

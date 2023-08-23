@@ -11,6 +11,19 @@ resource serviceBus 'Microsoft.ServiceBus/namespaces@2022-10-01-preview' = {
   }
 }
 
+resource serviceBusQueueUpdateAccountingDocument 'Microsoft.ServiceBus/namespaces/queues@2022-01-01-preview' = {
+  parent: serviceBus
+  name: 'domain~events~accounting-document'
+  properties: {
+    lockDuration: 'PT5M'
+    maxSizeInMegabytes: 1024
+    requiresDuplicateDetection: false
+    requiresSession: false
+    deadLetteringOnMessageExpiration: true
+    maxDeliveryCount: 10
+  }
+}
+
 resource serviceBusQueueUpdateAccountingForecast 'Microsoft.ServiceBus/namespaces/queues@2022-01-01-preview' = {
   parent: serviceBus
   name: 'domain~events~accounting-forecast'

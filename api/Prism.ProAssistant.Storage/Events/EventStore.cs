@@ -1,6 +1,7 @@
 ﻿namespace Prism.ProAssistant.Storage.Events;
 
 using Core;
+using Core.Attributes;
 using Domain;
 using Infrastructure.Authentication;
 using Infrastructure.Providers;
@@ -50,7 +51,9 @@ public class EventStore : IEventStore, IHydrator
             CurrentState = item
         };
         
-        await _publisher.PublishAsync("domain/events", context);
+        var collectionName = CollectionAttribute.GetCollectionName<T>();
+        
+        await _publisher.PublishAsync("domain/events/" + collectionName, context);
 
         return new UpsertResult(eventData.StreamId);
     }
