@@ -8,6 +8,7 @@ using Domain;
 using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Contacts;
 using Domain.DayToDay.Contacts.Events;
+using FluentAssertions;
 using Infrastructure.Authentication;
 using Infrastructure.Providers;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,44 @@ using Storage.Events;
 
 public class DomainEventServiceBusListenerTests
 {
+    [Fact]
+    public void Listeners_Tests()
+    {
+        // Arrange
+        var services = new ServiceCollection();
+        services.AddSingleton(new UserOrganization
+        {
+            Id = Identifier.GenerateString(),
+            Organization = Identifier.GenerateString()
+        });
+        
+        services.AddTransient<RefreshAppointmentWhenContactChange>();
+        services.AddLogging();
+        var serviceProvider = services.BuildServiceProvider();
+        
+        var serviceBusClient = new Mock<ServiceBusClient>();
+
+        // Act
+        var accountingDocumentEventServiceBusListener = new AccountingDocumentEventServiceBusListener(serviceBusClient.Object, serviceProvider);
+        var accountingForecastEventServiceBusListener = new AccountingForecastEventServiceBusListener(serviceBusClient.Object, serviceProvider);
+        var accountingReportingPeriodEventServiceBusListener = new AccountingReportingPeriodEventServiceBusListener(serviceBusClient.Object, serviceProvider);
+        var appointmentEventServiceBusListener = new AppointmentEventServiceBusListener(serviceBusClient.Object, serviceProvider);
+        var contactEventServiceBusListener = new ContactEventServiceBusListener(serviceBusClient.Object, serviceProvider);
+        var documentConfigurationEventServiceBusListener = new DocumentConfigurationEventServiceBusListener(serviceBusClient.Object, serviceProvider);
+        var settingsEventServiceBusListener = new SettingsEventServiceBusListener(serviceBusClient.Object, serviceProvider);
+        var tariffEventServiceBusListener = new TariffEventServiceBusListener(serviceBusClient.Object, serviceProvider);
+
+        // Assert
+        accountingDocumentEventServiceBusListener.Should().NotBeNull();
+        accountingForecastEventServiceBusListener.Should().NotBeNull();
+        accountingReportingPeriodEventServiceBusListener.Should().NotBeNull();
+        appointmentEventServiceBusListener.Should().NotBeNull();
+        contactEventServiceBusListener.Should().NotBeNull();
+        documentConfigurationEventServiceBusListener.Should().NotBeNull();
+        settingsEventServiceBusListener.Should().NotBeNull();
+        tariffEventServiceBusListener.Should().NotBeNull();
+    }
+    
     [Fact]
     public async Task Execute_Ok()
     {
