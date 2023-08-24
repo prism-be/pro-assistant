@@ -47,7 +47,8 @@ public class RefreshAppointmentWhenTariffChangeTests
             CurrentState = new Tariff
             {
                 Id = @event.Tariff.Id,
-                Name = Identifier.GenerateString()
+                Name = Identifier.GenerateString(),
+                BackgroundColor = Identifier.GenerateString()
             },
             Context = new UserOrganization()
         };
