@@ -26,7 +26,7 @@ const Reporting: NextPage = () => {
         datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
 
         for (let period of datas) {
-            period.details = period.details.sort((a, b) => a.type.localeCompare(b.type) || a.unitPrice - b.unitPrice);
+            period.details = period.details.sort((a, b) => a.type?.localeCompare(b?.type ?? "") || a.unitPrice - b.unitPrice);
         }
 
         return datas;
@@ -74,7 +74,7 @@ const Reporting: NextPage = () => {
 
     function getType(detail: IncomeDetail) {
         
-        if (detail.category?.length > 0) {
+        if (detail.category?.length) {
             return detail.category;
         }
         

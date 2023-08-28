@@ -145,12 +145,12 @@ const Documents: NextPage = () => {
         }
     }
     
-    const titleSuggestions = useMemo(() => {
-        return documents?.map((document) => document.title).filter(onlyUnique) ?? [];
+    const titleSuggestions = useMemo<string[]>(() => {
+        return (documents?.map((document) => document.title).filter(onlyUnique) ?? []) as string[];
     }, [documents]);
     
-    const categorySuggestions = useMemo(() => {
-        return documents?.map((document) => document.category).filter(onlyUnique) ?? [];
+    const categorySuggestions = useMemo<string[]>(() => {
+        return (documents?.map((document) => document.category).filter(onlyUnique) ?? []) as string[];
     }, [documents]);
 
     return <ContentContainer>
