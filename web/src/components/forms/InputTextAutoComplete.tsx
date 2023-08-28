@@ -51,10 +51,10 @@ const InputTextAutoComplete = ({
             return;
         }
 
-        let foundSuggestions = suggestions?.filter((s) => s.toUpperCase().startsWith(text.toUpperCase()));
-        console.log(foundSuggestions);
-
+        let foundSuggestions = suggestions?.filter((s) => s?.toUpperCase().startsWith(text.toUpperCase()));
         foundSuggestions = foundSuggestions?.filter(onlyUnique);
+        
+        foundSuggestions?.sort((a, b) => a.localeCompare(b));
 
         if (foundSuggestions?.length == 1 && foundSuggestions[0].toUpperCase() === text.toUpperCase())
         {

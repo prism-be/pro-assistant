@@ -61,6 +61,7 @@ const Documents: NextPage = () => {
         setValue("amount", 0);
         setValue("documentNumberChoice", "generate")
         setValue("documentNumber", nextNumber?.number);
+        setValue("category", "");
         setDisplayDocumentNumber(true);
         setEditing(true);
     }
@@ -105,6 +106,7 @@ const Documents: NextPage = () => {
         setValue("date", format(parseISO(document.date), "dd/MM/yyyy"));
         setValue("title", document.title);
         setValue("reference", document.reference);
+        setValue("category", document.category);
 
         setValue("amount", formatAmount(Math.abs(document.amount)));
         if (document.amount > 0) {
@@ -145,6 +147,10 @@ const Documents: NextPage = () => {
     
     const titleSuggestions = useMemo(() => {
         return documents?.map((document) => document.title).filter(onlyUnique) ?? [];
+    }, [documents]);
+    
+    const categorySuggestions = useMemo(() => {
+        return documents?.map((document) => document.category).filter(onlyUnique) ?? [];
     }, [documents]);
 
     return <ContentContainer>
@@ -242,6 +248,17 @@ const Documents: NextPage = () => {
                                     error={errors.documentNumber}
                                 />
                             </div>}
+                            <div className={"col-span-2"}>
+                                <InputTextAutoComplete
+                                    label={t("documents.headers.category")}
+                                    name={"category"}
+                                    type={"text"}
+                                    register={register}
+                                    setValue={setValue}
+                                    error={errors.title}
+                                    suggestions={categorySuggestions}
+                                />
+                            </div>
                             <Button
                                 text={t("common:actions.cancel")}
                                 onClick={() => setEditing(false)}
@@ -270,8 +287,9 @@ const Documents: NextPage = () => {
             </div>
 
             <div className={"grid grid-cols-12 gap-2 mt-4"}>
-                <div className={"font-bold col-span-8"}>{t("documents.headers.title")}</div>
+                <div className={"font-bold col-span-7"}>{t("documents.headers.title")}</div>
                 <div className={"font-bold col-span-1"}>{t("documents.headers.type")}</div>
+                <div className={"font-bold col-span-1"}>{t("documents.headers.category")}</div>
                 <div className={"font-bold col-span-1 text-center"}>{t("documents.headers.reference")}</div>
                 <div className={"font-bold col-span-1 text-center"}>{t("documents.headers.number")}</div>
                 <div className={"font-bold col-span-1 text-right"}>{t("documents.headers.amount")}</div>
@@ -286,7 +304,7 @@ const Documents: NextPage = () => {
             <>
                 {sortedDocuments?.map((document) => <div key={document.id}
                                                          className={"grid grid-cols-12 gap-2" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
-                    <div className={"col-span-8 flex"}>
+                    <div className={"col-span-7 flex"}>
                         <a className={"w-6 cursor-pointer"} onClick={() => startEditing(document)}>
                             {" "}
                             <PencilSquareIcon/>{" "}
@@ -301,6 +319,7 @@ const Documents: NextPage = () => {
                         </div>
                     </div>
                     <div className={"col-span-1"}>{getDocumentType(document)}</div>
+                    <div className={"col-span-1"}>{document.category}</div>
                     <div className={"col-span-1 text-center"}>{document.reference}</div>
                     <div className={"col-span-1 text-center"}>{document.documentNumber}</div>
                     <div className={"col-span-1 text-right"}>{formatAmount(document.amount)} &euro;</div>
