@@ -23,7 +23,7 @@
       "type": "Type",
       "count": "Nombre",
       "total": "Total",
-      "unitPrice": "Prix unitaire"
+      "unitPrice": "Prix unitaire"      
     },
     "period": "Période"
   },
@@ -36,7 +36,8 @@
       "title": "Titre",
       "amount": "Montant",
       "reference": "Référence",
-      "number": "Numéro"
+      "number": "Numéro",
+      "category": "Catégorie"
     },
     "types": {
       "income": "Entrée",

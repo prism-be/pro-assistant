@@ -12,11 +12,12 @@
 
 export interface AccountingDocument {
     amount: number;
+    category?: string | null;
     date: string;
-    id: string;
-    reference: string;
-    title: string;
     documentNumber?: number | null;
+    id: string;
+    reference?: string | null;
+    title?: string | null;
 }
 
 export interface AccountingReportingPeriod {
@@ -160,8 +161,9 @@ export interface IncomeDetail {
     id: string;
     count: number;
     subTotal: number;
-    type: string;
+    type?: string | null;
     unitPrice: number;
+    category?: string | null;
 }
 
 export interface NextNumber {

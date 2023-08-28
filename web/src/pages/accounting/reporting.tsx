@@ -4,7 +4,7 @@ import ContentContainer from "@/components/design/ContentContainer";
 import Section from "@/components/design/Section";
 import useSWR from "swr";
 import React, {useMemo, useState} from "react";
-import {AccountingReportingPeriod} from "@/libs/models";
+import {AccountingReportingPeriod, IncomeDetail} from "@/libs/models";
 import {formatAmount, formatIsoMonth} from "@/libs/formats";
 import {parseISO} from "date-fns";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
@@ -26,7 +26,7 @@ const Reporting: NextPage = () => {
         datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
 
         for (let period of datas) {
-            period.details = period.details.sort((a, b) => a.type.localeCompare(b.type) || a.unitPrice - b.unitPrice);
+            period.details = period.details.sort((a, b) => a.type?.localeCompare(b?.type ?? "") || a.unitPrice - b.unitPrice);
         }
 
         return datas;
@@ -72,8 +72,13 @@ const Reporting: NextPage = () => {
 
     }, [currentPeriod]);
 
-    function getType(type: string) {
-        switch (type) {
+    function getType(detail: IncomeDetail) {
+        
+        if (detail.category?.length) {
+            return detail.category;
+        }
+        
+        switch (detail.type) {
             case "appointment":
                 return t("reporting.details.appointments");
             case "document-expense":
@@ -83,7 +88,7 @@ const Reporting: NextPage = () => {
                 
         }
 
-        return type;
+        return detail.type;
     }
 
     return <ContentContainer>
@@ -123,7 +128,7 @@ const Reporting: NextPage = () => {
                             <>
                                 {period.details.map((detail) => <React.Fragment key={detail.id}>
                                     <div>
-                                        {getType(detail.type)}
+                                        {getType(detail)}
                                     </div>
                                     <div className={"text-right"}>
                                         {formatAmount(detail.unitPrice)} &euro;

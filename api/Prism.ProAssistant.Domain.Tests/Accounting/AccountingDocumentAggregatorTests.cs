@@ -25,7 +25,10 @@ public class AccountingDocumentAggregatorTests
                 Id = streamId,
                 Amount = 100,
                 Date = DateTime.UtcNow,
-                Title = "Title"
+                Title = "Title",
+                DocumentNumber = 42,
+                Reference = Identifier.GenerateString(),
+                Category = "unit-tests"
             }
         };
 
@@ -37,7 +40,10 @@ public class AccountingDocumentAggregatorTests
                 Id = streamId,
                 Amount = 200,
                 Date = DateTime.UtcNow,
-                Title = "Title"
+                Title = "Title",
+                DocumentNumber = 42,
+                Reference = Identifier.GenerateString(),
+                Category = "unit-tests-2"
             }
         };
 
@@ -50,10 +56,19 @@ public class AccountingDocumentAggregatorTests
         Assert.NotNull(aggregator.State);
         Assert.Equal(accountingDocumentCreated.Document.Amount, aggregator.State!.Amount);
         Assert.Equal(accountingDocumentCreated.Document.Date, aggregator.State!.Date);
+        Assert.Equal(accountingDocumentCreated.Document.Title, aggregator.State!.Title);
+        Assert.Equal(accountingDocumentCreated.Document.DocumentNumber, aggregator.State!.DocumentNumber);
+        Assert.Equal(accountingDocumentCreated.Document.Reference, aggregator.State!.Reference);
+        Assert.Equal(accountingDocumentCreated.Document.Category, aggregator.State!.Category);
 
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, accountingDocumentUpdated));
         Assert.NotNull(aggregator.State);
         Assert.Equal(accountingDocumentUpdated.Document.Amount, aggregator.State!.Amount);
+        Assert.Equal(accountingDocumentUpdated.Document.Date, aggregator.State!.Date);
+        Assert.Equal(accountingDocumentUpdated.Document.Title, aggregator.State!.Title);
+        Assert.Equal(accountingDocumentUpdated.Document.DocumentNumber, aggregator.State!.DocumentNumber);
+        Assert.Equal(accountingDocumentUpdated.Document.Reference, aggregator.State!.Reference);
+        Assert.Equal(accountingDocumentUpdated.Document.Category, aggregator.State!.Category);
 
         await aggregator.When(DomainEvent.FromEvent(streamId, userId, accountingDocumentDeleted));
         Assert.Null(aggregator.State);

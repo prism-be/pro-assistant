@@ -9,6 +9,9 @@ public class AccountingDocument
     [JsonPropertyName("amount")]
     public decimal Amount { get; set; }
 
+    [JsonPropertyName("category")]
+    public string? Category { get; set; }
+
     [JsonPropertyName("date")]
     public DateTime Date { get; set; }
 

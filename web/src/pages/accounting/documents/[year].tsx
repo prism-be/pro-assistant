@@ -18,6 +18,8 @@ import {postData} from "@/libs/http";
 import {formatAmount} from "@/libs/formats";
 import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
 import InputSelect from "@/components/forms/InputSelect";
+import InputTextAutoComplete from "@/components/forms/InputTextAutoComplete";
+import {onlyUnique} from "@/libs/text";
 
 const Documents: NextPage = () => {
     const {t} = useTranslation("accounting");
@@ -40,9 +42,8 @@ const Documents: NextPage = () => {
     const [selectedDocument, setSelectedDocument] = useState<AccountingDocument | null>(null);
     const [editing, setEditing] = useState<boolean>(false);
     const [displayDocumentNumber, setDisplayDocumentNumber] = useState<boolean>(false);
-    const [suggestions, setSuggestions] = useState<string[]>([]);
 
-    const {register, getValues, setValue, handleSubmit, formState: {errors}} = useForm();
+    const {register, setValue, handleSubmit, formState: {errors}} = useForm();
 
     async function setYear(delta: number) {
         let year = parseInt(router.query.year as string);
@@ -60,8 +61,8 @@ const Documents: NextPage = () => {
         setValue("amount", 0);
         setValue("documentNumberChoice", "generate")
         setValue("documentNumber", nextNumber?.number);
+        setValue("category", "");
         setDisplayDocumentNumber(true);
-        setSuggestions([]);
         setEditing(true);
     }
 
@@ -105,6 +106,7 @@ const Documents: NextPage = () => {
         setValue("date", format(parseISO(document.date), "dd/MM/yyyy"));
         setValue("title", document.title);
         setValue("reference", document.reference);
+        setValue("category", document.category);
 
         setValue("amount", formatAmount(Math.abs(document.amount)));
         if (document.amount > 0) {
@@ -123,7 +125,6 @@ const Documents: NextPage = () => {
             setDisplayDocumentNumber(false);
         }
 
-        setSuggestions([]);
         setEditing(true);
     }
 
@@ -143,32 +144,14 @@ const Documents: NextPage = () => {
             setDisplayDocumentNumber(false);
         }
     }
-
-    function onlyUnique(value: any, index: any, array: string | any[]) {
-        return array.indexOf(value) === index;
-      }
-
-    function suggestTitle() {
-        const title = getValues().title;
-
-        if (title.length < 3) {
-            setSuggestions([]);
-            return;
-        }
-
-        let foundSuggestions = documents?.filter((document) => document.title.toUpperCase().startsWith(title.toUpperCase())).map((document) => document.title);
-            console.log(foundSuggestions);
-
-        foundSuggestions = foundSuggestions?.filter(onlyUnique);
-
-        if (foundSuggestions?.length == 1 && foundSuggestions[0].toUpperCase() === title.toUpperCase())
-        {
-            setSuggestions([]);
-            return;
-        }
-
-        setSuggestions(foundSuggestions ?? []);
-    }
+    
+    const titleSuggestions = useMemo<string[]>(() => {
+        return (documents?.map((document) => document.title).filter(onlyUnique) ?? []) as string[];
+    }, [documents]);
+    
+    const categorySuggestions = useMemo<string[]>(() => {
+        return (documents?.map((document) => document.category).filter(onlyUnique) ?? []) as string[];
+    }, [documents]);
 
     return <ContentContainer>
         <Section>
@@ -194,7 +177,7 @@ const Documents: NextPage = () => {
                                 />
                             </div>
                             <div className={"col-span-2"}>
-                                <InputText
+                                <InputTextAutoComplete
                                     label={t("documents.headers.title")}
                                     name={"title"}
                                     type={"text"}
@@ -202,19 +185,9 @@ const Documents: NextPage = () => {
                                     register={register}
                                     setValue={setValue}
                                     error={errors.title}
-                                    onChange={() => { suggestTitle(); }}
+                                    suggestions={titleSuggestions}
                                 />
                             </div>
-                            <>
-                                {suggestions.length > 0 && <div className={"col-span-2"}>
-                                    <div className={"bg-gray-100 p-1"}>
-                                        {suggestions.map((suggestion) => <div key={suggestion} className={"cursor-pointer hover:bg-gray-200 p-1"}
-                                                                               onClick={() => { setValue("title", suggestion); setSuggestions([]); }}>
-                                            {suggestion}
-                                        </div>)}
-                                    </div>
-                                </div>}
-                            </>
                             <div className={"col-span-2"}>
                                 <InputText
                                     label={t("documents.headers.reference")}
@@ -275,6 +248,17 @@ const Documents: NextPage = () => {
                                     error={errors.documentNumber}
                                 />
                             </div>}
+                            <div className={"col-span-2"}>
+                                <InputTextAutoComplete
+                                    label={t("documents.headers.category")}
+                                    name={"category"}
+                                    type={"text"}
+                                    register={register}
+                                    setValue={setValue}
+                                    error={errors.title}
+                                    suggestions={categorySuggestions}
+                                />
+                            </div>
                             <Button
                                 text={t("common:actions.cancel")}
                                 onClick={() => setEditing(false)}
@@ -303,8 +287,9 @@ const Documents: NextPage = () => {
             </div>
 
             <div className={"grid grid-cols-12 gap-2 mt-4"}>
-                <div className={"font-bold col-span-8"}>{t("documents.headers.title")}</div>
+                <div className={"font-bold col-span-7"}>{t("documents.headers.title")}</div>
                 <div className={"font-bold col-span-1"}>{t("documents.headers.type")}</div>
+                <div className={"font-bold col-span-1"}>{t("documents.headers.category")}</div>
                 <div className={"font-bold col-span-1 text-center"}>{t("documents.headers.reference")}</div>
                 <div className={"font-bold col-span-1 text-center"}>{t("documents.headers.number")}</div>
                 <div className={"font-bold col-span-1 text-right"}>{t("documents.headers.amount")}</div>
@@ -319,7 +304,7 @@ const Documents: NextPage = () => {
             <>
                 {sortedDocuments?.map((document) => <div key={document.id}
                                                          className={"grid grid-cols-12 gap-2" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
-                    <div className={"col-span-8 flex"}>
+                    <div className={"col-span-7 flex"}>
                         <a className={"w-6 cursor-pointer"} onClick={() => startEditing(document)}>
                             {" "}
                             <PencilSquareIcon/>{" "}
@@ -334,6 +319,7 @@ const Documents: NextPage = () => {
                         </div>
                     </div>
                     <div className={"col-span-1"}>{getDocumentType(document)}</div>
+                    <div className={"col-span-1"}>{document.category}</div>
                     <div className={"col-span-1 text-center"}>{document.reference}</div>
                     <div className={"col-span-1 text-center"}>{document.documentNumber}</div>
                     <div className={"col-span-1 text-right"}>{formatAmount(document.amount)} &euro;</div>
