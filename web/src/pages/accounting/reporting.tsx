@@ -26,7 +26,7 @@ const Reporting: NextPage = () => {
         datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
 
         for (let period of datas) {
-            period.details = period.details.sort((a, b) => a.type?.localeCompare(b?.type ?? "") || a.unitPrice - b.unitPrice);
+            period.details = period.details.sort((a, b) => a.type?.localeCompare(b?.type ?? "") || a.category?.localeCompare(b?.category ?? "") || a.unitPrice - b.unitPrice);
         }
 
         return datas;
