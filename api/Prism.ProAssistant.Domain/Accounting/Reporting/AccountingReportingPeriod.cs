@@ -45,4 +45,7 @@ public class IncomeDetail
 
     [JsonPropertyName("unitPrice")]
     public decimal UnitPrice { get; set; }
+
+    [JsonPropertyName("category")]
+    public string? Category { get; set; }
 }

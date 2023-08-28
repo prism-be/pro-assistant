@@ -14,7 +14,7 @@ public static class AccountingReportingPeriodProjection
                 continue;
             }
 
-            var detail = period.Details.FirstOrDefault(x => x.Type == "appointment" && x.UnitPrice == appointment.Price);
+            var detail = period.Details.Find(x => x.Type == "appointment" && x.UnitPrice == appointment.Price);
             if (detail == null)
             {
                 detail = new IncomeDetail
@@ -41,12 +41,13 @@ public static class AccountingReportingPeriodProjection
             if (document.Amount > 0)
             {
                 period.Income += document.Amount;
-                var detail = period.Details.FirstOrDefault(x => x.Type == "document-income");
+                var detail = period.Details.Find(x => x.Type == "document-income" && x.Category == document.Category);
                 if (detail == null)
                 {
                     detail = new IncomeDetail
                     {
                         Type = "document-income",
+                        Category = document.Category,
                         UnitPrice = 0,
                         Count = 0,
                         SubTotal = 0
@@ -61,12 +62,13 @@ public static class AccountingReportingPeriodProjection
             else
             {
                 period.Expense += Math.Abs(document.Amount);
-                var detail = period.Details.FirstOrDefault(x => x.Type == "document-expense");
+                var detail = period.Details.Find(x => x.Type == "document-expense" && x.Category == document.Category);
                 if (detail == null)
                 {
                     detail = new IncomeDetail
                     {
                         Type = "document-expense",
+                        Category = document.Category,
                         UnitPrice = 0,
                         Count = 0,
                         SubTotal = 0
@@ -85,7 +87,7 @@ public static class AccountingReportingPeriodProjection
     {
         var appointmentsEnumerated = appointments.ToList();
         var firstAppointmentDate = appointmentsEnumerated.MinBy(x => x.StartDate)?.StartDate ?? DateTime.Now;
-        var startDate = new DateTime(firstAppointmentDate.Year, firstAppointmentDate.Month, 1);
+        var startDate = new DateTime(firstAppointmentDate.Year, firstAppointmentDate.Month, 1, 0, 0, 0, DateTimeKind.Utc);
 
         var endDate = periodType switch
         {
