@@ -27,6 +27,7 @@ using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Contacts;
 using Microsoft.Extensions.Azure;
 using QuestPDF.Infrastructure;
+using Services.Listeners;
 using Storage.Effects;
 
 public static class ServiceCollectionExtensions
@@ -127,7 +128,15 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IDomainAggregator<Forecast>, ForecastAggregator>();
         services.AddTransient<IDomainAggregator<AccountingDocument>, AccountingDocumentAggregator>();
 
-        services.AddHostedService<DomainEventServiceBusListener>();
+        services.AddHostedService<AccountingDocumentEventServiceBusListener>();
+        services.AddHostedService<AccountingForecastEventServiceBusListener>();
+        services.AddHostedService<AccountingReportingPeriodEventServiceBusListener>();
+        services.AddHostedService<AppointmentEventServiceBusListener>();
+        services.AddHostedService<ContactEventServiceBusListener>();
+        services.AddHostedService<DocumentConfigurationEventServiceBusListener>();
+        services.AddHostedService<SettingsEventServiceBusListener>();
+        services.AddHostedService<TariffEventServiceBusListener>();
+        
         services.AddTransient<RefreshAppointmentWhenContactChange>();
         services.AddTransient<RefreshAppointmentWhenTariffChange>();
         services.AddTransient<ProjectAccountingPeriodWhenAccountingDocumentUpdated>();

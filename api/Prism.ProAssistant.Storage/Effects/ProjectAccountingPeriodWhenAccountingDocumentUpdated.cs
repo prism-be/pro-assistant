@@ -1,14 +1,12 @@
 ﻿namespace Prism.ProAssistant.Storage.Effects;
 
 using Core.Attributes;
-using Domain;
-using Domain.Accounting.Document.Events;
+using Domain.Accounting.Document;
+using Events;
 using Infrastructure.Providers;
 using Microsoft.Extensions.Logging;
 
-[SideEffect(typeof(AccountingDocumentCreated))]
-[SideEffect(typeof(AccountingDocumentUpdated))]
-[SideEffect(typeof(AccountingDocumentDeleted))]
+[SideEffect(typeof(AccountingDocument))]
 public class ProjectAccountingPeriodWhenAccountingDocumentUpdated
 {
     private readonly ILogger<ProjectAccountingPeriodWhenAccountingDocumentUpdated> _logger;
@@ -22,25 +20,24 @@ public class ProjectAccountingPeriodWhenAccountingDocumentUpdated
         _stateProvider = stateProvider;
     }
 
-    public async Task Handle(DomainEvent @event)
+    public async Task Handle(EventContext<AccountingDocument> context)
     {
-        _logger.LogInformation("Projecting accounting period from change on document {AccountingDocumentId}", @event.StreamId);
+        _logger.LogInformation("Projecting accounting period from change on document {AccountingDocumentId}", context.Event.StreamId);
 
-        DateTime startPeriod;
-        var document = @event.ToEvent<AccountingDocumentUpdated>().Document;
+        if (context.CurrentState != null)
+        {
+            await Project(context.CurrentState);
+        }
 
-        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
-        if (document != null)
+        if (context.PreviousState != null)
         {
-            startPeriod = new DateTime(document.Date.Year, document.Date.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            await Project(context.PreviousState);
         }
-        else
-        {
-            var date = @event.ToEvent<AccountingDocumentDeleted>().Date;
-            startPeriod = new DateTime(date.Year, date.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        }
-        
-        
+    }
+
+    private async Task Project(AccountingDocument document)
+    {
+        var startPeriod = new DateTime(document.Date.Year, document.Date.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var endPeriod = startPeriod.AddMonths(1);
 
         await ProjectAccountingPeriodBase.Project(startPeriod, endPeriod, _queryService, _stateProvider);

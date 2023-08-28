@@ -12,15 +12,15 @@ public class AccountingDocument
     [JsonPropertyName("date")]
     public DateTime Date { get; set; }
 
+    [JsonPropertyName("documentNumber")]
+    public int? DocumentNumber { get; set; }
+
     [JsonPropertyName("id")]
     public required string Id { get; set; }
 
     [JsonPropertyName("reference")]
-    public string Reference { get; set; }
+    public string? Reference { get; set; }
 
     [JsonPropertyName("title")]
-    public string Title { get; set; }
-
-    [JsonPropertyName("documentNumber")]
-    public int? DocumentNumber { get; set; }
+    public string? Title { get; set; }
 }

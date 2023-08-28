@@ -1,17 +1,12 @@
 ﻿namespace Prism.ProAssistant.Storage.Effects;
 
 using Core.Attributes;
-using Domain;
-using Domain.Accounting.Document;
-using Domain.Accounting.Reporting;
 using Domain.DayToDay.Appointments;
-using Domain.DayToDay.Appointments.Events;
+using Events;
 using Infrastructure.Providers;
 using Microsoft.Extensions.Logging;
 
-[SideEffect(typeof(AppointmentCreated))]
-[SideEffect(typeof(AppointmentUpdated))]
-[SideEffect(typeof(AppointmentClosed))]
+[SideEffect(typeof(Appointment))]
 public class ProjectAccountingPeriodWhenAppointmentUpdated
 {
     private readonly ILogger<ProjectAccountingPeriodWhenAppointmentUpdated> _logger;
@@ -25,14 +20,26 @@ public class ProjectAccountingPeriodWhenAppointmentUpdated
         _stateProvider = stateProvider;
     }
 
-    public async Task Handle(DomainEvent @event)
+    public async Task Handle(EventContext<Appointment> context)
     {
-        var appointment = await _queryService.SingleAsync<Appointment>(@event.StreamId);
-        _logger.LogInformation("Projecting accounting period from change on appointment {AppointmentId}", appointment.Id);
+        _logger.LogInformation("Projecting accounting period from change on appointment {AppointmentId}", context.Event.StreamId);
 
-        var startPeriod = new DateTime(appointment.StartDate.Year, appointment.StartDate.Month, 1);
+        if (context.CurrentState != null)
+        {
+            await Project(context.CurrentState);
+        }
+
+        if (context.PreviousState != null)
+        {
+            await Project(context.PreviousState);
+        }
+    }
+
+    private async Task Project(Appointment appointment)
+    {
+        var startPeriod = new DateTime(appointment.StartDate.Year, appointment.StartDate.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         var endPeriod = startPeriod.AddMonths(1);
 
-        ProjectAccountingPeriodBase.Project(startPeriod, endPeriod, _queryService, _stateProvider);
+        await ProjectAccountingPeriodBase.Project(startPeriod, endPeriod, _queryService, _stateProvider);
     }
 }

@@ -35,10 +35,22 @@ public class RefreshAppointmentWhenContactChangeTests
             {
                 Identifier.GenerateString()
             });
+        
+        var context = new EventContext<Contact>
+        {
+            Event = DomainEvent.FromEvent(@event.StreamId,
+                Identifier.GenerateString(),
+                @event),
+            CurrentState = new Contact
+            {
+                Id = @event.Contact.Id
+            },
+            Context = new UserOrganization()
+        };
 
         // Act
         var effect = new RefreshAppointmentWhenContactChange(logger.Object, queryService.Object, eventStore.Object);
-        await effect.Handle(DomainEvent.FromEvent(@event.StreamId, Identifier.GenerateString(), @event));
+        await effect.Handle(context);
 
         // Assert
         eventStore.Verify(x => x.Persist<Appointment>(It.IsAny<string>()), Times.Once);

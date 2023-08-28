@@ -20,13 +20,18 @@ public class CollectionAttribute : Attribute
     
     public static string GetCollectionName<T>()
     {
-        var name = (typeof(T).GetCustomAttributes(typeof(CollectionAttribute), true)
+        return GetCollectionName(typeof(T));
+    }
+    
+    public static string GetCollectionName(Type type)
+    {
+        var name = (type.GetCustomAttributes(typeof(CollectionAttribute), true)
                 .FirstOrDefault()
             as CollectionAttribute)?.CollectionName;
 
         if (string.IsNullOrWhiteSpace(name))
         {
-            throw new MissingConfigurationException("The collection name is not specified", typeof(T).FullName);
+            throw new MissingConfigurationException("The collection name is not specified", type.FullName);
         }
 
         return name;

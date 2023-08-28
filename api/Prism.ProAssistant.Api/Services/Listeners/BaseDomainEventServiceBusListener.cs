@@ -1,4 +1,4 @@
-﻿namespace Prism.ProAssistant.Api.Services;
+﻿namespace Prism.ProAssistant.Api.Services.Listeners;
 
 using System.Reflection;
 using Azure.Messaging.ServiceBus;
@@ -7,17 +7,20 @@ using Infrastructure.Authentication;
 using Storage;
 using Storage.Events;
 
-public class DomainEventServiceBusListener : BackgroundService
+public class BaseDomainEventServiceBusListener<T> : BackgroundService
 {
     private readonly Dictionary<string, List<Type>> _effects = new();
 
     private readonly ServiceBusReceiver _receiver;
     private readonly IServiceProvider _serviceProvider;
 
-    public DomainEventServiceBusListener(ServiceBusClient serviceBusClient, IServiceProvider serviceProvider)
+    public BaseDomainEventServiceBusListener(ServiceBusClient serviceBusClient, IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
-        _receiver = serviceBusClient.CreateReceiver("domain/events");
+
+        var collectionName = CollectionAttribute.GetCollectionName<T>();
+
+        _receiver = serviceBusClient.CreateReceiver("domain/events/" + collectionName);
 
         BuildEffectList();
     }
@@ -31,11 +34,12 @@ public class DomainEventServiceBusListener : BackgroundService
         foreach (var type in types)
         {
             var effectAttributes = type.GetCustomAttributes<SideEffectAttribute>();
-            foreach (var effectAttribute in effectAttributes)
+
+            foreach (var effectAttributeKey in effectAttributes.Select(k => k.Key))
             {
-                var effects = _effects.TryGetValue(effectAttribute.Key, out var effect) ? effect : new List<Type>();
+                var effects = _effects.TryGetValue(effectAttributeKey, out var effect) ? effect : new List<Type>();
                 effects.Add(type);
-                _effects.Add(effectAttribute.Key, effects);
+                _effects.Add(effectAttributeKey, effects);
             }
         }
     }
@@ -51,7 +55,7 @@ public class DomainEventServiceBusListener : BackgroundService
                 continue;
             }
 
-            var data = message.Body.ToObjectFromJson<EventContext>();
+            var data = message.Body.ToObjectFromJson<EventContext<T>>();
 
             await ProcessMessage(data);
 
@@ -59,9 +63,9 @@ public class DomainEventServiceBusListener : BackgroundService
         }
     }
 
-    public async Task ProcessMessage(EventContext data)
+    public async Task ProcessMessage(EventContext<T> data)
     {
-        var key = $"{data.Event.StreamType}:{data.Event.Type}";
+        var key = CollectionAttribute.GetCollectionName<T>();
 
         if (_effects.TryGetValue(key, out var effectTypes))
         {
@@ -82,7 +86,7 @@ public class DomainEventServiceBusListener : BackgroundService
                     throw new NotSupportedException($"Effect {effectType.Name} does not have a Handle method");
                 }
 
-                tasks.Add((Task)method.Invoke(effect, new object[] { data.Event })!);
+                tasks.Add((Task)method.Invoke(effect, new object[] { data })!);
             }
 
             await Task.WhenAll(tasks);
