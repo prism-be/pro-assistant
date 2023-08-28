@@ -25,8 +25,7 @@ const Reporting: NextPage = () => {
         datas = datas.filter((period) => parseISO(period.startDate).getFullYear() === year);
         datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
 
-        for (let i = 0; i < datas.length; i++) {
-            const period = datas[i];
+        for (let period of datas) {
             period.details = period.details.sort((a, b) => a.type.localeCompare(b.type) || a.unitPrice - b.unitPrice);
         }
 
@@ -104,8 +103,10 @@ const Reporting: NextPage = () => {
                         <ArrowSmallRightIcon/>
                     </div>
                 </div>
-                <ReactApexChart options={graphData} series={graphData.series} type="bar" width={"100%"}
-                                height={500}/>
+                <div className={"print:hidden"}>
+                    <ReactApexChart options={graphData} series={graphData.series} type="bar" width={"100%"}
+                                    height={500}/>
+                </div>
             </>
         </Section>
         {graphData &&
@@ -135,6 +136,14 @@ const Reporting: NextPage = () => {
                                     </div>
                                 </React.Fragment>)}
                             </>
+                        </div>
+                        <div className={"grid grid-cols-4"}>
+                            <div />
+                            <div />
+                            <div />
+                            <div className={"text-right font-bold border-t"}>
+                                {formatAmount(period.income - period.expense)} &euro;
+                            </div>
                         </div>
                     </div>)}
                 </>
