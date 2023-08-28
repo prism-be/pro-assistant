@@ -303,7 +303,7 @@ const Documents: NextPage = () => {
             
             <>
                 {sortedDocuments?.map((document) => <div key={document.id}
-                                                         className={"grid grid-cols-12 gap-2" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
+                                                         className={"grid grid-cols-12 gap-2 hover:bg-gray-100" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
                     <div className={"col-span-7 flex"}>
                         <a className={"w-6 cursor-pointer"} onClick={() => startEditing(document)}>
                             {" "}
