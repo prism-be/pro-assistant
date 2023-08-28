@@ -28,7 +28,7 @@ public class RefreshAppointmentWhenTariffChange
             return;
         }
         
-        if (context.CurrentState?.BackgroundColor == context.PreviousState?.BackgroundColor)
+        if (context.CurrentState.BackgroundColor == context.PreviousState?.BackgroundColor)
         {
             return;
         }

@@ -5,5 +5,5 @@ using Core.Attributes;
 [StreamType(Streams.AccountingDocument)]
 public class AccountingDocumentCreated : BaseEvent
 {
-    public AccountingDocument Document { get; set; }
+    public required AccountingDocument Document { get; set; }
 }

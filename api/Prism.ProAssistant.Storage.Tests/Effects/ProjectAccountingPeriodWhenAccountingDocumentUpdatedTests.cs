@@ -31,7 +31,11 @@ public class ProjectAccountingPeriodWhenAccountingDocumentUpdatedTests
             Context = new UserOrganization(),
             Event = DomainEvent.FromEvent(id, Identifier.GenerateString(), new AccountingDocumentUpdated
             {
-                StreamId = id
+                StreamId = id,
+                Document = new AccountingDocument
+                {
+                    Id = id
+                }
             }),
             CurrentState = new AccountingDocument
             {
