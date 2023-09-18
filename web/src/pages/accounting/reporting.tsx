@@ -18,6 +18,7 @@ const Reporting: NextPage = () => {
 
     const periods = useSWR<AccountingReportingPeriod[]>("/data/accounting/reporting/periods");
     const [year, setYear] = useState<number>(new Date().getFullYear());
+    const [detailed, setDetailed] = useState<boolean>(true);
 
     const currentPeriod = useMemo(() => {
         let datas = periods.data ?? [];
@@ -26,8 +27,8 @@ const Reporting: NextPage = () => {
         datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
 
         for (let period of datas) {
-            period.details = period.details.sort((a, b) => a.type?.localeCompare(b?.type ?? "") || a.category?.localeCompare(b?.category ?? "") || a.unitPrice - b.unitPrice);
-        }
+            period.details = sortDetails(period.details);
+        }       
 
         return datas;
     }, [periods.data, year]);
@@ -70,7 +71,7 @@ const Reporting: NextPage = () => {
             ]
         } as ApexCharts.ApexOptions;
 
-    }, [currentPeriod]);
+    }, [currentPeriod, t]);
 
     function getType(detail: IncomeDetail) {
         
@@ -89,6 +90,34 @@ const Reporting: NextPage = () => {
         }
 
         return detail.type;
+    }
+
+    function sortDetails(details: IncomeDetail[]): IncomeDetail[] {
+        return details.sort((a, b) => (a.subTotal > 0 || b.subTotal > 0 ? b.subTotal - a.subTotal : a.subTotal - b.subTotal)
+        || (a.type?.localeCompare(b?.type ?? "") 
+        ?? (a.category?.localeCompare(b?.category ?? "")) ?? 0));
+    }
+    
+    function filterDetails(details: IncomeDetail[]): IncomeDetail[] {
+        if (details && detailed === false) {
+                details = details.reduce((acc, detail) => {
+                    const index = acc.findIndex((d) => d.type === detail.type && d.category === detail.category);
+    
+                    if (index === -1) {
+                        acc.push({...detail});
+                    } else {
+                        acc[index].count += detail.count;
+                        acc[index].subTotal += detail.subTotal;
+                        acc[index].unitPrice = acc[index].subTotal / acc[index].count;
+                    }
+    
+                    return acc;
+                }, [] as IncomeDetail[]);
+    
+                details = sortDetails(details);
+            }
+
+        return details;
     }
 
     return <ContentContainer>
@@ -117,6 +146,11 @@ const Reporting: NextPage = () => {
         {graphData &&
             <Section>
                 <h2>{t("reporting.details.title")}</h2>
+                <div className="text-right print:hidden">
+                    <button className={"btn btn-primary "} onClick={() => {setDetailed(!detailed); }}>
+                        {detailed ? t("reporting.details.hide") : t("reporting.details.show")}
+                    </button>
+                </div>
                 <>
                     {currentPeriod.map((period) => <div key={period.id} className={"pb-3"}>
                         <h3>{t("reporting.period")} : {formatIsoMonth(period.startDate)}</h3>
@@ -126,7 +160,7 @@ const Reporting: NextPage = () => {
                             <div className={"underline text-right"}>{t("reporting.details.count")}</div>
                             <div className={"underline text-right"}>{t("reporting.details.total")}</div>
                             <>
-                                {period.details.map((detail) => <React.Fragment key={detail.id}>
+                                {filterDetails(period.details).map((detail) => <React.Fragment key={detail.id}>
                                     <div>
                                         {getType(detail)}
                                     </div>
