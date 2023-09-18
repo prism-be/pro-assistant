@@ -10,6 +10,7 @@ import {parseISO} from "date-fns";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
 
 import dynamic from 'next/dynamic';
+import { Toggle } from "@/components/forms/Toggle";
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {ssr: false})
 
@@ -93,7 +94,7 @@ const Reporting: NextPage = () => {
     }
 
     function sortDetails(details: IncomeDetail[]): IncomeDetail[] {
-        return details.sort((a, b) => (a.subTotal > 0 || b.subTotal > 0 ? b.subTotal - a.subTotal : a.subTotal - b.subTotal)
+        return details.sort((a, b) => (a.unitPrice > 0 || b.unitPrice > 0 ? b.unitPrice - a.unitPrice : a.unitPrice - b.unitPrice)
         || (a.type?.localeCompare(b?.type ?? "") 
         ?? (a.category?.localeCompare(b?.category ?? "")) ?? 0));
     }
@@ -104,11 +105,12 @@ const Reporting: NextPage = () => {
                     const index = acc.findIndex((d) => d.type === detail.type && d.category === detail.category);
     
                     if (index === -1) {
+                        detail.count = 1;
+                        detail.unitPrice = detail.subTotal;
                         acc.push({...detail});
                     } else {
-                        acc[index].count += detail.count;
                         acc[index].subTotal += detail.subTotal;
-                        acc[index].unitPrice = acc[index].subTotal / acc[index].count;
+                        acc[index].unitPrice = acc[index].subTotal;
                     }
     
                     return acc;
@@ -147,9 +149,7 @@ const Reporting: NextPage = () => {
             <Section>
                 <h2>{t("reporting.details.title")}</h2>
                 <div className="text-right print:hidden">
-                    <button className={"btn btn-primary "} onClick={() => {setDetailed(!detailed); }}>
-                        {detailed ? t("reporting.details.hide") : t("reporting.details.show")}
-                    </button>
+                    <Toggle value={detailed} className={"ml-2"} text={t("reporting.details.show")} onChange={c => setDetailed(c)}/>
                 </div>
                 <>
                     {currentPeriod.map((period) => <div key={period.id} className={"pb-3"}>
