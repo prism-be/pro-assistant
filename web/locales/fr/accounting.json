@@ -23,7 +23,9 @@
       "type": "Type",
       "count": "Nombre",
       "total": "Total",
-      "unitPrice": "Prix unitaire"      
+      "unitPrice": "Prix unitaire",
+      "show": "Afficher les détails",
+      "hide": "Masquer les détails"
     },
     "period": "Période"
   },
