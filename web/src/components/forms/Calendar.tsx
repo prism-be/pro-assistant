@@ -73,7 +73,7 @@ export const Calendar = ({ value, onChange, className }: Props) => {
                 <div
                     key={formatISO(d)}
                     className={"text-center cursor-pointer " + getClass(d)}
-                    style={{ gridColumnStart: d.getDay() + 1 }}
+                    style={{ gridColumnStart: d.getDay() }}
                     onClick={() => {
                         onChange(d);
                         setDate(d);
