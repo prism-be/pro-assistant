@@ -2,8 +2,7 @@
 import {useTranslation} from "react-i18next";
 import ContentContainer from "@/components/design/ContentContainer";
 import Section from "@/components/design/Section";
-import useSWR from "swr";
-import React, {useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {AccountingReportingPeriod, IncomeDetail} from "@/libs/models";
 import {formatAmount, formatIsoMonth} from "@/libs/formats";
 import {parseISO} from "date-fns";
@@ -11,28 +10,57 @@ import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid
 
 import dynamic from 'next/dynamic';
 import { Toggle } from "@/components/forms/Toggle";
+import { getData } from "@/libs/http";
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {ssr: false})
 
 const Reporting: NextPage = () => {
     const {t} = useTranslation("accounting");
 
-    const periods = useSWR<AccountingReportingPeriod[]>("/data/accounting/reporting/periods");
     const [year, setYear] = useState<number>(new Date().getFullYear());
     const [detailed, setDetailed] = useState<boolean>(true);
+    const [currentPeriod, setCurrentPeriod] = useState<AccountingReportingPeriod[]>([]);
 
-    const currentPeriod = useMemo(() => {
-        let datas = periods.data ?? [];
+    const filterDetails = useCallback((details: IncomeDetail[]): IncomeDetail[] => {
+        if (details && detailed === false) {
+                details = details.reduce((acc, detail) => {
+                    const index = acc.findIndex((d) => d.type === detail.type && d.category === detail.category);
+    
+                    if (index === -1) {
+                        detail.count = 1;
+                        detail.unitPrice = detail.subTotal;
+                        acc.push({...detail});
+                    } else {
+                        acc[index].subTotal += detail.subTotal;
+                        acc[index].unitPrice = acc[index].subTotal;
+                    }
+    
+                    return acc;
+                }, [] as IncomeDetail[]);
+    
+                details = sortDetails(details);
+            }
+
+        return details;
+    }, [detailed]);
+    
+    const computeData = useCallback(async () => {
+        let datas = await getData<AccountingReportingPeriod[]>("/data/accounting/reporting/periods");
+        datas ??= [];
 
         datas = datas.filter((period) => parseISO(period.startDate).getFullYear() === year);
         datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
 
         for (let period of datas) {
-            period.details = sortDetails(period.details);
+            period.details = filterDetails(period.details);
         }       
 
-        return datas;
-    }, [periods.data, year]);
+        setCurrentPeriod(datas);
+    }, [year, filterDetails]);
+
+    useEffect(() => {
+        computeData();
+    }, [computeData, year, detailed]);
 
     const graphData = useMemo(() => {
 
@@ -98,29 +126,6 @@ const Reporting: NextPage = () => {
         || (a.type?.localeCompare(b?.type ?? "") 
         ?? (a.category?.localeCompare(b?.category ?? "")) ?? 0));
     }
-    
-    function filterDetails(details: IncomeDetail[]): IncomeDetail[] {
-        if (details && detailed === false) {
-                details = details.reduce((acc, detail) => {
-                    const index = acc.findIndex((d) => d.type === detail.type && d.category === detail.category);
-    
-                    if (index === -1) {
-                        detail.count = 1;
-                        detail.unitPrice = detail.subTotal;
-                        acc.push({...detail});
-                    } else {
-                        acc[index].subTotal += detail.subTotal;
-                        acc[index].unitPrice = acc[index].subTotal;
-                    }
-    
-                    return acc;
-                }, [] as IncomeDetail[]);
-    
-                details = sortDetails(details);
-            }
-
-        return details;
-    }
 
     return <ContentContainer>
         <Section>
@@ -160,7 +165,7 @@ const Reporting: NextPage = () => {
                             <div className={"underline text-right"}>{t("reporting.details.count")}</div>
                             <div className={"underline text-right"}>{t("reporting.details.total")}</div>
                             <>
-                                {filterDetails(period.details).map((detail) => <React.Fragment key={detail.id}>
+                                {period.details.map((detail) => <React.Fragment key={detail.id}>
                                     <div>
                                         {getType(detail)}
                                     </div>
