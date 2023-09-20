@@ -15,6 +15,7 @@
     "@azure/msal-react": "^1.5.4",
     "@heroicons/react": "^2.0.16",
     "@hookform/resolvers": "^2.9.11",
+    "@legendapp/state": "^1.11.1",
     "@microsoft/applicationinsights-react-js": "^3.4.1",
     "@microsoft/applicationinsights-web": "^2.8.11",
     "@types/node": "18.15.1",

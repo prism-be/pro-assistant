@@ -2,26 +2,43 @@
 import {useTranslation} from "react-i18next";
 import ContentContainer from "@/components/design/ContentContainer";
 import Section from "@/components/design/Section";
-import React, {useCallback, useEffect, useMemo, useState} from "react";
+import React from "react";
 import {AccountingReportingPeriod, IncomeDetail} from "@/libs/models";
 import {formatAmount, formatIsoMonth} from "@/libs/formats";
-import {parseISO} from "date-fns";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
 
 import dynamic from 'next/dynamic';
 import { Toggle } from "@/components/forms/Toggle";
 import { getData } from "@/libs/http";
+import { observable } from "@legendapp/state"
+import { Memo, useComputed, useObservable, useObserveEffect } from "@legendapp/state/react";
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {ssr: false})
+
+const detailed$ = observable(false);
 
 const Reporting: NextPage = () => {
     const {t} = useTranslation("accounting");
 
-    const [year, setYear] = useState<number>(new Date().getFullYear());
-    const [detailed, setDetailed] = useState<boolean>(true);
-    const [currentPeriod, setCurrentPeriod] = useState<AccountingReportingPeriod[]>([]);
+    const year = useObservable<number>(new Date().getFullYear());
 
-    const filterDetails = useCallback((details: IncomeDetail[]): IncomeDetail[] => {
+    const detailed = detailed$.use();
+
+    const currentPeriod$ = useObservable<AccountingReportingPeriod[]>([]);
+    const currentPeriod = currentPeriod$.use();
+    
+    useObserveEffect(async () => {
+        let datas = await getData<AccountingReportingPeriod[]>("/data/accounting/reporting/periods/" + year.get());
+        datas ??= [];
+
+        for (let period of datas) {
+            period.details = filterDetails(period.details);
+        }
+
+        currentPeriod$.set(datas);
+    });
+
+    function  filterDetails (details: IncomeDetail[]): IncomeDetail[] {
         if (details && detailed === false) {
                 details = details.reduce((acc, detail) => {
                     const index = acc.findIndex((d) => d.type === detail.type && d.category === detail.category);
@@ -38,38 +55,19 @@ const Reporting: NextPage = () => {
                     return acc;
                 }, [] as IncomeDetail[]);
     
-                details = sortDetails(details);
             }
 
-        return details;
-    }, [detailed]);
+        return sortDetails(details);
+    }
     
-    const computeData = useCallback(async () => {
-        let datas = await getData<AccountingReportingPeriod[]>("/data/accounting/reporting/periods");
-        datas ??= [];
-
-        datas = datas.filter((period) => parseISO(period.startDate).getFullYear() === year);
-        datas = datas.sort((a, b) => parseISO(a.startDate).getTime() - parseISO(b.startDate).getTime());
-
-        for (let period of datas) {
-            period.details = filterDetails(period.details);
-        }       
-
-        setCurrentPeriod(datas);
-    }, [year, filterDetails]);
-
-    useEffect(() => {
-        computeData();
-    }, [computeData, year, detailed]);
-
-    const graphData = useMemo(() => {
+    const graphData$ = useComputed(() => {
 
         return {
             chart: {
                 id: "income-reporting",
             },
             xaxis: {
-                categories: currentPeriod.map((period) => formatIsoMonth(period.startDate)),
+                categories: currentPeriod$.get().map((period) => formatIsoMonth(period.startDate)),
             },
             plotOptions: {
                 bar: {
@@ -89,18 +87,19 @@ const Reporting: NextPage = () => {
             series: [
                 {
                     name: t("reporting.income"),
-                    data: currentPeriod.map((period) => period.income),
+                    data: currentPeriod$.get().map((period) => period.income),
                     color: "#00b74a",
                 },
                 {
                     name: t("reporting.expenses"),
-                    data: currentPeriod.map((period) => period.expense),
+                    data: currentPeriod$.get().map((period) => period.expense),
                     color: "#ff5252",
                 },
             ]
         } as ApexCharts.ApexOptions;
 
-    }, [currentPeriod, t]);
+    });
+    const graphData = graphData$.use();
 
     function getType(detail: IncomeDetail) {
         
@@ -132,15 +131,15 @@ const Reporting: NextPage = () => {
             <h1>{t("reporting.title")}</h1>
             <>
                 <div className={"grid grid-cols-8 cursor-pointer"}>
-                    <div className={"col-start-1 w-8 m-auto text-primary"} onClick={() => setYear(year - 1)}>
+                    <div className={"col-start-1 w-8 m-auto text-primary"} onClick={() => year.set(year.get() - 1)}>
                         <ArrowSmallLeftIcon/>
                     </div>
 
                     <h1 className={"text-center col-span-6"}>
-                        {year}
+                        <Memo>{year}</Memo>
                     </h1>
 
-                    <div className={"col-start-8 1 w-8 m-auto text-primary"} onClick={() => setYear(year + 1)}>
+                    <div className={"col-start-8 1 w-8 m-auto text-primary"} onClick={() => year.set(year.get() + 1)}>
                         <ArrowSmallRightIcon/>
                     </div>
                 </div>
@@ -150,11 +149,11 @@ const Reporting: NextPage = () => {
                 </div>
             </>
         </Section>
-        {graphData &&
+        {currentPeriod &&
             <Section>
                 <h2>{t("reporting.details.title")}</h2>
                 <div className="text-right print:hidden">
-                    <Toggle value={detailed} className={"ml-2"} text={t("reporting.details.show")} onChange={c => setDetailed(c)}/>
+                    <Toggle value={detailed} className={"ml-2"} text={t("reporting.details.show")} onChange={() => detailed$.toggle()}/>
                 </div>
                 <>
                     {currentPeriod.map((period) => <div key={period.id} className={"pb-3"}>

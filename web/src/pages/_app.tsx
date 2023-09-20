@@ -9,8 +9,11 @@ import Insights from "@/components/Insights";
 import {MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "@/libs/msal";
 import {defaultLanguage, defaultNamespace, I18nProvider, languages, namespaces,} from "next-i18next-static-site";
+import { enableReactUse } from '@legendapp/state/config/enableReactUse';
 
 import locales from "@/libs/localization";
+
+enableReactUse();
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 
