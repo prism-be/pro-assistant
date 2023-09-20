@@ -18,24 +18,27 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {ssr: false})
 const Reporting: NextPage = () => {
     const {t} = useTranslation("accounting");
     
-    const year = useObservable<number>(new Date().getFullYear());
+    const year$ = useObservable<number>(new Date().getFullYear());
     
     const detailed$ = useObservable(false);
-    const detailed = detailed$.use();
 
     const currentPeriod$ = useObservable<AccountingReportingPeriod[]>([]);
     const currentPeriod = currentPeriod$.use();
     
-    useObserveEffect(async () => {
-        let datas = await getData<AccountingReportingPeriod[]>("/data/accounting/reporting/periods/" + year.get());
+    useObserveEffect(() => {
+        refreshData(year$.get(), detailed$.get());
+    });
+
+    async function refreshData(year: number, detailed: boolean) {
+        let datas = await getData<AccountingReportingPeriod[]>("/data/accounting/reporting/periods/" + year);
         datas ??= [];
 
         for (let period of datas) {
-            period.details = filterDetails(period.details, detailed$.get());
+            period.details = filterDetails(period.details, detailed);
         }
 
         currentPeriod$.set(datas);
-    });
+    }
 
     function  filterDetails (details: IncomeDetail[], detailed: boolean): IncomeDetail[] {
         if (details && detailed === false) {
@@ -130,15 +133,15 @@ const Reporting: NextPage = () => {
             <h1>{t("reporting.title")}</h1>
             <>
                 <div className={"grid grid-cols-8 cursor-pointer"}>
-                    <div className={"col-start-1 w-8 m-auto text-primary"} onClick={() => year.set(year.get() - 1)}>
+                    <div className={"col-start-1 w-8 m-auto text-primary"} onClick={() => year$.set(year$.get() - 1)}>
                         <ArrowSmallLeftIcon/>
                     </div>
 
                     <h1 className={"text-center col-span-6"}>
-                        <Memo>{year}</Memo>
+                        <Memo>{year$}</Memo>
                     </h1>
 
-                    <div className={"col-start-8 1 w-8 m-auto text-primary"} onClick={() => year.set(year.get() + 1)}>
+                    <div className={"col-start-8 1 w-8 m-auto text-primary"} onClick={() => year$.set(year$.get() + 1)}>
                         <ArrowSmallRightIcon/>
                     </div>
                 </div>
@@ -152,8 +155,8 @@ const Reporting: NextPage = () => {
             <Section>
                 <h2>{t("reporting.details.title")}</h2>
                 <div className="text-right print:hidden">
-                {(detailed ? "Oui" : "Non")}
-                    <Toggle value={detailed} className={"ml-2"} text={t("reporting.details.show")} onChange={() => detailed$.toggle()}/>
+                    {(detailed$.get() ? "Oui" : "Non")}
+                    <Toggle value={detailed$.get()} className={"ml-2"} text={t("reporting.details.show")} onChange={detailed$.toggle}/>
                 </div>
                 <>
                     {currentPeriod.map((period) => <div key={period.id} className={"pb-3"}>
