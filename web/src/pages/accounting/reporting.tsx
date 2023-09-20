@@ -31,7 +31,7 @@ const Reporting: NextPage = () => {
         datas ??= [];
 
         for (let period of datas) {
-            period.details = filterDetails(period.details, detailed$.get(true));
+            period.details = filterDetails(period.details, detailed$.get());
         }
 
         currentPeriod$.set(datas);
