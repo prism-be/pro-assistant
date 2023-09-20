@@ -10,18 +10,17 @@ import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid
 import dynamic from 'next/dynamic';
 import { Toggle } from "@/components/forms/Toggle";
 import { getData } from "@/libs/http";
-import { observable } from "@legendapp/state"
 import { Memo, useComputed, useObservable, useObserveEffect } from "@legendapp/state/react";
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {ssr: false})
 
-const detailed$ = observable(false);
 
 const Reporting: NextPage = () => {
     const {t} = useTranslation("accounting");
-
+    
     const year = useObservable<number>(new Date().getFullYear());
-
+    
+    const detailed$ = useObservable(false);
     const detailed = detailed$.use();
 
     const currentPeriod$ = useObservable<AccountingReportingPeriod[]>([]);
@@ -32,13 +31,13 @@ const Reporting: NextPage = () => {
         datas ??= [];
 
         for (let period of datas) {
-            period.details = filterDetails(period.details);
+            period.details = filterDetails(period.details, detailed$.get(true));
         }
 
         currentPeriod$.set(datas);
     });
 
-    function  filterDetails (details: IncomeDetail[]): IncomeDetail[] {
+    function  filterDetails (details: IncomeDetail[], detailed: boolean): IncomeDetail[] {
         if (details && detailed === false) {
                 details = details.reduce((acc, detail) => {
                     const index = acc.findIndex((d) => d.type === detail.type && d.category === detail.category);
@@ -153,6 +152,7 @@ const Reporting: NextPage = () => {
             <Section>
                 <h2>{t("reporting.details.title")}</h2>
                 <div className="text-right print:hidden">
+                {(detailed ? "Oui" : "Non")}
                     <Toggle value={detailed} className={"ml-2"} text={t("reporting.details.show")} onChange={() => detailed$.toggle()}/>
                 </div>
                 <>
