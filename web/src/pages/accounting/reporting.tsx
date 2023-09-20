@@ -11,23 +11,18 @@ import dynamic from 'next/dynamic';
 import { Toggle } from "@/components/forms/Toggle";
 import { getData } from "@/libs/http";
 import { Memo, useComputed, useObservable, useObserveEffect } from "@legendapp/state/react";
-
-import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
-import { persistObservable } from '@legendapp/state/persist'
+import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable"
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {ssr: false})
 
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
 const Reporting: NextPage = () => {
     const {t} = useTranslation("accounting");
     
     const year$ = useObservable<number>(new Date().getFullYear());
     
-    const detailed$ = useObservable(false);
-    persistObservable(detailed$, {
-        persistLocal: ObservablePersistLocalStorage,
-        local: "accounting-reporting-detailed",
-    });
+    const detailed$ = usePersistedObservable(false, { persistLocal: ObservablePersistLocalStorage, local: "accounting-reporting-detailed" });
 
     const currentPeriod$ = useObservable<AccountingReportingPeriod[]>([]);
     const currentPeriod = currentPeriod$.use();
