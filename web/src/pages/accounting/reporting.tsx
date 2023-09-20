@@ -12,6 +12,9 @@ import { Toggle } from "@/components/forms/Toggle";
 import { getData } from "@/libs/http";
 import { Memo, useComputed, useObservable, useObserveEffect } from "@legendapp/state/react";
 
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
+import { persistObservable } from '@legendapp/state/persist'
+
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {ssr: false})
 
 
@@ -21,6 +24,10 @@ const Reporting: NextPage = () => {
     const year$ = useObservable<number>(new Date().getFullYear());
     
     const detailed$ = useObservable(false);
+    persistObservable(detailed$, {
+        persistLocal: ObservablePersistLocalStorage,
+        local: "accounting-reporting-detailed",
+    });
 
     const currentPeriod$ = useObservable<AccountingReportingPeriod[]>([]);
     const currentPeriod = currentPeriod$.use();
@@ -155,7 +162,6 @@ const Reporting: NextPage = () => {
             <Section>
                 <h2>{t("reporting.details.title")}</h2>
                 <div className="text-right print:hidden">
-                    {(detailed$.get() ? "Oui" : "Non")}
                     <Toggle value={detailed$.get()} className={"ml-2"} text={t("reporting.details.show")} onChange={detailed$.toggle}/>
                 </div>
                 <>
