@@ -32,8 +32,8 @@ const Reporting: NextPage = () => {
     const currentPeriod$ = useObservable<AccountingReportingPeriod[]>([]);
     const currentPeriod = currentPeriod$.use();
     
-    useObserveEffect(() => {
-        refreshData(year$.get(), detailed$.get());
+    useObserveEffect(async () => {
+        await refreshData(year$.get(), detailed$.get());
     });
 
     async function refreshData(year: number, detailed: boolean) {
