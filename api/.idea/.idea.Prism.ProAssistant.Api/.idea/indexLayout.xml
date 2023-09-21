@@ -5,6 +5,7 @@
       <Path>../../pro-assistant</Path>
       <Path>../.github/workflows</Path>
       <Path>../ressources</Path>
+      <Path>../web</Path>
     </attachedFolders>
     <explicitIncludes />
     <explicitExcludes />

@@ -19,29 +19,32 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@azure/msal-browser@npm:^2.34.0":
-  version: 2.38.1
-  resolution: "@azure/msal-browser@npm:2.38.1"
+"@azure/msal-browser@npm:^3.1.0":
+  version: 3.1.0
+  resolution: "@azure/msal-browser@npm:3.1.0"
   dependencies:
-    "@azure/msal-common": 13.2.1
-  checksum: 86306ccfdaf3c412c21dc7b575c9ed8c6c5a7eb638a895573b6d01cae15afdeb4f54e3271f0bd5608c204a12acbd8b4de07fed6c0a63977fa18d254d4f99cc5d
+    "@azure/msal-common": 14.0.3
+  checksum: 103e3a9ef459b83508dfcb97995fddfd86b9b95e2977f21a7e2046e7fbcef970957ef8a3ddd279a33d4017688898b2d6dea93fbe15db3e8d05d6494d69f7a210
   languageName: node
   linkType: hard
 
-"@azure/msal-common@npm:13.2.1":
-  version: 13.2.1
-  resolution: "@azure/msal-common@npm:13.2.1"
-  checksum: 6b4ba4426ff79ef72bbdcb3c1d600dbe5432d63beb0666b674701c0575989e2288e2b5a10e83a498395b24dacf506d7daa3de6556cdea983e683e404f35e32ef
+"@azure/msal-common@npm:14.0.3":
+  version: 14.0.3
+  resolution: "@azure/msal-common@npm:14.0.3"
+  checksum: 3c2f0bb95072e809a39c886f7eccbfd7280ef48d5b4e1f421f7019774a6adac65e15b1792329cc76055f7969be09dfbb7759f6a2c6a421d52eeb05e99b79a1c5
   languageName: node
   linkType: hard
 
-"@azure/msal-react@npm:^1.5.4":
-  version: 1.5.10
-  resolution: "@azure/msal-react@npm:1.5.10"
+"@azure/msal-react@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@azure/msal-react@npm:2.0.3"
+  dependencies:
+    "@rollup/plugin-typescript": ^11.1.0
+    rollup: ^3.20.2
   peerDependencies:
-    "@azure/msal-browser": ^2.38.1
+    "@azure/msal-browser": ^3.1.0
     react: ^16.8.0 || ^17 || ^18
-  checksum: 58ce1995bb4162bf49d90e0d46f406785c0ab93abd24cd0303c99e6395405e07c369b6b69d284bf9442f6473150ca32de8d75710d75ed94a4ebd02f1e0d973d8
+  checksum: 10767310f12df2c1e4217b2464e5055ec206faed1a27731c7a868f5fbae6b241d1a6f27869ca49d84ad0a3e55c3b4cef5e29424fa8a97d04c0e41fcda27ac050
   languageName: node
   linkType: hard
 
@@ -455,6 +458,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@rollup/plugin-typescript@npm:^11.1.0":
+  version: 11.1.3
+  resolution: "@rollup/plugin-typescript@npm:11.1.3"
+  dependencies:
+    "@rollup/pluginutils": ^5.0.1
+    resolve: ^1.22.1
+  peerDependencies:
+    rollup: ^2.14.0||^3.0.0
+    tslib: "*"
+    typescript: ">=3.7.0"
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+    tslib:
+      optional: true
+  checksum: cde5475d16fb201bc6755eb676e72136591e9d4996b566ca702ab37870ba2554ba96a7cdacf4cd4b75ab004ae0d9fb4b32da014d3fae1d41c9bb783a843551f1
+  languageName: node
+  linkType: hard
+
+"@rollup/pluginutils@npm:^5.0.1":
+  version: 5.0.4
+  resolution: "@rollup/pluginutils@npm:5.0.4"
+  dependencies:
+    "@types/estree": ^1.0.0
+    estree-walker: ^2.0.2
+    picomatch: ^2.3.1
+  peerDependencies:
+    rollup: ^1.20.0||^2.0.0||^3.0.0
+  peerDependenciesMeta:
+    rollup:
+      optional: true
+  checksum: 893d5805ac4121fc704926963a0ae4e79e9e2bc8d736c3b28499ab69a404cce5119ca3a4e0c3d3a81d62f1beb3966f35285c36935d94b061794f26e94fed4cd1
+  languageName: node
+  linkType: hard
+
 "@rushstack/eslint-patch@npm:^1.1.3":
   version: 1.3.3
   resolution: "@rushstack/eslint-patch@npm:1.3.3"
@@ -475,6 +513,13 @@ __metadata:
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
   checksum: ad87447820dd3f24825d2d947ebc03072b20a42bfc96cbafec16bff8bbda6c1a81fcb0be56d5b21968560c5359a0af4038a68ba150c3e1694fe4c109a063bed8
+  languageName: node
+  linkType: hard
+
+"@types/estree@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "@types/estree@npm:1.0.1"
+  checksum: e9aa175eacb797216fafce4d41e8202c7a75555bc55232dee0f9903d7171f8f19f0ae7d5191bb1a88cb90e65468be508c0df850a9fb81b4433b293a5a749899d
   languageName: node
   linkType: hard
 
@@ -1842,6 +1887,13 @@ __metadata:
   version: 5.3.0
   resolution: "estraverse@npm:5.3.0"
   checksum: 072780882dc8416ad144f8fe199628d2b3e7bbc9989d9ed43795d2c90309a2047e6bc5979d7e2322a341163d22cfad9e21f4110597fe487519697389497e4e2b
+  languageName: node
+  linkType: hard
+
+"estree-walker@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "estree-walker@npm:2.0.2"
+  checksum: 6151e6f9828abe2259e57f5fd3761335bb0d2ebd76dc1a01048ccee22fabcfef3c0859300f6d83ff0d1927849368775ec5a6d265dde2f6de5a1be1721cd94efc
   languageName: node
   linkType: hard
 
@@ -3655,8 +3707,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "pro-assistant@workspace:."
   dependencies:
-    "@azure/msal-browser": ^2.34.0
-    "@azure/msal-react": ^1.5.4
+    "@azure/msal-browser": ^3.1.0
+    "@azure/msal-react": ^2.0.3
     "@heroicons/react": ^2.0.16
     "@hookform/resolvers": ^2.9.11
     "@legendapp/state": ^1.11.1
@@ -3961,6 +4013,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"resolve@npm:^1.22.1":
+  version: 1.22.6
+  resolution: "resolve@npm:1.22.6"
+  dependencies:
+    is-core-module: ^2.13.0
+    path-parse: ^1.0.7
+    supports-preserve-symlinks-flag: ^1.0.0
+  bin:
+    resolve: bin/resolve
+  checksum: d13bf66d4e2ee30d291491f16f2fa44edd4e0cefb85d53249dd6f93e70b2b8c20ec62f01b18662e3cd40e50a7528f18c4087a99490048992a3bb954cf3201a5b
+  languageName: node
+  linkType: hard
+
 "resolve@npm:^2.0.0-next.4":
   version: 2.0.0-next.4
   resolution: "resolve@npm:2.0.0-next.4"
@@ -3984,6 +4049,19 @@ __metadata:
   bin:
     resolve: bin/resolve
   checksum: c45f2545fdc4d21883861b032789e20aa67a2f2692f68da320cc84d5724cd02f2923766c5354b3210897e88f1a7b3d6d2c7c22faeead8eed7078e4c783a444bc
+  languageName: node
+  linkType: hard
+
+"resolve@patch:resolve@^1.22.1#~builtin<compat/resolve>":
+  version: 1.22.6
+  resolution: "resolve@patch:resolve@npm%3A1.22.6#~builtin<compat/resolve>::version=1.22.6&hash=c3c19d"
+  dependencies:
+    is-core-module: ^2.13.0
+    path-parse: ^1.0.7
+    supports-preserve-symlinks-flag: ^1.0.0
+  bin:
+    resolve: bin/resolve
+  checksum: 9d3b3c67aefd12cecbe5f10ca4d1f51ea190891096497c43f301b086883b426466918c3a64f1bbf1788fabb52b579d58809614006c5d0b49186702b3b8fb746a
   languageName: node
   linkType: hard
 
@@ -4022,6 +4100,20 @@ __metadata:
   bin:
     rimraf: bin.js
   checksum: 87f4164e396f0171b0a3386cc1877a817f572148ee13a7e113b238e48e8a9f2f31d009a92ec38a591ff1567d9662c6b67fd8818a2dbbaed74bc26a87a2a4a9a0
+  languageName: node
+  linkType: hard
+
+"rollup@npm:^3.20.2":
+  version: 3.29.2
+  resolution: "rollup@npm:3.29.2"
+  dependencies:
+    fsevents: ~2.3.2
+  dependenciesMeta:
+    fsevents:
+      optional: true
+  bin:
+    rollup: dist/bin/rollup
+  checksum: 2eacb5a2522cb41e46e0bd78cca2c2da29b09b1fbd5b7c6ebb0afb3864af125a06fba528dfd6699704e49384e106ff58b359ce4abef61d7db12a7840d3b56e54
   languageName: node
   linkType: hard
 
