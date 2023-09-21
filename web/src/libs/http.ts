@@ -1,5 +1,4 @@
-﻿import {InteractionRequiredAuthError} from "@azure/msal-browser";
-import {msalInstance} from "./msal";
+﻿import {msalInstance} from "./msal";
 
 
 export async function getData<TResult>(route: string): Promise<TResult | null> {
@@ -132,37 +131,23 @@ export async function deleteDataWithBody<TResult>(route: string, body: any): Pro
 }
 
 export const getAuthorization = async (): Promise<string> => {
+
+    const activeAccount = msalInstance.getActiveAccount();
+    const accounts = msalInstance.getAllAccounts();
+
+    if (!activeAccount && accounts.length === 0) {
+        return '';
+    }
+    
     const accessTokenRequest = {
         scopes: ["https://" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".onmicrosoft.com/" + process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID + "/records.manage"],
         account: msalInstance.getAllAccounts()[0],
     };
 
-    let accessToken = '';
+    const authResult = await msalInstance.acquireTokenSilent(accessTokenRequest);
 
-    try {
-        const accessTokenResponse = await msalInstance.acquireTokenSilent(accessTokenRequest);
-
-        if (accessTokenResponse?.accessToken) {
-            accessToken = accessTokenResponse?.accessToken;
-        }
-    } catch (error) {
-        console.log(error);
-
-        if (error instanceof InteractionRequiredAuthError) {
-            try {
-                const accessTokenResponse = await msalInstance.acquireTokenPopup(accessTokenRequest);
-
-                if (accessTokenResponse?.accessToken) {
-                    accessToken = accessTokenResponse?.accessToken;
-                }
-            } catch (error) {
-                console.log(error);
-            }
-        }
-    }
-
-    if (accessToken) {
-        return 'Bearer ' + accessToken;
+    if (authResult.accessToken) {
+        return 'Bearer ' + authResult.accessToken;
     }
 
     return '';

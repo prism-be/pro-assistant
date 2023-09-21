@@ -6,12 +6,13 @@ import Head from "next/head";
 import {Alert} from "@/components/Alert";
 import {getData} from "@/libs/http";
 import Insights from "@/components/Insights";
-import {MsalProvider} from "@azure/msal-react";
+import {MsalAuthenticationTemplate, MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "@/libs/msal";
 import {defaultLanguage, defaultNamespace, I18nProvider, languages, namespaces,} from "next-i18next-static-site";
-import { enableReactUse } from '@legendapp/state/config/enableReactUse';
+import {enableReactUse} from '@legendapp/state/config/enableReactUse';
 
 import locales from "@/libs/localization";
+import {InteractionType} from "@azure/msal-browser";
 
 enableReactUse();
 
@@ -25,9 +26,17 @@ const MyApp = ({Component, pageProps}: AppProps) => {
         locales,
     };
 
+    const authRequest = {
+        scopes: ["openid", "profile"]
+    };
+
     return (
-            <Insights>
-                <MsalProvider instance={msalInstance}>
+        <Insights>
+            <MsalProvider instance={msalInstance}>
+                <MsalAuthenticationTemplate
+                    interactionType={InteractionType.Redirect}
+                    authenticationRequest={authRequest}
+                >
                     <Head>
                         <title>Pro Assistant</title>
                     </Head>
@@ -37,8 +46,9 @@ const MyApp = ({Component, pageProps}: AppProps) => {
                         </I18nProvider>
                         <Alert/>
                     </SWRConfig>
-                </MsalProvider>
-            </Insights>
+                </MsalAuthenticationTemplate>
+            </MsalProvider>
+        </Insights>
     );
 };
 
