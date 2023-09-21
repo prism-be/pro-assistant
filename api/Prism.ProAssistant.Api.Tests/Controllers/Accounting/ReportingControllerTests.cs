@@ -2,6 +2,7 @@
 
 using Api.Controllers.Data.Accounting;
 using Domain.Accounting.Reporting;
+using Infrastructure.Providers;
 using Moq;
 using Storage;
 
@@ -15,9 +16,9 @@ public class ReportingControllerTests
         
         // Act
         var reportingController = new ReportingController(queryService.Object);
-        await reportingController.ListPeriods();
+        await reportingController.ListPeriods(2023);
 
         // Assert
-        queryService.Verify(x => x.ListAsync<AccountingReportingPeriod>(), Times.Once);
+        queryService.Verify(x => x.SearchAsync<AccountingReportingPeriod>(It.Is<Filter[]>(p => p.Length == 1)), Times.Once);
     }
 }

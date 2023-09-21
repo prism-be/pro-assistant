@@ -195,6 +195,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@legendapp/state@npm:^1.11.1":
+  version: 1.11.1
+  resolution: "@legendapp/state@npm:1.11.1"
+  dependencies:
+    use-sync-external-store: ^1.2.0
+  checksum: 2a88dafced9975e31a0b9982c5fcab54b396502f826f6cb28e7cf901d5c925ac4e5610d33981a3b13a03eabaf57479872c0d6c25aaff011e6e52b4ee3451f1fc
+  languageName: node
+  linkType: hard
+
 "@microsoft/applicationinsights-analytics-js@npm:2.8.15":
   version: 2.8.15
   resolution: "@microsoft/applicationinsights-analytics-js@npm:2.8.15"
@@ -3650,6 +3659,7 @@ __metadata:
     "@azure/msal-react": ^1.5.4
     "@heroicons/react": ^2.0.16
     "@hookform/resolvers": ^2.9.11
+    "@legendapp/state": ^1.11.1
     "@microsoft/applicationinsights-react-js": ^3.4.1
     "@microsoft/applicationinsights-web": ^2.8.11
     "@types/node": 18.15.1
