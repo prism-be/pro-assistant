@@ -6,7 +6,7 @@ import {useRouter} from "next/router";
 import Section from "../../components/design/Section";
 import {Contact} from "@/libs/models";
 import {searchContacts} from "@/libs/search";
-import {useObservable} from "@legendapp/state/react";
+import {useMountOnce, useObservable} from "@legendapp/state/react";
 import ReactiveInputText from "@/components/forms/ReactiveInputText";
 import ReactiveInputDate from "@/components/forms/ReactiveInputDate";
 import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable"
@@ -26,16 +26,22 @@ const Contacts: NextPage = () => {
         birthDate: "",
     }, { persistLocal: ObservablePersistSessionStorage, local: "contacts/search-contacts" });
     
-    // const schema = yup.object({}).required();
-
-    // useMountOnce(() => {
-    //     contacts$.set(await searchContacts(search$.get()));
-    // });
+    useMountOnce(() => {
+        if (search$.lastName.get()?.length > 0 || search$.firstName.get()?.length > 0 || search$.phoneNumber.get()?.length > 0 || search$.birthDate.get()?.length > 0)
+        {
+            performSearch();
+        }
+    });
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<any>) => {
         e.preventDefault();
-        contacts$.set(await searchContacts(search$.get()));
+        await performSearch();
+        
     };
+    
+    async function performSearch() {
+        contacts$.set(await searchContacts(search$.get()));
+    }
 
     const navigate = async (id: string) => {
         await router.push("/contacts/" + id);
