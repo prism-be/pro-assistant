@@ -21,12 +21,12 @@ const ReactiveInputDate = ({value, label, required, className}: Props) => {
     });
 
     function formatDate() {
-        if (value.get().length < 5) {
+        if (value.peek().length < 5) {
             return;
         }
 
         const parsed = parse(
-            value.get(),
+            value.peek(),
             "d/M/yy",
             add(new Date(), {
                 years: -50,
