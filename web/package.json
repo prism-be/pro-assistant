@@ -26,6 +26,7 @@
     "@types/sort-array": "^4.1.0",
     "apexcharts": "^3.41.1",
     "autoprefixer": "^10.4.14",
+    "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "eslint": "^8.46.0",
     "eslint-config-next": "^13.4.13",

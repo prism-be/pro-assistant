@@ -12,10 +12,9 @@ import { Toggle } from "@/components/forms/Toggle";
 import { getData } from "@/libs/http";
 import { Memo, useComputed, useObservable, useObserveEffect } from "@legendapp/state/react";
 import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable"
+import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {ssr: false})
-
-import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
 
 const Reporting: NextPage = () => {
     const {t} = useTranslation("accounting");

@@ -10,11 +10,13 @@ import {MsalAuthenticationTemplate, MsalProvider} from "@azure/msal-react";
 import {msalInstance} from "@/libs/msal";
 import {defaultLanguage, defaultNamespace, I18nProvider, languages, namespaces,} from "next-i18next-static-site";
 import {enableReactUse} from '@legendapp/state/config/enableReactUse';
+import { enableReactComponents } from '@legendapp/state/config/enableReactComponents'
 
 import locales from "@/libs/localization";
 import {InteractionType} from "@azure/msal-browser";
 
 enableReactUse();
+enableReactComponents();
 
 const MyApp = ({Component, pageProps}: AppProps) => {
 

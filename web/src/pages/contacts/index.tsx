@@ -1,72 +1,61 @@
 ﻿import ContentContainer from "../../components/design/ContentContainer";
-import InputText from "../../components/forms/InputText";
-import InputDate from "../../components/forms/InputDate";
 import Button from "../../components/forms/Button";
 import {NextPage} from "next";
 import {useTranslation} from "react-i18next";
-import {useForm} from "react-hook-form";
-import {useEffect, useState} from "react";
 import {useRouter} from "next/router";
 import Section from "../../components/design/Section";
 import {Contact} from "@/libs/models";
-import * as yup from "yup";
-import {yupResolver} from "@hookform/resolvers/yup";
-import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import {searchContacts} from "@/libs/search";
+import {useMountOnce, useObservable} from "@legendapp/state/react";
+import ReactiveInputText from "@/components/forms/ReactiveInputText";
+import ReactiveInputDate from "@/components/forms/ReactiveInputDate";
+import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable"
+import { ObservablePersistSessionStorage } from '@legendapp/state/persist-plugins/local-storage'
 
 const Contacts: NextPage = () => {
     const { t } = useTranslation("common");
     const router = useRouter();
 
-    const [contacts, setContacts] = useState<Contact[] | null>(null);
-
-    const schema = yup.object({}).required();
-
-    const {
-        register,
-        handleSubmit,
-        formState: { errors },
-        setValue,
-        setFocus,
-        reset,
-    } = useForm({ resolver: yupResolver(schema) });
-
-    useEffect(() => {
-        const sessionSearchContacts = sessionStorage.getItem("contacts/search-contacts");
-        if (sessionSearchContacts) {
-            const data = JSON.parse(sessionSearchContacts);
-            Object.getOwnPropertyNames(data).forEach((field) => {
-                setValue(field, data[field]);
-            });
-            onSubmit(data);
+    const contacts$ = useObservable<Contact[] | null>(null);
+    const contacts = contacts$.use();
+    
+    const search$ = usePersistedObservable({
+        lastName: "",
+        firstName: "",
+        phoneNumber: "",
+        birthDate: "",
+    }, { persistLocal: ObservablePersistSessionStorage, local: "contacts/search-contacts" });
+    
+    useMountOnce(() => {
+        if (search$.lastName.peek() || search$.firstName.peek() || search$.phoneNumber.peek() || search$.birthDate.peek())
+        {
+            performSearch();
         }
-        setFocus("lastName");
-    }, [setFocus]);
+    });
 
-    const onSubmit = async (data: any) => {
-        sessionStorage.setItem("contacts/search-contacts", JSON.stringify(data));
-
-        setContacts(await searchContacts(data));
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<any>) => {
+        e.preventDefault();
+        await performSearch();
+        
     };
+    
+    async function performSearch() {
+        contacts$.set(await searchContacts(search$.get()));
+    }
 
     const navigate = async (id: string) => {
         await router.push("/contacts/" + id);
     };
 
     const resetSearch = () => {
-        sessionStorage.removeItem("contacts/search-contacts");
-        reset();
-        setContacts(null);
-        setFocus("lastName");
+        search$.set({
+            lastName: "",
+            firstName: "",
+            phoneNumber: "",
+            birthDate: ""
+        });
+        contacts$.set(null);
     };
-
-    const [isNewPressed, isNewPressedEvent] = useKeyboardJs("alt + n");
-    useEffect(() => {
-        if (isNewPressed) {
-            isNewPressedEvent?.preventDefault();
-            router.push("/contacts/000000000000000000000000");
-        }
-    }, [isNewPressed, router]);
 
     return (
         <ContentContainer>
@@ -74,52 +63,18 @@ const Contacts: NextPage = () => {
                 <Section>
                     <>
                         <h1>{t("pages.contacts.title")}</h1>
-                        <form className={"grid gap-2 md:grid-cols-2 lg:grid-cols-4"} onSubmit={handleSubmit(onSubmit)}>
+                        <form className={"grid gap-2 md:grid-cols-2 lg:grid-cols-4"} onSubmit={handleSubmit}>
                             <div className={"pt-2"}>
-                                <InputText
-                                    name="lastName"
-                                    label={t("fields.lastName")}
-                                    type="text"
-                                    required={false}
-                                    register={register}
-                                    setValue={setValue}
-                                    error={errors.lastName}
-                                    autoCapitalize={true}
-                                />
+                                <ReactiveInputText label={t("fields.lastName")} value={search$.lastName} autoCapitalize={true} />
                             </div>
                             <div className={"pt-2"}>
-                                <InputText
-                                    name="firstName"
-                                    label={t("fields.firstName")}
-                                    type="text"
-                                    required={false}
-                                    register={register}
-                                    setValue={setValue}
-                                    error={errors.firstName}
-                                    autoCapitalize={true}
-                                />
+                                <ReactiveInputText label={t("fields.firstName")} value={search$.firstName} autoCapitalize={true} />
                             </div>
                             <div className={"pt-2"}>
-                                <InputText
-                                    name="phoneNumber"
-                                    label={t("fields.phoneNumber")}
-                                    type="text"
-                                    required={false}
-                                    register={register}
-                                    setValue={setValue}
-                                    error={errors.phoneNumber}
-                                />
+                                <ReactiveInputText label={t("fields.phoneNumber")} value={search$.phoneNumber} autoCapitalize={true} />
                             </div>
                             <div className={"pt-2"}>
-                                <InputDate
-                                    name="birthDate"
-                                    label={t("fields.birthDate")}
-                                    type="text"
-                                    required={false}
-                                    register={register}
-                                    setValue={setValue}
-                                    error={errors.birthDate}
-                                />
+                                <ReactiveInputDate label={t("fields.birthDate")} value={search$.birthDate} />
                             </div>
                             <div className={"pt-2"}>
                                 <Button text={t("actions.reset")} onClick={resetSearch} secondary={true} />
@@ -132,7 +87,7 @@ const Contacts: NextPage = () => {
                                 />
                             </div>
                             <div className={"pt-2 md:col-start-2 lg:col-start-4"}>
-                                <Button submit={true} text={t("actions.search")} onClick={handleSubmit(onSubmit)} />
+                                <Button submit={true} text={t("actions.search")} onClick={handleSubmit} />
                             </div>
                         </form>
                     </>
