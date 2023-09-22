@@ -27,7 +27,7 @@ const Contacts: NextPage = () => {
     }, { persistLocal: ObservablePersistSessionStorage, local: "contacts/search-contacts" });
     
     useMountOnce(() => {
-        if (search$.lastName.get()?.length > 0 || search$.firstName.get()?.length > 0 || search$.phoneNumber.get()?.length > 0 || search$.birthDate.get()?.length > 0)
+        if (search$.lastName.peek() || search$.firstName.peek() || search$.phoneNumber.peek() || search$.birthDate.peek())
         {
             performSearch();
         }

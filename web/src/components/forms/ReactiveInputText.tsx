@@ -1,5 +1,6 @@
 ﻿import {ObservablePrimitiveChildFns} from "@legendapp/state";
 import {Reactive} from "@legendapp/state/react";
+import clsx from "clsx";
 
 export interface Props {
     value: ObservablePrimitiveChildFns<string>;
@@ -14,12 +15,11 @@ const ReactiveInputText = ({value, label, required, type, className, autoCapital
 
     value.onChange(() => {
         if (autoCapitalize === true) {
-            const actual = value.get();
-            value.set(actual.charAt(0).toUpperCase() + actual.slice(1));
+            value.set(actual => actual.charAt(0).toUpperCase() + actual.slice(1));
         }
     });
 
-    return <div className={"block" + " " + className}>
+    return <div className={clsx("block", className)}>
         <label className={"block"}>
             {label} {required && " *"}{" "}
         </label>
