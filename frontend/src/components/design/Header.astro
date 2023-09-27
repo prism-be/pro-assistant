@@ -1,0 +1,20 @@
+---
+import { Image } from 'astro:assets';
+import HeaderUser from "../../client/components/HeaderUser.tsx";
+import logo from "../../assets/logo.svg";
+
+---
+<div class="h-14 flex border-b shadow print:hidden">
+    <div class="p-1">
+        <div>
+            <Image src={logo} height="42" width="42" alt="ProAssistant by PRISM" />
+        </div>
+    </div>
+    <div class="grow">
+    </div>
+    <div class="flex">
+        <div class="m-auto pl-2 pr-2 text-sm">
+            <HeaderUser client:only="react" />
+        </div>
+    </div>
+</div>

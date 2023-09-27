@@ -1,0 +1,25 @@
+---
+import Layout from "./Layout.astro";
+import Header from "../components/design/Header.astro";
+import Menu from "../components/design/Menu.astro";
+import LoginPanel from "../client/components/LoginPanel";
+
+interface Props {
+    title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<Layout title={title}>
+    <div>
+        <Header />
+        <div class="p-0 m-0 border-box relative w-full">
+            <Menu />
+            <div class="md:ml-64">
+                <LoginPanel client:only="react" />
+                <slot />
+            </div>
+        </div>
+    </div>
+</Layout>
