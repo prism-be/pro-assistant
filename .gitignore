@@ -446,3 +446,4 @@ api/**/wwwroot/**
 /api/.idea/.idea.Prism.ProAssistant.Api/.idea/dataSources.xml
 /rebuild-dev.bat
 /dump.db
+/frontend/dist/

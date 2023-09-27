@@ -1,12 +1,12 @@
-﻿import {getData} from "../../services/http.ts";
-import {msalInstance} from "../../services/msal.ts";
-import {currentUser$} from "../store.ts";
-import {useMountOnce, useObserve} from "@legendapp/state/react";
-import {useTranslation} from "react-i18next";
+﻿import { getData } from "../../services/http.ts";
+import { msalInstance } from "../../services/msal.ts";
+import { currentUser$ } from "../store.ts";
+import { useMountOnce, useObserve } from "@legendapp/state/react";
+import { useTranslation } from "react-i18next";
 
 export default function HeaderUser() {
 
-    const {t} = useTranslation('translation');
+    const { t } = useTranslation('translation');
 
     const name = currentUser$.name.use();
     const authenticated = currentUser$.isAuthenticated.use();
@@ -34,7 +34,7 @@ export default function HeaderUser() {
 
     return <>
         {checked && authenticated && <>
-            {t("header.hello", {name})}<br />
+            {t("header.hello", { name })}<br />
             <a href="#" onClick={async () => await msalInstance.logoutRedirect()}>{t("header.logout")}</a>
         </>}
     </>

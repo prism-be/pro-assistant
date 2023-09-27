@@ -9,5 +9,5 @@ export default {
     i18nextClientPlugins: {
         "{initReactI18next}": "react-i18next",
     },
-    namespaces: ["translation", "menu"],
+    namespaces: ["translation"],
 };

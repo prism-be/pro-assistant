@@ -1,4 +1,80 @@
 ---
+import { t } from "i18next";
 
+const getActiveClass = (path: string) => {
+     if (Astro.url.pathname.startsWith(path)) {
+         return " border-r-4 border-primary bg-gray-100 ";
+     }
+
+    return "";
+};
+
+const itemclass = "block px-4 py-2 hover:bg-gray-100 no-underline hover:no-underline";
 ---
-<div></div>
+<div>
+    <div
+            class={
+                "bg-white w-64 border-r h-100 fixed top-14 h-full z-50 " 
+            }
+    >
+        <ul>
+            <li class={"px-4 pt-4 font-bold"}>{t("menu.global")}</li>
+            <li class={getActiveClass("/contacts")}>
+                <a class={itemclass} href={"/contacts"}>
+                    {t("menu.contacts")}
+                </a>
+            </li>
+            <li class={getActiveClass("/agenda")}>
+                <a class={itemclass} href={"/agenda"}>
+                    {t("menu.agenda")}
+                </a>
+            </li>
+            <li class={getActiveClass("/calendar")}>
+                <a class={itemclass} href={"/calendar"}>
+                    {t("menu.calendar")}
+                </a>
+            </li>
+            <li class={getActiveClass("/appointments")}>
+                <a class={itemclass} href={"/appointments"}>
+                    {t("menu.appointments")}
+                </a>
+            </li>
+
+            <div class={"hidden md:block"}>
+                <li class={"px-4 pt-4 font-bold"}>{t("menu.configurationTitle")}</li>
+                <li class={getActiveClass("/configuration")}>
+                    <a class={itemclass} href={"/configuration"}>
+                        {t("menu.configuration")}
+                    </a>
+                </li>
+                <li class={getActiveClass("/documents")}>
+                    <a class={itemclass} href={"/documents"}>
+                        {t("menu.documents")}
+                    </a>
+                </li>
+            </div>
+
+            <li class={"px-4 pt-4 font-bold"}>{t("menu.accounting")}</li>
+            <li class={"hidden " + getActiveClass("/accounting/forecast")}>
+                <a class={itemclass} href={"/accounting/forecast"}>
+                    {t("menu.accounting-forecast")}
+                </a>
+            </li>
+            <li class={getActiveClass("/accounting/closing")}>
+                <a class={itemclass} href={"/accounting/closing"}>
+                    {t("menu.accounting-closing")}
+                </a>
+            </li>
+            <li class={getActiveClass("/accounting/reporting")}>
+                <a class={itemclass} href={"/accounting/reporting"}>
+                    {t("menu.accounting-reporting")}
+                </a>
+            </li>
+            <li class={getActiveClass("/accounting/documents")}>
+                <a class={itemclass} href={"/accounting/documents"}>
+                    {t("menu.accounting-documents")}
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
