@@ -9,6 +9,7 @@ export default function HeaderUser() {
     const {t} = useTranslation('translation');
 
     const name = currentUser$.name.use();
+    const authenticated = currentUser$.isAuthenticated.use();
     const checked = currentUser$.checked.use();
 
     useMountOnce(() => {
@@ -32,7 +33,7 @@ export default function HeaderUser() {
     }
 
     return <>
-        {checked && <>
+        {checked && authenticated && <>
             {t("header.hello", {name})}<br />
             <a href="#" onClick={async () => await msalInstance.logoutRedirect()}>{t("header.logout")}</a>
         </>}
