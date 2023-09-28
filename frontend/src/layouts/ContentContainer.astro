@@ -16,10 +16,10 @@ const { title } = Astro.props;
         <Header />
         <div class="p-0 m-0 border-box relative w-full">
             <Menu />
-            <div class="md:ml-64">
+            <main class="md:ml-64">
                 <LoginPanel client:only="react" />
                 <slot />
-            </div>
+            </main>
         </div>
     </div>
 </Layout>
