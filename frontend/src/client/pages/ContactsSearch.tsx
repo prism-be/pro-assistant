@@ -8,6 +8,7 @@ import Button from "../forms/Button";
 import ReactiveInputDate from "../forms/ReactiveInputDate";
 import ReactiveInputText from "../forms/ReactiveInputText";
 import {searchContacts} from "../../services/search";
+import AuthenticatedContent from "../components/AuthenticatedContent";
 
 export default function ContactsSearch() {
     const {t} = useTranslation();
@@ -53,7 +54,7 @@ export default function ContactsSearch() {
     };
 
     return (
-        <>
+        <AuthenticatedContent>
             <Section>
                 <>
                     <h1>{t("pages.contacts.title")}</h1>
@@ -133,6 +134,6 @@ export default function ContactsSearch() {
                     )}
                 </>
             </Section>
-        </>
+        </AuthenticatedContent>
     );
 };
