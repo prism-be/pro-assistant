@@ -1,5 +1,5 @@
-﻿import {Contact, Filter} from "@/libs/models";
-import {postData} from "@/libs/http";
+﻿import type {Contact, Filter} from "./models.ts";
+import {postData} from "./http.ts";
 
 export async function searchContacts(filter: any): Promise<Contact[]> {
     let filters : Filter[] = [];

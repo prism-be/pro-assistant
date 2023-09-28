@@ -1,4 +1,4 @@
-﻿import {ObservablePrimitiveChildFns} from "@legendapp/state";
+﻿import {type ObservablePrimitiveChildFns} from "@legendapp/state";
 import {Reactive} from "@legendapp/state/react";
 import clsx from "clsx";
 
