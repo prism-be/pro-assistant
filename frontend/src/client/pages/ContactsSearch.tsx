@@ -2,12 +2,12 @@
 import {useMountOnce, useObservable} from "@legendapp/state/react";
 import {usePersistedObservable} from "@legendapp/state/react-hooks/usePersistedObservable"
 import {ObservablePersistSessionStorage} from '@legendapp/state/persist-plugins/local-storage'
-import type {Contact} from "../../services/models.ts";
-import Section from "../components/Section.tsx";
-import Button from "../forms/Button.tsx";
-import ReactiveInputDate from "../forms/ReactiveInputDate.tsx";
-import ReactiveInputText from "../forms/ReactiveInputText.tsx";
-import {searchContacts} from "../../services/search.ts";
+import type {Contact} from "../../services/models";
+import Section from "../components/Section";
+import Button from "../forms/Button";
+import ReactiveInputDate from "../forms/ReactiveInputDate";
+import ReactiveInputText from "../forms/ReactiveInputText";
+import {searchContacts} from "../../services/search";
 
 export default function ContactsSearch() {
     const {t} = useTranslation();
