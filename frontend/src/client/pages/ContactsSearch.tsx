@@ -38,7 +38,7 @@ export default function ContactsSearch() {
         contacts$.set(await searchContacts(search$.get()));
     }
 
-    const navigate = async (id: string) => {
+    const navigate = (id: string) => {
         window.location.assign("/contacts/" + id);
     };
 
