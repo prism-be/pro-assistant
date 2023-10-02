@@ -39,10 +39,6 @@ export default function ContactsSearch() {
         contacts$.set(await searchContacts(search$.get()));
     }
 
-    const navigate = (id: string) => {
-        window.location.assign("/contacts/" + id);
-    };
-
     const resetSearch = () => {
         search$.set({
             lastName: "",
@@ -105,18 +101,18 @@ export default function ContactsSearch() {
                                         <div className={"font-bold p-2"}>{t("fields.birthDate")}</div>
                                     </div>
                                     {contacts?.map((contact) => (
-                                        <div
+                                        <a
+                                            href={"/contacts/details/?contactId=" + contact.id}
                                             className={
                                                 "grid grid-cols-2 lg:grid-cols-4 border-b border-dashed last:border-0 cursor-pointer hover:bg-gray-100"
                                             }
                                             key={contact.id}
-                                            onClick={() => navigate(contact.id)}
                                         >
-                                            <div className={"p-2"}>{contact.lastName}</div>
+                                            <div className={"p-2"} style={{viewTransitionName: "name" + contact.id}}>{contact.lastName}</div>
                                             <div className={"p-2"}>{contact.firstName}</div>
                                             <div className={"p-2"}>{contact.phoneNumber}</div>
                                             <div className={"p-2"}>{contact.birthDate}</div>
-                                        </div>
+                                        </a>
                                     ))}
                                 </div>
                             )}

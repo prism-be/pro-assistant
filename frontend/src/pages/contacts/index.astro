@@ -1,7 +1,7 @@
 ﻿---
 import {t} from "i18next";
-import ContentContainer from "../layouts/ContentContainer.astro";
-import ContactsSearch from "../client/pages/ContactsSearch.tsx";
+import ContentContainer from "../../layouts/ContentContainer.astro";
+import ContactsSearch from "../../client/pages/ContactsSearch.tsx";
 ---
 <ContentContainer title={t("menu.contacts")}>
     <ContactsSearch client:only="react"/>

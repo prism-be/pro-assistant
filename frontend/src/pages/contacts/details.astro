@@ -1,0 +1,9 @@
+﻿---
+import {t} from "i18next";
+import ContentContainer from "../../layouts/ContentContainer.astro";
+import ContactDetails from "../../client/pages/ContactDetails";
+
+---
+<ContentContainer title={t("menu.contacts")}>
+    <ContactDetails client:only="react"/>
+</ContentContainer>
