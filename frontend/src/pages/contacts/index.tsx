@@ -1,9 +1,7 @@
-﻿import ContentContainer from "../../components/design/ContentContainer";
-import Button from "../../components/forms/Button";
-import {NextPage} from "next";
+﻿import ContentContainer from "@/components/design/ContentContainer";
+import Button from "@/components/forms/Button";
 import {useTranslation} from "react-i18next";
-import {useRouter} from "next/router";
-import Section from "../../components/design/Section";
+import Section from "@/components/design/Section";
 import {Contact} from "@/libs/models";
 import {searchContacts} from "@/libs/search";
 import {useMountOnce, useObservable} from "@legendapp/state/react";
@@ -12,9 +10,8 @@ import ReactiveInputDate from "@/components/forms/ReactiveInputDate";
 import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable"
 import { ObservablePersistSessionStorage } from '@legendapp/state/persist-plugins/local-storage'
 
-const Contacts: NextPage = () => {
+const Contacts = () => {
     const { t } = useTranslation("common");
-    const router = useRouter();
 
     const contacts$ = useObservable<Contact[] | null>(null);
     const contacts = contacts$.use();
@@ -24,7 +21,7 @@ const Contacts: NextPage = () => {
         firstName: "",
         phoneNumber: "",
         birthDate: "",
-    }, { persistLocal: ObservablePersistSessionStorage, local: "contacts/search-contacts" });
+    }, { local: "contacts/search-contacts", pluginLocal: ObservablePersistSessionStorage });
     
     useMountOnce(() => {
         if (search$.lastName.peek() || search$.firstName.peek() || search$.phoneNumber.peek() || search$.birthDate.peek())
@@ -44,7 +41,7 @@ const Contacts: NextPage = () => {
     }
 
     const navigate = async (id: string) => {
-        await router.push("/contacts/" + id);
+        window.location.assign("/contacts/" + id);
     };
 
     const resetSearch = () => {
@@ -82,7 +79,7 @@ const Contacts: NextPage = () => {
                             <div className={"pt-2"}>
                                 <Button
                                     text={t("actions.new")}
-                                    onClick={() => router.push("/contacts/000000000000000000000000")}
+                                    onClick={() => window.location.assign("/contacts/000000000000000000000000")}
                                     secondary={true}
                                 />
                             </div>

@@ -1,23 +1,16 @@
-﻿import React from "react";
-import Image, {ImageLoaderProps} from "next/image";
-
-import {useTranslation} from "react-i18next";
+﻿import {useTranslation} from "react-i18next";
 
 import {useMsal} from "@azure/msal-react";
-import Head from "next/head";
 import {getData} from "@/libs/http";
 import {UserInformation} from "@/libs/models";
 import {toggledMobileMenu} from "@/libs/events/mobileMenu";
 import {useObserveEffect} from "@legendapp/state/react";
 import {currentUser$} from "@/stores/user";
+import {Helmet} from "react-helmet-async";
 
 const Header = () => {
 
     const {t} = useTranslation('common');
-
-    const myLoader = ({src}: ImageLoaderProps) => {
-        return src;
-    }
 
     const {instance} = useMsal();
 
@@ -27,14 +20,13 @@ const Header = () => {
     });
 
     return <>
-        <Head>
-            <title>Pro Assistant - {currentUser$.get()?.organization}</title>
-        </Head>
+        <Helmet>
+            <title>{`Pro Assistant - {currentUser$.get()?.organization}`}</title>
+        </Helmet>
         <div className={"h-14 flex border-b shadow print:hidden"}>
             <div className={"p-1"} onClick={() => toggledMobileMenu()}>
                 <div>
-                    <Image loader={myLoader} src="/images/logo.svg" height={42} width={42} alt={"ProAssistant by PRISM"}
-                           unoptimized={true}></Image>
+                    <img src="/images/logo.svg" height={42} width={42} alt={"ProAssistant by PRISM"} />
                 </div>
             </div>
             <div className={"grow"}>

@@ -140,7 +140,7 @@ export const getAuthorization = async (): Promise<string> => {
     }
     
     const accessTokenRequest = {
-        scopes: ["https://" + process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME + ".onmicrosoft.com/" + process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID + "/records.manage"],
+        scopes: ["https://" + import.meta.env.VITE_PUBLIC_AZURE_AD_TENANT_NAME + ".onmicrosoft.com/" + import.meta.env.VITE_PUBLIC_AZURE_AD_CLIENT_ID + "/records.manage"],
         account: msalInstance.getAllAccounts()[0],
     };
 

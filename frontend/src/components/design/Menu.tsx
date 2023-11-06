@@ -1,13 +1,12 @@
-﻿import Link from "next/link";
-import {useTranslation} from "react-i18next";
-import {useRouter} from "next/router";
+﻿import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
 import {format} from "date-fns";
 import {onToggledMobileMenu, toggledMobileMenu} from "@/libs/events/mobileMenu";
+import {Link, useLocation} from "react-router-dom";
 
 const Menu = () => {
     const { t } = useTranslation("common");
-    const router = useRouter();
+    let location = useLocation();
     const [displayMobileMenu, setDisplayMobileMenu] = useState(false);
 
     useEffect(() => {
@@ -18,7 +17,7 @@ const Menu = () => {
     }, [displayMobileMenu]);
 
     const getActiveLinkClass = (path: string) => {
-        if (router.pathname.startsWith(path)) {
+        if (location.pathname.startsWith(path)) {
             return " border-r-4 border-primary bg-gray-100 ";
         }
 
@@ -37,22 +36,22 @@ const Menu = () => {
             <ul>
                 <li className={"px-4 pt-4 font-bold"}>{t("menu.global")}</li>
                 <li className={getActiveLinkClass("/contacts")}>
-                    <Link className={itemClassName} href={"/contacts"}>
+                    <Link className={itemClassName} to={"/contacts"}>
                         {t("menu.contacts")}
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/agenda")}>
-                    <Link className={itemClassName} href={"/agenda/" + format(new Date(), "yyyy-MM-dd")}>
+                    <Link className={itemClassName} to={"/agenda/" + format(new Date(), "yyyy-MM-dd")}>
                         {t("menu.agenda")}
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/calendar")}>
-                    <Link className={itemClassName} href={"/calendar"}>
+                    <Link className={itemClassName} to={"/calendar"}>
                         {t("menu.calendar")}
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/appointments")}>
-                    <Link className={itemClassName} href={"/appointments"}>
+                    <Link className={itemClassName} to={"/appointments"}>
                         {t("menu.appointments")}
                     </Link>
                 </li>
@@ -60,12 +59,12 @@ const Menu = () => {
                 <div className={"hidden md:block"}>
                     <li className={"px-4 pt-4 font-bold"}>{t("menu.configurationTitle")}</li>
                     <li className={getActiveLinkClass("/configuration")}>
-                        <Link className={itemClassName} href={"/configuration"}>
+                        <Link className={itemClassName} to={"/configuration"}>
                             {t("menu.configuration")}
                         </Link>
                     </li>
                     <li className={getActiveLinkClass("/documents")}>
-                        <Link className={itemClassName} href={"/documents"}>
+                        <Link className={itemClassName} to={"/documents"}>
                             {t("menu.documents")}
                         </Link>
                     </li>
@@ -73,22 +72,22 @@ const Menu = () => {
 
                 <li className={"px-4 pt-4 font-bold"}>{t("menu.accounting")}</li>
                 <li className={"hidden " + getActiveLinkClass("/accounting/forecast")}>
-                    <Link className={itemClassName} href={"/accounting/forecast"}>
+                    <Link className={itemClassName} to={"/accounting/forecast"}>
                         {t("menu.accounting-forecast")}
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/accounting/closing")}>
-                    <Link className={itemClassName} href={"/accounting/closing"}>
+                    <Link className={itemClassName} to={"/accounting/closing"}>
                         {t("menu.accounting-closing")}
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/accounting/reporting")}>
-                    <Link className={itemClassName} href={"/accounting/reporting"}>
+                    <Link className={itemClassName} to={"/accounting/reporting"}>
                         {t("menu.accounting-reporting")}
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/accounting/documents")}>
-                    <Link className={itemClassName} href={"/accounting/documents"}>
+                    <Link className={itemClassName} to={"/accounting/documents"}>
                         {t("menu.accounting-documents")}
                     </Link>
                 </li>
