@@ -13,11 +13,13 @@
     "@azure/msal-browser": "^3.4.0",
     "@azure/msal-react": "^2.0.6",
     "autoprefixer": "^10.4.16",
+    "i18next": "^23.6.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "postcss": "^8.4.31",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^13.3.1",
     "react-router-dom": "^6.18.0",
     "sort-by": "^1.2.0",
     "tailwindcss": "^3.3.5"
