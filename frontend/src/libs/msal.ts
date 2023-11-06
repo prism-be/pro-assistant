@@ -1,8 +1,8 @@
 ﻿import * as msal from "@azure/msal-browser";
 
-const userFlow = process.env.NEXT_PUBLIC_AZURE_AD_USER_FLOW!;
-const tenantName = process.env.NEXT_PUBLIC_AZURE_AD_TENANT_NAME!;
-const clientId = process.env.NEXT_PUBLIC_AZURE_AD_CLIENT_ID!;
+const userFlow = import.meta.env.VITE_PUBLIC_AZURE_AD_USER_FLOW!;
+const tenantName = import.meta.env.VITE_PUBLIC_AZURE_AD_TENANT_NAME!;
+const clientId = import.meta.env.VITE_PUBLIC_AZURE_AD_CLIENT_ID!;
 
 export const b2cPolicies = {
     names: {
@@ -39,6 +39,8 @@ export const msalConfig = {
     }
 };
 
-const msalInstance = new msal.PublicClientApplication(msalConfig);
+export const msalInstance = new msal.PublicClientApplication(msalConfig);
 
-export {msalInstance}
+export const authRequest = {
+    scopes: ["openid", "profile"]
+};

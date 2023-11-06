@@ -1,5 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import {MsalAuthenticationTemplate, MsalProvider} from "@azure/msal-react";
+import {InteractionType} from "@azure/msal-browser";
+import {msalInstance, authRequest} from "./libs/msal";
 
 import {
     createBrowserRouter,
@@ -16,7 +19,11 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-      <RouterProvider router={router} />
-  </React.StrictMode>,
+    <React.StrictMode>
+        <MsalProvider instance={msalInstance}>
+            <MsalAuthenticationTemplate interactionType={InteractionType.Redirect} authenticationRequest={authRequest}>
+                <RouterProvider router={router}/>
+            </MsalAuthenticationTemplate>
+        </MsalProvider>
+    </React.StrictMode>,
 )

@@ -28,6 +28,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
         [null, {\
           "packageLocation": "./",\
           "packageDependencies": [\
+            ["@azure/msal-browser", "npm:3.4.0"],\
+            ["@azure/msal-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:2.0.6"],\
             ["@types/react", "npm:18.2.35"],\
             ["@types/react-dom", "npm:18.2.14"],\
             ["@typescript-eslint/eslint-plugin", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:6.9.1"],\
@@ -76,6 +78,53 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["@ampproject/remapping", "npm:2.2.1"],\
             ["@jridgewell/gen-mapping", "npm:0.3.3"],\
             ["@jridgewell/trace-mapping", "npm:0.3.20"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@azure/msal-browser", [\
+        ["npm:3.4.0", {\
+          "packageLocation": "./.yarn/cache/@azure-msal-browser-npm-3.4.0-96e9030053-c1a4727660.zip/node_modules/@azure/msal-browser/",\
+          "packageDependencies": [\
+            ["@azure/msal-browser", "npm:3.4.0"],\
+            ["@azure/msal-common", "npm:14.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@azure/msal-common", [\
+        ["npm:14.3.0", {\
+          "packageLocation": "./.yarn/cache/@azure-msal-common-npm-14.3.0-8f9c112b6f-6cc03cfb58.zip/node_modules/@azure/msal-common/",\
+          "packageDependencies": [\
+            ["@azure/msal-common", "npm:14.3.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@azure/msal-react", [\
+        ["npm:2.0.6", {\
+          "packageLocation": "./.yarn/cache/@azure-msal-react-npm-2.0.6-5fc71e37fd-d533942c72.zip/node_modules/@azure/msal-react/",\
+          "packageDependencies": [\
+            ["@azure/msal-react", "npm:2.0.6"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:2.0.6", {\
+          "packageLocation": "./.yarn/__virtual__/@azure-msal-react-virtual-3224835d50/0/cache/@azure-msal-react-npm-2.0.6-5fc71e37fd-d533942c72.zip/node_modules/@azure/msal-react/",\
+          "packageDependencies": [\
+            ["@azure/msal-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:2.0.6"],\
+            ["@azure/msal-browser", "npm:3.4.0"],\
+            ["@rollup/plugin-typescript", "virtual:3224835d50d8f29cc980a176d460ce17fd6064583ad522bf12a8239143536deef123bdebf06c2387e8bd4a03ac21e0f4e33edec62c85477c3339c9c47cec8cd9#npm:11.1.5"],\
+            ["@types/azure__msal-browser", null],\
+            ["@types/react", "npm:18.2.35"],\
+            ["react", "npm:18.2.0"],\
+            ["rollup", "npm:3.29.4"]\
+          ],\
+          "packagePeers": [\
+            "@azure/msal-browser",\
+            "@types/azure__msal-browser",\
+            "@types/react",\
+            "react"\
           ],\
           "linkType": "HARD"\
         }]\
@@ -841,6 +890,63 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["@rollup/plugin-typescript", [\
+        ["npm:11.1.5", {\
+          "packageLocation": "./.yarn/cache/@rollup-plugin-typescript-npm-11.1.5-a19e055f0f-092eed73bd.zip/node_modules/@rollup/plugin-typescript/",\
+          "packageDependencies": [\
+            ["@rollup/plugin-typescript", "npm:11.1.5"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:3224835d50d8f29cc980a176d460ce17fd6064583ad522bf12a8239143536deef123bdebf06c2387e8bd4a03ac21e0f4e33edec62c85477c3339c9c47cec8cd9#npm:11.1.5", {\
+          "packageLocation": "./.yarn/__virtual__/@rollup-plugin-typescript-virtual-641f73391c/0/cache/@rollup-plugin-typescript-npm-11.1.5-a19e055f0f-092eed73bd.zip/node_modules/@rollup/plugin-typescript/",\
+          "packageDependencies": [\
+            ["@rollup/plugin-typescript", "virtual:3224835d50d8f29cc980a176d460ce17fd6064583ad522bf12a8239143536deef123bdebf06c2387e8bd4a03ac21e0f4e33edec62c85477c3339c9c47cec8cd9#npm:11.1.5"],\
+            ["@rollup/pluginutils", "virtual:641f73391c5072c9a5062f1f0e471ef8359956b70de490e960382a345fbfcd908da9e6b7d25feb1c46b16c1834718a362b2b26a5c9721b0fccb9a2c6c79b88b6#npm:5.0.5"],\
+            ["@types/rollup", null],\
+            ["@types/tslib", null],\
+            ["@types/typescript", null],\
+            ["resolve", "patch:resolve@npm%3A1.22.8#~builtin<compat/resolve>::version=1.22.8&hash=c3c19d"],\
+            ["rollup", "npm:3.29.4"],\
+            ["tslib", null],\
+            ["typescript", null]\
+          ],\
+          "packagePeers": [\
+            "@types/rollup",\
+            "@types/tslib",\
+            "@types/typescript",\
+            "rollup",\
+            "tslib",\
+            "typescript"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@rollup/pluginutils", [\
+        ["npm:5.0.5", {\
+          "packageLocation": "./.yarn/cache/@rollup-pluginutils-npm-5.0.5-cfa8fafc53-dcd4d6e3cb.zip/node_modules/@rollup/pluginutils/",\
+          "packageDependencies": [\
+            ["@rollup/pluginutils", "npm:5.0.5"]\
+          ],\
+          "linkType": "SOFT"\
+        }],\
+        ["virtual:641f73391c5072c9a5062f1f0e471ef8359956b70de490e960382a345fbfcd908da9e6b7d25feb1c46b16c1834718a362b2b26a5c9721b0fccb9a2c6c79b88b6#npm:5.0.5", {\
+          "packageLocation": "./.yarn/__virtual__/@rollup-pluginutils-virtual-57bdfc51e8/0/cache/@rollup-pluginutils-npm-5.0.5-cfa8fafc53-dcd4d6e3cb.zip/node_modules/@rollup/pluginutils/",\
+          "packageDependencies": [\
+            ["@rollup/pluginutils", "virtual:641f73391c5072c9a5062f1f0e471ef8359956b70de490e960382a345fbfcd908da9e6b7d25feb1c46b16c1834718a362b2b26a5c9721b0fccb9a2c6c79b88b6#npm:5.0.5"],\
+            ["@types/estree", "npm:1.0.4"],\
+            ["@types/rollup", null],\
+            ["estree-walker", "npm:2.0.2"],\
+            ["picomatch", "npm:2.3.1"],\
+            ["rollup", "npm:3.29.4"]\
+          ],\
+          "packagePeers": [\
+            "@types/rollup",\
+            "rollup"\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["@types/babel__core", [\
         ["npm:7.20.3", {\
           "packageLocation": "./.yarn/cache/@types-babel__core-npm-7.20.3-12e735c935-8d14acc14d.zip/node_modules/@types/babel__core/",\
@@ -882,6 +988,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["@types/babel__traverse", "npm:7.20.3"],\
             ["@babel/types", "npm:7.23.0"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
+      ["@types/estree", [\
+        ["npm:1.0.4", {\
+          "packageLocation": "./.yarn/cache/@types-estree-npm-1.0.4-dc93df8c99-dcd08e6e96.zip/node_modules/@types/estree/",\
+          "packageDependencies": [\
+            ["@types/estree", "npm:1.0.4"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -1976,6 +2091,15 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
+      ["estree-walker", [\
+        ["npm:2.0.2", {\
+          "packageLocation": "./.yarn/cache/estree-walker-npm-2.0.2-dfab42f65c-6151e6f982.zip/node_modules/estree-walker/",\
+          "packageDependencies": [\
+            ["estree-walker", "npm:2.0.2"]\
+          ],\
+          "linkType": "HARD"\
+        }]\
+      ]],\
       ["esutils", [\
         ["npm:2.0.3", {\
           "packageLocation": "./.yarn/cache/esutils-npm-2.0.3-f865beafd5-22b5b08f74.zip/node_modules/esutils/",\
@@ -2122,6 +2246,8 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./",\
           "packageDependencies": [\
             ["frontend", "workspace:."],\
+            ["@azure/msal-browser", "npm:3.4.0"],\
+            ["@azure/msal-react", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:2.0.6"],\
             ["@types/react", "npm:18.2.35"],\
             ["@types/react-dom", "npm:18.2.14"],\
             ["@typescript-eslint/eslint-plugin", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:6.9.1"],\
