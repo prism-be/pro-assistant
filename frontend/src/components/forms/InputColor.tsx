@@ -1,5 +1,4 @@
-﻿import {FieldValues} from "react-hook-form";
-import {UseFormSetValue} from "react-hook-form/dist/types/form";
+﻿import {FieldValues, UseFormSetValue} from "react-hook-form";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {PencilSquareIcon} from "@heroicons/react/24/outline";
@@ -14,8 +13,8 @@ interface Props {
     initialColor?: string;
 }
 
-const InputColor = ({ label, name, error, className, setValue, onChange, initialColor }: Props) => {
-    const { t } = useTranslation("common");
+const InputColor = ({label, name, error, className, setValue, onChange, initialColor}: Props) => {
+    const {t} = useTranslation("common");
     const [color, setColor] = useState<string>(initialColor ?? "#000000");
     const [displayPicker, setDisplayPicker] = useState<boolean>(false);
     let foreColor = "#FFFFFF";
@@ -76,10 +75,10 @@ const InputColor = ({ label, name, error, className, setValue, onChange, initial
                     "w-28 rounded-lg cursor-pointer text-center max-w-xs block p-2 outline-0 " +
                     (error ? "border border-red-400" : "border border-gray-200")
                 }
-                style={{ backgroundColor: color, color: foreColor }}
+                style={{backgroundColor: color, color: foreColor}}
             >
                 <div className={"w-8 m-auto"} onClick={() => setDisplayPicker(!displayPicker)}>
-                    <PencilSquareIcon />
+                    <PencilSquareIcon/>
                 </div>
                 <div className={"text-sm"} onClick={() => setCustomColor()}>
                     {color}
@@ -92,7 +91,7 @@ const InputColor = ({ label, name, error, className, setValue, onChange, initial
                         <div
                             key={c}
                             className={"h-6 w-6 cursor-pointer m-auto"}
-                            style={{ backgroundColor: c }}
+                            style={{backgroundColor: c}}
                             onClick={() => {
                                 changeColor(c);
                                 setDisplayPicker(false);

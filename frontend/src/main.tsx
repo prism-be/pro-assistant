@@ -23,6 +23,9 @@ import ContactDetail from "@/pages/contacts/details.tsx";
 import {passThroughLoader} from "@/routing/loaders.ts";
 import Agenda from "@/pages/agenda";
 import Admin from "@/pages/admin.tsx";
+import Configuration from "@/pages/configuration.tsx";
+import {SWRConfig} from "swr";
+import {getData} from "@/libs/http.ts";
 
 const router = createBrowserRouter([
     {
@@ -43,6 +46,10 @@ const router = createBrowserRouter([
         element: <Contacts/>,
     },
     {
+        path: "/configuration",
+        element: <Configuration/>
+    },
+    {
         path: "/contacts/:contactId",
         element: <ContactDetail/>,
         loader: passThroughLoader
@@ -51,11 +58,13 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <MsalProvider instance={msalInstance}>
-            <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}
-                                        authenticationRequest={authRequest}>
-                <RouterProvider router={router}/>
-            </MsalAuthenticationTemplate>
-        </MsalProvider>
+        <SWRConfig value={{fetcher: getData}}>
+            <MsalProvider instance={msalInstance}>
+                <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}
+                                            authenticationRequest={authRequest}>
+                    <RouterProvider router={router}/>
+                </MsalAuthenticationTemplate>
+            </MsalProvider>
+        </SWRConfig>
     </React.StrictMode>,
 )

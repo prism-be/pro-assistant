@@ -1,5 +1,4 @@
-﻿import {NextPage} from "next";
-import ContentContainer from "../components/design/ContentContainer";
+﻿import ContentContainer from "../components/design/ContentContainer";
 import {useTranslation} from "react-i18next";
 import useSWR from "swr";
 import {useEffect, useState} from "react";
@@ -7,7 +6,7 @@ import InputText from "../components/forms/InputText";
 import {useForm} from "react-hook-form";
 import Button from "../components/forms/Button";
 import {useKeyPressEvent} from "react-use";
-import TextArea from "../components/forms/TextArea";
+import TextArea from "@/components/forms/TextArea";
 import InputImage from "../components/forms/InputImage";
 import Section from "../components/design/Section";
 import InputColor from "../components/forms/InputColor";
@@ -268,7 +267,7 @@ const Documents = () => {
     );
 };
 
-const Configuration: NextPage = () => {
+const Configuration = () => {
     return (
             <ContentContainer>
                 <>

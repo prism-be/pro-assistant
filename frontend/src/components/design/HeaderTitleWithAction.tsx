@@ -1,5 +1,4 @@
 ﻿import Button from "../forms/Button";
-import React from "react";
 
 interface Props {
     title: string;
