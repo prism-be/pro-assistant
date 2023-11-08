@@ -1,8 +1,7 @@
 ﻿import useSWR from "swr";
 import Section from "../design/Section";
 import {useTranslation} from "react-i18next";
-import {useRouter} from "next/router";
-import {AppointmentsList} from "../appointments/AppointmentsList";
+import {AppointmentsList} from "@/components/appointments/AppointmentsList";
 import {Appointment, Filter} from "@/libs/models";
 import {postData} from "@/libs/http";
 
@@ -30,10 +29,9 @@ export const ContactAppointments = (props: Props) => {
     );
 
     const {t} = useTranslation("common");
-    const router = useRouter();
 
     async function displayAppointment(id: string | null) {
-        await router.push("/appointments/" + id);
+        window.location.assign("/appointments/" + id);
     }
 
     return (

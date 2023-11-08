@@ -23,7 +23,7 @@ const Header = () => {
         <div className={"h-14 flex border-b shadow print:hidden"}>
             <div className={"p-1"} onClick={() => toggledMobileMenu()}>
                 <div>
-                    <img src="/images/logo.svg" height={42} width={42} alt={"ProAssistant by PRISM"} />
+                    <img src="/logo.svg" height={42} width={42} alt={"ProAssistant by PRISM"} />
                 </div>
             </div>
             <div className={"grow"}>

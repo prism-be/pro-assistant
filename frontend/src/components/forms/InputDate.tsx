@@ -1,5 +1,4 @@
-﻿import {FieldValues, UseFormRegister} from "react-hook-form";
-import {UseFormSetValue} from "react-hook-form/dist/types/form";
+﻿import {FieldValues, UseFormRegister, UseFormSetValue} from "react-hook-form";
 import {add, format, parse} from "date-fns";
 
 interface Props {

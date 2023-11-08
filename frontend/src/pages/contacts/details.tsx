@@ -1,25 +1,28 @@
-﻿import {NextPage} from "next";
-import {useTranslation} from "react-i18next";
-import ContentContainer from "../../components/design/ContentContainer";
-import {useRouter} from "next/router";
+﻿import {useTranslation} from "react-i18next";
+import ContentContainer from "@/components/design/ContentContainer";
 import useSWR, {mutate} from "swr";
-import InputText from "../../components/forms/InputText";
+import InputText from "@/components/forms/InputText";
 import {useForm} from "react-hook-form";
 import {useEffect} from "react";
-import Button from "../../components/forms/Button";
+import Button from "@/components/forms/Button";
 import useKeyboardJs from "react-use/lib/useKeyboardJs";
-import InputDate from "../../components/forms/InputDate";
-import Section from "../../components/design/Section";
+import InputDate from "@/components/forms/InputDate";
+import Section from "@/components/design/Section";
 import {ContactAppointments} from "@/components/contacts/ContactAppointments";
 import {ArrowSmallLeftIcon} from "@heroicons/react/24/outline";
 import {getData, postData} from "@/libs/http";
 import {Contact, UpsertResult} from "@/libs/models";
 import {alertSuccess} from "@/libs/events/alert";
+import {Link, useLoaderData} from "react-router-dom";
 
-const Contacts: NextPage = () => {
+interface Query {
+    contactId: string;
+}
+
+const ContactDetail = () => {
     const { t } = useTranslation("common");
-    const router = useRouter();
-    const { cid } = router.query;
+
+    const {contactId} = useLoaderData() as Query;
 
     const loadContact = async (route: string) => {
         if (route === "/data/contacts/000000000000000000000000") {
@@ -29,7 +32,8 @@ const Contacts: NextPage = () => {
         return await getData<Contact>(route);
     };
 
-    const { data: contact, mutate: mutateContact } = useSWR("/data/contacts/" + cid, loadContact);
+    const { data: contact, mutate: mutateContact } = useSWR("/data/contacts/" + contactId, loadContact);
+    
     const {
         register,
         handleSubmit,
@@ -48,17 +52,17 @@ const Contacts: NextPage = () => {
     }, [contact, setValue]);
 
     const saveContactForm = async (data: any) => {
-        if (cid === "000000000000000000000000") {
+        if (contactId === "000000000000000000000000") {
             data.id = "";
             const result = await postData<UpsertResult>("/data/contacts/insert", data);
             alertSuccess(t("details.saveSuccess"), { autoClose: true });
-            await router.push("/contacts/" + result.id);
+            window.location.assign("/contacts/" + result.id);
             return;
         }
 
         await postData("/data/contacts/update", data);
         await mutateContact();
-        await mutate(`/api/contacts/${cid}/appointments`);
+        await mutate(`/api/contacts/${contactId}/appointments`);
         alertSuccess(t("pages.contacts.details.saveSuccess"), { autoClose: true });
     };
 
@@ -79,9 +83,9 @@ const Contacts: NextPage = () => {
         <ContentContainer>
             <Section>
                 <div className={"flex"}>
-                    <a className={"w-8 cursor-pointer"} onClick={() => router.push("/contacts")}>
+                    <Link className={"w-8 cursor-pointer"} to="/contacts">
                         <ArrowSmallLeftIcon />
-                    </a>
+                    </Link>
                     <h1>
                         {t("pages.contacts.details.title")} {contact?.lastName} {contact?.firstName}
                     </h1>
@@ -222,9 +226,9 @@ const Contacts: NextPage = () => {
                     </div>
                 </form>
             </Section>
-            <ContactAppointments contactId={cid as string} />
+            <ContactAppointments contactId={contactId} />
         </ContentContainer>
     );
 };
 
-export default Contacts;
+export default ContactDetail;
