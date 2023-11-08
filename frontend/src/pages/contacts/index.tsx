@@ -9,9 +9,12 @@ import ReactiveInputText from "@/components/forms/ReactiveInputText";
 import ReactiveInputDate from "@/components/forms/ReactiveInputDate";
 import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable"
 import { ObservablePersistSessionStorage } from '@legendapp/state/persist-plugins/local-storage'
+import {useNavigate} from "react-router-dom";
 
 const Contacts = () => {
     const { t } = useTranslation("common");
+    
+    const navigate = useNavigate();
 
     const contacts$ = useObservable<Contact[] | null>(null);
     const contacts = contacts$.use();
@@ -39,11 +42,7 @@ const Contacts = () => {
     async function performSearch() {
         contacts$.set(await searchContacts(search$.get()));
     }
-
-    const navigate = async (id: string) => {
-        window.location.assign("/contacts/" + id);
-    };
-
+    
     const resetSearch = () => {
         search$.set({
             lastName: "",
@@ -79,7 +78,7 @@ const Contacts = () => {
                             <div className={"pt-2"}>
                                 <Button
                                     text={t("actions.new")}
-                                    onClick={() => window.location.assign("/contacts/000000000000000000000000")}
+                                    onClick={() => navigate("/contacts/000000000000000000000000")}
                                     secondary={true}
                                 />
                             </div>
@@ -109,7 +108,7 @@ const Contacts = () => {
                                                     "grid grid-cols-2 lg:grid-cols-4 border-b border-dashed last:border-0 cursor-pointer hover:bg-gray-100"
                                                 }
                                                 key={contact.id}
-                                                onClick={() => navigate(contact.id)}
+                                                onClick={() => navigate("/contacts/" + contact.id)}
                                             >
                                                 <div className={"p-2"}>{contact.lastName}</div>
                                                 <div className={"p-2"}>{contact.firstName}</div>

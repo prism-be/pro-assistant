@@ -13,7 +13,7 @@ import {ArrowSmallLeftIcon} from "@heroicons/react/24/outline";
 import {getData, postData} from "@/libs/http";
 import {Contact, UpsertResult} from "@/libs/models";
 import {alertSuccess} from "@/libs/events/alert";
-import {Link, useLoaderData} from "react-router-dom";
+import {Link, useLoaderData, useNavigate} from "react-router-dom";
 
 interface Query {
     contactId: string;
@@ -23,6 +23,7 @@ const ContactDetail = () => {
     const { t } = useTranslation("common");
 
     const {contactId} = useLoaderData() as Query;
+    const navigate = useNavigate();
 
     const loadContact = async (route: string) => {
         if (route === "/data/contacts/000000000000000000000000") {
@@ -56,7 +57,7 @@ const ContactDetail = () => {
             data.id = "";
             const result = await postData<UpsertResult>("/data/contacts/insert", data);
             alertSuccess(t("details.saveSuccess"), { autoClose: true });
-            window.location.assign("/contacts/" + result.id);
+            navigate("/contacts/" + result.id);
             return;
         }
 
