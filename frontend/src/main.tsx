@@ -21,11 +21,17 @@ enableReactComponents();
 import Contacts from "@/pages/contacts";
 import ContactDetail from "@/pages/contacts/details.tsx";
 import {passThroughLoader} from "@/routing/loaders.ts";
+import Agenda from "@/pages/agenda";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Contacts/>,
+    },
+    {
+        path: "/agenda/:date",
+        element: <Agenda/>,
+        loader: passThroughLoader
     },
     {
         path: "/contacts",
