@@ -8,7 +8,7 @@ import {useMountOnce, useObservable} from "@legendapp/state/react";
 import ReactiveInputText from "@/components/forms/ReactiveInputText";
 import ReactiveInputDate from "@/components/forms/ReactiveInputDate";
 import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable"
-import { ObservablePersistSessionStorage } from '@legendapp/state/persist-plugins/local-storage'
+import { ObservablePersistSessionStorage  } from '@legendapp/state/persist-plugins/local-storage'
 import {useNavigate} from "react-router-dom";
 
 const Contacts = () => {
