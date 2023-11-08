@@ -20,13 +20,14 @@ export async function getData<TResult>(route: string): Promise<TResult | null> {
     return null;
 }
 
-export async function generateDocument<TResult>(documentId: string, appointmentId: string): Promise<void> {
+export async function generateDocument(documentId: string, appointmentId: string): Promise<void> {
     const bearer = await getAuthorization();
 
     const body = {
         documentId,
         appointmentId: appointmentId
     };
+    
     await fetch("/api/document/generate", {
         method: "POST",
         body: JSON.stringify(body),
@@ -38,7 +39,7 @@ export async function generateDocument<TResult>(documentId: string, appointmentI
     });
 }
 
-export async function downloadDocument<TResult>(documentId: string): Promise<void> {
+export async function downloadDocument(documentId: string): Promise<void> {
     const bearer = await getAuthorization();
 
     const body = {
@@ -101,7 +102,7 @@ export async function putData(route: string, body: any): Promise<void> {
     });
 }
 
-export async function deleteData<TResult>(route: string): Promise<void> {
+export async function deleteData(route: string): Promise<void> {
 
     const bearer = await getAuthorization();
 
@@ -115,7 +116,7 @@ export async function deleteData<TResult>(route: string): Promise<void> {
     });
 }
 
-export async function deleteDataWithBody<TResult>(route: string, body: any): Promise<void> {
+export async function deleteDataWithBody(route: string, body: any): Promise<void> {
 
     const bearer = await getAuthorization();
 
