@@ -4,7 +4,7 @@ import {AppInsightsContext, ReactPlugin, withAITracking} from "@microsoft/applic
 let reactPlugin = new ReactPlugin();
 let appInsights = new ApplicationInsights({
     config: {
-        connectionString: process.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING,
+        connectionString: import.meta.env.NEXT_PUBLIC_APPLICATIONINSIGHTS_CONNECTION_STRING,
         enableAutoRouteTracking: true,
         enableCorsCorrelation: true,
         isBrowserLinkTrackingEnabled: true,

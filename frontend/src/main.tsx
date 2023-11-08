@@ -33,6 +33,7 @@ import AccountingDocuments from "@/pages/accounting/documents.tsx";
 import Calendar from "@/pages/calendar.tsx";
 import Appointments from "@/pages/appointments.tsx";
 import {Alert} from "@/components/Alert.tsx";
+import Insights from "@/components/Insights.tsx";
 
 const router = createBrowserRouter([
     {
@@ -92,14 +93,16 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
     <React.StrictMode>
-        <SWRConfig value={{fetcher: getData}}>
-            <MsalProvider instance={msalInstance}>
-                <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}
-                                            authenticationRequest={authRequest}>
-                    <RouterProvider router={router}/>
-                    <Alert/>
-                </MsalAuthenticationTemplate>
-            </MsalProvider>
-        </SWRConfig>
+        <Insights>
+            <SWRConfig value={{fetcher: getData}}>
+                <MsalProvider instance={msalInstance}>
+                    <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}
+                                                authenticationRequest={authRequest}>
+                        <RouterProvider router={router}/>
+                        <Alert/>
+                    </MsalAuthenticationTemplate>
+                </MsalProvider>
+            </SWRConfig>
+        </Insights>
     </React.StrictMode>,
 )
