@@ -87,7 +87,7 @@ const Menu = () => {
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/accounting/documents")}>
-                    <Link className={itemClassName} to={"/accounting/documents"}>
+                    <Link className={itemClassName} to={"/accounting/documents/" + new Date().getFullYear()}>
                         {t("menu.accounting-documents")}
                     </Link>
                 </li>

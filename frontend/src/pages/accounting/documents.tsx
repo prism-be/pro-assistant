@@ -1,10 +1,8 @@
-﻿import {NextPage} from "next";
-import ContentContainer from "@/components/design/ContentContainer";
+﻿import ContentContainer from "@/components/design/ContentContainer";
 import Section from "@/components/design/Section";
 import {useTranslation} from "react-i18next";
 import { useMemo, useState} from "react";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
-import {useRouter} from "next/router";
 import useSWR from "swr";
 import {AccountingDocument, NextNumber} from "@/libs/models";
 import {HeaderTitleWithAction} from "@/components/design/HeaderTitleWithAction";
@@ -20,20 +18,26 @@ import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
 import InputSelect from "@/components/forms/InputSelect";
 import InputTextAutoComplete from "@/components/forms/InputTextAutoComplete";
 import {onlyUnique} from "@/libs/text";
+import {useLoaderData, useNavigate} from "react-router-dom";
 
-const Documents: NextPage = () => {
+interface Query {
+    year: string;
+}
+
+const AccountingDocuments = () => {
+    const {year} = useLoaderData() as Query;
     const {t} = useTranslation("accounting");
-    const router = useRouter();
+    const navigate = useNavigate();
 
     const {
         data: documents,
         mutate: mutateDocuments
-    } = useSWR<AccountingDocument[]>("/data/accounting/documents/" + (router.query.year ?? new Date().getFullYear()));
+    } = useSWR<AccountingDocument[]>("/data/accounting/documents/" + (year ?? new Date().getFullYear()));
 
     const {
         data: nextNumber,
         mutate: mutateNextNumber
-    } = useSWR<NextNumber>("/data/accounting/documents/next-number/" + (router.query.year ?? new Date().getFullYear()));
+    } = useSWR<NextNumber>("/data/accounting/documents/next-number/" + (year ?? new Date().getFullYear()));
 
     const sortedDocuments = useMemo(() => {
         return documents ? documents.sort((a, b) => parseISO(a.date).getTime() - parseISO(b.date).getTime() || (a.documentNumber ?? 0) - (b.documentNumber ?? 0)) : [];
@@ -46,10 +50,10 @@ const Documents: NextPage = () => {
     const {register, setValue, handleSubmit, formState: {errors}} = useForm();
 
     async function setYear(delta: number) {
-        let year = parseInt(router.query.year as string);
-        year += delta;
+        let nextYear = parseInt(year);
+        nextYear += delta;
 
-        await router.push("/accounting/documents/" + year);
+        navigate("/accounting/documents/" + nextYear);
     }
 
     function addDocument() {
@@ -277,7 +281,7 @@ const Documents: NextPage = () => {
                 </div>
 
                 <h1 className={"text-center col-span-6"}>
-                    {router.query.year}
+                    {year}
                 </h1>
 
                 <div className={"col-start-8 1 w-8 m-auto text-primary"}
@@ -330,4 +334,4 @@ const Documents: NextPage = () => {
     </ContentContainer>
 }
 
-export default Documents;
+export default AccountingDocuments;

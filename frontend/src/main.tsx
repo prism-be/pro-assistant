@@ -29,6 +29,7 @@ import {getData} from "@/libs/http.ts";
 import Documents from "@/pages/documents.tsx";
 import AccountingClosing from "@/pages/accounting/closing.tsx";
 import AccountingReporting from "@/pages/accounting/reporting.tsx";
+import AccountingDocuments from "@/pages/accounting/documents.tsx";
 
 const router = createBrowserRouter([
     {
@@ -38,6 +39,11 @@ const router = createBrowserRouter([
     {
         path: "/accounting/closing",
         element: <AccountingClosing/>,
+    },
+    {
+        path: "/accounting/documents/:year",
+        element: <AccountingDocuments/>,
+        loader: passThroughLoader
     },
     {
         path: "/accounting/reporting",
