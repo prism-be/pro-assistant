@@ -1,5 +1,5 @@
-﻿import Section from "../../components/design/Section";
-import ContentContainer from "../../components/design/ContentContainer";
+﻿import Section from "@/components/design/Section";
+import ContentContainer from "@/components/design/ContentContainer";
 import {useTranslation} from "react-i18next";
 import {add, format, formatISO, parse, parseISO} from "date-fns";
 import React from "react";
