@@ -26,6 +26,7 @@ import Admin from "@/pages/admin.tsx";
 import Configuration from "@/pages/configuration.tsx";
 import {SWRConfig} from "swr";
 import {getData} from "@/libs/http.ts";
+import Documents from "@/pages/documents.tsx";
 
 const router = createBrowserRouter([
     {
@@ -53,6 +54,10 @@ const router = createBrowserRouter([
         path: "/contacts/:contactId",
         element: <ContactDetail/>,
         loader: passThroughLoader
+    },
+    {
+        path: "/documents",
+        element: <Documents/>,
     },
 ]);
 

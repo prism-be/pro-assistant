@@ -1,5 +1,4 @@
-﻿import React, {useState} from "react";
-import {NextPage} from "next";
+﻿import {useState} from "react";
 import ContentContainer from "../components/design/ContentContainer";
 import {useTranslation} from "react-i18next";
 import Section from "../components/design/Section";
@@ -12,21 +11,21 @@ import {HeaderTitleWithAction} from "@/components/design/HeaderTitleWithAction";
 import {DocumentConfiguration} from "@/libs/models";
 import {deleteData, postData} from "@/libs/http";
 
-const Documents: NextPage = () => {
-    const { t } = useTranslation("documents");
-    const { data: documents, mutate: mutateDocuments } = useSWR<DocumentConfiguration[] | null>(
+const Documents = () => {
+    const {t} = useTranslation("documents");
+    const {data: documents, mutate: mutateDocuments} = useSWR<DocumentConfiguration[] | null>(
         "/data/document-configurations"
     );
     const [currentDocument, setCurrentDocument] = useState<DocumentConfiguration | null>(null);
     const {
         register,
         getValues,
-        formState: { errors },
+        formState: {errors},
         setValue,
     } = useForm();
 
     const createNew = () => {
-        setCurrentDocument({ id: "" });
+        setCurrentDocument({id: ""});
         setValue("name", "");
         setValue("title", "");
         setValue("body", "");
@@ -72,23 +71,21 @@ const Documents: NextPage = () => {
 
                         <div>
                             {documents?.length === 0 && (
-                                <>
-                                    <i className={"text-center italic p-4"}>{t("list.NoElements")}</i>
-                                </>
+                                <i className={"text-center italic p-4"}>{t("list.NoElements")}</i>
                             )}
                             {documents && documents.length > 0 && (
                                 <>
                                     {documents.map((d) => (
                                         <div className={"flex"} key={d.id}>
-                                                <a className={"w-6 cursor-pointer"} onClick={() => editDocument(d)}>
-                                                    {" "}
-                                                    <PencilSquareIcon />{" "}
-                                                </a>
-                                                <a className={"w-6 ml-2 cursor-pointer"} onClick={() => deleteDocument(d)}>
-                                                    {" "}
-                                                    <TrashIcon />{" "}
-                                                </a>
-                                                <div className={"pl-2"}>{d.name}</div>
+                                            <a className={"w-6 cursor-pointer"} onClick={() => editDocument(d)}>
+                                                {" "}
+                                                <PencilSquareIcon/>{" "}
+                                            </a>
+                                            <a className={"w-6 ml-2 cursor-pointer"} onClick={() => deleteDocument(d)}>
+                                                {" "}
+                                                <TrashIcon/>{" "}
+                                            </a>
+                                            <div className={"pl-2"}>{d.name}</div>
                                         </div>
                                     ))}
                                 </>
