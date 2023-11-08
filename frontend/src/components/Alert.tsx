@@ -1,7 +1,6 @@
 ﻿import {useEffect, useRef, useState} from "react";
-import {useRouter} from "next/router";
 import {XCircleIcon} from "@heroicons/react/24/outline";
-import {AlertType, clear, onAlert} from "@/libs/events/alert";
+import {AlertType, onAlert} from "@/libs/events/alert";
 
 interface Props {
     id?: string;
@@ -10,7 +9,6 @@ interface Props {
 
 export const Alert = ({ id, fade }: Props) => {
     const mounted = useRef(false);
-    const router = useRouter();
     const [alerts, setAlerts] = useState<any[]>([]);
 
     useEffect(() => {
@@ -31,17 +29,12 @@ export const Alert = ({ id, fade }: Props) => {
             }
         });
 
-        // clear alerts on location change
-        const clearAlerts = () => clear(id);
-        router.events.on("routeChangeStart", clearAlerts);
-
         // clean up function that runs when the component unmounts
         return () => {
             mounted.current = false;
 
             // unsubscribe to avoid memory leaks
             subscription.unsubscribe();
-            router.events.off("routeChangeStart", clearAlerts);
         };
     }, []);
 

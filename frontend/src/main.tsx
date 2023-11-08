@@ -32,6 +32,7 @@ import AccountingReporting from "@/pages/accounting/reporting.tsx";
 import AccountingDocuments from "@/pages/accounting/documents.tsx";
 import Calendar from "@/pages/calendar.tsx";
 import Appointments from "@/pages/appointments.tsx";
+import {Alert} from "@/components/Alert.tsx";
 
 const router = createBrowserRouter([
     {
@@ -96,6 +97,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
                 <MsalAuthenticationTemplate interactionType={InteractionType.Redirect}
                                             authenticationRequest={authRequest}>
                     <RouterProvider router={router}/>
+                    <Alert/>
                 </MsalAuthenticationTemplate>
             </MsalProvider>
         </SWRConfig>
