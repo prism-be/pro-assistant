@@ -6,7 +6,6 @@ import {UserInformation} from "@/libs/models";
 import {toggledMobileMenu} from "@/libs/events/mobileMenu";
 import {useObserveEffect} from "@legendapp/state/react";
 import {currentUser$} from "@/stores/user";
-import {Helmet} from "react-helmet-async";
 
 const Header = () => {
 
@@ -17,12 +16,10 @@ const Header = () => {
     useObserveEffect(async () => {
         const user = await getData<UserInformation>("/authentication/user");
         currentUser$.set(user);
+        document.title = `Pro Assistant - ${user?.organization}`;
     });
 
     return <>
-        <Helmet>
-            <title>{`Pro Assistant - {currentUser$.get()?.organization}`}</title>
-        </Helmet>
         <div className={"h-14 flex border-b shadow print:hidden"}>
             <div className={"p-1"} onClick={() => toggledMobileMenu()}>
                 <div>

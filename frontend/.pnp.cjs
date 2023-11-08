@@ -48,7 +48,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["postcss", "npm:8.4.31"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:18.2.0"],\
-            ["react-helmet-async", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:1.3.0"],\
             ["react-i18next", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:13.3.1"],\
             ["react-router-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:6.18.0"],\
             ["rxjs", "npm:7.8.1"],\
@@ -2316,7 +2315,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             ["postcss", "npm:8.4.31"],\
             ["react", "npm:18.2.0"],\
             ["react-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:18.2.0"],\
-            ["react-helmet-async", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:1.3.0"],\
             ["react-i18next", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:13.3.1"],\
             ["react-router-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:6.18.0"],\
             ["rxjs", "npm:7.8.1"],\
@@ -2651,16 +2649,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageLocation": "./.yarn/cache/inherits-npm-2.0.4-c66b3957a0-4a48a73384.zip/node_modules/inherits/",\
           "packageDependencies": [\
             ["inherits", "npm:2.0.4"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["invariant", [\
-        ["npm:2.2.4", {\
-          "packageLocation": "./.yarn/cache/invariant-npm-2.2.4-717fbdb119-cc3182d793.zip/node_modules/invariant/",\
-          "packageDependencies": [\
-            ["invariant", "npm:2.2.4"],\
-            ["loose-envify", "npm:1.4.0"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3576,18 +3564,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["prop-types", [\
-        ["npm:15.8.1", {\
-          "packageLocation": "./.yarn/cache/prop-types-npm-15.8.1-17c71ee7ee-c056d3f1c0.zip/node_modules/prop-types/",\
-          "packageDependencies": [\
-            ["prop-types", "npm:15.8.1"],\
-            ["loose-envify", "npm:1.4.0"],\
-            ["object-assign", "npm:4.1.1"],\
-            ["react-is", "npm:16.13.1"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["punycode", [\
         ["npm:2.3.1", {\
           "packageLocation": "./.yarn/cache/punycode-npm-2.3.1-97543c420d-bb0a0ceedc.zip/node_modules/punycode/",\
@@ -3640,46 +3616,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "linkType": "HARD"\
         }]\
       ]],\
-      ["react-fast-compare", [\
-        ["npm:3.2.2", {\
-          "packageLocation": "./.yarn/cache/react-fast-compare-npm-3.2.2-45b585a872-2071415b4f.zip/node_modules/react-fast-compare/",\
-          "packageDependencies": [\
-            ["react-fast-compare", "npm:3.2.2"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["react-helmet-async", [\
-        ["npm:1.3.0", {\
-          "packageLocation": "./.yarn/cache/react-helmet-async-npm-1.3.0-240f565ac8-7ca7e47f8a.zip/node_modules/react-helmet-async/",\
-          "packageDependencies": [\
-            ["react-helmet-async", "npm:1.3.0"]\
-          ],\
-          "linkType": "SOFT"\
-        }],\
-        ["virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:1.3.0", {\
-          "packageLocation": "./.yarn/__virtual__/react-helmet-async-virtual-0d126c2b9c/0/cache/react-helmet-async-npm-1.3.0-240f565ac8-7ca7e47f8a.zip/node_modules/react-helmet-async/",\
-          "packageDependencies": [\
-            ["react-helmet-async", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:1.3.0"],\
-            ["@babel/runtime", "npm:7.23.2"],\
-            ["@types/react", "npm:18.2.35"],\
-            ["@types/react-dom", "npm:18.2.14"],\
-            ["invariant", "npm:2.2.4"],\
-            ["prop-types", "npm:15.8.1"],\
-            ["react", "npm:18.2.0"],\
-            ["react-dom", "virtual:d9650954c7f1725ea712d2e40695de9ea5d1c0fa9b89379134c62909d440d91b03d6c37e2823804a3404472b90a5bec73c82193190dd3c4db4c9e9edd75db91e#npm:18.2.0"],\
-            ["react-fast-compare", "npm:3.2.2"],\
-            ["shallowequal", "npm:1.1.0"]\
-          ],\
-          "packagePeers": [\
-            "@types/react-dom",\
-            "@types/react",\
-            "react-dom",\
-            "react"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
       ["react-i18next", [\
         ["npm:13.3.1", {\
           "packageLocation": "./.yarn/cache/react-i18next-npm-13.3.1-2ad8c538c6-71a9ae4968.zip/node_modules/react-i18next/",\
@@ -3712,15 +3648,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
             "react-dom",\
             "react-native",\
             "react"\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["react-is", [\
-        ["npm:16.13.1", {\
-          "packageLocation": "./.yarn/cache/react-is-npm-16.13.1-a9b9382b4f-f7a19ac349.zip/node_modules/react-is/",\
-          "packageDependencies": [\
-            ["react-is", "npm:16.13.1"]\
           ],\
           "linkType": "HARD"\
         }]\
@@ -3934,15 +3861,6 @@ function $$SETUP_STATE(hydrateRuntimeState, basePath) {
           "packageDependencies": [\
             ["semver", "npm:7.5.4"],\
             ["lru-cache", "npm:6.0.0"]\
-          ],\
-          "linkType": "HARD"\
-        }]\
-      ]],\
-      ["shallowequal", [\
-        ["npm:1.1.0", {\
-          "packageLocation": "./.yarn/cache/shallowequal-npm-1.1.0-6688d419cb-f4c1de0837.zip/node_modules/shallowequal/",\
-          "packageDependencies": [\
-            ["shallowequal", "npm:1.1.0"]\
           ],\
           "linkType": "HARD"\
         }]\
