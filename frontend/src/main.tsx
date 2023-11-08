@@ -31,11 +31,17 @@ import AccountingClosing from "@/pages/accounting/closing.tsx";
 import AccountingReporting from "@/pages/accounting/reporting.tsx";
 import AccountingDocuments from "@/pages/accounting/documents.tsx";
 import Calendar from "@/pages/calendar.tsx";
+import Appointments from "@/pages/appointments.tsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Contacts/>,
+    },
+    {
+        path: "/appointments/:appointmentId",
+        element: <Appointments/>,
+        loader: passThroughLoader
     },
     {
         path: "/calendar/:date",

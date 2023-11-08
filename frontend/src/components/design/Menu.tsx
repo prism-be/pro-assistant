@@ -1,6 +1,6 @@
 ﻿import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
-import {format, startOfWeek} from "date-fns";
+import {format, formatISO, startOfWeek} from "date-fns";
 import {onToggledMobileMenu, toggledMobileMenu} from "@/libs/events/mobileMenu";
 import {Link, useLocation} from "react-router-dom";
 
@@ -51,7 +51,7 @@ const Menu = () => {
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/appointments")}>
-                    <Link className={itemClassName} to={"/appointments"}>
+                    <Link className={itemClassName} to={"/appointments/new?startDate=" + encodeURIComponent(formatISO(new Date()))}>
                         {t("menu.appointments")}
                     </Link>
                 </li>

@@ -1,16 +1,14 @@
-﻿import {NextPage} from "next";
-import ContentContainer from "../../components/design/ContentContainer";
-import Section from "../../components/design/Section";
+﻿import ContentContainer from "@/components/design/ContentContainer";
+import Section from "@/components/design/Section";
 import {useTranslation} from "react-i18next";
-import {useRouter} from "next/router";
 import useSWR from "swr";
 import {useForm} from "react-hook-form";
 import {useCallback, useEffect, useState} from "react";
-import InputText from "../../components/forms/InputText";
-import InputSelect from "../../components/forms/InputSelect";
+import InputText from "@/components/forms/InputText";
+import InputSelect from "@/components/forms/InputSelect";
 import {add, format, formatISO, parse, parseISO, startOfHour} from "date-fns";
-import Button from "../../components/forms/Button";
-import InputDate from "../../components/forms/InputDate";
+import Button from "@/components/forms/Button";
+import InputDate from "@/components/forms/InputDate";
 import {Appointment, Contact, Tariff} from "@/libs/models";
 import {getData, postData} from "@/libs/http";
 import {Calendar} from "@/components/forms/Calendar";
@@ -19,12 +17,18 @@ import {GeneratedDocuments} from "@/components/appointments/GeneratedDocuments";
 import {formatAmount} from "@/libs/formats";
 import {alertSuccess} from "@/libs/events/alert";
 import {searchContacts} from "@/libs/search";
+import {useLoaderData, useLocation} from "react-router-dom";
 
-const Appointments: NextPage = () => {
+interface Query {
+    appointmentId: string;
+}
+
+const Appointments = () => {
     const { t } = useTranslation("common");
-    const router = useRouter();
+    const location = useLocation();
+    const { appointmentId } = useLoaderData() as Query;
 
-    const { data: appointment, mutate: mutateAppointment } = useSWR<Appointment | null>("/data/appointments/" + router.query.mid, loadAppointment);
+    const { data: appointment, mutate: mutateAppointment } = useSWR<Appointment | null>("/data/appointments/" + appointmentId, loadAppointment);
     const { data: tariffs } = useSWR<Tariff[]>("/data/tariffs");
 
     const {
@@ -88,18 +92,18 @@ const Appointments: NextPage = () => {
     }, [appointment, tariffs]);
 
     useEffect(() => {
-        if (router.asPath.startsWith("/appointments/new")) {
+        if (location.pathname.startsWith("/appointments/new")) {
             let startDate = startOfHour(new Date());
 
-            if (router.query.startDate) {
-                startDate = parseISO(router.query.startDate as string);
+            if (startDate) {
+                startDate = parseISO(startDate.toISOString());
             }
 
             setDate(startDate);
             setValue("duration", 60);
             setValue("hour", format(startDate, "HH:mm"));
         }
-    }, [router]);
+    }, [location]);
 
     function loadAppointment(path: string): Promise<Appointment | null> {
         if (path === "/data/appointments/new") {
@@ -138,9 +142,9 @@ const Appointments: NextPage = () => {
         } else {
             await postData("/data/appointments/update", updatedAppointment);
         }
-        await router.back();
         await mutateAppointment();
         alertSuccess(t("alerts.saveSuccess"));
+        history.back();
     }
 
     let searchContactsTimeout: any;
@@ -337,7 +341,7 @@ const Appointments: NextPage = () => {
                     <InputSelect className={"col-span-2"} label={t("fields.payment")} name={"payment"} required={false} register={register} error={errors.payment} options={paymentOptions} onChange={() => updateState()} />
                     <InputSelect className={"col-span-2"} label={t("fields.appointmentState")} name={"state"} required={false} register={register} error={errors.payment} options={stateOptions} />
 
-                    <Button text={t("actions.back")} secondary={true} className={"col-span-2"} onClick={() => router.back()} />
+                    <Button text={t("actions.back")} secondary={true} className={"col-span-2"} onClick={() => history.back()} />
 
                     <Button text={t("actions.save")} className={"col-span-2"} onClick={handleSubmit(onSubmit)} />
                 </form>
