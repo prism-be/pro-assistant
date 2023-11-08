@@ -1,5 +1,4 @@
-﻿import {NextPage} from "next";
-import Section from "@/components/design/Section";
+﻿import Section from "@/components/design/Section";
 import ContentContainer from "@/components/design/ContentContainer";
 import {useTranslation} from "react-i18next";
 import {Appointment, AppointmentClosing} from "@/libs/models";
@@ -12,14 +11,14 @@ import sortArray from "sort-array";
 import InputSelect from "@/components/forms/InputSelect";
 import {useForm} from "react-hook-form";
 import {postData} from "@/libs/http";
-import {useRouter} from "next/router";
 import InputDate from "@/components/forms/InputDate";
 import {format, formatISO, parse, parseISO} from "date-fns";
 import {HandThumbUpIcon} from "@heroicons/react/24/solid";
+import {useNavigate} from "react-router-dom";
 
-const Closing: NextPage = () => {
+const AccountingClosing = () => {
 
-    const router = useRouter();
+    const navigate = useNavigate();
     const {t} = useTranslation("accounting");
     const {data: unclosed, mutate: mutateUnclosed} = useSWR<Appointment[]>("/data/accounting/closing/unclosed");
 
@@ -115,7 +114,7 @@ const Closing: NextPage = () => {
                             />
                             <Button
                                 text={t("common:actions.details")}
-                                onClick={() => router.push(`/appointments/${currentEdit.id}`)}
+                                onClick={() => navigate(`/appointments/${currentEdit.id}`)}
                                 secondary={true}
                             />
                             <Button text={t("common:actions.save")} onClick={handleSubmit(onSubmit)}/>
@@ -132,13 +131,11 @@ const Closing: NextPage = () => {
             </div>}
             </>
 
-            <>
-                <AppointmentsList appointments={sortArray(unclosed ?? [], {by: "startDate"})}
-                                  onClick={(x) => startEditing(x)}/>
-            </>
+            <AppointmentsList appointments={sortArray(unclosed ?? [], {by: "startDate"})}
+                              onClick={(x) => startEditing(x)}/>
 
         </Section>
     </ContentContainer>
 }
 
-export default Closing;
+export default AccountingClosing;

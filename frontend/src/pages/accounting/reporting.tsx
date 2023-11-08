@@ -1,5 +1,4 @@
-﻿import {NextPage} from "next";
-import {useTranslation} from "react-i18next";
+﻿import {useTranslation} from "react-i18next";
 import ContentContainer from "@/components/design/ContentContainer";
 import Section from "@/components/design/Section";
 import React from "react";
@@ -7,21 +6,18 @@ import {AccountingReportingPeriod, IncomeDetail} from "@/libs/models";
 import {formatAmount, formatIsoMonth} from "@/libs/formats";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
 
-import dynamic from 'next/dynamic';
 import { Toggle } from "@/components/forms/Toggle";
 import { getData } from "@/libs/http";
 import { Memo, useComputed, useObservable, useObserveEffect } from "@legendapp/state/react";
-import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable"
-import { ObservablePersistLocalStorage } from '@legendapp/state/persist-plugins/local-storage'
+import ReactApexChart from 'react-apexcharts';
 
-const ReactApexChart = dynamic(() => import('react-apexcharts'), {ssr: false})
 
-const Reporting: NextPage = () => {
+const AccountingReporting = () => {
     const {t} = useTranslation("accounting");
     
     const year$ = useObservable<number>(new Date().getFullYear());
     
-    const detailed$ = usePersistedObservable(false, { persistLocal: ObservablePersistLocalStorage, local: "accounting-reporting-detailed" });
+    const detailed$ = useObservable(false);
 
     const currentPeriod$ = useObservable<AccountingReportingPeriod[]>([]);
     const currentPeriod = currentPeriod$.use();
@@ -99,7 +95,7 @@ const Reporting: NextPage = () => {
                     color: "#ff5252",
                 },
             ]
-        } as ApexCharts.ApexOptions;
+        } as any;
 
     });
     const graphData = graphData$.use();
@@ -198,4 +194,4 @@ const Reporting: NextPage = () => {
     </ContentContainer>;
 }
 
-export default Reporting;
+export default AccountingReporting;

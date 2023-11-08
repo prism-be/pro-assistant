@@ -6,13 +6,12 @@ import Section from "@/components/design/Section";
 import { ListItem } from "@/components/ListItem";
 import { postData } from "@/libs/http";
 import { Forecast } from "@/libs/models";
-import { NextPage } from "next";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import useSWR from "swr";
 import sortArray from "sort-array";
 
-const Forecast: NextPage = () => {
+const AccountingForecast = () => {
     const { t } = useTranslation("accounting");
     const { data: forecasts, mutate: mutateForecasts } = useSWR<Forecast[]>("/data/accounting/forecast");
 
@@ -78,4 +77,4 @@ const Forecast: NextPage = () => {
     );
 };
 
-export default Forecast;
+export default AccountingForecast;

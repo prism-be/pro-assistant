@@ -27,11 +27,21 @@ import Configuration from "@/pages/configuration.tsx";
 import {SWRConfig} from "swr";
 import {getData} from "@/libs/http.ts";
 import Documents from "@/pages/documents.tsx";
+import AccountingClosing from "@/pages/accounting/closing.tsx";
+import AccountingReporting from "@/pages/accounting/reporting.tsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Contacts/>,
+    },
+    {
+        path: "/accounting/closing",
+        element: <AccountingClosing/>,
+    },
+    {
+        path: "/accounting/reporting",
+        element: <AccountingReporting/>,
     },
     {
         path: "/admin",
