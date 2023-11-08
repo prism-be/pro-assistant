@@ -1,6 +1,6 @@
 ﻿import {useTranslation} from "react-i18next";
 import {useEffect, useState} from "react";
-import {format} from "date-fns";
+import {format, startOfWeek} from "date-fns";
 import {onToggledMobileMenu, toggledMobileMenu} from "@/libs/events/mobileMenu";
 import {Link, useLocation} from "react-router-dom";
 
@@ -46,7 +46,7 @@ const Menu = () => {
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/calendar")}>
-                    <Link className={itemClassName} to={"/calendar"}>
+                    <Link className={itemClassName} to={"/calendar/" + format(startOfWeek(new Date(), { weekStartsOn: 1 }), "yyyy-MM-dd")}>
                         {t("menu.calendar")}
                     </Link>
                 </li>

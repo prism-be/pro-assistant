@@ -1,12 +1,10 @@
-﻿import {NextPage} from "next";
-import ContentContainer from "../../components/design/ContentContainer";
+﻿import ContentContainer from "@/components/design/ContentContainer";
 import {add, format, formatISO, parse, parseISO, startOfWeek} from "date-fns";
 import {useTranslation} from "react-i18next";
 import React from "react";
 import {useKeyPressEvent} from "react-use";
 import {useSwipeable} from "react-swipeable";
-import Section from "../../components/design/Section";
-import {useRouter} from "next/router";
+import Section from "@/components/design/Section";
 import useSWR from "swr";
 import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
 import {Appointment} from "@/libs/models";
@@ -14,23 +12,30 @@ import {postData} from "@/libs/http";
 import {getLocale} from "@/libs/localization";
 import {AppointmentStateIcon} from "@/components/appointments/AppointmentStateIcon";
 import {defaultColor} from "@/libs/constants";
+import {useLoaderData, useNavigate} from "react-router-dom";
 
-const Calendar: NextPage = () => {
-    const router = useRouter();
-    const monday = startOfWeek(parse(router.query.date as string, "yyyy-MM-dd", new Date()), { weekStartsOn: 1 });
+interface Query {
+    date: string;
+}
 
-    const { data: appointments } = useSWR(router.asPath, loadAppointments);
+const Calendar = () => {
+    const  {date} = useLoaderData() as Query;
+    const navigate = useNavigate();
+    
+    const monday = startOfWeek(parse(date, "yyyy-MM-dd", new Date()), { weekStartsOn: 1 });
+
+    const { data: appointments } = useSWR( `/appointments/${date}`, loadAppointments);
 
     const { t } = useTranslation("common");
     const hours = [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21];
     const days = [1, 2, 3, 4, 5, 6, 7];
 
     function goNextWeek() {
-        router.push("/calendar/" + format(add(monday, { weeks: 1 }), "yyyy-MM-dd"));
+        navigate("/calendar/" + format(add(monday, { weeks: 1 }), "yyyy-MM-dd"));
     }
 
     function goPreviousWeek() {
-        router.push("/calendar/" + format(add(monday, { weeks: -1 }), "yyyy-MM-dd"));
+        navigate("/calendar/" + format(add(monday, { weeks: -1 }), "yyyy-MM-dd"));
     }
 
     useKeyPressEvent("ArrowLeft", () => {
@@ -80,7 +85,7 @@ const Calendar: NextPage = () => {
             hours: h,
             minutes: m,
         });
-        router.push("/appointments/new?startDate=" + encodeURIComponent(formatISO(startDate)));
+        navigate("/appointments/new?startDate=" + encodeURIComponent(formatISO(startDate)));
     };
 
     const swipeHandlers = useSwipeable({
@@ -185,7 +190,7 @@ const Calendar: NextPage = () => {
                                         gridRowEnd: getDurationClassName(a.duration),
                                     }}
                                     key={a.id}
-                                    onClick={() => router.push("/appointments/" + a.id)}
+                                    onClick={() => navigate("/appointments/" + a.id)}
                                 >
                                     <div className={"hidden md:block relative"}>
                                         {a.title?.slice(0, 30)}
