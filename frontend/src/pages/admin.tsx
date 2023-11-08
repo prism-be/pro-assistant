@@ -1,4 +1,4 @@
-﻿import {postData, putData} from "@/libs/http";
+﻿import { putData} from "@/libs/http";
 import {alertSuccess} from "@/libs/events/alert";
 
 const Admin = () => {

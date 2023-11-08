@@ -22,11 +22,16 @@ import Contacts from "@/pages/contacts";
 import ContactDetail from "@/pages/contacts/details.tsx";
 import {passThroughLoader} from "@/routing/loaders.ts";
 import Agenda from "@/pages/agenda";
+import Admin from "@/pages/admin.tsx";
 
 const router = createBrowserRouter([
     {
         path: "/",
         element: <Contacts/>,
+    },
+    {
+        path: "/admin",
+        element: <Admin/>
     },
     {
         path: "/agenda/:date",
