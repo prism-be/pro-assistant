@@ -7,28 +7,27 @@ import {searchContacts} from "@/libs/search";
 import {useMountOnce, useObservable} from "@legendapp/state/react";
 import ReactiveInputText from "@/components/forms/ReactiveInputText";
 import ReactiveInputDate from "@/components/forms/ReactiveInputDate";
-import { usePersistedObservable } from "@legendapp/state/react-hooks/usePersistedObservable"
-import { ObservablePersistSessionStorage  } from '@legendapp/state/persist-plugins/local-storage'
+import {usePersistedObservable} from "@legendapp/state/react-hooks/usePersistedObservable"
+import {ObservablePersistSessionStorage} from '@legendapp/state/persist-plugins/local-storage'
 import {useNavigate} from "react-router-dom";
 
-const Contacts = () => {
-    const { t } = useTranslation("common");
-    
+const ContactsSearch = () => {
+    const {t} = useTranslation("common");
+
     const navigate = useNavigate();
 
     const contacts$ = useObservable<Contact[] | null>(null);
     const contacts = contacts$.use();
-    
+
     const search$ = usePersistedObservable({
         lastName: "",
         firstName: "",
         phoneNumber: "",
         birthDate: "",
-    }, { local: "contacts/search-contacts", pluginLocal: ObservablePersistSessionStorage });
-    
+    }, {local: "contacts/search-contacts", pluginLocal: ObservablePersistSessionStorage});
+
     useMountOnce(() => {
-        if (search$.lastName.peek() || search$.firstName.peek() || search$.phoneNumber.peek() || search$.birthDate.peek())
-        {
+        if (search$.lastName.peek() || search$.firstName.peek() || search$.phoneNumber.peek() || search$.birthDate.peek()) {
             performSearch();
         }
     });
@@ -36,13 +35,13 @@ const Contacts = () => {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement> | React.MouseEvent<any>) => {
         e.preventDefault();
         await performSearch();
-        
+
     };
-    
+
     async function performSearch() {
         contacts$.set(await searchContacts(search$.get()));
     }
-    
+
     const resetSearch = () => {
         search$.set({
             lastName: "",
@@ -61,19 +60,22 @@ const Contacts = () => {
                         <h1>{t("pages.contacts.title")}</h1>
                         <form className={"grid gap-2 md:grid-cols-2 lg:grid-cols-4"} onSubmit={handleSubmit}>
                             <div className={"pt-2"}>
-                                <ReactiveInputText label={t("fields.lastName")} value={search$.lastName} autoCapitalize={true} />
+                                <ReactiveInputText label={t("fields.lastName")} value={search$.lastName}
+                                                   autoCapitalize={true}/>
                             </div>
                             <div className={"pt-2"}>
-                                <ReactiveInputText label={t("fields.firstName")} value={search$.firstName} autoCapitalize={true} />
+                                <ReactiveInputText label={t("fields.firstName")} value={search$.firstName}
+                                                   autoCapitalize={true}/>
                             </div>
                             <div className={"pt-2"}>
-                                <ReactiveInputText label={t("fields.phoneNumber")} value={search$.phoneNumber} autoCapitalize={true} />
+                                <ReactiveInputText label={t("fields.phoneNumber")} value={search$.phoneNumber}
+                                                   autoCapitalize={true}/>
                             </div>
                             <div className={"pt-2"}>
-                                <ReactiveInputDate label={t("fields.birthDate")} value={search$.birthDate} />
+                                <ReactiveInputDate label={t("fields.birthDate")} value={search$.birthDate}/>
                             </div>
                             <div className={"pt-2"}>
-                                <Button text={t("actions.reset")} onClick={resetSearch} secondary={true} />
+                                <Button text={t("actions.reset")} onClick={resetSearch} secondary={true}/>
                             </div>
                             <div className={"pt-2"}>
                                 <Button
@@ -83,7 +85,7 @@ const Contacts = () => {
                                 />
                             </div>
                             <div className={"pt-2 md:col-start-2 lg:col-start-4"}>
-                                <Button submit={true} text={t("actions.search")} onClick={handleSubmit} />
+                                <Button submit={true} text={t("actions.search")} onClick={handleSubmit}/>
                             </div>
                         </form>
                     </>
@@ -125,11 +127,7 @@ const Contacts = () => {
                             </>
                         )}
 
-                        {!contacts && (
-                            <>
-                                <div className={"text-center italic"}>{t("results.doSearch")}</div>
-                            </>
-                        )}
+                        {!contacts && (<div className={"text-center italic"}>{t("results.doSearch")}</div>)}
                     </>
                 </Section>
             </>
@@ -137,4 +135,4 @@ const Contacts = () => {
     );
 };
 
-export default Contacts;
+export default ContactsSearch;

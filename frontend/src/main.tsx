@@ -31,7 +31,7 @@ const AccountingDocuments = React.lazy(() => import("@/pages/accounting/document
 const AccountingReporting = React.lazy(() => import("@/pages/accounting/reporting.tsx"));
 const Appointments = React.lazy(() => import("@/pages/appointments.tsx"));
 const Calendar = React.lazy(() => import("@/pages/calendar.tsx"));
-const Contacts = React.lazy(() => import("@/pages/contacts/index.tsx"));
+const ContactsSearch = React.lazy(() => import("@/pages/contacts/search.tsx"));
 const ContactDetail = React.lazy(() => import("@/pages/contacts/details.tsx"));
 const Configuration = React.lazy(() => import("@/pages/configuration.tsx"));
 const Documents = React.lazy(() => import("@/pages/documents.tsx"));
@@ -39,7 +39,7 @@ const Documents = React.lazy(() => import("@/pages/documents.tsx"));
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Suspense><Contacts/></Suspense>,
+        element: <Suspense><ContactsSearch/></Suspense>,
     },
     {
         path: "/appointments/:appointmentId",
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
     },
     {
         path: "/contacts",
-        element: <Suspense><Contacts/></Suspense>,
+        element: <Suspense><ContactsSearch/></Suspense>,
     },
     {
         path: "/configuration",
