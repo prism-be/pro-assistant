@@ -21,7 +21,7 @@ enableReactComponents();
 import Contacts from "@/pages/contacts";
 import ContactDetail from "@/pages/contacts/details.tsx";
 import {passThroughLoader} from "@/routing/loaders.ts";
-import Agenda from "@/pages/agenda";
+import Agenda from "@/pages/agenda.tsx";
 import Admin from "@/pages/admin.tsx";
 import Configuration from "@/pages/configuration.tsx";
 import {SWRConfig} from "swr";

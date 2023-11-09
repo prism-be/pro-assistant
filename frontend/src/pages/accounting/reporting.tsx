@@ -38,7 +38,7 @@ const AccountingReporting = () => {
     }
 
     function  filterDetails (details: IncomeDetail[], detailed: boolean): IncomeDetail[] {
-        if (details && detailed === false) {
+        if (details && !detailed) {
                 details = details.reduce((acc, detail) => {
                     const index = acc.findIndex((d) => d.type === detail.type && d.category === detail.category);
     
@@ -162,22 +162,20 @@ const AccountingReporting = () => {
                             <div className={"underline text-right"}>{t("reporting.details.unitPrice")}</div>
                             <div className={"underline text-right"}>{t("reporting.details.count")}</div>
                             <div className={"underline text-right"}>{t("reporting.details.total")}</div>
-                            <>
-                                {period.details.map((detail) => <React.Fragment key={detail.id}>
-                                    <div>
-                                        {getType(detail)}
-                                    </div>
-                                    <div className={"text-right"}>
-                                        {formatAmount(detail.unitPrice)} &euro;
-                                    </div>
-                                    <div className={"text-right"}>
-                                        {detail.count}
-                                    </div>
-                                    <div className={"text-right"}>
-                                        {formatAmount(detail.subTotal)} &euro;
-                                    </div>
-                                </React.Fragment>)}
-                            </>
+                            {period.details.map((detail) => <React.Fragment key={detail.id}>
+                                <div>
+                                    {getType(detail)}
+                                </div>
+                                <div className={"text-right"}>
+                                    {formatAmount(detail.unitPrice)} &euro;
+                                </div>
+                                <div className={"text-right"}>
+                                    {detail.count}
+                                </div>
+                                <div className={"text-right"}>
+                                    {formatAmount(detail.subTotal)} &euro;
+                                </div>
+                            </React.Fragment>)}
                         </div>
                         <div className={"grid grid-cols-4"}>
                             <div />
