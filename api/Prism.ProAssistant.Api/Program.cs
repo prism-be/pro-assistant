@@ -35,10 +35,10 @@ app.MapControllers();
 
 app.UseRouting();
 app.UseAuthentication().UseAuthorization();
+
 app.UseDefaultFiles();
 app.UseStaticFiles();
-
-app.UseMiddleware<NextJsRouterMiddleWare>();
+app.MapFallbackToFile("index.html");
 
 if (app.Environment.IsDevelopment())
 {
