@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {Suspense} from 'react'
 import ReactDOM from 'react-dom/client'
 import {MsalAuthenticationTemplate, MsalProvider} from "@azure/msal-react";
 import {InteractionType} from "@azure/msal-browser";
@@ -18,76 +18,77 @@ import {enableReactComponents} from '@legendapp/state/config/enableReactComponen
 enableReactUse();
 enableReactComponents();
 
-import Contacts from "@/pages/contacts";
-import ContactDetail from "@/pages/contacts/details.tsx";
 import {passThroughLoader} from "@/routing/loaders.ts";
-import Agenda from "@/pages/agenda.tsx";
-import Admin from "@/pages/admin.tsx";
-import Configuration from "@/pages/configuration.tsx";
 import {SWRConfig} from "swr";
 import {getData} from "@/libs/http.ts";
-import Documents from "@/pages/documents.tsx";
-import AccountingClosing from "@/pages/accounting/closing.tsx";
-import AccountingReporting from "@/pages/accounting/reporting.tsx";
-import AccountingDocuments from "@/pages/accounting/documents.tsx";
-import Calendar from "@/pages/calendar.tsx";
-import Appointments from "@/pages/appointments.tsx";
 import {Alert} from "@/components/Alert.tsx";
 import Insights from "@/components/Insights.tsx";
+
+const Admin = React.lazy(() => import("@/pages/admin.tsx"));
+const Agenda = React.lazy(() => import("@/pages/agenda.tsx"));
+const AccountingClosing = React.lazy(() => import("@/pages/accounting/closing.tsx"));
+const AccountingDocuments = React.lazy(() => import("@/pages/accounting/documents.tsx"));
+const AccountingReporting = React.lazy(() => import("@/pages/accounting/reporting.tsx"));
+const Appointments = React.lazy(() => import("@/pages/appointments.tsx"));
+const Calendar = React.lazy(() => import("@/pages/calendar.tsx"));
+const ContactsSearch = React.lazy(() => import("@/pages/contacts/search.tsx"));
+const ContactDetail = React.lazy(() => import("@/pages/contacts/details.tsx"));
+const Configuration = React.lazy(() => import("@/pages/configuration.tsx"));
+const Documents = React.lazy(() => import("@/pages/documents.tsx"));
 
 const router = createBrowserRouter([
     {
         path: "/",
-        element: <Contacts/>,
+        element: <Suspense><ContactsSearch/></Suspense>,
     },
     {
         path: "/appointments/:appointmentId",
-        element: <Appointments/>,
+        element: <Suspense><Appointments/></Suspense>,
         loader: passThroughLoader
     },
     {
         path: "/calendar/:date",
-        element: <Calendar/>,
+        element: <Suspense><Calendar/></Suspense>,
         loader: passThroughLoader
     },
     {
         path: "/accounting/closing",
-        element: <AccountingClosing/>,
+        element: <Suspense><AccountingClosing/></Suspense>,
     },
     {
         path: "/accounting/documents/:year",
-        element: <AccountingDocuments/>,
+        element: <Suspense><AccountingDocuments/></Suspense>,
         loader: passThroughLoader
     },
     {
         path: "/accounting/reporting",
-        element: <AccountingReporting/>,
+        element: <Suspense><AccountingReporting /></Suspense>
     },
     {
         path: "/admin",
-        element: <Admin/>
+        element: <Suspense><Admin/></Suspense>
     },
     {
         path: "/agenda/:date",
-        element: <Agenda/>,
+        element: <Suspense><Agenda/></Suspense>,
         loader: passThroughLoader
     },
     {
         path: "/contacts",
-        element: <Contacts/>,
+        element: <Suspense><ContactsSearch/></Suspense>,
     },
     {
         path: "/configuration",
-        element: <Configuration/>
+        element: <Suspense><Configuration/></Suspense>
     },
     {
         path: "/contacts/:contactId",
-        element: <ContactDetail/>,
+        element: <Suspense><ContactDetail/></Suspense>,
         loader: passThroughLoader
     },
     {
         path: "/documents",
-        element: <Documents/>,
+        element: <Suspense><Documents/></Suspense>,
     },
 ]);
 
