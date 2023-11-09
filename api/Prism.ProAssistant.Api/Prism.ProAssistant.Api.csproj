@@ -10,7 +10,7 @@
       <PackageReference Include="Acme.Core.Extensions" Version="2.0.0" />
       <PackageReference Include="DotLiquid" Version="2.2.692" />
       <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="2.8.2.3" />
-      <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.2.0" />
+      <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="13.3.0" />
       <PackageReference Include="MediatR" Version="12.1.1" />
       <PackageReference Include="Microsoft.ApplicationInsights" Version="2.21.0" />
       <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.21.0" />
