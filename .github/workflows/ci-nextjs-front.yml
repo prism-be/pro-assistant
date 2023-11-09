@@ -4,12 +4,12 @@ on:
     branches:
       - main
     paths:
-      - 'web/**'
+      - 'frontend/**'
   pull_request:
     branches:
       - main
     paths:
-      - 'web/**'
+      - 'frontend/**'
   workflow_dispatch:
 
 concurrency: 
@@ -32,24 +32,24 @@ jobs:
         uses: actions/cache@v3
         with:
           path: |
-            ${{ github.workspace }}/web/.yarn
-            ${{ github.workspace }}/web/.pnp.cjs
-            ${{ github.workspace }}/web/.next/cache
-          key: ${{ runner.os }}-deps-${{ hashFiles('**/web/yarn.lock') }}
+            ${{ github.workspace }}/frontend/.yarn
+            ${{ github.workspace }}/frontend/.pnp.cjs
+            ${{ github.workspace }}/frontend/.next/cache
+          key: ${{ runner.os }}-deps-${{ hashFiles('**/frontend/yarn.lock') }}
       - name: Install Dependencies
-        working-directory: ./web
+        working-directory: ./frontend
         run: |
           corepack enable
           corepack prepare yarn@stable --activate
           yarn install --immutable
       - name: Build the application
-        working-directory: ./web
+        working-directory: ./frontend
         run: |
           yarn build
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
-          projectBaseDir: ./web
+          projectBaseDir: ./frontend
           args: >
             -Dsonar.projectVersion=${{ env.MAJOR }}.${{ env.MINOR }}.${{ env.PATCH }}.${{ env.NUMBER_OF_COMMITS_SINCE_TAG }}
         env:
