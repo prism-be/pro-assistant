@@ -167,6 +167,8 @@ const Documents = () => {
             setValue("logo", findSetting("document-header-logo")?.value);
             setValue("yourName", findSetting("document-header-your-name")?.value);
             setValue("yourCity", findSetting("document-header-your-city")?.value);
+            setValue("yourCity", findSetting("document-header-your-city")?.value);
+            setValue("yourTitle", findSetting("document-header-your-title")?.value);
             setValue("signature", findSetting("document-header-signature")?.value);
             setValue("accentuateColor", findSetting("document-header-accentuate-color")?.value);
             setAccentuateColor(findSetting("document-header-accentuate-color")?.value);
@@ -187,6 +189,7 @@ const Documents = () => {
         settings.push({id: "document-header-address", value: data.address});
         settings.push({id: "document-header-logo", value: data.logo});
         settings.push({id: "document-header-your-name", value: data.yourName});
+        settings.push({id: "document-header-your-title", value: data.yourTitle});
         settings.push({id: "document-header-your-city", value: data.yourCity});
         settings.push({id: "document-header-signature", value: data.signature});
         settings.push({id: "document-header-accentuate-color", value: data.accentuateColor,});
@@ -245,6 +248,14 @@ const Documents = () => {
                                 type={"text"}
                                 register={register}
                                 setValue={setValue}
+                        />
+                        <InputText
+                            className={"col-span-4 md:col-span-2"}
+                            label={t("documents.header.yourTitle")}
+                            name={"yourTitle"}
+                            type={"text"}
+                            register={register}
+                            setValue={setValue}
                         />
                         <InputText
                                 className={"col-span-4 md:col-span-2"}

@@ -237,6 +237,7 @@ public class PdfService : IPdfService
             }
 
             c.Item().AlignRight().Text(GetSettingValue("document-header-your-name"));
+            c.Item().AlignRight().Text(GetSettingValue("document-header-your-title"));
             c.Item().AlignRight().Text(GetSettingValue("document-header-your-city") + ", " + DateTime.Today.ToLongDateString()).FontSize(10);
         });
     }

@@ -153,6 +153,12 @@ public class PdfServiceTests
             Id = "document-header-your-name",
             Value = "Simon Baudart"
         });
+        
+        dataService.Setup(x => x.SingleAsync<Setting>("document-header-your-title")).ReturnsAsync(new Setting
+        {
+            Id = "document-header-your-title",
+            Value = "Web Dev"
+        });
 
         dataService.Setup(x => x.SingleAsync<Setting>("document-header-your-city")).ReturnsAsync(new Setting
         {
