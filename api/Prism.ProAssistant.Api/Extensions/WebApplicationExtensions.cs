@@ -19,15 +19,21 @@ public static class WebApplicationExtensions
             app.Logger.LogInformation("Replacing environment variables in {file}...", file);
             var content = File.ReadAllText(file);
 
-            content = ReplaceEnvironmentVariable(content, app.Logger, "ENV_AZURE_AD_CLIENT_ID", Environment.GetEnvironmentVariable("AZURE_AD_CLIENT_ID"));
-            content = ReplaceEnvironmentVariable(content, app.Logger, "ENV_AZURE_AD_TENANT_ID", Environment.GetEnvironmentVariable("AZURE_AD_TENANT_ID"));
-            content = ReplaceEnvironmentVariable(content, app.Logger, "ENV_AZURE_AD_USER_FLOW", Environment.GetEnvironmentVariable("AZURE_AD_USER_FLOW"));
-            content = ReplaceEnvironmentVariable(content, app.Logger, "ENV_AZURE_AD_TENANT_NAME", Environment.GetEnvironmentVariable("AZURE_AD_TENANT_NAME"));
+            content = ReplaceEnvironmentVariable(content, app.Logger, "ENV_AZURE_AD_CLIENT_ID", GetRequiredEnvironmentVariable("AZURE_AD_CLIENT_ID"));
+            content = ReplaceEnvironmentVariable(content, app.Logger, "ENV_AZURE_AD_TENANT_ID", GetRequiredEnvironmentVariable("AZURE_AD_TENANT_ID"));
+            content = ReplaceEnvironmentVariable(content, app.Logger, "ENV_AZURE_AD_USER_FLOW", GetRequiredEnvironmentVariable("AZURE_AD_USER_FLOW"));
+            content = ReplaceEnvironmentVariable(content, app.Logger, "ENV_AZURE_AD_TENANT_NAME", GetRequiredEnvironmentVariable("AZURE_AD_TENANT_NAME"));
 
-            content = content.Replace("ENV_APPLICATIONINSIGHTS_CONNECTION_STRING", Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING"));
+            content = content.Replace("ENV_APPLICATIONINSIGHTS_CONNECTION_STRING", GetRequiredEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING"));
 
             File.WriteAllText(file, content);
         }
+    }
+
+    private static string GetRequiredEnvironmentVariable(string variableName)
+    {
+        return Environment.GetEnvironmentVariable(variableName) 
+               ?? throw new NotFoundException($"The environment variable {variableName} was not found.");
     }
 
     private static string ReplaceEnvironmentVariable(string content, ILogger logger, string variable, string? value)
