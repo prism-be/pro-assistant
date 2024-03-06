@@ -14,6 +14,7 @@
       "address": "Adresse",
       "logo": "Logo",
       "yourName": "Nom pour la signature",
+      "yourTitle": "Titre pour la signature",
       "yourCity": "Ville pour la signature",
       "signature": "Signature",
       "accentuateColor": "Couleur d'accentuation",
