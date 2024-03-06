@@ -2,6 +2,7 @@
 FROM node:18-alpine AS web-deps
 
 WORKDIR /app
+COPY ./frontend/.yarn ./
 COPY ./frontend/package.json ./frontend/yarn.lock ./
 COPY ./frontend/.yarnrc.docker.yml .yarnrc.yml
 
