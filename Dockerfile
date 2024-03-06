@@ -2,6 +2,7 @@
 FROM node:18-alpine AS web-deps
 
 WORKDIR /app
+COPY ./frontend/.yarn ./.yarn
 COPY ./frontend/package.json ./frontend/yarn.lock ./
 COPY ./frontend/.yarnrc.docker.yml .yarnrc.yml
 
@@ -9,7 +10,7 @@ RUN corepack enable \
     && corepack prepare yarn@stable --activate \
     && yarn set version 3
     
-RUN yarn install --immutable
+RUN yarn install
 
 FROM node:18-alpine AS web-builder
 
@@ -28,7 +29,7 @@ RUN corepack enable \
     && corepack prepare yarn@stable --activate \
     && yarn set version 3
     
-RUN yarn install --immutable
+RUN yarn install
 RUN yarn build
 
 # Build the API
