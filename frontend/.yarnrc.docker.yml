@@ -1,0 +1,5 @@
+﻿nodeLinker: pnp
+enableInlineBuilds: true
+enableGlobalCache: false
+
+yarnPath: .yarn/releases/yarn-4.0.1.cjs
