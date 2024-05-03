@@ -94,9 +94,16 @@ const Appointments = () => {
     useEffect(() => {
         if (location.pathname.startsWith("/appointments/new")) {
             let startDate = startOfHour(new Date());
-
+            
             if (startDate) {
                 startDate = parseISO(startDate.toISOString());
+            }
+
+            let hashDate = location.hash.replace("#", "");
+
+            if (hashDate && hashDate.length > 0) {
+                hashDate = decodeURIComponent(hashDate);
+                startDate = parseISO(hashDate);
             }
 
             setDate(startDate);
