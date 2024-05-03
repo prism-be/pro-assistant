@@ -51,7 +51,7 @@ const Menu = () => {
                     </Link>
                 </li>
                 <li className={getActiveLinkClass("/appointments")}>
-                    <Link className={itemClassName} to={"/appointments/new?startDate=" + encodeURIComponent(formatISO(new Date()))}>
+                    <Link className={itemClassName} to={"/appointments/new#" + encodeURIComponent(formatISO(new Date()))}>
                         {t("menu.appointments")}
                     </Link>
                 </li>

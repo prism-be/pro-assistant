@@ -28,7 +28,7 @@ const Appointments = () => {
     const location = useLocation();
     const { appointmentId } = useLoaderData() as Query;
 
-    const { data: appointment, mutate: mutateAppointment } = useSWR<Appointment | null>("/data/appointments/" + appointmentId, loadAppointment);
+    const { data: appointment } = useSWR<Appointment | null>("/data/appointments/" + appointmentId, loadAppointment);
     const { data: tariffs } = useSWR<Tariff[]>("/data/tariffs");
 
     const {
@@ -149,7 +149,7 @@ const Appointments = () => {
         } else {
             await postData("/data/appointments/update", updatedAppointment);
         }
-        await mutateAppointment();
+        
         alertSuccess(t("alerts.saveSuccess"));
         history.back();
     }
