@@ -73,7 +73,7 @@ const Agenda = () => {
 
     function addAppointment(h: number, m: number) {
         const startDate = add(new Date(day.getFullYear(), day.getMonth(), day.getDate()), {hours: h, minutes: m});
-        navigate("/appointments/new?startDate=" + encodeURIComponent(formatISO(startDate)));
+        navigate("/appointments/new#" + encodeURIComponent(formatISO(startDate)));
     }
 
     function previousDay() {

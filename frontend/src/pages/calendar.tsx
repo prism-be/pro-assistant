@@ -85,7 +85,7 @@ const Calendar = () => {
             hours: h,
             minutes: m,
         });
-        navigate("/appointments/new?startDate=" + encodeURIComponent(formatISO(startDate)));
+        navigate("/appointments/new#" + encodeURIComponent(formatISO(startDate)));
     };
 
     const swipeHandlers = useSwipeable({
