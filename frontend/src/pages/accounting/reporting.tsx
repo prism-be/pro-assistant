@@ -4,7 +4,7 @@ import Section from "@/components/design/Section";
 import React from "react";
 import {AccountingReportingPeriod, IncomeDetail} from "@/libs/models";
 import {formatAmount, formatIsoMonth} from "@/libs/formats";
-import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
+import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/react/24/solid";
 
 import { Toggle } from "@/components/forms/Toggle";
 import { getData } from "@/libs/http";
@@ -131,7 +131,7 @@ const AccountingReporting = () => {
             <>
                 <div className={"grid grid-cols-8 cursor-pointer"}>
                     <div className={"col-start-1 w-8 m-auto text-primary"} onClick={() => year$.set(year$.get() - 1)}>
-                        <ArrowSmallLeftIcon/>
+                        <ArrowLeftIcon/>
                     </div>
 
                     <h1 className={"text-center col-span-6"}>
@@ -139,7 +139,7 @@ const AccountingReporting = () => {
                     </h1>
 
                     <div className={"col-start-8 1 w-8 m-auto text-primary"} onClick={() => year$.set(year$.get() + 1)}>
-                        <ArrowSmallRightIcon/>
+                        <ArrowRightIcon/>
                     </div>
                 </div>
                 <div className={"print:hidden"}>

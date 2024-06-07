@@ -9,7 +9,7 @@ import useKeyboardJs from "react-use/lib/useKeyboardJs";
 import InputDate from "@/components/forms/InputDate";
 import Section from "@/components/design/Section";
 import {ContactAppointments} from "@/components/contacts/ContactAppointments";
-import {ArrowSmallLeftIcon} from "@heroicons/react/24/outline";
+import {ArrowLeftIcon} from "@heroicons/react/24/outline";
 import {getData, postData} from "@/libs/http";
 import {Contact, UpsertResult} from "@/libs/models";
 import {alertSuccess} from "@/libs/events/alert";
@@ -85,7 +85,7 @@ const ContactDetail = () => {
             <Section>
                 <div className={"flex"}>
                     <Link className={"w-8 cursor-pointer"} to="/contacts">
-                        <ArrowSmallLeftIcon />
+                        <ArrowLeftIcon />
                     </Link>
                     <h1>
                         {t("pages.contacts.details.title")} {contact?.lastName} {contact?.firstName}

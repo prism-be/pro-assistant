@@ -5,7 +5,7 @@ import {add, format, formatISO, parse, parseISO} from "date-fns";
 import React from "react";
 import {useSwipeable} from "react-swipeable";
 import useSWR from "swr";
-import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
+import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/react/24/solid";
 import {postData} from "@/libs/http";
 import {Appointment} from "@/libs/models";
 import {getLocale} from "@/libs/localization";
@@ -89,7 +89,7 @@ const Agenda = () => {
             <Section>
                 <div {...swipeHandlers} className={"grid grid-cols-8 cursor-pointer"}>
                     <div className={"col-start-1 w-8 m-auto text-primary"} onClick={previousDay}>
-                        <ArrowSmallLeftIcon/>
+                        <ArrowLeftIcon/>
                     </div>
 
                     <h1 className={"hidden text-center md:block col-span-6"}>
@@ -102,7 +102,7 @@ const Agenda = () => {
                     </h1>
 
                     <div className={"col-start-8 1 w-8 m-auto text-primary"} onClick={nextDay}>
-                        <ArrowSmallRightIcon/>
+                        <ArrowRightIcon/>
                     </div>
 
                     {appointments?.length === 0 && (
