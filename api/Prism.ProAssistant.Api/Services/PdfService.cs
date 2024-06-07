@@ -146,9 +146,9 @@ public class PdfService : IPdfService
             contactName = (contact?.Title + " " + (contact?.LastName ?? appointment.LastName) + " " + (contact?.FirstName ?? appointment.FirstName)).Trim(),
             price = appointment.Price.ToString("F2") + "€",
             appointmentType = appointment.Type,
-            appointmentDate = appointment.StartDate.ToLongDateString(),
-            appointmentHour = appointment.StartDate.ToShortTimeString(),
-            paymentDate = (appointment.PaymentDate ?? appointment.StartDate).ToString("dd/MM/yyyy"),
+            appointmentDate = appointment.StartDate.ToLocalTime().ToLongDateString(),
+            appointmentHour = appointment.StartDate.ToLocalTime().ToShortTimeString(),
+            paymentDate = (appointment.PaymentDate ?? appointment.StartDate).ToLocalTime().ToString("dd/MM/yyyy"),
             paymentMode = GetPaymentTranslation(appointment.Payment)
         };
 
@@ -157,7 +157,7 @@ public class PdfService : IPdfService
 
     private async Task SaveDocument(Appointment appointment, string title, string fileId, string fileName)
     {
-        var documentTitle = $"{appointment.StartDate:yyyy-MM-dd HH:mm} - {appointment.LastName} {appointment.FirstName} - {title}";
+        var documentTitle = $"{appointment.StartDate.ToLocalTime():yyyy-MM-dd HH:mm} - {appointment.LastName} {appointment.FirstName} - {title}";
 
         var document = new BinaryDocument
         {
