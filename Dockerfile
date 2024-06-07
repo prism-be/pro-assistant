@@ -20,8 +20,6 @@ ENV NODE_ENV=production
 
 COPY ./frontend .
 
-COPY --from=web-deps /app/.pnp.cjs ./
-COPY --from=web-deps /app/.pnp.loader.mjs ./
 COPY --from=web-deps /app/.yarn ./.yarn
 COPY --from=web-deps /app/.yarnrc.yml ./.yarnrc.yml
 
