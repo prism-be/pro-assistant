@@ -6,7 +6,7 @@ import {useKeyPressEvent} from "react-use";
 import {useSwipeable} from "react-swipeable";
 import Section from "@/components/design/Section";
 import useSWR from "swr";
-import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
+import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/react/24/solid";
 import {Appointment} from "@/libs/models";
 import {postData} from "@/libs/http";
 import {getLocale} from "@/libs/localization";
@@ -102,14 +102,14 @@ const Calendar = () => {
                     <Section>
                         <div className={"grid grid-cols-8 cursor-pointer"} {...swipeHandlers}>
                             <div className={"col-start-1 w-8 m-auto text-primary"} onClick={goPreviousWeek}>
-                                <ArrowSmallLeftIcon />
+                                <ArrowLeftIcon />
                             </div>
                             <h1 className={"col-span-6 text-center"}>
                                 {t("pages.calendar.title")}{" "}
                                 {format(monday, "EEEE dd MMMM yyyy", { locale: getLocale() })}
                             </h1>
                             <div className={"col-start-8 1 w-8 m-auto text-primary"} onClick={goNextWeek}>
-                                <ArrowSmallRightIcon />
+                                <ArrowRightIcon />
                             </div>
 
                             <div className={"h-8 col-span-8"}></div>

@@ -2,7 +2,7 @@
 import Section from "@/components/design/Section";
 import {useTranslation} from "react-i18next";
 import { useMemo, useState} from "react";
-import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/solid";
+import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/react/24/solid";
 import useSWR from "swr";
 import {AccountingDocument, NextNumber} from "@/libs/models";
 import {HeaderTitleWithAction} from "@/components/design/HeaderTitleWithAction";
@@ -277,7 +277,7 @@ const AccountingDocuments = () => {
             <div className={"grid grid-cols-8 cursor-pointer"}>
                 <div className={"col-start-1 w-8 m-auto text-primary"}
                      onClick={() => setYear(-1)}>
-                    <ArrowSmallLeftIcon/>
+                    <ArrowLeftIcon/>
                 </div>
 
                 <h1 className={"text-center col-span-6"}>
@@ -286,7 +286,7 @@ const AccountingDocuments = () => {
 
                 <div className={"col-start-8 1 w-8 m-auto text-primary"}
                      onClick={() => setYear(1)}>
-                    <ArrowSmallRightIcon/>
+                    <ArrowRightIcon/>
                 </div>
             </div>
 

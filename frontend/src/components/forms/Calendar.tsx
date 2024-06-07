@@ -1,7 +1,7 @@
 ﻿import {add, format, formatISO, startOfMonth} from "date-fns";
 import {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {ArrowSmallLeftIcon, ArrowSmallRightIcon} from "@heroicons/react/24/outline";
+import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/react/24/outline";
 import {getLocale} from "@/libs/localization";
 
 interface Props {
@@ -51,7 +51,7 @@ export const Calendar = ({ value, onChange, className }: Props) => {
                 className={"col-start-1 w-6 text-primary cursor-pointer m-auto"}
                 onClick={() => setMonth(add(month, { months: -1 }))}
             >
-                <ArrowSmallLeftIcon />
+                <ArrowLeftIcon />
             </div>
             <div className={"font-bold col-span-5 text-center"}>
                 {format(month, "MMMM yyyy", { locale: getLocale() })}
@@ -60,7 +60,7 @@ export const Calendar = ({ value, onChange, className }: Props) => {
                 className={"col-start-7 w-6 text-right text-primary cursor-pointer m-auto"}
                 onClick={() => setMonth(add(month, { months: 1 }))}
             >
-                <ArrowSmallRightIcon />
+                <ArrowRightIcon />
             </div>
             <div className={"text-center font-bold"}>{t("days.short.day1")}</div>
             <div className={"text-center font-bold"}>{t("days.short.day2")}</div>
