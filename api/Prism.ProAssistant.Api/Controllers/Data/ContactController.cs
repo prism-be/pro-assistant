@@ -2,9 +2,9 @@
 
 using Core;
 using Domain;
-using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Contacts;
 using Domain.DayToDay.Contacts.Events;
+using Helpers;
 using Infrastructure.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +27,8 @@ public class ContactController : Controller
     [Route("api/data/contacts/insert")]
     public async Task<UpsertResult> Insert([FromBody] Contact request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         request.Id = Identifier.GenerateString();
 
         return await _eventStore.RaiseAndPersist<Contact>(new ContactCreated
@@ -46,6 +48,8 @@ public class ContactController : Controller
     [Route("api/data/contacts/search")]
     public async Task<IEnumerable<Contact>> Search([FromBody] Filter[] request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _queryService.SearchAsync<Contact>(request);
     }
 
@@ -53,6 +57,8 @@ public class ContactController : Controller
     [Route("api/data/contacts/{id}")]
     public async Task<Contact?> Single(string id)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _queryService.SingleAsync<Contact>(id);
     }
 
@@ -60,6 +66,8 @@ public class ContactController : Controller
     [Route("api/data/contacts/update")]
     public async Task<UpsertResult> Update([FromBody] Contact request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         var result = await _eventStore.RaiseAndPersist<Contact>(new ContactUpdated
         {
             Contact = request

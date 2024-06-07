@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Storage;
 
 [Authorize]
-public class ClosingController: Controller
+public class ClosingController : Controller
 {
     private readonly IQueryService _queryService;
 
@@ -15,7 +15,7 @@ public class ClosingController: Controller
     {
         _queryService = queryService;
     }
-    
+
     [HttpGet]
     [Route("api/data/accounting/closing/unclosed")]
     public async Task<IEnumerable<Appointment>> ListUnclosed()
@@ -23,6 +23,6 @@ public class ClosingController: Controller
         return await _queryService.SearchAsync<Appointment>(
             new Filter(nameof(Appointment.Payment), (int)PaymentTypes.Unpayed),
             new Filter(nameof(Appointment.State), (int)AppointmentState.Canceled, FilterOperator.NotEqual)
-            );
+        );
     }
 }

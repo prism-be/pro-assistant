@@ -6,6 +6,7 @@ using Domain.DayToDay.Appointments;
 using Domain.DayToDay.Appointments.Events;
 using Domain.DayToDay.Contacts;
 using Domain.DayToDay.Contacts.Events;
+using Helpers;
 using Infrastructure.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -29,6 +30,8 @@ public class AppointmentController : Controller
     [Route("api/data/appointments/close")]
     public async Task<UpsertResult> Close([FromBody] AppointmentClosing request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         if (request.Payment != (int)PaymentTypes.Unpayed)
         {
             request.PaymentDate = DateTime.UtcNow;
@@ -69,6 +72,8 @@ public class AppointmentController : Controller
     [Route("api/data/appointments/insert")]
     public async Task<UpsertResult> Insert([FromBody] AppointmentInformation request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         request.Id = Identifier.GenerateString();
 
         await EnsureContact(request);
@@ -90,6 +95,8 @@ public class AppointmentController : Controller
     [Route("api/data/appointments/search")]
     public async Task<IEnumerable<Appointment>> Search([FromBody] IEnumerable<Filter> request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _queryService.SearchAsync<Appointment>(request.ToArray());
     }
 
@@ -97,6 +104,8 @@ public class AppointmentController : Controller
     [Route("api/data/appointments/{id}")]
     public async Task<Appointment?> Single(string id)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _queryService.SingleOrDefaultAsync<Appointment>(id);
     }
 
@@ -104,6 +113,8 @@ public class AppointmentController : Controller
     [Route("api/data/appointments/update")]
     public async Task<UpsertResult> Update([FromBody] AppointmentInformation request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         await EnsureContact(request);
 
         return await _eventStore.RaiseAndPersist<Appointment>(new AppointmentUpdated

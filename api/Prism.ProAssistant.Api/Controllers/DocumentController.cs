@@ -16,6 +16,7 @@ using Prism.ProAssistant.Storage.Events;
 namespace Prism.ProAssistant.Api.Controllers;
 
 using Domain;
+using Helpers;
 
 public class DocumentController : Controller
 {
@@ -38,6 +39,8 @@ public class DocumentController : Controller
     [Route("api/document/{appointmentId}/{documentId}")]
     public async Task Delete(string appointmentId, string documentId)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         await _eventStore.RaiseAndPersist<Appointment>(new DetachAppointmentDocument
         {
             StreamId = appointmentId,
@@ -50,6 +53,8 @@ public class DocumentController : Controller
     [Route("api/document/download/{id}/{downloadKey}")]
     public async Task<IActionResult> Download(string id, string downloadKey, [FromQuery] bool download)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         var idBytes = await _cache.GetAsync(downloadKey);
 
         if (idBytes == null)
@@ -79,6 +84,8 @@ public class DocumentController : Controller
     [Route("api/document/download/{id}")]
     public async Task<DownloadReference> DownloadDocument(string id)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         if (await _dataStorage.ExistsAsync(_userOrganization.Organization, "documents", id) == false)
         {
             throw new NotFoundException("Document not found.");
@@ -103,6 +110,8 @@ public class DocumentController : Controller
     [Route("api/document/generate")]
     public async Task GenerateDocument([FromBody] DocumentRequest request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         await _pdfService.GenerateDocument(request);
     }
 

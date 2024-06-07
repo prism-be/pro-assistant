@@ -4,6 +4,7 @@ using Core;
 using Domain;
 using Domain.Accounting.Document;
 using Domain.Accounting.Document.Events;
+using Helpers;
 using Infrastructure.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -26,6 +27,8 @@ public class DocumentController : Controller
     [Route("api/data/accounting/documents/delete")]
     public async Task<UpsertResult> Delete([FromBody] AccountingDocument request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _eventStore.RaiseAndPersist<AccountingDocument>(new AccountingDocumentDeleted
         {
             StreamId = request.Id,
@@ -37,6 +40,8 @@ public class DocumentController : Controller
     [Route("api/data/accounting/documents/next-number/{year:int}")]
     public async Task<NextNumber> GetNextNumber(int year)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         var start = new DateTime(year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var end = start.AddYears(1);
 
@@ -53,6 +58,8 @@ public class DocumentController : Controller
     [Route("api/data/accounting/documents/insert")]
     public async Task<UpsertResult> Insert([FromBody] AccountingDocument request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _eventStore.RaiseAndPersist<AccountingDocument>(new AccountingDocumentCreated
         {
             StreamId = Identifier.GenerateString(),
@@ -71,6 +78,8 @@ public class DocumentController : Controller
     [Route("api/data/accounting/documents/{year:int}")]
     public async Task<IEnumerable<AccountingDocument>> List(int year)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         if (year == 0)
         {
             return Array.Empty<AccountingDocument>();
@@ -92,6 +101,8 @@ public class DocumentController : Controller
     [Route("api/data/accounting/documents/update")]
     public async Task<UpsertResult> Update([FromBody] AccountingDocument request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _eventStore.RaiseAndPersist<AccountingDocument>(new AccountingDocumentUpdated
         {
             StreamId = request.Id,

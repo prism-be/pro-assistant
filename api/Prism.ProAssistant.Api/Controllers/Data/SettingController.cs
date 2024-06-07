@@ -9,6 +9,7 @@ using Prism.ProAssistant.Storage.Events;
 namespace Prism.ProAssistant.Api.Controllers.Data;
 
 using Domain;
+using Helpers;
 
 [Authorize]
 public class SettingController : Controller
@@ -26,6 +27,8 @@ public class SettingController : Controller
     [Route("api/data/settings/insert")]
     public async Task<UpsertResult> Insert([FromBody] Setting request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+
         return await _eventStore.RaiseAndPersist<Setting>(new SettingCreated { Setting = request });
     }
 
@@ -40,6 +43,8 @@ public class SettingController : Controller
     [Route("api/data/settings/search")]
     public async Task<IEnumerable<Setting>> Search([FromBody] IEnumerable<Filter> request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+
         return await _queryService.SearchAsync<Setting>(request.ToArray());
     }
 
@@ -47,6 +52,8 @@ public class SettingController : Controller
     [Route("api/data/settings/{id}")]
     public async Task<Setting?> Single(string id)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+
         return await _queryService.SingleOrDefaultAsync<Setting>(id);
     }
 
@@ -54,6 +61,8 @@ public class SettingController : Controller
     [Route("api/data/settings/update")]
     public async Task<UpsertResult> Update([FromBody] Setting request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _eventStore.RaiseAndPersist<Setting>(new SettingUpdated { Setting = request });
     }
 
@@ -61,6 +70,8 @@ public class SettingController : Controller
     [Route("api/data/settings/update-many")]
     public async Task<List<UpsertResult>> UpdateMany([FromBody] List<Setting> request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         var results = new List<UpsertResult>();
 
         foreach (var setting in request)

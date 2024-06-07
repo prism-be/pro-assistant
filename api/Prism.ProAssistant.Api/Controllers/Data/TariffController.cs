@@ -5,6 +5,7 @@ using Domain;
 using Domain.Configuration.Tariffs;
 using Domain.Configuration.Tariffs.Events;
 using Domain.DayToDay.Appointments;
+using Helpers;
 using Infrastructure.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,6 +28,8 @@ public class TariffController : Controller
     [Route("api/data/tariffs/insert")]
     public async Task<UpsertResult> Insert([FromBody] Tariff request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         request.Id = Identifier.GenerateString();
         
         return await _eventStore.RaiseAndPersist<Tariff>(new TariffCreated { Tariff = request });
@@ -43,6 +46,8 @@ public class TariffController : Controller
     [Route("api/data/tariffs/search")]
     public async Task<IEnumerable<Tariff>> Search([FromBody] IEnumerable<Filter> request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _queryService.SearchAsync<Tariff>(request.ToArray());
     }
 
@@ -50,6 +55,8 @@ public class TariffController : Controller
     [Route("api/data/tariffs/{id}")]
     public async Task<Tariff?> Single(string id)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _queryService.SingleOrDefaultAsync<Tariff>(id);
     }
 
@@ -57,6 +64,8 @@ public class TariffController : Controller
     [Route("api/data/tariffs/update")]
     public async Task<UpsertResult> Update([FromBody] Tariff request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _eventStore.RaiseAndPersist<Tariff>(new TariffUpdated { Tariff = request });
     }
 }
