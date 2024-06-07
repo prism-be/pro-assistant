@@ -10,6 +10,7 @@ namespace Prism.ProAssistant.Api.Controllers.Data;
 
 using Core;
 using Domain;
+using Helpers;
 
 [Authorize]
 public class DocumentConfigurationController : Controller
@@ -27,6 +28,8 @@ public class DocumentConfigurationController : Controller
     [Route("api/data/document-configurations/{id}")]
     public async Task<UpsertResult> Delete(string id)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _eventStore.RaiseAndPersist<DocumentConfiguration>(new DocumentConfigurationDeleted { StreamId = id });
     }
 
@@ -34,6 +37,8 @@ public class DocumentConfigurationController : Controller
     [Route("api/data/document-configurations/insert")]
     public async Task<UpsertResult> Insert([FromBody] DocumentConfiguration request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         request.Id = Identifier.GenerateString();
         
         return await _eventStore.RaiseAndPersist<DocumentConfiguration>(new DocumentConfigurationCreated { DocumentConfiguration = request });
@@ -50,6 +55,8 @@ public class DocumentConfigurationController : Controller
     [Route("api/data/document-configurations/search")]
     public async Task<IEnumerable<DocumentConfiguration>> Search([FromBody] IEnumerable<Filter> request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _queryService.SearchAsync<DocumentConfiguration>(request.ToArray());
     }
 
@@ -57,6 +64,8 @@ public class DocumentConfigurationController : Controller
     [Route("api/data/document-configurations/{id}")]
     public async Task<DocumentConfiguration?> Single(string id)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _queryService.SingleOrDefaultAsync<DocumentConfiguration>(id);
     }
 
@@ -64,6 +73,8 @@ public class DocumentConfigurationController : Controller
     [Route("api/data/document-configurations/update")]
     public async Task<UpsertResult> Update([FromBody] DocumentConfiguration request)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         return await _eventStore.RaiseAndPersist<DocumentConfiguration>(new DocumentConfigurationUpdated { DocumentConfiguration = request });
     }
 }

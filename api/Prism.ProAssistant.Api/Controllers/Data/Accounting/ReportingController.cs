@@ -1,6 +1,7 @@
 ﻿namespace Prism.ProAssistant.Api.Controllers.Data.Accounting;
 
 using Domain.Accounting.Reporting;
+using Helpers;
 using Infrastructure.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,8 @@ public class ReportingController : Controller
     [Route("api/data/accounting/reporting/periods/{year:int}")]
     public async Task<IEnumerable<AccountingReportingPeriod>> ListPeriods(int year)
     {
+        ModelStateHelper.Validate(ModelState.IsValid);
+        
         var startOfYear = new DateTime(year, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         var data = await _queryService.SearchAsync<AccountingReportingPeriod>(new Filter(nameof(AccountingReportingPeriod.StartDate), startOfYear, FilterOperator.GreaterThanOrEqual));
         return data.Where(x => x.StartDate.Year == year).OrderBy(x => x.StartDate);
