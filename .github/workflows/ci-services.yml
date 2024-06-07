@@ -26,18 +26,18 @@ jobs:
           fetch-depth: 0
 
       - name: Extract Version
-        uses: damienaicheh/extract-version-from-tag-action@v1.1.0
+        uses: damienaicheh/extract-version-from-tag-action@v1.3.0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.x
+          dotnet-version: 8.x
 
       - name: Trick for Sonar
         run: rm -f ./sonar-project.properties
 
       - name: Build and Analyze
-        uses: highbyte/sonarscan-dotnet@v2.2.3
+        uses: highbyte/sonarscan-dotnet@v2.3.2
         with:
           sonarProjectKey: prism-be_pro-assistant-api
           sonarProjectName: pro-assistant-api
