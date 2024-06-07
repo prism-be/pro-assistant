@@ -37,7 +37,7 @@ jobs:
         run: rm -f ./sonar-project.properties
 
       - name: Build and Analyze
-        uses: highbyte/sonarscan-dotnet@v2.3.2cd ../
+        uses: highbyte/sonarscan-dotnet@v2.3.2
         with:
           sonarProjectKey: prism-be_pro-assistant-api
           sonarProjectName: pro-assistant-api
