@@ -31,7 +31,7 @@ RUN yarn install
 RUN yarn build
 
 # Build the API
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS net-builder
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS net-builder
 
 WORKDIR /source
 
@@ -40,7 +40,7 @@ RUN dotnet restore
 RUN dotnet publish Prism.ProAssistant.Api/Prism.ProAssistant.Api.csproj -c release -o /app --no-restore
 
 # final stage/image
-FROM mcr.microsoft.com/dotnet/aspnet:7.0-jammy
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-jammy
 EXPOSE 80
 ENV DOTNET_RUNNING_IN_CONTAINER=true
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
