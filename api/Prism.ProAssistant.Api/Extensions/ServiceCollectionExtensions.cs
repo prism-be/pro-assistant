@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using MongoDB.ApplicationInsights.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
+using MongoDB.Driver;
 using Prism.Core;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
@@ -60,7 +60,8 @@ public static class ServiceCollectionExtensions
         var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");
 
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
-        services.AddMongoClient(mongoDbConnectionString);
+        var mongoClient = new MongoClient(mongoDbConnectionString);
+        services.AddSingleton(mongoClient);
         services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
     }
 

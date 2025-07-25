@@ -21,6 +21,7 @@ public class PdfServiceTests
     public PdfServiceTests()
     {
         QuestPDF.Settings.License = LicenseType.Community;
+        QuestPDF.Settings.EnableDebugging = true;
     }
     
     [Fact]
