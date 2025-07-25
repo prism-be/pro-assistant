@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using MongoDB.ApplicationInsights.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
@@ -34,10 +35,7 @@ public static class ServiceCollectionExtensions
 {
     public static void AddBearer(this IServiceCollection services)
     {
-        services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
+        services.AddAuthentication(options => { options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme; })
             .AddJwtBearer(jwtOptions =>
             {
                 jwtOptions.Authority = "https://byprism.b2clogin.com/byprism.onmicrosoft.com/B2C_1_PRO_ASSISTANT/v2.0/";
@@ -59,9 +57,13 @@ public static class ServiceCollectionExtensions
     {
         var mongoDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("MONGODB_CONNECTION_STRING");
 
-        BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
+        BsonSerializer.RegisterSerializer(
+            new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
         services.AddMongoClient(mongoDbConnectionString);
         services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
+
+        var sqlDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("SQLDB_CONNECTION_STRING");
+        services.AddDbContext<ProAssistantDbContext>(options => options.UseSqlServer(sqlDbConnectionString));
     }
 
     public static void AddProAssistant(this IServiceCollection services)
@@ -70,7 +72,7 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IQueryService, QueryService>();
         services.AddScoped<IPdfService, PdfService>();
-        
+
         if (!string.IsNullOrWhiteSpace(EnvironmentConfiguration.GetConfiguration("AZURE_STORAGE_CONNECTION_STRING")))
         {
             services.AddScoped<IDataStorage, BlobDataStorage>();
@@ -79,7 +81,7 @@ public static class ServiceCollectionExtensions
         {
             services.AddScoped<IDataStorage, MongoDataStorage>();
         }
-        
+
         services.AddScoped<IUserOrganizationService, UserOrganizationService>();
         services.AddScoped<UserOrganization>(serviceProvider =>
         {
@@ -104,15 +106,13 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEventStore, EventStore>();
         services.AddScoped<IHydrator, EventStore>();
 
-        services.AddMediatR(cfg =>
-        {
-            cfg.RegisterServicesFromAssembly(typeof(EventStore).Assembly);
-        });
+        services.AddMediatR(cfg => { cfg.RegisterServicesFromAssembly(typeof(EventStore).Assembly); });
 
         services.AddScoped<IGlobalStateProvider, MongoGlobalStateProvider>();
         services.AddScoped<IStateProvider, MongoStateProvider>();
-        
-        var serviceBusConnectionString = EnvironmentConfiguration.GetConfiguration("AZURE_SERVICE_BUS_CONNECTION_STRING");
+
+        var serviceBusConnectionString =
+            EnvironmentConfiguration.GetConfiguration("AZURE_SERVICE_BUS_CONNECTION_STRING");
 
         if (!string.IsNullOrWhiteSpace(serviceBusConnectionString))
         {
@@ -136,7 +136,7 @@ public static class ServiceCollectionExtensions
         services.AddHostedService<DocumentConfigurationEventServiceBusListener>();
         services.AddHostedService<SettingsEventServiceBusListener>();
         services.AddHostedService<TariffEventServiceBusListener>();
-        
+
         services.AddTransient<RefreshAppointmentWhenContactChange>();
         services.AddTransient<RefreshAppointmentWhenTariffChange>();
         services.AddTransient<ProjectAccountingPeriodWhenAccountingDocumentUpdated>();
