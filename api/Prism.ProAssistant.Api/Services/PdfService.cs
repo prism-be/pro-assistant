@@ -204,7 +204,7 @@ public class PdfService : IPdfService
         {
             var logoBytes = Convert.FromBase64String(logo);
             logoBytes = ImageProcessor.Resize(logoBytes, 250, 250);
-            table.Cell().Row(1).Column(1).Element(e => e.Height(2, Unit.Centimetre)).Image(logoBytes);
+            table.Cell().Row(1).Column(1).Element(e => e.Height(1, Unit.Centimetre)).Image(logoBytes);
         }
 
         table.Cell().Row(1).Column(2).ColumnSpan(2).PaddingLeft(0.5f, Unit.Centimetre).Column(c =>

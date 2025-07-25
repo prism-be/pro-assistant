@@ -31,13 +31,13 @@ jobs:
       - name: Setup .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 8.x
+          dotnet-version: 9.x
 
       - name: Trick for Sonar
         run: rm -f ./sonar-project.properties
 
       - name: Build and Analyze
-        uses: highbyte/sonarscan-dotnet@v2.3.2
+        uses: highbyte/sonarscan-dotnet@v2.4.2
         with:
           sonarProjectKey: prism-be_pro-assistant-api
           sonarProjectName: pro-assistant-api
