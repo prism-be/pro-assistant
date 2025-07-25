@@ -1,8 +1,9 @@
-﻿namespace Prism.Infrastructure.Providers.Mongo;
+﻿using MongoDB.Driver.GridFS;
+
+namespace Prism.Infrastructure.Providers.Mongo;
 
 using MongoDB.Bson;
 using MongoDB.Driver;
-using MongoDB.Driver.GridFS;
 
 public class MongoDataStorage : IDataStorage
 {

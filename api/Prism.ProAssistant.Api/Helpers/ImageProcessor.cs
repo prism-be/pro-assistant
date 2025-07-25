@@ -19,7 +19,7 @@ public static class ImageProcessor
             return data;
         }
 
-        image.Resize(width, height);
+        image.Resize((uint)width, (uint)height);
         return image.ToByteArray();
     }
 }
