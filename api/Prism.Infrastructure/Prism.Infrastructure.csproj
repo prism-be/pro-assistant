@@ -9,11 +9,13 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Prism.Core\Prism.Core.csproj" />
+        <ProjectReference Include="..\Prism.ProAssistant.Domain\Prism.ProAssistant.Domain.csproj" />
     </ItemGroup>
 
     <ItemGroup>
         <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.20.1" />
         <PackageReference Include="Azure.Storage.Blobs" Version="12.25.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.7" />
         <PackageReference Include="MongoDB.Driver" Version="3.4.1" />
     </ItemGroup>
 

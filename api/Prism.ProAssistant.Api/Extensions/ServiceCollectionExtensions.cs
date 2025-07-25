@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using MongoDB.ApplicationInsights.DependencyInjection;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
@@ -9,7 +8,6 @@ using Prism.Core;
 using Prism.Infrastructure.Authentication;
 using Prism.Infrastructure.Providers;
 using Prism.Infrastructure.Providers.Azure;
-using Prism.Infrastructure.Providers.Local;
 using Prism.Infrastructure.Providers.Mongo;
 using Prism.ProAssistant.Api.Config;
 using Prism.ProAssistant.Api.Services;
