@@ -2,8 +2,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Api", "Prism.ProAssistant.Api\Prism.ProAssistant.Api.csproj", "{C9002176-C0DB-4E28-8E70-5C222F783EC0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Api.Tests", "Prism.ProAssistant.Api.Tests\Prism.ProAssistant.Api.Tests.csproj", "{74CC4C4E-1BA5-496E-9A5D-E07C5B5A1248}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Domain", "Prism.ProAssistant.Domain\Prism.ProAssistant.Domain.csproj", "{04354C93-5347-4A16-ABAB-789EAE7CDC1D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Storage", "Prism.ProAssistant.Storage\Prism.ProAssistant.Storage.csproj", "{325B0069-F09E-4AAD-8616-6EBCB3C5C3E9}"
@@ -16,9 +14,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Core.Tests", "Prism.C
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Infrastructure.Tests", "Prism.Infrastructure.Tests\Prism.Infrastructure.Tests.csproj", "{E6BC0833-314A-4BD8-915F-F676718F53D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Storage.Tests", "Prism.ProAssistant.Storage.Tests\Prism.ProAssistant.Storage.Tests.csproj", "{7C467EB3-C2BE-4D46-9810-6506F8CEC051}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.ProAssistant.Domain.Tests", "Prism.ProAssistant.Domain.Tests\Prism.ProAssistant.Domain.Tests.csproj", "{19F58A5D-7BFB-4E00-B961-8A9A777E6542}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Prism.Temp.Migrator", "Prism.Temp.Migrator\Prism.Temp.Migrator.csproj", "{48C8197C-A03B-454F-9583-B31BC1B25389}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,10 +26,6 @@ Global
 		{C9002176-C0DB-4E28-8E70-5C222F783EC0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C9002176-C0DB-4E28-8E70-5C222F783EC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C9002176-C0DB-4E28-8E70-5C222F783EC0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{74CC4C4E-1BA5-496E-9A5D-E07C5B5A1248}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{74CC4C4E-1BA5-496E-9A5D-E07C5B5A1248}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{74CC4C4E-1BA5-496E-9A5D-E07C5B5A1248}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{74CC4C4E-1BA5-496E-9A5D-E07C5B5A1248}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04354C93-5347-4A16-ABAB-789EAE7CDC1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04354C93-5347-4A16-ABAB-789EAE7CDC1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04354C93-5347-4A16-ABAB-789EAE7CDC1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -58,13 +50,9 @@ Global
 		{E6BC0833-314A-4BD8-915F-F676718F53D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E6BC0833-314A-4BD8-915F-F676718F53D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E6BC0833-314A-4BD8-915F-F676718F53D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7C467EB3-C2BE-4D46-9810-6506F8CEC051}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7C467EB3-C2BE-4D46-9810-6506F8CEC051}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7C467EB3-C2BE-4D46-9810-6506F8CEC051}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7C467EB3-C2BE-4D46-9810-6506F8CEC051}.Release|Any CPU.Build.0 = Release|Any CPU
-		{19F58A5D-7BFB-4E00-B961-8A9A777E6542}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{19F58A5D-7BFB-4E00-B961-8A9A777E6542}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{19F58A5D-7BFB-4E00-B961-8A9A777E6542}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{19F58A5D-7BFB-4E00-B961-8A9A777E6542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48C8197C-A03B-454F-9583-B31BC1B25389}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{48C8197C-A03B-454F-9583-B31BC1B25389}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{48C8197C-A03B-454F-9583-B31BC1B25389}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{48C8197C-A03B-454F-9583-B31BC1B25389}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

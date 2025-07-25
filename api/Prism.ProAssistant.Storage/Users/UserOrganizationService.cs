@@ -1,11 +1,12 @@
 ﻿using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
 using Prism.Core.Exceptions;
 using Prism.Infrastructure.Authentication;
-using Prism.Infrastructure.Providers;
+using Prism.Infrastructure.Providers.Azure;
 
 namespace Prism.ProAssistant.Storage.Users;
 
@@ -19,16 +20,17 @@ public interface IUserOrganizationService
 public class UserOrganizationService : IUserOrganizationService
 {
     private readonly IDistributedCache _cache;
-    private readonly IGlobalStateProvider _globalStateProvider;
     private readonly IHttpContextAccessor _httpContextAccessor;
     private readonly ILogger<UserOrganizationService> _logger;
+    
+    private readonly ProAssistantDbContext _dbContext;
 
-    public UserOrganizationService(ILogger<UserOrganizationService> logger, IHttpContextAccessor httpContextAccessor, IDistributedCache cache, IGlobalStateProvider globalStateProvider)
+    public UserOrganizationService(ILogger<UserOrganizationService> logger, IHttpContextAccessor httpContextAccessor, IDistributedCache cache, ProAssistantDbContext dbContext)
     {
         _logger = logger;
         _httpContextAccessor = httpContextAccessor;
         _cache = cache;
-        _globalStateProvider = globalStateProvider;
+        _dbContext = dbContext;
     }
 
     public async Task<string> GetUserOrganization()
@@ -52,8 +54,8 @@ public class UserOrganizationService : IUserOrganizationService
 
         _logger.LogInformation("The user {userId} was not found in the cache, querying the database.", userId);
 
-        var userContainer = await _globalStateProvider.GetGlobalContainerAsync<UserOrganization>();
-        var user = await userContainer.ReadAsync(userId);
+        var user = await _dbContext.UserOrganizations
+            .FirstOrDefaultAsync(u => u.Id == userId);
 
         if (user != null)
         {
@@ -67,11 +69,12 @@ public class UserOrganizationService : IUserOrganizationService
 
         _logger.LogWarning("The user {userId} was not found in the database, defaulting to the demo database.", userId);
 
-        await userContainer.WriteAsync(userId, new UserOrganization
+        _dbContext.UserOrganizations.Add(new UserOrganization
         {
             Id = userId,
             Organization = "demo"
         });
+        await _dbContext.SaveChangesAsync();
 
         return "demo";
     }

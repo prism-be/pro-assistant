@@ -28,7 +28,7 @@ public class UserOrganizationServiceTests
         var globalStateProvider = new Mock<IGlobalStateProvider>();
 
         // Act
-        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object, globalStateProvider.Object);
+        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object);
         var result = await service.GetUserOrganization();
 
         // Assert
@@ -56,7 +56,7 @@ public class UserOrganizationServiceTests
         var globalStateProvider = new Mock<IGlobalStateProvider>();
 
         // Act
-        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object, globalStateProvider.Object);
+        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object);
         var result = service.GetUserId();
         var name = service.GetName();
 
@@ -78,7 +78,7 @@ public class UserOrganizationServiceTests
         var globalStateProvider = new Mock<IGlobalStateProvider>();
 
         // Act
-        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object, globalStateProvider.Object);
+        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object);
         var result = service.GetUserId();
         var name = service.GetName();
 
@@ -116,7 +116,7 @@ public class UserOrganizationServiceTests
         globalStateProvider.Setup(x => x.GetGlobalContainerAsync<UserOrganization>()).ReturnsAsync(container.Object);
 
         // Act
-        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object, globalStateProvider.Object);
+        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object);
         var act = async () => await service.GetUserOrganization();
 
         // Assert
@@ -153,7 +153,7 @@ public class UserOrganizationServiceTests
         globalStateProvider.Setup(x => x.GetGlobalContainerAsync<UserOrganization>()).ReturnsAsync(container.Object);
 
         // Act
-        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object, globalStateProvider.Object);
+        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object);
         var result = await service.GetUserOrganization();
 
         // Assert
@@ -184,7 +184,7 @@ public class UserOrganizationServiceTests
         globalStateProvider.Setup(x => x.GetGlobalContainerAsync<UserOrganization>()).ReturnsAsync(container.Object);
 
         // Act
-        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object, globalStateProvider.Object);
+        var service = new UserOrganizationService(logger.Object, httpContextAccessor.Object, cache.Object);
         var result = await service.GetUserOrganization();
 
         // Assert

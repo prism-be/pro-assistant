@@ -1,26 +1,24 @@
-﻿namespace Prism.ProAssistant.Api.Controllers.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Prism.Infrastructure.Providers.Azure;
+
+namespace Prism.ProAssistant.Api.Controllers.Data;
 
 using Core;
 using Domain;
 using Domain.DayToDay.Contacts;
-using Domain.DayToDay.Contacts.Events;
 using Helpers;
 using Infrastructure.Providers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Storage;
-using Storage.Events;
 
 [Authorize]
 public class ContactController : Controller
 {
-    private readonly IEventStore _eventStore;
-    private readonly IQueryService _queryService;
+    private readonly ProAssistantDbContext _dbContext;
 
-    public ContactController(IQueryService queryService, IEventStore eventStore)
+    public ContactController(ProAssistantDbContext dbContext)
     {
-        _eventStore = eventStore;
-        _queryService = queryService;
+        _dbContext = dbContext;
     }
 
     [HttpPost]
@@ -30,27 +28,57 @@ public class ContactController : Controller
         ModelStateHelper.Validate(ModelState.IsValid);
         
         request.Id = Identifier.GenerateString();
+        _dbContext.Contacts.Add(request);
+        await _dbContext.SaveChangesAsync();
 
-        return await _eventStore.RaiseAndPersist<Contact>(new ContactCreated
-        {
-            Contact = request
-        });
+        return new UpsertResult(request.Id);
     }
 
     [HttpGet]
     [Route("api/data/contacts")]
     public async Task<IEnumerable<Contact>> List()
     {
-        return await _queryService.ListAsync<Contact>();
+        return await _dbContext.Contacts
+            .OrderBy(c => c.LastName)
+            .ThenBy(c => c.FirstName)
+            .ThenBy(c => c.BirthDate)
+            .ToListAsync();
     }
 
+    public record ContactSearch(string FirstName, string LastName, string BirthDate, string PhoneNumber);
     [HttpPost]
     [Route("api/data/contacts/search")]
-    public async Task<IEnumerable<Contact>> Search([FromBody] Filter[] request)
+    public async Task<IEnumerable<Contact>> Search([FromBody] ContactSearch request)
     {
         ModelStateHelper.Validate(ModelState.IsValid);
         
-        return await _queryService.SearchAsync<Contact>(request);
+        var query = _dbContext.Contacts.AsQueryable();
+
+        if (!string.IsNullOrWhiteSpace(request.FirstName))
+        {
+            query = query.Where(c => c.FirstName != null && c.FirstName.StartsWith(request.FirstName));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(request.LastName))
+        {
+            query = query.Where(c => c.LastName != null && c.LastName.StartsWith(request.LastName));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(request.BirthDate))
+        {
+            query = query.Where(c => c.BirthDate != null && c.BirthDate.Contains(request.BirthDate));
+        }
+        
+        if (!string.IsNullOrWhiteSpace(request.PhoneNumber))
+        {
+            query = query.Where(c => c.PhoneNumber != null && c.PhoneNumber.Contains(request.PhoneNumber));
+        }
+        
+        query = query.OrderBy(c => c.LastName)
+                     .ThenBy(c => c.FirstName)
+                     .ThenBy(c => c.BirthDate);
+        
+        return await query.ToListAsync();
     }
 
     [HttpGet]
@@ -59,7 +87,7 @@ public class ContactController : Controller
     {
         ModelStateHelper.Validate(ModelState.IsValid);
         
-        return await _queryService.SingleAsync<Contact>(id);
+        return await _dbContext.Contacts.FirstOrDefaultAsync(c => c.Id == id);
     }
 
     [HttpPost]
@@ -68,11 +96,9 @@ public class ContactController : Controller
     {
         ModelStateHelper.Validate(ModelState.IsValid);
         
-        var result = await _eventStore.RaiseAndPersist<Contact>(new ContactUpdated
-        {
-            Contact = request
-        });
+        _dbContext.Contacts.Update(request);
+        await _dbContext.SaveChangesAsync();
 
-        return result;
+        return new UpsertResult(request.Id);
     }
 }

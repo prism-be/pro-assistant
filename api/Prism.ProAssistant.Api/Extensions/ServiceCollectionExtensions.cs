@@ -58,7 +58,7 @@ public static class ServiceCollectionExtensions
 
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard).WithRepresentation(BsonType.String));
         var mongoClient = new MongoClient(mongoDbConnectionString);
-        services.AddSingleton(mongoClient);
+        services.AddSingleton<IMongoClient>(mongoClient);
         services.AddSingleton(new MongoDbConfiguration(mongoDbConnectionString));
 
         var sqlDbConnectionString = EnvironmentConfiguration.GetMandatoryConfiguration("SQLDB_CONNECTION_STRING");

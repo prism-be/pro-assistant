@@ -2,12 +2,17 @@
 using Prism.Infrastructure.Authentication;
 using Prism.ProAssistant.Domain.DayToDay.Contacts;
 
-namespace Prism.Infrastructure.Providers.Azure;
+namespace Prism.Temp.Migrator;
 
-public class ProAssistantDbContext(DbContextOptions<ProAssistantDbContext> options) : DbContext(options)
+public class ProAssistantDbContext: DbContext
 {
     public DbSet<Contact> Contacts { get; set; }
     public DbSet<UserOrganization> UserOrganizations { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer(Environment.GetEnvironmentVariable("SQLDB_CONNECTION_STRING"));
+    }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
