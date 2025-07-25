@@ -1,24 +1,26 @@
 ﻿import ContentContainer from "@/components/design/ContentContainer";
 import Section from "@/components/design/Section";
 import {useTranslation} from "react-i18next";
-import { useMemo, useState} from "react";
-import {ArrowLeftIcon, ArrowRightIcon} from "@heroicons/react/24/solid";
+import {useMemo, useState} from "react";
+import {ArrowLeftIcon, ArrowRightIcon, ArrowDownTrayIcon} from "@heroicons/react/24/solid";
 import useSWR from "swr";
-import {AccountingDocument, NextNumber} from "@/libs/models";
+import {AccountingDocument, AccountingReportingPeriod, NextNumber} from "@/libs/models";
 import {HeaderTitleWithAction} from "@/components/design/HeaderTitleWithAction";
 import {useForm} from "react-hook-form";
 import InputText from "@/components/forms/InputText";
 import {Popup} from "@/components/Pops";
 import InputDate from "@/components/forms/InputDate";
-import {format, formatISO, parse, parseISO } from "date-fns";
+import {format, formatISO, parse, parseISO} from "date-fns";
 import Button from "@/components/forms/Button";
-import {postData} from "@/libs/http";
+import {getData, postData} from "@/libs/http";
 import {formatAmount} from "@/libs/formats";
 import {PencilSquareIcon, TrashIcon} from "@heroicons/react/24/outline";
 import InputSelect from "@/components/forms/InputSelect";
 import InputTextAutoComplete from "@/components/forms/InputTextAutoComplete";
 import {onlyUnique} from "@/libs/text";
 import {useLoaderData, useNavigate} from "react-router-dom";
+import writeXlsxFile from "write-excel-file";
+import {getLocale} from "@/libs/localization.ts";
 
 interface Query {
     year: string;
@@ -72,7 +74,7 @@ const AccountingDocuments = () => {
 
     async function onSaveDocument(data: any) {
         data.amount = parseFloat(data.amount);
-        
+
         if (data.type === "expense") {
             data.amount *= -1;
         }
@@ -80,8 +82,8 @@ const AccountingDocuments = () => {
         if (data.documentNumberChoice === "noGenerate") {
             data.documentNumber = null;
         }
-        
-        data.date = formatISO(parse(data.date, "dd/MM/yyyy", new Date()), {representation: "date"} );
+
+        data.date = formatISO(parse(data.date, "dd/MM/yyyy", new Date()), {representation: "date"});
 
         if (selectedDocument) {
             data.id = selectedDocument.id;
@@ -119,7 +121,7 @@ const AccountingDocuments = () => {
             setValue("type", "expense");
         }
 
-        if(document.documentNumber) {
+        if (document.documentNumber) {
             setValue("documentNumberChoice", "generate");
             setValue("documentNumber", document.documentNumber);
             setDisplayDocumentNumber(true);
@@ -139,7 +141,7 @@ const AccountingDocuments = () => {
         }
     }
 
-    function switchDisplayDocumentNumber(action:string) {
+    function switchDisplayDocumentNumber(action: string) {
         if (action === "generate") {
             setValue("documentNumber", nextNumber?.number);
             setDisplayDocumentNumber(true);
@@ -148,14 +150,78 @@ const AccountingDocuments = () => {
             setDisplayDocumentNumber(false);
         }
     }
-    
+
     const titleSuggestions = useMemo<string[]>(() => {
         return (documents?.map((document) => document.title).filter(onlyUnique) ?? []) as string[];
     }, [documents]);
-    
+
     const categorySuggestions = useMemo<string[]>(() => {
         return (documents?.map((document) => document.category).filter(onlyUnique) ?? []) as string[];
     }, [documents]);
+
+    async function downloadFile() {
+        if (!documents) {
+            return;
+        }
+
+        const reportingPeriod = await getData<AccountingReportingPeriod[]>("/data/accounting/reporting/periods/" + year);
+        
+        const incomeAppointments = reportingPeriod?.map((period) => {
+            return {
+                id: "",
+                documentNumber: null,
+                reference: "",
+                date: period.startDate,
+                title: t("reporting.details.appointments") + " - " + format(period.startDate, "MMMM", {locale: getLocale()}),
+                category: t("reporting.details.appointments"),
+                amount: period.details.filter(d => d.type === "appointment").reduce((acc, detail) => acc + detail.subTotal, 0)
+            } as AccountingDocument;
+        });
+        
+        const sheetIncome = documents.filter(d => d.amount >= 0);
+        const sheetExpense = documents.filter(d => d.amount < 0);
+
+        const schema = [
+            {
+                column: t('documents.headers.number'),
+                type: Number,
+                value: (x: AccountingDocument) => x.documentNumber
+            },
+            {
+                column: t('documents.headers.reference'),
+                type: String,
+                value: (x: AccountingDocument) => x.reference
+            },
+            {
+                column: t('documents.headers.date'),
+                type: Date,
+                format: 'dd/mm/yyyy',
+                value: (x: AccountingDocument) => parseISO(x.date)
+            },
+            {
+                column: t('documents.headers.title'),
+                type: String,
+                value: (x: AccountingDocument) => x.title
+            },
+            {
+                column: t('documents.headers.category'),
+                type: String,
+                value: (x: AccountingDocument) => x.category
+            },
+            {
+                column: t('documents.headers.amount'),
+                type: Number,
+                format: '0.00',
+                value: (x: AccountingDocument) => x.amount
+            }
+        ];
+
+        await writeXlsxFile([sheetIncome.concat(incomeAppointments ?? []) , sheetExpense], {
+            sheets: [t('reporting.income'), t('reporting.expenses')],
+            schema: [schema, schema],
+            fileName: `${year} - ${t('title')} - ${t('documents.title')}.xlsx`
+        })
+    }
 
     return <ContentContainer>
         <Section>
@@ -238,7 +304,9 @@ const AccountingDocuments = () => {
                                         {value: "generate", text: t("documents.documentNumber.generate")},
                                         {value: "noGenerate", text: t("documents.documentNumber.noGenerate")}
                                     ]}
-                                    onChange={(e) => { switchDisplayDocumentNumber(e); }}
+                                    onChange={(e) => {
+                                        switchDisplayDocumentNumber(e);
+                                    }}
                                 />
                             </div>
                             {displayDocumentNumber && <div className={"col-span-2"}>
@@ -282,6 +350,9 @@ const AccountingDocuments = () => {
 
                 <h1 className={"text-center col-span-6"}>
                     {year}
+                    <a className={"w-8 inline-block pl-2"} onClick={() => downloadFile()}>
+                        <ArrowDownTrayIcon/>
+                    </a>
                 </h1>
 
                 <div className={"col-start-8 1 w-8 m-auto text-primary"}
@@ -304,7 +375,7 @@ const AccountingDocuments = () => {
                     {t("documents.noDocuments")}
                 </div>}
             </>
-            
+
             <>
                 {sortedDocuments?.map((document) => <div key={document.id}
                                                          className={"grid grid-cols-12 gap-2 hover:bg-gray-100" + (document.amount < 0 ? " text-red-700" : " text-green-700")}>
